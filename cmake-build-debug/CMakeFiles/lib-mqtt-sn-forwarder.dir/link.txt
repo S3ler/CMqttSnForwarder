@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblib-mqtt-sn-forwarder.a  CMakeFiles/lib-mqtt-sn-forwarder.dir/forwarder/MqttSnFordwarder.c.o CMakeFiles/lib-mqtt-sn-forwarder.dir/forwarder/MqttSnGatewayNetworkInterface.c.o CMakeFiles/lib-mqtt-sn-forwarder.dir/forwarder/MqttSnClientNetworkInterface.c.o
+/usr/bin/ranlib liblib-mqtt-sn-forwarder.a

@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/bele/CLionProjects/CMqttSnForwarder/forwarder/global_defines.h
+stdint.h
+-
+
+/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClient.cpp
+stdexcept
+-
+MockClient.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClient.h
+
+/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClient.h
+cstdint
+-
+atomic
+-
+MockClientNetworkInterface.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClientNetworkInterface.h
+MockClientNetworkReceiverInterface.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClientNetworkReceiverInterface.h
+thread
+-
+
+/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClientNetworkInterface.h
+cstdint
+-
+../../forwarder/global_defines.h
+/home/bele/CLionProjects/CMqttSnForwarder/forwarder/global_defines.h
+MockClient.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClient.h
+
+/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClientNetworkReceiverInterface.h
+cstdint
+-
+

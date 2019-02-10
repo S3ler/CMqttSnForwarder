@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblib-mqtt-sn-client-mock-network.a  CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/MockClientNetwork/MockClient.cpp.o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/MockClientNetwork/GatewayNetworkLooper.cpp.o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/MockClientNetwork/MockClientMqttSnMessageData.cpp.o
+/usr/bin/ranlib liblib-mqtt-sn-client-mock-network.a

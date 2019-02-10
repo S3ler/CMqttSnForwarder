@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblib-mqtt-sn-ring-buffer.a  CMakeFiles/lib-mqtt-sn-ring-buffer.dir/forwarder/MqttSnFixedSizeRingBuffer.c.o
+/usr/bin/ranlib liblib-mqtt-sn-ring-buffer.a

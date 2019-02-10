@@ -1,0 +1,145 @@
+cmake_minimum_required(VERSION 3.12)
+#project(CMqttSnForwarder C)
+project(CMqttSnForwarder C CXX)
+
+#set(CMAKE_C_STANDARD 99)
+#enable_language(CXX)
+set(CMAKE_CXX_STANDARD 11)
+
+if (NOT DEFINED CMAKE_C_STANDARD AND NOT DEFINED CMAKE_CXX_STANDARD)
+    message(FATAL_ERROR "Neither C nor C++ project")
+endif ()
+
+set(IMPLEMENTATIONL_FILES
+        forwarder/MqttSnClientNetworkInterface.h
+        forwarder/MqttSnForwarder.h
+        forwarder/MqttSnGatewayNetworkInterface.h
+        forwarder/MqttSnFordwarder.c
+        forwarder/global_defines.h
+        forwarder/MqttSnGatewayNetworkInterface.c
+        forwarder/MqttSnClientNetworkInterface.c)
+
+set(MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES
+        forwarder/MqttSnFixedSizeRingBuffer.h
+        forwarder/MqttSnFixedSizeRingBuffer.c)
+
+set(TCP_GATWAY_NETWORK_FILES
+        forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h
+        forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c)
+
+set(TCP_CLIENT_NETWORK_FILES
+        forwarder/network/client/tcp/MqttSnClientTcpNetwork.h
+        forwarder/network/client/tcp/MqttSnClientTcpNetwork.c)
+
+add_library(lib-mqtt-sn-forwarder ${IMPLEMENTATIONL_FILES})
+
+add_library(lib-mqtt-sn-ring-buffer ${MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES})
+
+add_library(lib-mqtt-sn-gateway-network ${TCP_GATWAY_NETWORK_FILES})
+target_link_libraries(lib-mqtt-sn-gateway-network lib-mqtt-sn-ring-buffer)
+
+add_library(lib-mqtt-sn-client-network ${TCP_CLIENT_NETWORK_FILES})
+target_link_libraries(lib-mqtt-sn-client-network lib-mqtt-sn-ring-buffer)
+
+
+if (CMAKE_C_STANDARD)
+    message("Bulding as C project")
+    add_executable(CMqttSnForwarder main/main.c)
+    target_link_libraries(CMqttSnForwarder lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    add_executable(CMqttSnForwarderTester testermain.c forwarder/global_defines.h)
+    target_link_libraries(CMqttSnForwarderTester lib-mqtt-sn-forwarder)
+else ()
+    message("Bulding as C++ project")
+    if (${CMAKE_CXX_STANDARD} LESS 11)
+        message(FATAL_ERROR "Cannot build with less than C++11")
+    endif ()
+
+    # https://github.com/google/googletest/blob/master/googletest/README.md#using-cmake
+
+    # Download and unpack googletest at configure time
+    configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
+    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+            RESULT_VARIABLE result
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download)
+    if (result)
+        message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+    endif ()
+    execute_process(COMMAND ${CMAKE_COMMAND} --build .
+            RESULT_VARIABLE result
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download)
+    if (result)
+        message(FATAL_ERROR "Build step for googletest failed: ${result}")
+    endif ()
+
+    # Prevent overriding the parent project's compiler/linker
+    # settings on Windows
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+    # Add googletest directly to our build. This defines
+    # the gtest and gtest_main targets.
+    add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
+            ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
+            EXCLUDE_FROM_ALL)
+
+    # The gtest/gtest_main targets carry header search path
+    # dependencies automatically when using CMake 2.8.11 or
+    # later. Otherwise we have to add them here ourselves.
+    if (CMAKE_VERSION VERSION_LESS 2.8.11)
+        include_directories("${gtest_SOURCE_DIR}/include")
+    endif ()
+
+    enable_testing()
+
+    # Now simply link against gtest or gtest_main as needed. Eg
+
+
+    # create a testing mock libraries for gateway network and client network
+    add_library(lib-mqtt-sn-client-mock-network
+            forwarder/global_defines.h
+            test/MockClientNetwork/MockClient.cpp
+            test/MockClientNetwork/MockClient.h
+            test/MockClientNetwork/MockClientNetworkInterface.h
+            test/MockClientNetwork/MockClientNetworkReceiverInterface.h
+            test/MockClientNetwork/MockClientNetworkReceiver.h
+            test/MockClientNetwork/GatewayNetworkLooper.cpp test/MockClientNetwork/GatewayNetworkLooper.h test/MockClientNetwork/MockClientMqttSnMessageData.cpp test/MockClientNetwork/MockClientMqttSnMessageData.h)
+    target_link_libraries(lib-mqtt-sn-client-mock-network lib-mqtt-sn-client-network pthread)
+
+    add_executable(MqttSnForwarder_LinuxTcpClientNetwork_Tests
+            test/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.cpp
+            test/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.h
+            test/MqttSnForwarder_LinuxTcpClientNetwork_Tests.cpp
+            )
+    target_link_libraries(MqttSnForwarder_LinuxTcpClientNetwork_Tests
+            gtest gtest_main gmock gmock_main lib-mqtt-sn-gateway-network lib-mqtt-sn-client-mock-network)
+
+    add_library(lib-mqtt-sn-gateway-mock-network
+            test/MockGatewayNetwork/MockGateway.h
+            forwarder/global_defines.h
+            test/MockGatewayNetwork/MockGateway.cpp
+            test/MockGatewayNetwork/MockGatewayNetworkInterface.h
+
+            test/MockGatewayNetwork/MockGatewayNetworkReceiverInterface.h
+            test/MockGatewayNetwork/MockGatewayNetworkReceiver.h)
+    target_link_libraries(lib-mqtt-sn-gateway-mock-network pthread)
+
+    add_executable(MqttSnForwarder_LinuxTcpGatewayNetwork_Tests
+            test/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp
+            test/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.h
+            test/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp)
+    target_link_libraries(MqttSnForwarder_LinuxTcpGatewayNetwork_Tests
+            gtest gtest_main gmock gmock_main lib-mqtt-sn-gateway-network lib-mqtt-sn-gateway-mock-network)
+    #add_executable(MqttSnForwarderTest
+    #        test/MqttSnForwarder_Tests.cpp
+    #        test/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp test/MqttSnForwarder_LinuxTcpClientNetwork_Tests.cpp)
+    #target_link_libraries(MqttSnForwarderTest
+    #        gtest gtest_main gmock gmock_main
+    #        lib-mqtt-sn-forwarder
+    #        lib-mqtt-sn-gateway-mock-network
+    #        lib-mqtt-sn-client-network)
+    #add_test(NAME example_test COMMAND MqttSnForwarderTest)
+
+
+endif ()
+
+
+
