@@ -59,8 +59,6 @@ gtest/internal/gtest-internal.h
 googletest-src/googletest/include/gtest/gtest/internal/gtest-internal.h
 gtest/internal/gtest-param-util.h
 googletest-src/googletest/include/gtest/gtest/internal/gtest-param-util.h
-gtest/internal/gtest-param-util-generated.h
-googletest-src/googletest/include/gtest/gtest/internal/gtest-param-util-generated.h
 gtest/internal/gtest-port.h
 googletest-src/googletest/include/gtest/gtest/internal/gtest-port.h
 
@@ -214,18 +212,10 @@ googletest-src/googletest/include/gtest/internal/gtest/internal/gtest-string.h
 gtest/internal/gtest-type-util.h
 googletest-src/googletest/include/gtest/internal/gtest/internal/gtest-type-util.h
 
-googletest-src/googletest/include/gtest/internal/gtest-param-util-generated.h
-assert.h
--
-memory
--
-gtest/internal/gtest-param-util.h
-googletest-src/googletest/include/gtest/internal/gtest/internal/gtest-param-util.h
-gtest/internal/gtest-port.h
-googletest-src/googletest/include/gtest/internal/gtest/internal/gtest-port.h
-
 googletest-src/googletest/include/gtest/internal/gtest-param-util.h
 ctype.h
+-
+cassert
 -
 iterator
 -
@@ -357,17 +347,17 @@ sys/wait.h
 -
 spawn.h
 -
+lib/fdio/fd.h
+-
 lib/fdio/io.h
 -
 lib/fdio/spawn.h
 -
-lib/fdio/util.h
--
-lib/zx/socket.h
--
 lib/zx/port.h
 -
 lib/zx/process.h
+-
+lib/zx/socket.h
 -
 zircon/processargs.h
 -
@@ -478,6 +468,10 @@ mach/mach_init.h
 mach/task.h
 -
 mach/vm_map.h
+-
+sys/sysctl.h
+-
+sys/user.h
 -
 devctl.h
 -

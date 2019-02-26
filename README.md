@@ -3,6 +3,9 @@ What does not work yet:
 automatically choice of MQTT-SN Gateway (we need a SearchGW and parsing prodecure)
 loading from configurationfile
 // TODO tests with multiple message (at the moment there is only one message send)
+// find out maximum rating for networks
+// der trick ist: obwohl in C implementiert kann man C++ google test framework nutzen, man muss nur zur vergleichbarkeit
+// alles es eine Frage der Netzwerkabstraction
 
 ### Supported Transmission Protocols
 The Mqtt-SN Forwarder forwads between two different networks.
@@ -161,3 +164,7 @@ Because this depends on many factors no general tests can be implemented.
 | :---------------------------------------------------  | :------------|
 | GatewayLinuxTcpDisconnect_Gratefully_SocketIsZero     |   Tests if the socket filedescriptor is zero (0) after a grateful disconnect.  |
 | GatewayLinuxTcpDisconnect_Ungratefully_SocketIsZero   |   Tests if the socket filedescriptor is zero (0) after and ungrateful disconnect.  |
+
+## Getting Started
+
+## Getting Started - Writing new tests

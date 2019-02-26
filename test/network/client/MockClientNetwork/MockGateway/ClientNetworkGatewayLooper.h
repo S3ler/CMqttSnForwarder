@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <thread>
 #include <atomic>
-#include "../../../../forwarder/MqttSnClientNetworkInterface.h"
+#include "../../../../../forwarder/MqttSnClientNetworkInterface.h"
 
 class ClientNetworkGatewayLooper {
  public:

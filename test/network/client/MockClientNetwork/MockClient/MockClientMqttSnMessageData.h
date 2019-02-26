@@ -9,8 +9,8 @@
 #include <vector>
 #include <cstring>
 #include <ostream>
-#include "../../../../forwarder/global_defines.h"
-#include "../../../../forwarder/MqttSnFixedSizeRingBuffer.h"
+#include "../../../../../forwarder/global_defines.h"
+#include "../../../../../forwarder/MqttSnFixedSizeRingBuffer.h"
 
 class MockClientMqttSnMessageData {
  public:

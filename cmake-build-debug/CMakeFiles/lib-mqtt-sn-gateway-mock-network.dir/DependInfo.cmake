@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/bele/CLionProjects/CMqttSnForwarder/test/MockGatewayNetwork/MockGateway.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/MockGatewayNetwork/MockGateway.cpp.o"
+  "/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGateway.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

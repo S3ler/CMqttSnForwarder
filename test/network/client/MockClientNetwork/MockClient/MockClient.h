@@ -9,7 +9,7 @@
 #include <atomic>
 #include "MockClientNetworkInterface.h"
 #include "MockClientNetworkReceiverInterface.h"
-#include "../../../../forwarder/global_defines.h"
+#include "../../../../../forwarder/global_defines.h"
 #include <thread>
 
 class MockClientNetworkInterface;

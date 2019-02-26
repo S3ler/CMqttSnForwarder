@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_MOCKCLIENTLINUXTCPNETWORKIMPLEMENTATION_H
 #define CMQTTSNFORWARDER_MOCKCLIENTLINUXTCPNETWORKIMPLEMENTATION_H
 
-#include "../MockClientNetworkInterface.h"
+#include "../MockClient/MockClientNetworkInterface.h"
 
 class MockClientLinuxTcpNetworkImplementation : public MockClientNetworkInterface {
  private:

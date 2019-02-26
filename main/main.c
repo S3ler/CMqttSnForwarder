@@ -16,8 +16,9 @@ int main() {
 
 
     MqttSnClientTcpNetwork clientNetworkContext = {0};
-    clientNetworkContext.port = 9999;
-    ClientNetworkInit(&mqttSnForwarder.clientNetwork, &clientNetworkContext, ClientLinuxTcpInit);
+    uint16_t clientNetworkPort = 9999;
+    device_address clientNetworkAddress = {127,0,0,1, (uint8_t) clientNetworkPort >> 8, (uint8_t) clientNetworkPort >> 0};
+    ClientNetworkInit(&mqttSnForwarder.clientNetwork, &clientNetworkAddress, &clientNetworkContext, ClientLinuxTcpInit);
 
     MqttSnForwarderStart (&mqttSnForwarder, &clientNetworkContext, &gatewayNetworkContext);
 

@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/MockGatewayNetwork/MockGateway.cpp.o"
+  "CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o"
   "liblib-mqtt-sn-gateway-mock-network.pdb"
   "liblib-mqtt-sn-gateway-mock-network.a"
 )

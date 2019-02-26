@@ -1,2 +1,2 @@
-/usr/bin/ar qc liblib-mqtt-sn-gateway-mock-network.a  CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/MockGatewayNetwork/MockGateway.cpp.o
+/usr/bin/ar qc liblib-mqtt-sn-gateway-mock-network.a  CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o
 /usr/bin/ranlib liblib-mqtt-sn-gateway-mock-network.a

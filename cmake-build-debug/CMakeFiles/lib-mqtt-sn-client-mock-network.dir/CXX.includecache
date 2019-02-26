@@ -6,37 +6,35 @@
 
 #IncludeRegexTransform: 
 
+/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnClientNetworkInterface.h
+stdint.h
+-
+MqttSnFixedSizeRingBuffer.h
+/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnFixedSizeRingBuffer.h
+
+/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnFixedSizeRingBuffer.h
+stdint.h
+-
+stdbool.h
+-
+global_defines.h
+/home/bele/CLionProjects/CMqttSnForwarder/forwarder/global_defines.h
+
 /home/bele/CLionProjects/CMqttSnForwarder/forwarder/global_defines.h
 stdint.h
 -
 
-/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClient.cpp
-stdexcept
--
-MockClient.h
-/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClient.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp
+ClientNetworkGatewayLooper.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h
 
-/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClient.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h
 cstdint
+-
+thread
 -
 atomic
 -
-MockClientNetworkInterface.h
-/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClientNetworkInterface.h
-MockClientNetworkReceiverInterface.h
-/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClientNetworkReceiverInterface.h
-thread
--
-
-/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClientNetworkInterface.h
-cstdint
--
-../../forwarder/global_defines.h
-/home/bele/CLionProjects/CMqttSnForwarder/forwarder/global_defines.h
-MockClient.h
-/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClient.h
-
-/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClientNetworkReceiverInterface.h
-cstdint
--
+../../../../../forwarder/MqttSnClientNetworkInterface.h
+/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnClientNetworkInterface.h
 

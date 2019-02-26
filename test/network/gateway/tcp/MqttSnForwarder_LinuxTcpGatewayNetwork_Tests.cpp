@@ -6,11 +6,11 @@
 #include <gmock/gmock-more-actions.h>
 #include <gmock/gmock-cardinalities.h>
 #include <gmock/gmock-matchers.h>
-#include "../forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h"
-#include "../forwarder/MqttSnForwarder.h"
-#include "MockGatewayNetwork/MockGateway.h"
-#include "MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.h"
-#include "MockGatewayNetwork/MockGatewayNetworkReceiver.h"
+#include "../../../../forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h"
+#include "../../../../forwarder/MqttSnForwarder.h"
+#include "../MockGatewayNetwork/MockGateway.h"
+#include "../MockGatewayNetwork/MockGatewayNetworkReceiver.h"
+#include "../MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.h"
 
 using ::testing::_;
 using ::testing::AtLeast;

@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.cpp.o"
-  "/home/bele/CLionProjects/CMqttSnForwarder/test/MqttSnForwarder_LinuxTcpClientNetwork_Tests.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/MqttSnForwarder_LinuxTcpClientNetwork_Tests.cpp.o"
+  "/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/BaseMqttSnClientNetworkTests.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/BaseMqttSnClientNetworkTests.cpp.o"
+  "/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -25,6 +25,7 @@ set(CMAKE_TARGET_LINKED_INFO_FILES
   "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/CMakeFiles/gmock_main.dir/DependInfo.cmake"
   "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-network.dir/DependInfo.cmake"
   "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/DependInfo.cmake"
+  "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-forwarder.dir/DependInfo.cmake"
   "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-network.dir/DependInfo.cmake"
   "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-ring-buffer.dir/DependInfo.cmake"
   )

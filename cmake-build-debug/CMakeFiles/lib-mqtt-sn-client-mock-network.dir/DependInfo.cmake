@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/GatewayNetworkLooper.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/MockClientNetwork/GatewayNetworkLooper.cpp.o"
-  "/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClient.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/MockClientNetwork/MockClient.cpp.o"
-  "/home/bele/CLionProjects/CMqttSnForwarder/test/MockClientNetwork/MockClientMqttSnMessageData.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/MockClientNetwork/MockClientMqttSnMessageData.cpp.o"
+  "/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClient.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o"
+  "/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o"
+  "/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -7,7 +7,7 @@
 
 #include <atomic>
 #include <thread>
-#include "../../forwarder/global_defines.h"
+#include "../../../../forwarder/global_defines.h"
 #include "MockGatewayNetworkInterface.h"
 
 class MockGatewayNetworkReceiverInterface;

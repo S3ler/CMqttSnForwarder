@@ -4,9 +4,12 @@
 
 #include "MqttSnClientNetworkInterface.h"
 
-int ClientNetworkInit(MqttSnClientNetworkInterface *n, void *context,
-                      int (*client_network_init)(struct MqttSnClientNetworkInterface *, void *context)) {
+int ClientNetworkInit(MqttSnClientNetworkInterface *n,
+                      device_address *client_network_address,
+                      void *context,
+                      int (*client_network_init)(MqttSnClientNetworkInterface *, void *)) {
     n->status = 0;
+    n->client_network_address = client_network_address;
     n->client_network_init = client_network_init;
     n->client_network_init(n, context);
 }

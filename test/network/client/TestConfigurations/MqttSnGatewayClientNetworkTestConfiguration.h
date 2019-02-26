@@ -6,28 +6,28 @@
 #define CMQTTSNFORWARDER_MQTTSNCLIENTNETWORKTESTFIXTURE_H
 
 #include <ostream>
-#include "../../../forwarder/global_defines.h"
-#include "../../../forwarder/MqttSnClientNetworkInterface.h"
-#include "MockClientNetwork/MockClient.h"
-#include "MockClientNetwork/MockClientNetworkReceiver.h"
-#include "MockClientNetwork/MockClientMqttSnMessageData.h"
+#include "../../../../forwarder/global_defines.h"
+#include "../../../../forwarder/MqttSnClientNetworkInterface.h"
+#include "../MockClientNetwork/MockClient/MockClient.h"
+#include "../MockClientNetwork/MockClient/MockClientNetworkReceiver.h"
+#include "../MockClientNetwork/MockClient/MockClientMqttSnMessageData.h"
 
 class MqttSnGatewayClientNetworkTestConfiguration {
  public:
 
   MqttSnGatewayClientNetworkTestConfiguration(device_address &forwarderAddress,
-                                 void *clientNetworkContext,
-                                 int (*clientNetworkInit)(MqttSnClientNetworkInterface *, void *) ) :
+                                              void *clientNetworkContext,
+                                              int (*clientNetworkInit)(MqttSnClientNetworkInterface *, void *),
+                                              bool useIdentifier = false) :
       forwarderAddress(forwarderAddress),
-      clientNetworkContext(
-          clientNetworkContext),
-      clientNetworkInit(
-          clientNetworkInit) {}
+      clientNetworkContext(clientNetworkContext),
+      clientNetworkInit(clientNetworkInit),
+      useIdentifier(useIdentifier) {}
 
-  device_address forwarderAddress;
-  void *clientNetworkContext;
+  bool useIdentifier = false;
+  device_address forwarderAddress = {0};
+  void *clientNetworkContext = nullptr;
   int (*clientNetworkInit)(struct MqttSnClientNetworkInterface *, void *context) = nullptr;
-  //device_address (*generateMockClientNetworkAddress)(uint16_t mockClientIdentifier) = nullptr;
 
   friend std::ostream &operator<<(std::ostream &os, const MqttSnGatewayClientNetworkTestConfiguration &fixture) {
     return os;

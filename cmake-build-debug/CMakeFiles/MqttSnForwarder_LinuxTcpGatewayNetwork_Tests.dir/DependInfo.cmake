@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/bele/CLionProjects/CMqttSnForwarder/test/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o"
-  "/home/bele/CLionProjects/CMqttSnForwarder/test/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o"
+  "/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o"
+  "/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

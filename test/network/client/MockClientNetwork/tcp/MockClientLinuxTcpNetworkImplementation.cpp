@@ -25,6 +25,7 @@ int MockClientLinuxTcpNetworkImplementation::sendToNetwork(device_address *to, c
   if (forwarder_socket_fd == -1) {
     return 0;
   }
+  // check if tcp socket is connected, if not then do it!
   if (send(forwarder_socket_fd, buf, len, 0) != len) {
     close(forwarder_socket_fd);
     forwarder_socket_fd = -1;

@@ -24,6 +24,10 @@ int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
   for (int i = 0; i < clientTcpNetwork->max_clients; ++i) {
     clientTcpNetwork->client_socket[i] = -1;
   }
+  uint16_t port = n->client_network_address->bytes[5];
+  port += (uint16_t) n->client_network_address->bytes[4] << 8;
+
+  clientTcpNetwork->port = port;
   n->client_network_init = ClientLinuxTcpInit;
   n->client_network_connect = ClientLinuxTcpConnect;
   n->client_network_disconnect = ClientLinuxTcpDisconnect;
@@ -99,7 +103,8 @@ void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
   }
 }
 
-int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *receiveBuffer,
+int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
+                          MqttSnFixedSizeRingBuffer *receiveBuffer,
                           uint32_t timeout_ms,
                           void *context) {
 
@@ -252,7 +257,7 @@ void MqttSnClientHandleClientSockets(MqttSnClientTcpNetwork *clientTcpNetwork, M
       continue;
     }
 
-    if (valread >= MAX_MESSAGE_LENGTH) {
+    if (valread > MAX_MESSAGE_LENGTH) {
       continue;
     }
 
