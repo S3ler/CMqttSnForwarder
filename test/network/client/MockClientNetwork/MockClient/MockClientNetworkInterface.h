@@ -6,14 +6,16 @@
 #define CMQTTSNFORWARDER_MOCKCLIENTNETWORKINTERFACE_H
 
 #include <cstdint>
-#include "../../forwarder/global_defines.h"
 #include "MockClient.h"
+#include "../../../../forwarder/global_defines.h"
 
 class MockClient;
 
 class MockClientNetworkInterface {
  public:
   virtual void setMockClient(MockClient *client)=0;
+
+  virtual void setNetworkAddress(device_address *address)=0;
 
   virtual bool isNetworkConnected() = 0;
 

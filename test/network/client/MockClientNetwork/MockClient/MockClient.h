@@ -9,6 +9,7 @@
 #include <atomic>
 #include "MockClientNetworkInterface.h"
 #include "MockClientNetworkReceiverInterface.h"
+#include "../../../../forwarder/global_defines.h"
 #include <thread>
 
 class MockClientNetworkInterface;
@@ -19,9 +20,11 @@ class MockClient {
 
   bool start_loop();
 
+  bool isNetworkConnected();
+
   void stop_loop();
 
-  void send(uint8_t *data, uint16_t length);
+  int send(uint8_t *data, uint16_t length);
 
   void receive(uint8_t *data, uint16_t length);
 
@@ -31,12 +34,23 @@ class MockClient {
 
   void setForwarderAddress(device_address *forwarderAddress);
 
-  void setMockClientNetworkReceiverInterface(MockClientNetworkReceiverInterface *receiverInterface);
-
   void setMockClientNetworkInterface(MockClientNetworkInterface *mockClientNetworkInterface);
 
+  MockClientNetworkReceiverInterface* getMockClientNetworkReceiverInterface();
+
+  void setMockClientNetworkReceiverInterface(MockClientNetworkReceiverInterface* receiver);
+
+  uint16_t getIdentifier() const;
+
+  MockClient();
+
+  MockClient(uint16_t identifier,
+             device_address *networkAddress,
+             device_address *forwarderAddress,
+             MockClientNetworkReceiverInterface *receiver);
  private:
-  MockClientNetworkReceiverInterface *receiver = nullptr;
+  uint16_t identifier;
+  MockClientNetworkReceiverInterface* receiver;
   std::thread thread;
   device_address *networkAddress = nullptr;
   std::atomic<bool> stopped{false};

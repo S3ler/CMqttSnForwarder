@@ -2,9 +2,9 @@
 // Created by bele on 07.02.19.
 //
 
-#include "GatewayNetworkLooper.h"
+#include "ClientNetworkGatewayLooper.h"
 
-bool GatewayNetworkLooper::startNetworkLoop(int (*ClientNetworkReceive)(MqttSnClientNetworkInterface *,
+bool ClientNetworkGatewayLooper::startNetworkLoop(int (*ClientNetworkReceive)(MqttSnClientNetworkInterface *,
                                                                          MqttSnFixedSizeRingBuffer *,
                                                                          uint32_t,
                                                                          void *),
@@ -31,19 +31,20 @@ bool GatewayNetworkLooper::startNetworkLoop(int (*ClientNetworkReceive)(MqttSnCl
   this->timeout_ms = timeout_ms;
   this->context = context;
 
-  this->thread = std::thread(&GatewayNetworkLooper::networkLoop, this);
+  this->thread = std::thread(&ClientNetworkGatewayLooper::networkLoop, this);
   this->thread.detach();
   return true;
 
 }
-void GatewayNetworkLooper::stopNetworkLoop() {
+void ClientNetworkGatewayLooper::stopNetworkLoop() {
   stopped = true;
-
+  isStopped = false;
 }
-void GatewayNetworkLooper::networkLoop() {
+void ClientNetworkGatewayLooper::networkLoop() {
   while (!stopped) {
     if(this->clientNetworkReceive(n, receiveBuffer, timeout_ms, context) < 0){
       break;
     }
   }
+  isStopped = true;
 }

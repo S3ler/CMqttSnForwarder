@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_MOCKCLIENTNETWORKRECEIVER_H
 
 #include "MockClientNetworkReceiverInterface.h"
-#include "../../cmake-build-debug/googletest-src/googlemock/include/gmock/gmock-function-mocker.h"
+#include "gmock/gmock-function-mocker.h"
 
 class MockClientNetworkReceiver : public MockClientNetworkReceiverInterface {
  public:

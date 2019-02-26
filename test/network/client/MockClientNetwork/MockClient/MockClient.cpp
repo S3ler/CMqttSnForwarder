@@ -32,6 +32,10 @@ bool MockClient::start_loop() {
   return true;
 }
 
+bool MockClient::isNetworkConnected() {
+  return mockClientNetworkInterface->isNetworkConnected();
+}
+
 void MockClient::stop_loop() {
   this->stopped = true;
   if (this->thread.joinable()) {
@@ -64,15 +68,11 @@ void MockClient::setNetworkAddress(device_address *networkAddress) {
   this->networkAddress = networkAddress;
 }
 
-void MockClient::setMockClientNetworkReceiverInterface(MockClientNetworkReceiverInterface *receiverInterface) {
-  this->receiver = receiverInterface;
-}
-
 void MockClient::setMockClientNetworkInterface(MockClientNetworkInterface *mockClientNetworkInterface) {
   this->mockClientNetworkInterface = mockClientNetworkInterface;
 }
 
-void MockClient::send(uint8_t *data, uint16_t length) {
+int MockClient::send(uint8_t *data, uint16_t length) {
   if (mockClientNetworkInterface == nullptr) {
     throw std::invalid_argument("mockClientNetworkInterface not initialized");
   }
@@ -82,8 +82,24 @@ void MockClient::send(uint8_t *data, uint16_t length) {
   if (this->networkAddress == nullptr) {
     throw std::invalid_argument("gateway networkAddress not set");
   }
-  mockClientNetworkInterface->sendToNetwork(forwarderAddress, data, length);
+  return mockClientNetworkInterface->sendToNetwork(forwarderAddress, data, length);
 }
+
 device_address *MockClient::getNetworkAddress() {
   return this->networkAddress;
+}
+MockClientNetworkReceiverInterface *MockClient::getMockClientNetworkReceiverInterface() {
+  return receiver;
+}
+void MockClient::setMockClientNetworkReceiverInterface(MockClientNetworkReceiverInterface* receiver) {
+  this->receiver = receiver;
+}
+MockClient::MockClient() {}
+MockClient::MockClient(uint16_t identifier,
+                       device_address *networkAddress,
+                       device_address *forwarderAddress,
+                       MockClientNetworkReceiverInterface *receiver)
+    : identifier(identifier), networkAddress(networkAddress), forwarderAddress(forwarderAddress), receiver(receiver) {}
+uint16_t MockClient::getIdentifier() const {
+  return identifier;
 }

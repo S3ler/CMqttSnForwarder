@@ -106,3 +106,6 @@ void MockClientLinuxTcpNetworkImplementation::disconnectNetwork() {
 void MockClientLinuxTcpNetworkImplementation::loopNetwork() {
 
 }
+void MockClientLinuxTcpNetworkImplementation::setNetworkAddress(device_address *address) {
+  this->address = address;
+}
