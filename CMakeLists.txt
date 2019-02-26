@@ -105,9 +105,17 @@ else ()
     target_link_libraries(lib-mqtt-sn-client-mock-network lib-mqtt-sn-client-network pthread)
 
     add_executable(MqttSnForwarder_LinuxTcpClientNetwork_Tests
-            test/network/client/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.cpp
-            test/network/client/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.h
-            test/network/client/BaseMqttSnClientNetworkTests.cpp test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h test/network/client/TestConfigurations/MockClientConfiguration.h)
+            test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp
+            test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.h
+            test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h
+            test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h
+            test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h
+            test/network/client/TestConfigurations/MockClientConfiguration.h
+            test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp
+            test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp
+            test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp
+            test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.h)
+
     target_link_libraries(MqttSnForwarder_LinuxTcpClientNetwork_Tests
             gtest gtest_main gmock gmock_main lib-mqtt-sn-gateway-network lib-mqtt-sn-client-mock-network lib-mqtt-sn-forwarder)
 
@@ -126,7 +134,7 @@ else ()
             test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.h
             test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp)
     target_link_libraries(MqttSnForwarder_LinuxTcpGatewayNetwork_Tests
-            gtest gtest_main gmock gmock_main lib-mqtt-sn-gateway-network lib-mqtt-sn-gateway-mock-network)
+            gtest gtest_main gmock gmock_main pthread lib-mqtt-sn-gateway-network lib-mqtt-sn-gateway-mock-network)
     #add_executable(MqttSnForwarderTest
     #        test/MqttSnForwarder_Tests.cpp
     #        test/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp test/MqttSnForwarder_LinuxTcpClientNetwork_Tests.cpp)

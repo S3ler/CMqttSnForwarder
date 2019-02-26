@@ -733,9 +733,6 @@
 		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h">
 			<Option target="lib-mqtt-sn-gateway-network"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/BaseMqttSnClientNetworkTests.cpp">
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
-		</Unit>
 		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClient.cpp">
 			<Option target="lib-mqtt-sn-client-mock-network"/>
 		</Unit>
@@ -763,10 +760,19 @@
 		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h">
 			<Option target="lib-mqtt-sn-client-mock-network"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.cpp">
+		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp">
 			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.h">
+		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
+		</Unit>
+		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
+		</Unit>
+		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
+		</Unit>
+		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.h">
 			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
 		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MockClientConfiguration.h">
@@ -776,6 +782,12 @@
 			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
 		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
+		</Unit>
+		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
+		</Unit>
+		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h">
 			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
 		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGateway.cpp">

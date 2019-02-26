@@ -6,6 +6,7 @@
 #define CMQTTSNFORWARDER_MOCKCLIENTIDENTIFIER_H
 
 #include "../../../../forwarder/global_defines.h"
+
 class MockClientConfiguration {
   public:
   device_address address;
