@@ -8,7 +8,7 @@ loading from configurationfile
 // alles es eine Frage der Netzwerkabstraction
 
 ### Supported Transmission Protocols
-The Mqtt-SN Forwarder forwads between two different networks.
+The Mqtt-SN Forwarder forwards between two different networks.
 For example we can use LoRa on the client side and Tcp to the Mqtt-SN Gateway.
 In the following tables is listet which protocols are implemented for client and gateway side.
 

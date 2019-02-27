@@ -27,22 +27,22 @@ class MockGateway {
 
   void receive(uint8_t *data, uint16_t length);
 
-  void setNetworkAddress(device_address *networkAddress);
+  MockGatewayNetworkReceiverInterface *getReceiver();
 
-  void setForwarderNetworkAddress(device_address *forwarderAddress);
+  bool isNetworkConnected();
 
-  void setMockGatewayNetworkReceiverInterface(MockGatewayNetworkReceiverInterface *receiverInterface);
-
-  void setMockGatewayNetworkInterface(MockGatewayNetworkInterface *mockGatewayNetworkInterface);
-
+  MockGateway(uint8_t gatewayIdentifier,
+                const device_address *networkAddress,
+                MockGatewayNetworkInterface *mockGatewayNetworkInterface,
+                MockGatewayNetworkReceiverInterface *receiver);
  private:
 
   MockGatewayNetworkReceiverInterface *receiver = nullptr;
   std::thread thread;
-  device_address *networkAddress = nullptr;
+  const device_address *networkAddress = nullptr;
   std::atomic<bool> stopped{false};
   MockGatewayNetworkInterface* mockGatewayNetworkInterface = nullptr;
-  device_address *forwarderAddress;
+  uint8_t gatewayIdentifier;
 };
 
 #endif //CMQTTSNFORWARDER_MOCKGATEWAYNETWORKINTERFACE_H

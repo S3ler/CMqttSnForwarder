@@ -10,18 +10,18 @@
 #define CMQTTSNFORWARDER_MQTTSNCLIENTNETWORKTESTTYPEPARAMETER_H
 
 #include <cstdint>
+#include <vector>
 #include <ostream>
-#include "MqttSnGatewayClientNetworkTestConfiguration.h"
 #include "MockClientConfiguration.h"
+#include "MqttSnGatewayClientNetworkTestConfiguration.h"
 #include "ClientNetworkMessageDataGenerator.h"
 
 class MqttSnClientNetworkTestValueParameter {
  public:
-  //uint16_t clientCount;
   std::vector<MockClientConfiguration> mockClientConfigurations;
   uint16_t messageCount;
   uint16_t messageLength;
-  uint8_t *(*messageDataGenerator)(uint8_t* arr, uint16_t len);
+  uint8_t *(*messageDataGenerator)(uint8_t *arr, uint16_t len);
 
   MqttSnGatewayClientNetworkTestConfiguration &mqttSnClientNetworkTestFixture;
 
@@ -29,7 +29,7 @@ class MqttSnClientNetworkTestValueParameter {
                                         uint16_t messageCount,
                                         uint16_t messageLength,
                                         MqttSnGatewayClientNetworkTestConfiguration &mqttSnClientNetworkTestFixture,
-                                        uint8_t *(*messageDataGenerator)(uint8_t*, uint16_t) = defaultMessageDataGenerator)
+                                        uint8_t *(*msgDataGenerator)(uint8_t *, uint16_t) = defaultMessageDataGenerator)
       : mockClientConfigurations(std::move(mockClientIdentifiers)),
         messageCount(messageCount),
         messageLength(messageLength),
@@ -37,10 +37,9 @@ class MqttSnClientNetworkTestValueParameter {
         messageDataGenerator(messageDataGenerator) {}
 
   friend std::ostream &operator<<(std::ostream &os, const MqttSnClientNetworkTestValueParameter &parameter) {
-    os << "clientCount" << parameter.mockClientConfigurations.size() << "messageCount" << parameter.messageCount
-       << "messageLength"
-       << parameter.messageLength << "mqttSnGatewayClientNetworkTestConfiguration"
-       << parameter.mqttSnClientNetworkTestFixture << "";
+    os << "mockClientCount" << parameter.mockClientConfigurations.size()
+       << "messageCount" << parameter.messageCount
+       << "messageLength" << parameter.messageLength;
     return os;
   }
 };

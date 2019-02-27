@@ -2,18 +2,19 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="CMqttSnForwarder" targetName="gmock" />
-      <config projectName="CMqttSnForwarder" targetName="lib-mqtt-sn-client-network" />
       <config projectName="CMqttSnForwarder" targetName="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests" />
       <config projectName="CMqttSnForwarder" targetName="lib-mqtt-sn-gateway-mock-network" />
       <config projectName="CMqttSnForwarder" targetName="lib-mqtt-sn-client-mock-network" />
       <config projectName="CMqttSnForwarder" targetName="gmock_main" />
-      <config projectName="CMqttSnForwarder" targetName="MqttSnForwarder_LinuxTcpClientNetwork_Tests" />
-      <config projectName="CMqttSnForwarder" targetName="lib-mqtt-sn-forwarder" />
       <config projectName="CMqttSnForwarder" targetName="gtest_main" />
+      <config projectName="CMqttSnForwarder" targetName="lib-mqtt-sn-gateway-network" />
+      <config projectName="CMqttSnForwarder" targetName="gmock" />
+      <config projectName="CMqttSnForwarder" targetName="lib-mqtt-sn-client-network" />
+      <config projectName="CMqttSnForwarder" targetName="MqttSnForwarder_LinuxTcpClientNetwork_Tests" />
+      <config projectName="CMqttSnForwarder" targetName="GatewayTests" />
+      <config projectName="CMqttSnForwarder" targetName="lib-mqtt-sn-forwarder" />
       <config projectName="CMqttSnForwarder" targetName="lib-mqtt-sn-ring-buffer" />
       <config projectName="CMqttSnForwarder" targetName="gtest" />
-      <config projectName="CMqttSnForwarder" targetName="lib-mqtt-sn-gateway-network" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -23,52 +24,70 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="61f1f14f-a9c1-40c4-9dec-ddb457b07ad0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/test/network/client/TestConfigurations/CartesianTestGenerator.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/network/client/TestConfigurations/CartesianTestGenerator.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/CXX.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/DependInfo.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/cmake_clean.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/depend.internal" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/cmake_clean.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/CXX.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/DependInfo.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/cmake_clean.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/depend.internal" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/flags.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-network.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-network.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-forwarder.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-forwarder.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/cmake_clean.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/flags.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-network.dir/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-network.dir/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-network.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-network.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-ring-buffer.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/lib-mqtt-sn-ring-buffer.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMqttSnForwarder.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMqttSnForwarder.cbp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/MqttSnForwarder_LinuxTcpClientNetwork_Tests" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/MqttSnForwarder_LinuxTcpClientNetwork_Tests" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/CMakeFiles/gmock.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/CMakeFiles/gmock.dir/progress.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/CMakeFiles/gmock_main.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/CMakeFiles/gmock_main.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/progress.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/src/gtest-all.cc.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/src/gtest-all.cc.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/gtest/CMakeFiles/gtest_main.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-build/googlemock/gtest/CMakeFiles/gtest_main.dir/progress.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/lib/libgmockd.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/lib/libgmockd.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/lib/libgtestd.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/lib/libgtestd.a" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/liblib-mqtt-sn-client-mock-network.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/liblib-mqtt-sn-client-mock-network.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/liblib-mqtt-sn-gateway-mock-network.a" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/liblib-mqtt-sn-forwarder.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/liblib-mqtt-sn-forwarder.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/liblib-mqtt-sn-gateway-network.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/liblib-mqtt-sn-gateway-network.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/forwarder/MqttSnGatewayNetworkInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/forwarder/MqttSnGatewayNetworkInterface.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/forwarder/MqttSnGatewayNetworkInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/forwarder/MqttSnGatewayNetworkInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c" beforeDir="false" afterPath="$PROJECT_DIR$/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/MqttSnForwarder_Tests.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/client/TestConfigurations/MockClientConfiguration.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/TestConfigurations/MockClientConfiguration.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGateway.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGateway.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGateway.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGateway.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -80,24 +99,36 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="ExportTestResults" outputFolder="$PROJECT_DIR$" userTempatePath="" />
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="523">
-              <caret line="47" column="32" selection-start-line="47" selection-start-column="32" selection-end-line="47" selection-end-column="32" />
-              <folding>
-                <element signature="e#168#223#0" expanded="true" />
-              </folding>
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="420">
+                <caret line="28" column="25" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+        <entry file="file://$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="191">
-              <caret line="124" column="39" selection-start-line="124" selection-start-column="39" selection-end-line="124" selection-end-column="39" />
+            <state relative-caret-position="-537">
+              <caret line="30" column="72" lean-forward="true" selection-start-line="30" selection-start-column="72" selection-end-line="30" selection-end-column="72" />
+              <folding>
+                <element signature="e#164#188#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="15" selection-start-line="15" selection-end-line="15" />
             </state>
           </provider>
         </entry>
@@ -106,8 +137,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>interval</find>
-      <find>socket failed</find>
       <find>TODO</find>
       <find>CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH</find>
       <find>TCP_CLIENT_NETWORK_FILES</find>
@@ -136,6 +165,8 @@
       <find>MqttSnForwarder_LinuxTcpClientNetwork_Tests</find>
       <find>lib-mqtt-sn-client-mock-network</find>
       <find>Tcp</find>
+      <find>Gatewa</find>
+      <find>gateway-mock</find>
     </findStrings>
     <replaceStrings>
       <replace>peer_adress</replace>
@@ -151,57 +182,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/test/MockClientNetwork/MockClient.h" />
-        <option value="$PROJECT_DIR$/test/MockClientNetwork/MockClientMqttSnMessageData.cpp" />
-        <option value="$PROJECT_DIR$/test/MockClientNetwork/MockClient.cpp" />
-        <option value="$PROJECT_DIR$/test/MockClientNetwork/MockClientMqttSnMessageData.h" />
-        <option value="$PROJECT_DIR$/test/MockClientNetwork/MockClientNetworkInterface.h" />
-        <option value="$PROJECT_DIR$/test/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.cpp" />
-        <option value="$PROJECT_DIR$/test/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.h" />
-        <option value="$PROJECT_DIR$/test/MqttSnForwarder_LinuxTcpClientNetwork_Tests.cpp" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/test/network/client/Ba.h" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/tcp/MockClientLinuxTcpNetworkImplementation.cpp" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClientNetworkInterface.h" />
-        <option value="$PROJECT_DIR$/test/network/client/BaseMqttSnClientNetworkTests.h" />
-        <option value="$PROJECT_DIR$/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp" />
-        <option value="$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/include/gtest/gtest-param-test.h" />
-        <option value="$PROJECT_DIR$/test/network/client/CartesianValueParameter.h" />
-        <option value="$PROJECT_DIR$/test/network/client/tcp/MqttSnForwarder_LinuxTcpClientNetwork_Tests.cpp" />
-        <option value="$PROJECT_DIR$/forwarder/global_defines.h" />
-        <option value="$PROJECT_DIR$/main/main.c" />
-        <option value="$PROJECT_DIR$/forwarder/MqttSnClientNetworkInterface.c" />
-        <option value="$PROJECT_DIR$/forwarder/network/client/tcp/MqttSnClientTcpNetwork.c" />
-        <option value="$PROJECT_DIR$/forwarder/MqttSnClientNetworkInterface.h" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/GatewayNetworkLooper.cpp" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientIdentifier.cpp" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientIdentifier.h" />
-        <option value="$PROJECT_DIR$/test/network/client/MqttSnClientNetworkTestTypeParameter.h" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientConfiguration.h" />
-        <option value="$PROJECT_DIR$/test/network/client/MqttSnClientNetworkTestFixture.h" />
-        <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnClientNetworkTestTypeParameter.h" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/GatewayNetworkLooper.h" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient.cpp" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient.h" />
-        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClientMqttSnMessageData.h" />
         <option value="$PROJECT_DIR$/forwarder/MqttSnFixedSizeRingBuffer.h" />
-        <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h" />
         <option value="$PROJECT_DIR$/test/network/client/BaseMqttSnClientNetworkTests.cpp" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/test/network/client/MqttSnClientNetworkInterfaceTests.cpp" />
         <option value="$PROJECT_DIR$/test/network/client/MqttSnClientNetworkInterfaceTests.h" />
         <option value="$PROJECT_DIR$/test/network/client/TcpMqttSnClientNetworkInterfaceTests.h" />
         <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/DefaultMessageDataGenerator.h" />
-        <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h" />
         <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/DefaultMessageDataGenerator.cpp" />
         <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp" />
         <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.h" />
-        <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/MockClientConfiguration.h" />
-        <option value="$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h" />
         <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/CartesianTestGenerator.h" />
         <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/CartesianTestGenerator.cpp" />
         <option value="$PROJECT_DIR$/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/MockGatewayConfiguration.h" />
+        <option value="$PROJECT_DIR$/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.h" />
+        <option value="$PROJECT_DIR$/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkValueParameter.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkValueParameter.h" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/MqttSnForwarderGatewayNetworkTestConfiguration.cpp" />
+        <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/MqttSnForwarderGatewayNetworkTestConfiguration.h" />
+        <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h" />
+        <option value="$PROJECT_DIR$/forwarder/MqttSnGatewayNetworkInterface.c" />
+        <option value="$PROJECT_DIR$/main/main.c" />
+        <option value="$PROJECT_DIR$/test/network/gateway/TestConfigurations/MockGatewayConfiguration.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/TestConfigurations/MockGatewayConfiguration.h" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h" />
+        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h" />
+        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.h" />
+        <option value="$PROJECT_DIR$/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/getParameterMqttSnGatewayNetworkTestTypeParameter.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/getParameterMqttSnGatewayNetworkTestTypeParameter.h" />
+        <option value="$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h" />
+        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.cpp" />
+        <option value="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.h" />
+        <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/MockClientConfiguration.h" />
+        <option value="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGateway.h" />
+        <option value="$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGateway.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.h" />
+        <option value="$PROJECT_DIR$/forwarder/MqttSnGatewayNetworkInterface.h" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkValueParameter.h" />
+        <option value="$PROJECT_DIR$/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceTests.cpp" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceTests.h" />
+        <option value="$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h" />
       </list>
     </option>
   </component>
@@ -245,6 +276,36 @@
             <path>
               <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
               <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="forwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="forwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="tcp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="forwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="gateway" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="forwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="tcp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -264,14 +325,6 @@
               <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="network" type="462c0819:PsiDirectoryNode" />
               <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="network" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="MockClientNetwork" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
@@ -306,6 +359,46 @@
             </path>
             <path>
               <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="MockForwarderGatewayNetworkLooper" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="MockGatewayNetwork" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="Tcp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="TestConfigurations" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="gateway" type="462c0819:PsiDirectoryNode" />
+              <item name="Tests" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
@@ -322,16 +415,16 @@
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/test/network/client/Tcp" />
-      <recent name="$PROJECT_DIR$/test/network/client" />
-      <recent name="$PROJECT_DIR$/test/network" />
-      <recent name="$PROJECT_DIR$/test/network/client/Tests" />
-      <recent name="$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/test/network/gateway/TestConfigurations" />
+      <recent name="$PROJECT_DIR$/test/network/gateway/Tcp" />
+      <recent name="$PROJECT_DIR$/test/network/gateway" />
+      <recent name="$PROJECT_DIR$/test/network/client/Tcp" />
+      <recent name="$PROJECT_DIR$/test/network/client" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -346,8 +439,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.MqttSnForwarder_LinuxTcpClientNetwork_Tests">
-    <configuration name="All in MqttSnClientNetworkInterfaceTests.h" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CMqttSnForwarder" TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CMqttSnForwarder" RUN_TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" TEST_PATTERN="all-tests(file://$PROJECT_DIR$/test/network/client/MqttSnClientNetworkInterfaceTests.h)" TEST_MODE="PATTERN">
+  <component name="RunManager" selected="Application.GatewayTests">
+    <configuration name="All in MqttSnGatewayNetworkInterfaceTests.h" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" TEST_PATTERN="all-tests(file://$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceTests.h)" TEST_MODE="PATTERN">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
@@ -359,13 +452,7 @@
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="All in TcpMqttSnClientNetworkInterfaceTests.cpp" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CMqttSnForwarder" TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CMqttSnForwarder" RUN_TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" TEST_PATTERN="all-tests(file://$PROJECT_DIR$/test/network/client/TcpMqttSnClientNetworkInterfaceTests.cpp)" TEST_MODE="PATTERN">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SendReceiveTests-BaseMqttSnClientNetworkTests" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CMqttSnForwarder" TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CMqttSnForwarder" RUN_TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" TEST_PATTERN="SendReceiveTests/BaseMqttSnClientNetworkTests.*/*:SendReceiveTests/BaseMqttSnClientNetworkTests/*.*" TEST_MODE="PATTERN">
+    <configuration name="GatewaySendReceiveTests-MqttSnGatewayNetworkInterfaceTests" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" TEST_PATTERN="GatewaySendReceiveTests/MqttSnGatewayNetworkInterfaceTests.*/*:GatewaySendReceiveTests/MqttSnGatewayNetworkInterfaceTests/*.*" TEST_MODE="PATTERN">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
@@ -378,6 +465,11 @@
       </method>
     </configuration>
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GatewayTests" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CMqttSnForwarder" TARGET_NAME="GatewayTests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CMqttSnForwarder" RUN_TARGET_NAME="GatewayTests">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -442,8 +534,23 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Unittests in Tests" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="CMqttSnForwarder" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/network/gateway/Tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/network/gateway/Tests&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.Build All" />
+      <item itemvalue="Application.GatewayTests" />
       <item itemvalue="Application.lib-mqtt-sn-client-mock-network" />
       <item itemvalue="Application.lib-mqtt-sn-client-network" />
       <item itemvalue="Application.lib-mqtt-sn-forwarder" />
@@ -456,19 +563,19 @@
       <item itemvalue="Application.gmock_main" />
       <item itemvalue="Application.gtest" />
       <item itemvalue="Application.gtest_main" />
-      <item itemvalue="Google Test.All in MqttSnClientNetworkInterfaceTests.h" />
-      <item itemvalue="Google Test.SendReceiveTests-BaseMqttSnClientNetworkTests" />
-      <item itemvalue="Google Test.All in TcpMqttSnClientNetworkInterfaceTests.cpp" />
       <item itemvalue="Google Test.SendReceiveTests-MqttSnClientNetworkInterfaceTests" />
       <item itemvalue="Google Test.All in TcpMqttSnClientNetworkInterfaceTests.cpp (1)" />
+      <item itemvalue="Google Test.GatewaySendReceiveTests-MqttSnGatewayNetworkInterfaceTests" />
+      <item itemvalue="Google Test.All in MqttSnGatewayNetworkInterfaceTests.h" />
+      <item itemvalue="Python tests.Unittests in Tests" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Unittests in Tests" />
+        <item itemvalue="Google Test.All in MqttSnGatewayNetworkInterfaceTests.h" />
+        <item itemvalue="Google Test.GatewaySendReceiveTests-MqttSnGatewayNetworkInterfaceTests" />
         <item itemvalue="Google Test.All in TcpMqttSnClientNetworkInterfaceTests.cpp (1)" />
         <item itemvalue="Google Test.SendReceiveTests-MqttSnClientNetworkInterfaceTests" />
-        <item itemvalue="Google Test.All in TcpMqttSnClientNetworkInterfaceTests.cpp" />
-        <item itemvalue="Google Test.SendReceiveTests-BaseMqttSnClientNetworkTests" />
-        <item itemvalue="Google Test.All in MqttSnClientNetworkInterfaceTests.h" />
       </list>
     </recent_temporary>
   </component>
@@ -521,7 +628,10 @@
       <workItem from="1551096129910" duration="342000" />
       <workItem from="1551096552210" duration="58000" />
       <workItem from="1551096619951" duration="29961000" />
-      <workItem from="1551199590782" duration="11743000" />
+      <workItem from="1551199590782" duration="16691000" />
+      <workItem from="1551218949776" duration="9311000" />
+      <workItem from="1551265956073" duration="6769000" />
+      <workItem from="1551272767527" duration="3994000" />
     </task>
     <servers />
   </component>
@@ -558,7 +668,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="353208000" />
+    <option name="totallyTimeSpent" value="378230000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -572,7 +682,7 @@
   <component name="ToolWindowManager">
     <frame x="0" y="35" width="1600" height="865" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49543378" visible="true" weight="0.33268982" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49543378" visible="true" weight="0.36550838" />
       <window_info id="Structure" order="1" sideWeight="0.5045662" side_tool="true" weight="0.27091378" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -581,7 +691,7 @@
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.6003861" weight="0.39863014" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32921812" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32876712" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.24066924" weight="0.33150685" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4993565" weight="0.32876712" />
@@ -607,19 +717,9 @@
           <option name="timeStamp" value="194" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp</url>
-          <line>52</line>
-          <option name="timeStamp" value="228" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp</url>
           <line>29</line>
           <option name="timeStamp" value="229" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h</url>
-          <line>32</line>
-          <option name="timeStamp" value="233" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp</url>
@@ -630,6 +730,16 @@
           <url>file://$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/include/gtest/gtest-param-test.h</url>
           <line>480</line>
           <option name="timeStamp" value="237" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h</url>
+          <line>69</line>
+          <option name="timeStamp" value="243" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c</url>
+          <line>29</line>
+          <option name="timeStamp" value="249" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -645,274 +755,99 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test/network/client/CartesianValueParameter.cpp" />
-    <entry file="file://$PROJECT_DIR$/test/network/client/CartesianValueParameter.h" />
-    <entry file="file://$PROJECT_DIR$/test/network/client/MqttSnClientNetworkTestFixture.cpp" />
-    <entry file="file://$PROJECT_DIR$/forwarder/global_defines.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forwarder/MqttSnFordwarder.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="98" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="98" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forwarder/MqttSnGatewayNetworkInterface.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/main.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="18" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forwarder/MqttSnClientNetworkInterface.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forwarder/MqttSnClientNetworkInterface.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="28" column="42" selection-start-line="28" selection-start-column="42" selection-end-line="28" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="52" column="12" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/c++/7/iosfwd">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="155" column="36" selection-start-line="155" selection-start-column="36" selection-end-line="155" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/include/gtest/gtest-printers.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14070">
-          <caret line="938" column="18" selection-start-line="938" selection-start-column="18" selection-end-line="938" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientIdentifier.cpp" />
-    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="20" column="44" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/include/gtest/gtest.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="2503" selection-start-line="2503" selection-end-line="2503" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/src/gtest_main.cc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="44" selection-start-line="44" selection-end-line="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/c++/7/bits/alloc_traits.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="435" selection-start-line="435" selection-end-line="435" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/c++/7/bits/vector.tcc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="405" selection-start-line="405" selection-end-line="405" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/c++/7/bits/stl_vector.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="947" selection-start-line="947" selection-end-line="947" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/c++/7/ext/new_allocator.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="110" selection-start-line="110" selection-end-line="110" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiverInterface.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="6" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/tcp/MqttSnForwarder_LinuxTcpClientNetwork_Tests.cpp" />
-    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClientNetworkInterface.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="74" column="17" selection-start-line="74" selection-start-column="17" selection-end-line="74" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="26" column="43" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
-          <folding>
-            <element signature="e#116#134#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiver.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="13" column="2" selection-start-line="13" selection-start-column="2" selection-end-line="13" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="26" column="102" selection-start-line="26" selection-start-column="102" selection-end-line="26" selection-end-column="102" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Test Results - BaseMqttSnClientNetworkTests_VariableMessageLength.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forwarder/MqttSnFixedSizeRingBuffer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="24" column="35" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="7" selection-start-line="1" selection-start-column="7" selection-end-line="1" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/include/gtest/internal/gtest-param-util.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="536" selection-start-line="536" selection-end-line="536" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="38" selection-start-line="4" selection-start-column="38" selection-end-line="4" selection-end-column="38" />
-          <folding>
-            <element signature="e#150#168#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/MockClientConfiguration.h">
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h">
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="31" column="101" selection-start-line="31" selection-start-column="101" selection-end-line="31" selection-end-column="101" />
+        <state relative-caret-position="210">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#39#57#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forwarder/network/client/tcp/MqttSnClientTcpNetwork.h">
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkValueParameter.cpp" />
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/Tests/MqttSnForwarderGatewayNetworkTestConfiguration.cpp" />
+    <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="25" column="2" selection-start-line="25" selection-start-column="2" selection-end-line="25" selection-end-column="2" />
+        <state relative-caret-position="484">
+          <caret line="41" column="53" selection-start-line="41" selection-start-column="53" selection-end-line="41" selection-end-column="53" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#208#226#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forwarder/network/client/tcp/MqttSnClientTcpNetwork.c">
+    <entry file="file://$PROJECT_DIR$/forwarder/MqttSnClientNetworkInterface.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3822">
-          <caret line="26" selection-start-line="26" selection-end-line="26" />
+        <state relative-caret-position="165">
+          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp">
+    <entry file="file://$PROJECT_DIR$/forwarder/MqttSnClientNetworkInterface.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" selection-start-line="36" selection-end-line="36" />
+        <state relative-caret-position="304">
+          <caret line="28" column="26" selection-start-line="28" selection-end-line="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp">
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/TestConfigurations/MockGatewayConfiguration.cpp" />
+    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClientNetworkInterface.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="33" column="17" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
+        <state relative-caret-position="255">
+          <caret line="19" column="15" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp">
+    <entry file="file:///usr/include/c++/7/atomic">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="23" column="45" selection-start-line="23" selection-start-column="45" selection-end-line="23" selection-end-column="45" />
+        <state relative-caret-position="234">
+          <caret line="867" column="32" selection-start-line="867" selection-start-column="32" selection-end-line="867" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="131">
-          <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
+        <state relative-caret-position="225">
+          <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h">
+    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="20" column="40" selection-start-line="20" selection-start-column="40" selection-end-line="20" selection-end-column="40" />
+        <state relative-caret-position="300">
+          <caret line="23" column="15" selection-start-line="23" selection-start-column="15" selection-end-line="23" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="42" column="33" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="23" column="33" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
           <folding>
-            <element signature="e#156#174#0" expanded="true" />
+            <element signature="e#162#179#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -923,76 +858,291 @@
           <caret line="10" selection-start-line="10" selection-end-line="14" selection-end-column="95" />
           <folding>
             <element signature="e#140#189#0" expanded="true" />
-            <element signature="e#219#315#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/include/c++/7/iostream">
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="73" selection-start-line="73" selection-end-line="73" />
+        <state relative-caret-position="145">
+          <caret line="14" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="2" />
+          <folding>
+            <element signature="e#188#206#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="87" selection-start-line="87" selection-end-line="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/client/MockClientNetwork/MockClient/MockClient.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="421">
+          <caret line="48" column="9" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/CartesianTestGenerator.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
+        <state relative-caret-position="151">
+          <caret line="33" column="24" selection-start-line="33" selection-start-column="24" selection-end-line="33" selection-end-column="24" />
           <folding>
-            <element signature="e#85#181#0" expanded="true" />
+            <element signature="e#154#250#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/include/gtest/gtest-param-test.h">
+    <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/MockClientConfiguration.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-72">
-          <caret line="467" column="8" selection-start-line="467" selection-start-column="8" selection-end-line="467" selection-end-column="8" />
+        <state relative-caret-position="135">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
           <folding>
-            <element signature="e#12144#12170#0" expanded="true" />
+            <element signature="e#136#185#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+          <folding>
+            <element signature="e#156#174#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/TestConfigurations/MockGatewayConfiguration.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="2" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
+          <folding>
+            <element signature="e#144#162#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/include/gtest/internal/gtest-param-util.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3078">
+          <caret line="655" selection-start-line="655" selection-end-line="655" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGateway.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="41" column="8" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forwarder/network/client/tcp/MqttSnClientTcpNetwork.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="54" selection-start-line="54" selection-end-line="56" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="113" column="79" selection-start-line="113" selection-start-column="79" selection-end-line="113" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/main.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="10" column="28" selection-start-line="10" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/c++/7/bits/shared_ptr_base.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="968" selection-start-line="968" selection-end-line="968" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/MockGatewayNetwork/MockGateway.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/c++/7/bits/stl_vector.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="333" selection-start-line="333" selection-end-line="333" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="58" selection-start-line="13" selection-start-column="58" selection-end-line="13" selection-end-column="58" />
+          <folding>
+            <element signature="e#194#243#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+          <folding>
+            <element signature="e#111#209#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkValueParameter.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
+          <folding>
+            <element signature="e#184#202#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forwarder/MqttSnGatewayNetworkInterface.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="24" column="24" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="68" selection-start-line="68" selection-end-line="82" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="91" selection-start-line="91" selection-end-line="91" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forwarder/MqttSnGatewayNetworkInterface.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="26" selection-start-line="26" selection-end-line="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/src/gtest.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="4551" selection-start-line="4551" selection-end-line="4551" />
+        <state relative-caret-position="15">
+          <caret line="2425" selection-start-line="2425" selection-end-line="2425" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="36" column="40" selection-start-line="36" selection-start-column="40" selection-end-line="36" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="40" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-255">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="270">
+          <caret line="18" column="39" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="39" />
           <folding>
             <element signature="e#152#176#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp">
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
+        <state relative-caret-position="76">
+          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="523">
-          <caret line="47" column="32" selection-start-line="47" selection-start-column="32" selection-end-line="47" selection-end-column="32" />
+        <state relative-caret-position="16">
+          <caret line="28" selection-start-line="28" selection-end-line="28" />
           <folding>
             <element signature="e#168#223#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="124" column="39" selection-start-line="124" selection-start-column="39" selection-end-line="124" selection-end-column="39" />
+        <state relative-caret-position="225">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+          <folding>
+            <element signature="e#180#197#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="420">
+            <caret line="28" column="25" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-537">
+          <caret line="30" column="72" lean-forward="true" selection-start-line="30" selection-start-column="72" selection-end-line="30" selection-end-column="72" />
+          <folding>
+            <element signature="e#164#188#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

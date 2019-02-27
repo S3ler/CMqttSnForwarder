@@ -85,21 +85,24 @@ int MockClient::send(uint8_t *data, uint16_t length) {
   return mockClientNetworkInterface->sendToNetwork(forwarderAddress, data, length);
 }
 
-device_address *MockClient::getNetworkAddress() {
-  return this->networkAddress;
-}
 MockClientNetworkReceiverInterface *MockClient::getMockClientNetworkReceiverInterface() {
   return receiver;
 }
-void MockClient::setMockClientNetworkReceiverInterface(MockClientNetworkReceiverInterface* receiver) {
+void MockClient::setMockClientNetworkReceiverInterface(MockClientNetworkReceiverInterface *receiver) {
   this->receiver = receiver;
 }
-MockClient::MockClient() {}
+
 MockClient::MockClient(uint16_t identifier,
-                       device_address *networkAddress,
+                       const device_address *networkAddress,
                        device_address *forwarderAddress,
-                       MockClientNetworkReceiverInterface *receiver)
-    : identifier(identifier), networkAddress(networkAddress), forwarderAddress(forwarderAddress), receiver(receiver) {}
-uint16_t MockClient::getIdentifier() const {
+                       MockClientNetworkInterface *mockClientNetworkInterface,
+                       MockClientNetworkReceiverInterface *receiver) :
+    identifier(identifier),
+    networkAddress(networkAddress),
+    forwarderAddress(forwarderAddress),
+    mockClientNetworkInterface(mockClientNetworkInterface),
+    receiver(receiver) {}
+
+uint16_t MockClient::getIdentifier() {
   return identifier;
 }

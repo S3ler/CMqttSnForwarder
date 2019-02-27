@@ -12,7 +12,7 @@
 
 class ClientNetworkGatewayLooper {
  public:
-  bool startNetworkLoop(int ClientNetworkReceive(MqttSnClientNetworkInterface *n,
+  bool startNetworkLoop(int (*clientNetworkReceive)(MqttSnClientNetworkInterface *n,
                                                  MqttSnFixedSizeRingBuffer *receiveBuffer,
                                                  uint32_t timeout_ms,
                                                  void *context),

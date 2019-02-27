@@ -57,54 +57,98 @@ include CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/progress.mak
 # Include the compile flags for this target's objects.
 include CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/flags.make
 
-CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/flags.make
-CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o: ../test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o -c /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/flags.make
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o: ../test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o -c /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp
 
-CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp > CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp > CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i
 
-CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s
 
-CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/flags.make
-CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o: ../test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o -c /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/flags.make
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o: ../test/network/gateway/MockGatewayNetwork/MockGateway.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o -c /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGateway.cpp
 
-CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp > CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.i
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGateway.cpp > CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.i
 
-CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.s
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGateway.cpp -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.s
+
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/flags.make
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o: ../test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o -c /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp
+
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp > CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.i
+
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.s
+
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/flags.make
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o: ../test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o -c /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp
+
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp > CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.i
+
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.s
+
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/flags.make
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o: ../test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o -c /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp
+
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp > CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.i
+
+CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp -o CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.s
 
 # Object files for target MqttSnForwarder_LinuxTcpGatewayNetwork_Tests
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests_OBJECTS = \
-"CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o" \
-"CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o"
+"CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o" \
+"CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o" \
+"CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o" \
+"CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o" \
+"CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o"
 
 # External object files for target MqttSnForwarder_LinuxTcpGatewayNetwork_Tests
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests_EXTERNAL_OBJECTS =
 
-MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o
-MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o
+MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o
+MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o
+MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o
+MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o
+MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: lib/libgtestd.a
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: lib/libgtest_maind.a
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: lib/libgmockd.a
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: lib/libgmock_maind.a
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: liblib-mqtt-sn-gateway-network.a
-MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: liblib-mqtt-sn-gateway-mock-network.a
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: lib/libgmockd.a
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: lib/libgtestd.a
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: liblib-mqtt-sn-ring-buffer.a
 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests: CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

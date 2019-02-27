@@ -4,7 +4,7 @@
 
 #include "MockGateway.h"
 #include "MockGatewayNetworkReceiverInterface.h"
-#include "tcp/MockGatewayLinuxTcpNetworkImplementation.h"
+#include "../Tcp/MockGatewayLinuxTcpNetworkImplementation.h"
 
 void MockGateway::loop() {
   while (!stopped) {
@@ -26,7 +26,7 @@ bool MockGateway::start_loop() {
   }
 
   mockGatewayNetworkInterface->setMockGateway(this);
-  if (!mockGatewayNetworkInterface->connectNetwork(networkAddress)) {
+  if (!mockGatewayNetworkInterface->connectNetwork(const_cast<device_address *>(networkAddress))) {
     return false;
   }
   this->thread = std::thread(&MockGateway::loop, this);
@@ -71,20 +71,20 @@ void MockGateway::receive(uint8_t *data, uint16_t length) {
   this->receiver->receive_any_message(data, length);
 }
 
-
-void MockGateway::setNetworkAddress(device_address *networkAddress) {
-  this->networkAddress = networkAddress;
+MockGatewayNetworkReceiverInterface *MockGateway::getReceiver() {
+  return receiver;
 }
 
-void MockGateway::setMockGatewayNetworkReceiverInterface(MockGatewayNetworkReceiverInterface *receiverInterface) {
-  this->receiver = receiverInterface;
-}
+MockGateway::MockGateway(uint8_t gatewayIdentifier,
+                         const device_address *networkAddress,
+                         MockGatewayNetworkInterface *mockGatewayNetworkInterface,
+                         MockGatewayNetworkReceiverInterface *receiver)
+    : receiver(receiver),
+      networkAddress(networkAddress),
+      mockGatewayNetworkInterface(mockGatewayNetworkInterface),
+      gatewayIdentifier(gatewayIdentifier) {}
 
-void MockGateway::setMockGatewayNetworkInterface(MockGatewayNetworkInterface *mockGatewayNetworkInterface) {
-  this->mockGatewayNetworkInterface = mockGatewayNetworkInterface;
-}
-
-void MockGateway::setForwarderNetworkAddress(device_address *forwarderAddress) {
-  this->forwarderAddress = forwarderAddress;
+bool MockGateway::isNetworkConnected() {
+  return mockGatewayNetworkInterface->isNetworkConnected();
 }
 

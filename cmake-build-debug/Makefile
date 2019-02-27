@@ -246,17 +246,17 @@ lib-mqtt-sn-client-network/fast:
 .PHONY : lib-mqtt-sn-client-network/fast
 
 #=============================================================================
-# Target rules for targets named lib-mqtt-sn-client-mock-network
+# Target rules for targets named GatewayTests
 
 # Build rule for target.
-lib-mqtt-sn-client-mock-network: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 lib-mqtt-sn-client-mock-network
-.PHONY : lib-mqtt-sn-client-mock-network
+GatewayTests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 GatewayTests
+.PHONY : GatewayTests
 
 # fast build rule for target.
-lib-mqtt-sn-client-mock-network/fast:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build
-.PHONY : lib-mqtt-sn-client-mock-network/fast
+GatewayTests/fast:
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/build
+.PHONY : GatewayTests/fast
 
 #=============================================================================
 # Target rules for targets named MqttSnForwarder_LinuxTcpClientNetwork_Tests
@@ -270,6 +270,19 @@ MqttSnForwarder_LinuxTcpClientNetwork_Tests: cmake_check_build_system
 MqttSnForwarder_LinuxTcpClientNetwork_Tests/fast:
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build
 .PHONY : MqttSnForwarder_LinuxTcpClientNetwork_Tests/fast
+
+#=============================================================================
+# Target rules for targets named lib-mqtt-sn-client-mock-network
+
+# Build rule for target.
+lib-mqtt-sn-client-mock-network: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 lib-mqtt-sn-client-mock-network
+.PHONY : lib-mqtt-sn-client-mock-network
+
+# fast build rule for target.
+lib-mqtt-sn-client-mock-network/fast:
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build
+.PHONY : lib-mqtt-sn-client-mock-network/fast
 
 #=============================================================================
 # Target rules for targets named gmock_main
@@ -491,8 +504,8 @@ test/network/client/MockClientNetwork/MockClient/MockClient.o: test/network/clie
 
 # target to build an object file
 test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o
 .PHONY : test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o
 
 test/network/client/MockClientNetwork/MockClient/MockClient.i: test/network/client/MockClientNetwork/MockClient/MockClient.cpp.i
@@ -501,8 +514,8 @@ test/network/client/MockClientNetwork/MockClient/MockClient.i: test/network/clie
 
 # target to preprocess a source file
 test/network/client/MockClientNetwork/MockClient/MockClient.cpp.i:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.i
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.i
 .PHONY : test/network/client/MockClientNetwork/MockClient/MockClient.cpp.i
 
 test/network/client/MockClientNetwork/MockClient/MockClient.s: test/network/client/MockClientNetwork/MockClient/MockClient.cpp.s
@@ -511,8 +524,8 @@ test/network/client/MockClientNetwork/MockClient/MockClient.s: test/network/clie
 
 # target to generate assembly for a file
 test/network/client/MockClientNetwork/MockClient/MockClient.cpp.s:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.s
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.s
 .PHONY : test/network/client/MockClientNetwork/MockClient/MockClient.cpp.s
 
 test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.o: test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o
@@ -521,8 +534,8 @@ test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.o: 
 
 # target to build an object file
 test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o
 .PHONY : test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o
 
 test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.i: test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.i
@@ -531,8 +544,8 @@ test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.i: 
 
 # target to preprocess a source file
 test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.i:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.i
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.i
 .PHONY : test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.i
 
 test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.s: test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.s
@@ -541,8 +554,8 @@ test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.s: 
 
 # target to generate assembly for a file
 test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.s:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.s
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.s
 .PHONY : test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.s
 
 test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.o: test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o
@@ -551,8 +564,8 @@ test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.o: 
 
 # target to build an object file
 test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o
 .PHONY : test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o
 
 test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.i: test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.i
@@ -561,8 +574,8 @@ test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.i: 
 
 # target to preprocess a source file
 test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.i:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.i
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.i
 .PHONY : test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.i
 
 test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.s: test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.s
@@ -571,8 +584,8 @@ test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.s: 
 
 # target to generate assembly for a file
 test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.s:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.s
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.s
 .PHONY : test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.s
 
 test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.o: test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o
@@ -581,8 +594,8 @@ test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.o: test/network/
 
 # target to build an object file
 test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o
 .PHONY : test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o
 
 test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.i: test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.i
@@ -591,8 +604,8 @@ test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.i: test/network/
 
 # target to preprocess a source file
 test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.i:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.i
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.i
 .PHONY : test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.i
 
 test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.s: test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.s
@@ -601,8 +614,8 @@ test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.s: test/network/
 
 # target to generate assembly for a file
 test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.s:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.s
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.s
 .PHONY : test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.s
 
 test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.o: test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o
@@ -611,8 +624,8 @@ test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.o: test/network/cli
 
 # target to build an object file
 test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o
 .PHONY : test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o
 
 test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.i: test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.i
@@ -621,8 +634,8 @@ test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.i: test/network/cli
 
 # target to preprocess a source file
 test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.i:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.i
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.i
 .PHONY : test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.i
 
 test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.s: test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.s
@@ -631,8 +644,8 @@ test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.s: test/network/cli
 
 # target to generate assembly for a file
 test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.s:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.s
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.s
 .PHONY : test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.s
 
 test/network/client/TestConfigurations/CartesianTestGenerator.o: test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o
@@ -641,8 +654,8 @@ test/network/client/TestConfigurations/CartesianTestGenerator.o: test/network/cl
 
 # target to build an object file
 test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o
 .PHONY : test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o
 
 test/network/client/TestConfigurations/CartesianTestGenerator.i: test/network/client/TestConfigurations/CartesianTestGenerator.cpp.i
@@ -651,8 +664,8 @@ test/network/client/TestConfigurations/CartesianTestGenerator.i: test/network/cl
 
 # target to preprocess a source file
 test/network/client/TestConfigurations/CartesianTestGenerator.cpp.i:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.i
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.i
 .PHONY : test/network/client/TestConfigurations/CartesianTestGenerator.cpp.i
 
 test/network/client/TestConfigurations/CartesianTestGenerator.s: test/network/client/TestConfigurations/CartesianTestGenerator.cpp.s
@@ -661,8 +674,8 @@ test/network/client/TestConfigurations/CartesianTestGenerator.s: test/network/cl
 
 # target to generate assembly for a file
 test/network/client/TestConfigurations/CartesianTestGenerator.cpp.s:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.s
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.s
 .PHONY : test/network/client/TestConfigurations/CartesianTestGenerator.cpp.s
 
 test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.o: test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o
@@ -671,8 +684,8 @@ test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.o: test
 
 # target to build an object file
 test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o
 .PHONY : test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o
 
 test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.i: test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.i
@@ -681,8 +694,8 @@ test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.i: test
 
 # target to preprocess a source file
 test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.i:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.i
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.i
 .PHONY : test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.i
 
 test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.s: test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.s
@@ -691,8 +704,8 @@ test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.s: test
 
 # target to generate assembly for a file
 test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.s:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.s
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.s
 .PHONY : test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.s
 
 test/network/client/Tests/MqttSnClientNetworkInterfaceTests.o: test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o
@@ -701,8 +714,8 @@ test/network/client/Tests/MqttSnClientNetworkInterfaceTests.o: test/network/clie
 
 # target to build an object file
 test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o
 .PHONY : test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o
 
 test/network/client/Tests/MqttSnClientNetworkInterfaceTests.i: test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.i
@@ -711,8 +724,8 @@ test/network/client/Tests/MqttSnClientNetworkInterfaceTests.i: test/network/clie
 
 # target to preprocess a source file
 test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.i:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.i
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.i
 .PHONY : test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.i
 
 test/network/client/Tests/MqttSnClientNetworkInterfaceTests.s: test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.s
@@ -721,9 +734,42 @@ test/network/client/Tests/MqttSnClientNetworkInterfaceTests.s: test/network/clie
 
 # target to generate assembly for a file
 test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.s:
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.s
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.s
 .PHONY : test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.s
+
+test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.o: test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o
+
+.PHONY : test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.o
+
+# target to build an object file
+test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o
+.PHONY : test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o
+
+test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.i: test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.i
+
+.PHONY : test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.i
+
+# target to preprocess a source file
+test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.i:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.i
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.i
+.PHONY : test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.i
+
+test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.s: test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.s
+
+.PHONY : test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.s
+
+# target to generate assembly for a file
+test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.s:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.s
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.s
+.PHONY : test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.s
 
 test/network/gateway/MockGatewayNetwork/MockGateway.o: test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o
 
@@ -731,7 +777,9 @@ test/network/gateway/MockGatewayNetwork/MockGateway.o: test/network/gateway/Mock
 
 # target to build an object file
 test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o
 .PHONY : test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o
 
 test/network/gateway/MockGatewayNetwork/MockGateway.i: test/network/gateway/MockGatewayNetwork/MockGateway.cpp.i
@@ -740,7 +788,9 @@ test/network/gateway/MockGatewayNetwork/MockGateway.i: test/network/gateway/Mock
 
 # target to preprocess a source file
 test/network/gateway/MockGatewayNetwork/MockGateway.cpp.i:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.i
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.i
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.i
 .PHONY : test/network/gateway/MockGatewayNetwork/MockGateway.cpp.i
 
 test/network/gateway/MockGatewayNetwork/MockGateway.s: test/network/gateway/MockGatewayNetwork/MockGateway.cpp.s
@@ -749,62 +799,160 @@ test/network/gateway/MockGatewayNetwork/MockGateway.s: test/network/gateway/Mock
 
 # target to generate assembly for a file
 test/network/gateway/MockGatewayNetwork/MockGateway.cpp.s:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.s
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.s
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.s
 .PHONY : test/network/gateway/MockGatewayNetwork/MockGateway.cpp.s
 
-test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.o: test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o
+test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.o: test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.o
 
-.PHONY : test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.o
-
-# target to build an object file
-test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o:
-	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o
-.PHONY : test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o
-
-test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.i: test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i
-
-.PHONY : test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.i
-
-# target to preprocess a source file
-test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i:
-	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i
-.PHONY : test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i
-
-test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.s: test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s
-
-.PHONY : test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.s
-
-# target to generate assembly for a file
-test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s:
-	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s
-.PHONY : test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s
-
-test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.o: test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o
-
-.PHONY : test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.o
+.PHONY : test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.o
 
 # target to build an object file
-test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o:
-	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o
-.PHONY : test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o
+test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.o:
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.o
+.PHONY : test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.o
 
-test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.i: test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.i
+test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.i: test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.i
 
-.PHONY : test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.i
+.PHONY : test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.i
 
 # target to preprocess a source file
-test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.i:
-	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.i
-.PHONY : test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.i
+test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.i:
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.i
+.PHONY : test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.i
 
-test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.s: test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.s
+test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.s: test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.s
 
-.PHONY : test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.s
+.PHONY : test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.s
 
 # target to generate assembly for a file
-test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.s:
-	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.s
-.PHONY : test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.s
+test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.s:
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.s
+.PHONY : test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp.s
+
+test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.o: test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o
+
+.PHONY : test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.o
+
+# target to build an object file
+test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o
+.PHONY : test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o
+
+test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.i: test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i
+
+.PHONY : test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.i
+
+# target to preprocess a source file
+test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i
+.PHONY : test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.i
+
+test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.s: test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s
+
+.PHONY : test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.s
+
+# target to generate assembly for a file
+test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s
+.PHONY : test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.s
+
+test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.o: test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o
+
+.PHONY : test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.o
+
+# target to build an object file
+test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o
+.PHONY : test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o
+
+test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.i: test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.i
+
+.PHONY : test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.i
+
+# target to preprocess a source file
+test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.i:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.i
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.i
+.PHONY : test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.i
+
+test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.s: test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.s
+
+.PHONY : test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.s
+
+# target to generate assembly for a file
+test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.s:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.s
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.s
+.PHONY : test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.s
+
+test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.o: test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o
+
+.PHONY : test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.o
+
+# target to build an object file
+test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o
+.PHONY : test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o
+
+test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.i: test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.i
+
+.PHONY : test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.i
+
+# target to preprocess a source file
+test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.i:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.i
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.i
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.i
+.PHONY : test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.i
+
+test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.s: test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.s
+
+.PHONY : test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.s
+
+# target to generate assembly for a file
+test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.s:
+	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.s
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.s
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.s
+.PHONY : test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.s
+
+test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.o: test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.o
+
+.PHONY : test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.o
+
+# target to build an object file
+test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.o:
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.o
+.PHONY : test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.o
+
+test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.i: test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.i
+
+.PHONY : test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.i
+
+# target to preprocess a source file
+test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.i:
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.i
+.PHONY : test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.i
+
+test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.s: test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.s
+
+.PHONY : test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.s
+
+# target to generate assembly for a file
+test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.s:
+	$(MAKE) -f CMakeFiles/GatewayTests.dir/build.make CMakeFiles/GatewayTests.dir/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.s
+.PHONY : test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp.s
 
 # Help Target
 help:
@@ -825,8 +973,9 @@ help:
 	@echo "... install/strip"
 	@echo "... lib-mqtt-sn-gateway-network"
 	@echo "... lib-mqtt-sn-client-network"
-	@echo "... lib-mqtt-sn-client-mock-network"
+	@echo "... GatewayTests"
 	@echo "... MqttSnForwarder_LinuxTcpClientNetwork_Tests"
+	@echo "... lib-mqtt-sn-client-mock-network"
 	@echo "... gmock_main"
 	@echo "... gmock"
 	@echo "... gtest_main"
@@ -873,15 +1022,27 @@ help:
 	@echo "... test/network/client/Tests/MqttSnClientNetworkInterfaceTests.o"
 	@echo "... test/network/client/Tests/MqttSnClientNetworkInterfaceTests.i"
 	@echo "... test/network/client/Tests/MqttSnClientNetworkInterfaceTests.s"
+	@echo "... test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.o"
+	@echo "... test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.i"
+	@echo "... test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.s"
 	@echo "... test/network/gateway/MockGatewayNetwork/MockGateway.o"
 	@echo "... test/network/gateway/MockGatewayNetwork/MockGateway.i"
 	@echo "... test/network/gateway/MockGatewayNetwork/MockGateway.s"
-	@echo "... test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.o"
-	@echo "... test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.i"
-	@echo "... test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.s"
-	@echo "... test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.o"
-	@echo "... test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.i"
-	@echo "... test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.s"
+	@echo "... test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.o"
+	@echo "... test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.i"
+	@echo "... test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.s"
+	@echo "... test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.o"
+	@echo "... test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.i"
+	@echo "... test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.s"
+	@echo "... test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.o"
+	@echo "... test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.i"
+	@echo "... test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.s"
+	@echo "... test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.o"
+	@echo "... test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.i"
+	@echo "... test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.s"
+	@echo "... test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.o"
+	@echo "... test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.i"
+	@echo "... test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.s"
 .PHONY : help
 
 

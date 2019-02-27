@@ -1,6 +1,9 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o"
-  "CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp.o"
+  "CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp.o"
+  "CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockGatewayNetwork/MockGateway.cpp.o"
+  "CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp.o"
+  "CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp.o"
+  "CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp.o"
   "MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.pdb"
   "MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"
 )

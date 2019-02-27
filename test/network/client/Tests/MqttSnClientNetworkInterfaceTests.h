@@ -11,7 +11,6 @@
 #include "../MockClientNetwork/MockClient/MockClient.h"
 #include "../MockClientNetwork/MockClient/MockClientNetworkReceiver.h"
 #include "../MockClientNetwork/MockClient/MockClientMqttSnMessageData.h"
-#include "gtest/gtest.h"
 #include "../TestConfigurations/MqttSnClientNetworkTestValueParameter.h"
 #include "../../../../forwarder/network/client/tcp/MqttSnClientTcpNetwork.h"
 #include "../TestConfigurations/MockClientConfiguration.h"
@@ -49,16 +48,13 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
 
     this->generateMessageData = a.messageDataGenerator;
 
-    std::vector<MockClientConfiguration> mockClientConfigurations = a.mockClientConfigurations;
-    for (auto &mockClientConfiguration : mockClientConfigurations) {
+    for (auto &mockClientConfiguration : a.mockClientConfigurations) {
       std::shared_ptr<MockClientNetworkReceiver> receiver(new MockClientNetworkReceiver);
       std::shared_ptr<MockClient> mockClient(new MockClient(mockClientConfiguration.identifier,
                                                             &mockClientConfiguration.address,
                                                             &p.forwarderAddress,
+                                                            mockClientConfiguration.mockClientNetworkInterface,
                                                             receiver.get()));
-      mockClient->setNetworkAddress(&mockClientConfiguration.address);
-      mockClient->setForwarderAddress(&p.forwarderAddress);
-      mockClient->setMockClientNetworkInterface(mockClientConfiguration.mockClientNetworkInterface);
 
       ASSERT_TRUE(mockClient->start_loop());
       ASSERT_TRUE(mockClient->isNetworkConnected());
@@ -73,7 +69,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
   virtual void TearDown() {
 
     for (auto &mockClient : mockClients) {
-      mockClient.get()->stop_loop();
+      mockClient->stop_loop();
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
@@ -81,7 +77,8 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     while (!clientNetworkGatewayLooper.isStopped) {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-    ClientNetworkDisconnect(&mqttSnClientNetworkInterface, GetParam().mqttSnClientNetworkTestFixture.clientNetworkContext);
+    ClientNetworkDisconnect(&mqttSnClientNetworkInterface,
+        GetParam().mqttSnClientNetworkTestFixture.clientNetworkContext);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }

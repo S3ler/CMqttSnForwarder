@@ -6,13 +6,15 @@
 #define CMQTTSNFORWARDER_MOCKCLIENTIDENTIFIER_H
 
 #include "../../../../forwarder/global_defines.h"
+#include "../MockClientNetwork/MockClient/MockClientNetworkInterface.h"
 
 class MockClientConfiguration {
   public:
   device_address address;
   uint16_t identifier;
   MockClientNetworkInterface* mockClientNetworkInterface;
-  MockClientConfiguration(const device_address &address,
+
+  MockClientConfiguration(device_address address,
                           uint16_t identifier,
                           MockClientNetworkInterface *mockClientNetworkInterface)
       : address(address), identifier(identifier), mockClientNetworkInterface(mockClientNetworkInterface) {}

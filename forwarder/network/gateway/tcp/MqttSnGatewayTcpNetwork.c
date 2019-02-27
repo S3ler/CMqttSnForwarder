@@ -28,8 +28,28 @@ int GatewayLinuxTcpInit(struct MqttSnGatewayNetworkInterface *n, void *context) 
 
 int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
+
+  if (networkInterface->mqtt_sn_gateway_network_address == NULL) {
+    // TODO implement searching for gateway
+  }
+
+  char ipAsString[255] = {0};
+  sprintf(ipAsString,
+          "%d.%d.%d.%d",
+          networkInterface->mqtt_sn_gateway_network_address->bytes[0],
+          networkInterface->mqtt_sn_gateway_network_address->bytes[1],
+          networkInterface->mqtt_sn_gateway_network_address->bytes[2],
+          networkInterface->mqtt_sn_gateway_network_address->bytes[3]);
+  uint16_t port = (((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[4]) << 8)
+      + ((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[5]);
+  /*
   char *addr = tcpNetwork->ip;
   int port = tcpNetwork->port;
+  */
+  char *addr = ipAsString;
+  if (addr == NULL || port == 0) {
+    return -1;
+  }
 
   int type = SOCK_STREAM;
   struct sockaddr_in address;

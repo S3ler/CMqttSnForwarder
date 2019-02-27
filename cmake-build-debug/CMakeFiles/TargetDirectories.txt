@@ -11,8 +11,9 @@
 /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/install/strip.dir
 /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-gateway-network.dir
 /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-network.dir
-/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir
+/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/GatewayTests.dir
 /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir
+/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir
 /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/CMakeFiles/install/strip.dir
 /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/CMakeFiles/edit_cache.dir
 /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/CMakeFiles/list_install_components.dir

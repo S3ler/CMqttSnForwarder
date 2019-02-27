@@ -8,17 +8,15 @@
 #include <ostream>
 #include "../../../../forwarder/global_defines.h"
 #include "../../../../forwarder/MqttSnClientNetworkInterface.h"
-#include "../MockClientNetwork/MockClient/MockClient.h"
-#include "../MockClientNetwork/MockClient/MockClientNetworkReceiver.h"
-#include "../MockClientNetwork/MockClient/MockClientMqttSnMessageData.h"
 
 class MqttSnGatewayClientNetworkTestConfiguration {
  public:
 
-  MqttSnGatewayClientNetworkTestConfiguration(device_address &forwarderAddress,
-                                              void *clientNetworkContext,
-                                              int (*clientNetworkInit)(MqttSnClientNetworkInterface *, void *),
-                                              bool useIdentifier = false) :
+  MqttSnGatewayClientNetworkTestConfiguration(
+      device_address &forwarderAddress,
+      void *clientNetworkContext,
+      int (*clientNetworkInit)(MqttSnClientNetworkInterface *, void *),
+      bool useIdentifier = false) :
       forwarderAddress(forwarderAddress),
       clientNetworkContext(clientNetworkContext),
       clientNetworkInit(clientNetworkInit),
@@ -30,11 +28,12 @@ class MqttSnGatewayClientNetworkTestConfiguration {
   int (*clientNetworkInit)(struct MqttSnClientNetworkInterface *, void *context) = nullptr;
 
   friend std::ostream &operator<<(std::ostream &os, const MqttSnGatewayClientNetworkTestConfiguration &fixture) {
+    /*
+      os << "forwarderAddress: " << fixture.forwarderAddress << " clientNetworkContext: " << fixture.clientNetworkContext
+      << " clientNetworkInit: " << fixture.clientNetworkInit << " mockClientNetworkAddress: "
+      << fixture.mockClientNetworkAddress << " mockClientNetworkInterface: " << fixture.mockClientNetworkInterface;
+    */
     return os;
-    /*os << "forwarderAddress: " << fixture.forwarderAddress << " clientNetworkContext: " << fixture.clientNetworkContext
-       << " clientNetworkInit: " << fixture.clientNetworkInit << " mockClientNetworkAddress: "
-       << fixture.mockClientNetworkAddress << " mockClientNetworkInterface: " << fixture.mockClientNetworkInterface;
-    return os;*/
   }
 };
 

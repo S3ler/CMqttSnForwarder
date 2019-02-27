@@ -6,22 +6,31 @@
 
 int main() {
 
-    MqttSnForwarder mqttSnForwarder;
+  MqttSnForwarder mqttSnForwarder;
 
-    MqttSnGatewayTcpNetwork gatewayNetworkContext = {0};
-    gatewayNetworkContext.my_socket = 0;
-    gatewayNetworkContext.ip = "127.0.0.1";
-    gatewayNetworkContext.port = 8888;
-    GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork, &gatewayNetworkContext, GatewayLinuxTcpInit);
+  MqttSnGatewayTcpNetwork gatewayNetworkContext = {0};
+  /*
+  gatewayNetworkContext.ip = "127.0.0.1";
+  gatewayNetworkContext.port = 8888;
+  */
+  device_address forwarderGatewayNetworkAddress = {0, 0, 0, 0, 0, 0};
+  uint16_t gatewayNetworkPort = 8888;
+  device_address
+      mqttSnGatewayNetworkAddress = {127, 0, 0, 1, (uint8_t) gatewayNetworkPort >> 8, (uint8_t) gatewayNetworkPort >> 0};
+  GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
+                     &forwarderGatewayNetworkAddress,
+                     &mqttSnGatewayNetworkAddress,
+                     &gatewayNetworkContext,
+                     GatewayLinuxTcpInit);
 
+  MqttSnClientTcpNetwork clientNetworkContext = {0};
+  uint16_t clientNetworkPort = 9999;
+  device_address
+      clientNetworkAddress = {127, 0, 0, 1, (uint8_t) clientNetworkPort >> 8, (uint8_t) clientNetworkPort >> 0};
+  ClientNetworkInit(&mqttSnForwarder.clientNetwork, &clientNetworkAddress, &clientNetworkContext, ClientLinuxTcpInit);
 
-    MqttSnClientTcpNetwork clientNetworkContext = {0};
-    uint16_t clientNetworkPort = 9999;
-    device_address clientNetworkAddress = {127,0,0,1, (uint8_t) clientNetworkPort >> 8, (uint8_t) clientNetworkPort >> 0};
-    ClientNetworkInit(&mqttSnForwarder.clientNetwork, &clientNetworkAddress, &clientNetworkContext, ClientLinuxTcpInit);
+  MqttSnForwarderStart(&mqttSnForwarder, &clientNetworkContext, &gatewayNetworkContext);
 
-    MqttSnForwarderStart (&mqttSnForwarder, &clientNetworkContext, &gatewayNetworkContext);
-
-    return 0;
+  return 0;
 }
 

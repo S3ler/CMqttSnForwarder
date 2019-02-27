@@ -6,5 +6,5 @@ CXX_FLAGS = -g   -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = 
+CXX_INCLUDES = -isystem /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include -isystem /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest -isystem /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include -isystem /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock 
 

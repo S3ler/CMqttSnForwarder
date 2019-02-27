@@ -131,6 +131,8 @@ cstring
 /home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MockClientConfiguration.h
 ../../../../forwarder/global_defines.h
 /home/bele/CLionProjects/CMqttSnForwarder/forwarder/global_defines.h
+../MockClientNetwork/MockClient/MockClientNetworkInterface.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientNetworkInterface.h
 
 /home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h
 utility
@@ -139,12 +141,14 @@ utility
 -
 cstdint
 -
+vector
+-
 ostream
 -
-MqttSnGatewayClientNetworkTestConfiguration.h
-/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h
 MockClientConfiguration.h
 /home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MockClientConfiguration.h
+MqttSnGatewayClientNetworkTestConfiguration.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h
 ClientNetworkMessageDataGenerator.h
 /home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.h
 
@@ -155,12 +159,10 @@ ostream
 /home/bele/CLionProjects/CMqttSnForwarder/forwarder/global_defines.h
 ../../../../forwarder/MqttSnClientNetworkInterface.h
 /home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnClientNetworkInterface.h
-../MockClientNetwork/MockClient/MockClient.h
-/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClient.h
-../MockClientNetwork/MockClient/MockClientNetworkReceiver.h
-/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiver.h
-../MockClientNetwork/MockClient/MockClientMqttSnMessageData.h
-/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.h
+
+/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp
+MqttSnClientNetworkInterfaceTests.h
+/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h
 
 /home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h
 gtest/gtest.h
@@ -175,8 +177,6 @@ gtest/gtest.h
 /home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiver.h
 ../MockClientNetwork/MockClient/MockClientMqttSnMessageData.h
 /home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.h
-gtest/gtest.h
-/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tests/gtest/gtest.h
 ../TestConfigurations/MqttSnClientNetworkTestValueParameter.h
 /home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h
 ../../../../forwarder/network/client/tcp/MqttSnClientTcpNetwork.h

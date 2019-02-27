@@ -91,7 +91,35 @@ else ()
     enable_testing()
 
     # Now simply link against gtest or gtest_main as needed. Eg
+    add_executable(GatewayTests
+            test/network/gateway/MockGatewayNetwork/MockGateway.cpp
+            test/network/gateway/MockGatewayNetwork/MockGateway.h
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiver.h
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h
 
+            test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp
+            test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.h
+
+            test/network/gateway/TestConfigurations/MockGatewayConfiguration.h
+            test/network/gateway/TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.h
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkValueParameter.h
+
+            test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp
+            test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h
+
+            test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp
+            test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.h
+
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp)
+
+    target_link_libraries(GatewayTests
+            gtest gtest_main gmock gmock_main pthread
+            lib-mqtt-sn-forwarder
+            lib-mqtt-sn-gateway-network)
 
     # create a testing mock libraries for gateway network and client network
     add_library(lib-mqtt-sn-client-mock-network
@@ -164,15 +192,41 @@ else ()
             test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h
 
             test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiverInterface.h
-            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiver.h)
-    target_link_libraries(lib-mqtt-sn-gateway-mock-network pthread)
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiver.h
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkValueParameter.h
+            test/network/gateway/TestConfigurations/MockGatewayConfiguration.h
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.h
+            test/network/gateway/TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h
+            test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp
+            test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.h
+            test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp
+            test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h)
+    target_link_libraries(lib-mqtt-sn-gateway-mock-network gtest gtest_main gmock gmock_main pthread)
 
     add_executable(MqttSnForwarder_LinuxTcpGatewayNetwork_Tests
-            test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.cpp
-            test/network/gateway/MockGatewayNetwork/tcp/MockGatewayLinuxTcpNetworkImplementation.h
-            test/network/gateway/tcp/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp)
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h
+            test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp
+            test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.h
+            test/network/gateway/MockGatewayNetwork/MockGateway.h
+            forwarder/global_defines.h
+            test/network/gateway/MockGatewayNetwork/MockGateway.cpp
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h
+
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiverInterface.h
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiver.h
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkValueParameter.h
+            test/network/gateway/TestConfigurations/MockGatewayConfiguration.h
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.h
+            test/network/gateway/TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h
+            test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp
+            test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.h
+            test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp
+            test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h
+            )
     target_link_libraries(MqttSnForwarder_LinuxTcpGatewayNetwork_Tests
-            gtest gtest_main gmock gmock_main pthread lib-mqtt-sn-gateway-network lib-mqtt-sn-gateway-mock-network)
+            gtest gtest_main gmock gmock_main pthread lib-mqtt-sn-gateway-network)
     #add_executable(MqttSnForwarderTest
     #        test/MqttSnForwarder_Tests.cpp
     #        test/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.cpp test/MqttSnForwarder_LinuxTcpClientNetwork_Tests.cpp)
