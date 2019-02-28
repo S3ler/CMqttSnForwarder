@@ -1,4 +1,4 @@
-# Install script for directory: /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src
+# Install script for directory: /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/cmake_install.cmake")
+  include("/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/cmake_install.cmake")
 
 endif()
 

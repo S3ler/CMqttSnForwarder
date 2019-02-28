@@ -2,11 +2,11 @@
 // Created by bele on 06.02.19.
 //
 
-#include <zconf.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <unistd.h>
 #include "MockClientLinuxTcpNetworkImplementation.h"
 
 void MockClientLinuxTcpNetworkImplementation::setMockClient(MockClient *client) {

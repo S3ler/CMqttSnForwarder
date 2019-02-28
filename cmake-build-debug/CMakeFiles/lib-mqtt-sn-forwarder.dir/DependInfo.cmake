@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnClientNetworkInterface.c" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-forwarder.dir/forwarder/MqttSnClientNetworkInterface.c.o"
-  "/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnFordwarder.c" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-forwarder.dir/forwarder/MqttSnFordwarder.c.o"
-  "/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnGatewayNetworkInterface.c" "/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/CMakeFiles/lib-mqtt-sn-forwarder.dir/forwarder/MqttSnGatewayNetworkInterface.c.o"
+  "/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnClientNetworkInterface.c" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-forwarder.dir/forwarder/MqttSnClientNetworkInterface.c.o"
+  "/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnFordwarder.c" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-forwarder.dir/forwarder/MqttSnFordwarder.c.o"
+  "/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnGatewayNetworkInterface.c" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-forwarder.dir/forwarder/MqttSnGatewayNetworkInterface.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

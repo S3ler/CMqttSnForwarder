@@ -8,550 +8,550 @@
 		<Option virtualFolders="CMake Files\;CMake Files\cmake-build-debug\;CMake Files\cmake-build-debug\googletest-src\;CMake Files\cmake-build-debug\googletest-src\googlemock\;CMake Files\cmake-build-debug\googletest-src\googlemock\cmake\;CMake Files\cmake-build-debug\googletest-src\googletest\;CMake Files\cmake-build-debug\googletest-src\googletest\cmake\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="install/local">
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/local"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="install/strip">
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/strip"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="list_install_components">
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 list_install_components"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 list_install_components"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="edit_cache">
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
+			<Target title="install/local">
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-client-network">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-client-network.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-client-network"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-client-network/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-client-network.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-client-network/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-gateway-network">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-gateway-network.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-gateway-network"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-gateway-network/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-gateway-network.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-gateway-network/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="install">
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 install"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-ring-buffer">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-ring-buffer.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-ring-buffer"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-ring-buffer/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-ring-buffer.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-ring-buffer/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="GatewayTests">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/GatewayTests" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 GatewayTests"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="GatewayTests/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/GatewayTests" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 GatewayTests/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-forwarder">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-forwarder.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-forwarder"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-forwarder/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-forwarder.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-forwarder/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-client-mock-network">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-client-mock-network.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-client-mock-network"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-client-mock-network/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-client-mock-network.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-client-mock-network/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="MqttSnForwarder_LinuxTcpClientNetwork_Tests">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/MqttSnForwarder_LinuxTcpClientNetwork_Tests" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="MqttSnForwarder_LinuxTcpClientNetwork_Tests/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/MqttSnForwarder_LinuxTcpClientNetwork_Tests" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 MqttSnForwarder_LinuxTcpClientNetwork_Tests/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-gateway-mock-network">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-gateway-mock-network.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-gateway-mock-network"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="lib-mqtt-sn-gateway-mock-network/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/liblib-mqtt-sn-gateway-mock-network.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-gateway-mock-network/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/local"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="test">
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 test"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 test"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 MqttSnForwarder_LinuxTcpGatewayNetwork_Tests/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-gateway-mock-network">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-gateway-mock-network.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-gateway-mock-network"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-gateway-mock-network/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-gateway-mock-network.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-gateway-mock-network/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install">
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 install"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-ring-buffer">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-ring-buffer.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-ring-buffer"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-ring-buffer/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-ring-buffer.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-ring-buffer/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-forwarder">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-forwarder.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-forwarder"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-forwarder/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-forwarder.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-forwarder/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install/strip">
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/strip"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-gateway-network">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-gateway-network.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-gateway-network"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-gateway-network/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-gateway-network.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-gateway-network/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-client-network">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-client-network.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-client-network"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-client-network/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-client-network.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-client-network/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="GatewayTests">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/GatewayTests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 GatewayTests"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="GatewayTests/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/GatewayTests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 GatewayTests/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MqttSnForwarder_LinuxTcpClientNetwork_Tests">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/MqttSnForwarder_LinuxTcpClientNetwork_Tests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MqttSnForwarder_LinuxTcpClientNetwork_Tests/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/MqttSnForwarder_LinuxTcpClientNetwork_Tests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 MqttSnForwarder_LinuxTcpClientNetwork_Tests/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-client-mock-network">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-client-mock-network.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-client-mock-network"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lib-mqtt-sn-client-mock-network/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/liblib-mqtt-sn-client-mock-network.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 lib-mqtt-sn-client-mock-network/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="gmock_main">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgmock_maind.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock"/>
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgmock_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
@@ -562,23 +562,23 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock_main"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock_main"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="gmock_main/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgmock_maind.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock"/>
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgmock_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
@@ -589,23 +589,23 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock_main/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock_main/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="gmock">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgmockd.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock"/>
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgmockd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
@@ -616,23 +616,23 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="gmock/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgmockd.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock"/>
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgmockd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
@@ -643,71 +643,21 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="gtest">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="gtest/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="gtest_main">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest"/>
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
@@ -718,21 +668,21 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest_main"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest_main"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="gtest_main/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest"/>
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
@@ -743,294 +693,344 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest_main/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest_main/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/src/gmock-all.cc">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/src/gmock-all.cc">
 			<Option target="gmock"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/src/gmock_main.cc">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/src/gmock_main.cc">
 			<Option target="gmock_main"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/src/gtest-all.cc">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/src/gtest-all.cc">
 			<Option target="gtest"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/src/gtest_main.cc">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/src/gtest_main.cc">
 			<Option target="gtest_main"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnClientNetworkInterface.c">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnClientNetworkInterface.c">
 			<Option target="lib-mqtt-sn-forwarder"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnClientNetworkInterface.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnClientNetworkInterface.h">
 			<Option target="lib-mqtt-sn-forwarder"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnFixedSizeRingBuffer.c">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnFixedSizeRingBuffer.c">
 			<Option target="lib-mqtt-sn-ring-buffer"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnFixedSizeRingBuffer.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnFixedSizeRingBuffer.h">
 			<Option target="lib-mqtt-sn-ring-buffer"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnFordwarder.c">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnFordwarder.c">
 			<Option target="lib-mqtt-sn-forwarder"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnForwarder.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnForwarder.h">
 			<Option target="lib-mqtt-sn-forwarder"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnGatewayNetworkInterface.c">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnGatewayNetworkInterface.c">
 			<Option target="lib-mqtt-sn-forwarder"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/MqttSnGatewayNetworkInterface.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/MqttSnGatewayNetworkInterface.h">
 			<Option target="lib-mqtt-sn-forwarder"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/global_defines.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/global_defines.h">
 			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
-			<Option target="lib-mqtt-sn-forwarder"/>
-			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-gateway-mock-network"/>
+			<Option target="lib-mqtt-sn-forwarder"/>
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
+			<Option target="lib-mqtt-sn-client-mock-network"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/network/client/tcp/MqttSnClientTcpNetwork.c">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/network/client/tcp/MqttSnClientTcpNetwork.c">
 			<Option target="lib-mqtt-sn-client-network"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/network/client/tcp/MqttSnClientTcpNetwork.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/network/client/tcp/MqttSnClientTcpNetwork.h">
 			<Option target="lib-mqtt-sn-client-network"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c">
 			<Option target="lib-mqtt-sn-gateway-network"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h">
 			<Option target="lib-mqtt-sn-gateway-network"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClient.cpp">
-			<Option target="lib-mqtt-sn-client-mock-network"/>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClient.cpp">
 			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClient.h">
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClient.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientNetworkInterface.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiver.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClientNetworkInterface.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiverInterface.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiver.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiverInterface.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/CartesianTestGenerator.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/CartesianTestGenerator.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianTestGenerator.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianTestGenerator.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MockClientConfiguration.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/MockClientConfiguration.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
-			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-client-mock-network"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h">
 			<Option target="MqttSnForwarder_LinuxTcpClientNetwork_Tests"/>
+			<Option target="lib-mqtt-sn-client-mock-network"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
-			<Option target="GatewayTests"/>
-			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.h">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
-			<Option target="GatewayTests"/>
-			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGateway.cpp">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
-			<Option target="GatewayTests"/>
-			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGateway.h">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
-			<Option target="GatewayTests"/>
-			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
-			<Option target="GatewayTests"/>
-			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiver.h">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
-			<Option target="GatewayTests"/>
-			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiverInterface.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp">
 			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkDisconnectTests.cpp">
 			<Option target="GatewayTests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkDisconnectTests.h">
-			<Option target="GatewayTests"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp">
-			<Option target="GatewayTests"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.h">
 			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
+			<Option target="lib-mqtt-sn-gateway-mock-network"/>
 			<Option target="GatewayTests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/MockGatewayNetwork/MockGateway.cpp">
 			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
+			<Option target="lib-mqtt-sn-gateway-mock-network"/>
 			<Option target="GatewayTests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/TextFixture.cpp">
-			<Option target="GatewayTests"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tcp/TextFixture.h">
-			<Option target="GatewayTests"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/MockGatewayNetwork/MockGateway.h">
 			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
+			<Option target="lib-mqtt-sn-gateway-mock-network"/>
 			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
+			<Option target="lib-mqtt-sn-gateway-mock-network"/>
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiver.h">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
+			<Option target="lib-mqtt-sn-gateway-mock-network"/>
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiverInterface.h">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-gateway-mock-network"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkDisconnectTests.cpp">
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkDisconnectTests.h">
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp">
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp">
 			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.h">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tcp/TextFixture.cpp">
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tcp/TextFixture.h">
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/MockGatewayConfiguration.h">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/TestConfigurations/MockGatewayConfiguration.h">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.h">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkValueParameter.h">
-			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.h">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="lib-mqtt-sn-gateway-mock-network"/>
-		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceConnectTests.cpp">
 			<Option target="GatewayTests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceConnectTests.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/TestConfigurations/MqttSnGatewayNetworkValueParameter.h">
+			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
+			<Option target="lib-mqtt-sn-gateway-mock-network"/>
 			<Option target="GatewayTests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceInitializationTests.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceConnectTests.cpp">
 			<Option target="GatewayTests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceInitializationTests.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceConnectTests.h">
 			<Option target="GatewayTests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceInitializationTests.cpp">
 			<Option target="GatewayTests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceInitializationTests.h">
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp">
+			<Option target="GatewayTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h">
 			<Option target="MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"/>
 			<Option target="GatewayTests"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/CMakeLists.txt">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/CMakeLists.txt.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/CMakeLists.txt.in">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/CMakeLists.txt">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/CMakeLists.txt">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googlemock\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/cmake/gmock.pc.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/cmake/gmock.pc.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googlemock\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/cmake/gmock_main.pc.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/cmake/gmock_main.pc.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googlemock\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/CMakeLists.txt">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/cmake/Config.cmake.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/cmake/Config.cmake.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/cmake/gtest.pc.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/cmake/gtest.pc.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/cmake/gtest_main.pc.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/cmake/gtest_main.pc.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/cmake/internal_utils.cmake">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/cmake/internal_utils.cmake">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
 		</Unit>
 	</Project>

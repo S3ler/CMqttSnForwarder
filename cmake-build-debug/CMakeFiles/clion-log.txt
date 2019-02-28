@@ -1,4 +1,4 @@
-/home/bele/JetBrains/Clion/clion-2018.2.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/bele/CLionProjects/CMqttSnForwarder
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /tmp/tmp.ycYCPoRMKx
 -- The C compiler identification is GNU 7.3.0
 -- The CXX compiler identification is GNU 7.3.0
 -- Check for working C compiler: /usr/bin/cc
@@ -16,19 +16,14 @@
 Bulding as C++ project
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-download
-Scanning dependencies of target googletest
-[ 11%] Creating directories for 'googletest'
-[ 22%] Performing download step (git clone) for 'googletest'
--- Avoiding repeated git clone, stamp file is up to date: '/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-download/googletest-prefix/src/googletest-stamp/googletest-gitclone-lastrun.txt'
-[ 33%] No patch step for 'googletest'
-[ 44%] Performing update step for 'googletest'
-Aktueller Branch master ist auf dem neuesten Stand.
-[ 55%] No configure step for 'googletest'
-[ 66%] No build step for 'googletest'
-[ 77%] No install step for 'googletest'
-[ 88%] No test step for 'googletest'
-[100%] Completed 'googletest'
+-- Build files have been written to: /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-download
+[ 11%] Performing update step for 'googletest'
+Current branch master is up to date.
+[ 22%] No configure step for 'googletest'
+[ 33%] No build step for 'googletest'
+[ 44%] No install step for 'googletest'
+[ 55%] No test step for 'googletest'
+[ 66%] Completed 'googletest'
 [100%] Built target googletest
 -- Found PythonInterp: /usr/bin/python (found version "2.7.15") 
 -- Looking for pthread.h
@@ -42,4 +37,4 @@ Aktueller Branch master ist auf dem neuesten Stand.
 -- Found Threads: TRUE  
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug
+-- Build files have been written to: /tmp/tmp.ycYCPoRMKx/cmake-build-debug

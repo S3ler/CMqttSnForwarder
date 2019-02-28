@@ -11,7 +11,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdlib.h>
-#include <zconf.h>
 
 #include "MqttSnClientTcpNetwork.h"
 #include "../../../MqttSnClientNetworkInterface.h"

@@ -14,7 +14,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, SendReceiveMultipleClientMultipleMessa
 
   uint16_t toTestMessageLength = p.messageLength;
   uint8_t maximumByteData[toTestMessageLength];
-  generateMessageData(maximumByteData, toTestMessageLength);
+  this->generateMessageData(maximumByteData, toTestMessageLength);
 
   for (uint16_t messageCount = 0; messageCount < p.messageCount; ++messageCount) {
     // we send message in RoundRobin for each client

@@ -8,74 +8,24 @@
 		<Option virtualFolders="CMake Files\;CMake Files\cmake-build-debug\;CMake Files\cmake-build-debug\googletest-src\;CMake Files\cmake-build-debug\googletest-src\googlemock\;CMake Files\cmake-build-debug\googletest-src\googlemock\cmake\;CMake Files\cmake-build-debug\googletest-src\googletest\;CMake Files\cmake-build-debug\googletest-src\googletest\cmake\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="gtest">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="gtest/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
-					<Add directory="/usr/include/c++/7"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
-					<Add directory="/usr/include/c++/7/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="gtest_main">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest"/>
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
@@ -86,21 +36,21 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest_main"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest_main"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="gtest_main/fast">
-				<Option output="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest"/>
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/include"/>
-					<Add directory="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
 					<Add directory="/usr/include/c++/7/backward"/>
@@ -111,50 +61,100 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest_main/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest_main/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest/fast">
+				<Option output="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 gtest/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-build/googlemock/gtest/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/src/gtest-all.cc">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/src/gtest-all.cc">
 			<Option target="gtest"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/src/gtest_main.cc">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/src/gtest_main.cc">
 			<Option target="gtest_main"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/CMakeLists.txt">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/CMakeLists.txt.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/CMakeLists.txt.in">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/CMakeLists.txt">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/CMakeLists.txt">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googlemock\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/cmake/gmock.pc.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/cmake/gmock.pc.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googlemock\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googlemock/cmake/gmock_main.pc.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/cmake/gmock_main.pc.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googlemock\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/CMakeLists.txt">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/cmake/Config.cmake.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/cmake/Config.cmake.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/cmake/gtest.pc.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/cmake/gtest.pc.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/cmake/gtest_main.pc.in">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/cmake/gtest_main.pc.in">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
 		</Unit>
-		<Unit filename="/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-src/googletest/cmake/internal_utils.cmake">
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/cmake/internal_utils.cmake">
 			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
 		</Unit>
 	</Project>
