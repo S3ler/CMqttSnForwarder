@@ -1,16 +1,45 @@
-/home/bele/JetBrains/Clion/clion-2018.3.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/bele/CLionProjects/CMqttSnForwarder
+/home/bele/JetBrains/Clion/clion-2018.2.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/bele/CLionProjects/CMqttSnForwarder
+-- The C compiler identification is GNU 7.3.0
+-- The CXX compiler identification is GNU 7.3.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
 Bulding as C++ project
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-download
-[ 11%] Performing update step for 'googletest'
+Scanning dependencies of target googletest
+[ 11%] Creating directories for 'googletest'
+[ 22%] Performing download step (git clone) for 'googletest'
+-- Avoiding repeated git clone, stamp file is up to date: '/home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug/googletest-download/googletest-prefix/src/googletest-stamp/googletest-gitclone-lastrun.txt'
+[ 33%] No patch step for 'googletest'
+[ 44%] Performing update step for 'googletest'
 Aktueller Branch master ist auf dem neuesten Stand.
-[ 22%] No configure step for 'googletest'
-[ 33%] No build step for 'googletest'
-[ 44%] No install step for 'googletest'
-[ 55%] No test step for 'googletest'
-[ 66%] Completed 'googletest'
+[ 55%] No configure step for 'googletest'
+[ 66%] No build step for 'googletest'
+[ 77%] No install step for 'googletest'
+[ 88%] No test step for 'googletest'
+[100%] Completed 'googletest'
 [100%] Built target googletest
+-- Found PythonInterp: /usr/bin/python (found version "2.7.15") 
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Looking for pthread_create
+-- Looking for pthread_create - not found
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/bele/CLionProjects/CMqttSnForwarder/cmake-build-debug

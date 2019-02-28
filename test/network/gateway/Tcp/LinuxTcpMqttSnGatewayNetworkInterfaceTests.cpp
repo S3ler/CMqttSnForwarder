@@ -13,6 +13,9 @@
 #include "../TestConfigurations/MqttSnGatewayNetworkValueParameter.h"
 #include "../TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h"
 #include "../Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h"
+#include "../Tests/MqttSnGatewayNetworkInterfaceConnectTests.h"
+#include "../Tests/MqttSnGatewayNetworkInterfaceInitializationTests.h"
+#include "LinuxTcpMqttSnGatewayNetworkDisconnectTests.h"
 
 device_address generateMockGatewayTcpNetworkAddress(uint16_t mockClientIdentifier) {
   // a zeroed device address tells the test set to use the given device address
@@ -48,10 +51,24 @@ struct PrintToStringMqttSnClientGatewayNetworkTestValueParameterParamName {
   }
 };
 
-INSTANTIATE_TEST_SUITE_P(GatewaySendReceiveTests,
-    MqttSnGatewayNetworkInterfaceSendReceiveTests,
-    ::testing::ValuesIn(gatewayNetworkTestParameter.begin(), gatewayNetworkTestParameter.end()),
-    PrintToStringMqttSnClientGatewayNetworkTestValueParameterParamName());
+INSTANTIATE_TEST_SUITE_P(GatewayInitializationTests,
+                         MqttSnGatewayNetworkInterfaceInitializationTests,
+                         ::testing::ValuesIn(gatewayNetworkTestParameter.begin(), gatewayNetworkTestParameter.end()),
+                         PrintToStringMqttSnClientGatewayNetworkTestValueParameterParamName());
 
+INSTANTIATE_TEST_SUITE_P(GatewayConnectTests,
+                         MqttSnGatewayNetworkInterfaceConnectTests,
+                         ::testing::ValuesIn(gatewayNetworkTestParameter.begin(), gatewayNetworkTestParameter.end()),
+                         PrintToStringMqttSnClientGatewayNetworkTestValueParameterParamName());
+
+INSTANTIATE_TEST_SUITE_P(GatewayDisconnectTests,
+                         LinuxTcpMqttSnGatewayNetworkDisconnectTests,
+                         ::testing::ValuesIn(gatewayNetworkTestParameter.begin(), gatewayNetworkTestParameter.end()),
+                         PrintToStringMqttSnClientGatewayNetworkTestValueParameterParamName());
+
+INSTANTIATE_TEST_SUITE_P(GatewaySendReceiveTests,
+                         MqttSnGatewayNetworkInterfaceSendReceiveTests,
+                         ::testing::ValuesIn(gatewayNetworkTestParameter.begin(), gatewayNetworkTestParameter.end()),
+                         PrintToStringMqttSnClientGatewayNetworkTestValueParameterParamName());
 
 #endif //CMQTTSNFORWARDER_LINUXTCPMQTTSNGATEWAYNETWORKINTERFACETESTS_H

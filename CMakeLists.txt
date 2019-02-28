@@ -114,7 +114,7 @@ else ()
             test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.h
 
             test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h
-            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp)
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceInitializationTests.cpp test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceInitializationTests.h test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceConnectTests.cpp test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceConnectTests.h test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkDisconnectTests.cpp test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkDisconnectTests.h test/network/gateway/Tcp/TextFixture.h test/network/gateway/Tcp/TextFixture.cpp)
 
     target_link_libraries(GatewayTests
             gtest gtest_main gmock gmock_main pthread
