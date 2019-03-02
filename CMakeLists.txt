@@ -237,6 +237,9 @@ else ()
     #        lib-mqtt-sn-client-network)
     #add_test(NAME example_test COMMAND MqttSnForwarderTest)
 
+    add_library(mock-mqtt-sn-fixed-size-ring-buffer
+            test/ringbuffer/MockMqttSnFixedSizeRingBuffer/MockMqttSnFixedSizeRingBufferInterface.h test/ringbuffer/MockMqttSnFixedSizeRingBuffer/MockMqttSnFixedSizeRingBuffer.h)
+
 
 endif ()
 

@@ -3,6 +3,16 @@
 //
 
 #include "MqttSnClientNetworkInterfaceTests.h"
+// TODO probleme treten auf bei:
+// we nee dsome identiy
+// MessageSize < 2 && Identity => only 255 different clients can be destinquished by Id,
+// this is crosschecked when the messageSize is >=2 and by the message counter (2 Message => 4xmessage with one message ID)
+// Message
+
+// send by client => received by forwarder
+// send by forwarder => received by client
+// send by clients => received by forwarder => send back to clients
+// send by forwarder => received by clients => send back to forwarder
 
 
 // TODO test what happens with more than 255 clients with 1 byte message and 2 messag
@@ -47,6 +57,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, SendReceiveMultipleClientMultipleMessa
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
+  // TODO mock den RingBuffer, dann kannst du dir das hier sparen, und über EXPECTED_THAT auf den MockRingBuffer regeln
   std::vector<MockClientMqttSnMessageData> actualMockClientSnMessageDatas;
   MqttSnMessageData messageData;
   while (pop(&receiveBuffer, &messageData) == 0) {

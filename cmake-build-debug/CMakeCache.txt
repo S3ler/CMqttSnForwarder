@@ -325,6 +325,9 @@ lib-mqtt-sn-gateway-network_LIB_DEPENDS:STATIC=general;lib-mqtt-sn-ring-buffer;
 //Dependencies for target
 lib-mqtt-sn-ring-buffer_LIB_DEPENDS:STATIC=
 
+//Dependencies for target
+mock-mqtt-sn-fixed-size-ring-buffer_LIB_DEPENDS:STATIC=
+
 
 ########################
 # INTERNAL cache entries

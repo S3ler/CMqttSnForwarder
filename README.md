@@ -168,3 +168,20 @@ Because this depends on many factors no general tests can be implemented.
 ## Getting Started
 
 ## Getting Started - Writing new tests
+
+
+#[[
+project(gmock-global-download NONE)
+
+#include(ExternalProject)
+ExternalProject_Add(gmock-global
+  GIT_REPOSITORY    https://github.com/apriorit/gmock-global.git
+  GIT_TAG           master
+  SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/gmock-global-src"
+  BINARY_DIR        "${CMAKE_CURRENT_BINARY_DIR}/gmock-global-build"
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND     ""
+  INSTALL_COMMAND   ""
+  TEST_COMMAND      ""
+)
+]]
