@@ -7,18 +7,37 @@
 
 extern MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock;
 
+extern std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *> *globalMqttSnFixedSizeRingBufferMockMap;
+
 void MqttSnFixedSizeRingBufferInit(MqttSnFixedSizeRingBuffer *queue) {
-  globalMqttSnFixedSizeRingBufferMock->MqttSnFixedSizeRingBufferInit(queue);
+  auto iterator = globalMqttSnFixedSizeRingBufferMockMap->find(queue);
+  if (iterator == globalMqttSnFixedSizeRingBufferMockMap->end()) {
+    globalMqttSnFixedSizeRingBufferMock->MqttSnFixedSizeRingBufferInit(queue);
+    return;
+  }
+  iterator->second->MqttSnFixedSizeRingBufferInit(queue);
 }
 
 int put(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
-  return globalMqttSnFixedSizeRingBufferMock->put(queue, messageData);
+  auto iterator = globalMqttSnFixedSizeRingBufferMockMap->find(queue);
+  if (iterator == globalMqttSnFixedSizeRingBufferMockMap->end()) {
+    return globalMqttSnFixedSizeRingBufferMock->put(queue, messageData);
+  }
+  return iterator->second->put(queue, messageData);
 }
 
 int pop(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
-  return globalMqttSnFixedSizeRingBufferMock->put(queue, messageData);
+  auto iterator = globalMqttSnFixedSizeRingBufferMockMap->find(queue);
+  if (iterator == globalMqttSnFixedSizeRingBufferMockMap->end()) {
+    return globalMqttSnFixedSizeRingBufferMock->pop(queue, messageData);
+  }
+  return iterator->second->pop(queue, messageData);
 }
 
 int isEmpty(MqttSnFixedSizeRingBuffer *queue) {
-  return globalMqttSnFixedSizeRingBufferMock->isEmpty(queue);
+  auto iterator = globalMqttSnFixedSizeRingBufferMockMap->find(queue);
+  if (iterator == globalMqttSnFixedSizeRingBufferMockMap->end()) {
+    return globalMqttSnFixedSizeRingBufferMock->isEmpty(queue);
+  }
+  return iterator->second->isEmpty(queue);
 }

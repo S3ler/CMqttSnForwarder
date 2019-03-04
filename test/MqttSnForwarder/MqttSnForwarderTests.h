@@ -13,13 +13,15 @@
 
 ClientNetworkMock *globalClientNetworkMockObj;
 GatewayNetworkMock *globalGatewayNetworkMockObj;
-MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock;
+
+MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock = nullptr;
+std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
+    *globalMqttSnFixedSizeRingBufferMockMap = nullptr;
 
 class MqttSnForwarderTests : public ::testing::Test {
  public:
   ClientNetworkMock clientNetworkMock;
   GatewayNetworkMock gatewayNetworkMock;
-  MqttSnFixedSizeRingBufferMock mqttSnFixedSizeRingBufferMock;
 
   MqttSnForwarder mqttSnForwarder;
   device_address client_network_address;
@@ -29,10 +31,39 @@ class MqttSnForwarderTests : public ::testing::Test {
   device_address mqtt_sn_gateway_address;
   void *gatewayNetworkContext = nullptr;
 
+  std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *> mqttSnFixedSizeRingBufferMockMap;
+
+  MqttSnFixedSizeRingBufferMock defaultMqttSnFixedSizeRingBufferMock;
+
+  MqttSnFixedSizeRingBufferMock clientNetworkReceiveBuffer;
+  MqttSnFixedSizeRingBufferMock clientNetworkSendBuffer;
+  MqttSnFixedSizeRingBufferMock gatewayNetworkReceiveBuffer;
+  MqttSnFixedSizeRingBufferMock gatewayNetworkSendBuffer;
+
   virtual void SetUp() {
+
     globalClientNetworkMockObj = &clientNetworkMock;
     globalGatewayNetworkMockObj = &gatewayNetworkMock;
-    globalMqttSnFixedSizeRingBufferMock = &mqttSnFixedSizeRingBufferMock;
+
+    mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&mqttSnForwarder.clientNetworkReceiveBuffer,
+                                                           &clientNetworkReceiveBuffer));
+    mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&mqttSnForwarder.clientNetworkSendBuffer,
+                                                           &clientNetworkSendBuffer));
+    mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&mqttSnForwarder.gatewayNetworkReceiveBuffer,
+                                                           &gatewayNetworkReceiveBuffer));
+    mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&mqttSnForwarder.gatewayNetworkSendBuffer,
+                                                           &gatewayNetworkSendBuffer));
+    globalMqttSnFixedSizeRingBufferMockMap = &mqttSnFixedSizeRingBufferMockMap;
+
+    globalMqttSnFixedSizeRingBufferMock = &defaultMqttSnFixedSizeRingBufferMock;
+    EXPECT_CALL(defaultMqttSnFixedSizeRingBufferMock, MqttSnFixedSizeRingBufferInit(_))
+        .Times(0);
+    EXPECT_CALL(defaultMqttSnFixedSizeRingBufferMock, put(_, _))
+        .Times(0);
+    EXPECT_CALL(defaultMqttSnFixedSizeRingBufferMock, pop(_, _))
+        .Times(0);
+    EXPECT_CALL(defaultMqttSnFixedSizeRingBufferMock, isEmpty(_))
+        .Times(0);
 
     {
       device_address client_network_address({0, 0, 0, 0, 0, 0});
@@ -62,20 +93,33 @@ class MqttSnForwarderTests : public ::testing::Test {
                                  mock_gateway_network_init), 0);
   }
   virtual void TearDown() {
+
     globalClientNetworkMockObj = nullptr;
     globalGatewayNetworkMockObj = nullptr;
+
+    globalMqttSnFixedSizeRingBufferMockMap = nullptr;
   }
   MqttSnForwarderTests() {}
   virtual ~MqttSnForwarderTests() {}
 };
 
-TEST_F(MqttSnForwarderTests, MqttSnForwarderTests_ClientNetworkMessageReceived_Test) {
+TEST_F(MqttSnForwarderTests, MqttSnForwarderTests_MqttSnForwarderInit_NetworkBufferAreInitialized) {
+
+  EXPECT_CALL(clientNetworkReceiveBuffer, MqttSnFixedSizeRingBufferInit(&mqttSnForwarder.clientNetworkReceiveBuffer))
+      .Times(1);
+  EXPECT_CALL(clientNetworkSendBuffer, MqttSnFixedSizeRingBufferInit(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(1);
+  EXPECT_CALL(gatewayNetworkReceiveBuffer, MqttSnFixedSizeRingBufferInit(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
+      .Times(1);
+  EXPECT_CALL(gatewayNetworkSendBuffer, MqttSnFixedSizeRingBufferInit(&mqttSnForwarder.gatewayNetworkSendBuffer))
+      .Times(1);
 
   {
     if (MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext) != 0) {
       MqttSnForwarderDeinit(&mqttSnForwarder);
       ASSERT_TRUE(false) << "SHOULD NOT HAPPEN";
     }
+
 /*
     if (ClientNetworkConnect(&mqttSnForwarder.clientNetwork, mqttSnForwarder.clientNetworkContext) != 0) {
       MqttSnForwarderDeinit(&mqttSnForwarder);
