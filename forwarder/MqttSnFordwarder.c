@@ -4,12 +4,15 @@
 
 #include <memory.h>
 #include <stdio.h>
+#include <signal.h>
 #include "MqttSnForwarder.h"
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
 
-
-int MqttSnForwarderStart(MqttSnForwarder *mqttSnForwarder, void *clientNetworkContext, void *gatewayNetworkContext) {
+int MqttSnForwarderStart(MqttSnForwarder *mqttSnForwarder,
+                         void *clientNetworkContext,
+                         void *gatewayNetworkContext,
+                         volatile sig_atomic_t *keep_running) {
 
   if (MqttSnForwarderInit(mqttSnForwarder, clientNetworkContext, gatewayNetworkContext) != 0) {
     MqttSnForwarderDeinit(mqttSnForwarder);
@@ -26,7 +29,7 @@ int MqttSnForwarderStart(MqttSnForwarder *mqttSnForwarder, void *clientNetworkCo
     return -1;
   }
 
-  while (MqttSnForwarderLoop(mqttSnForwarder) == 0) {}
+  while ((*keep_running == 1) && MqttSnForwarderLoop(mqttSnForwarder) == 0) {}
 
   MqttSnForwarderDeinit(mqttSnForwarder);
 
@@ -52,7 +55,7 @@ void MqttSnForwarderDeinit(MqttSnForwarder *forwarder) {
 
 int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
 
-  if (forwarder->clientNetwork.client_receive(
+  if (forwarder->clientNetwork.client_network_receive(
       &forwarder->clientNetwork,
       &forwarder->clientNetworkReceiveBuffer,
       CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT,
@@ -86,7 +89,7 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
 
-  if (forwarder->clientNetwork.client_send(
+  if (forwarder->clientNetwork.client_network_send(
       &forwarder->clientNetwork,
       &forwarder->clientNetworkSendBuffer,
       CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
@@ -121,7 +124,7 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
 void sendBufferedMessagesToClients(MqttSnForwarder *forwarder) {
   while (!isEmpty(&forwarder->gatewayNetworkReceiveBuffer) &&
       !isEmpty(&forwarder->clientNetworkSendBuffer)) {
-    if (forwarder->clientNetwork.client_receive(
+    if (forwarder->clientNetwork.client_network_receive(
         &forwarder->clientNetwork,
         &forwarder->clientNetworkReceiveBuffer,
         CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT,
@@ -131,7 +134,7 @@ void sendBufferedMessagesToClients(MqttSnForwarder *forwarder) {
     if (RemoveForwardingHeaderFromGatewayMessages(forwarder) != 0) {
       break;
     }
-    if (forwarder->clientNetwork.client_send(
+    if (forwarder->clientNetwork.client_network_send(
         &forwarder->clientNetwork,
         &forwarder->clientNetworkSendBuffer,
         CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,

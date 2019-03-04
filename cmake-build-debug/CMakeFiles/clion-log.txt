@@ -11,15 +11,6 @@ Current branch master is up to date.
 [ 55%] No test step for 'googletest'
 [ 66%] Completed 'googletest'
 [100%] Built target googletest
-CMake Error at CMakeLists.txt:80 (add_subdirectory):
-  The source directory
-
-    /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src
-
-  does not contain a CMakeLists.txt file.
-
-
--- Configuring incomplete, errors occurred!
-See also "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/CMakeOutput.log".
-See also "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/CMakeError.log".
-Unable to determine product file path for target mock-mqtt-sn-fixed-size-ring-buffer. Running and debugging will be unavailable.
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /tmp/tmp.ycYCPoRMKx/cmake-build-debug

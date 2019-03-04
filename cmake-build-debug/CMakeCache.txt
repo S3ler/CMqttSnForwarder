@@ -326,7 +326,19 @@ lib-mqtt-sn-gateway-network_LIB_DEPENDS:STATIC=general;lib-mqtt-sn-ring-buffer;
 lib-mqtt-sn-ring-buffer_LIB_DEPENDS:STATIC=
 
 //Dependencies for target
-mock-mqtt-sn-fixed-size-ring-buffer_LIB_DEPENDS:STATIC=
+mock-mqtt-sn-_LIB_DEPENDS:STATIC=
+
+//Dependencies for the target
+mock-mqtt-sn-client-network_LIB_DEPENDS:STATIC=general;gtest;general;gtest_main;general;gmock;general;gmock_main;general;lib-mqtt-sn-forwarder;
+
+//Dependencies for the target
+mock-mqtt-sn-fixed-size-ring-buffer_LIB_DEPENDS:STATIC=general;gtest;general;gtest_main;general;gmock;general;gmock_main;general;lib-mqtt-sn-forwarder;
+
+//Dependencies for target
+mock-mqtt-sn-fixed-size_LIB_DEPENDS:STATIC=
+
+//Dependencies for the target
+mock-mqtt-sn-gateway-network_LIB_DEPENDS:STATIC=general;gtest;general;gtest_main;general;gmock;general;gmock_main;general;lib-mqtt-sn-forwarder;
 
 
 ########################

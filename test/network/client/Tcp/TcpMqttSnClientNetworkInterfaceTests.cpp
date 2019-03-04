@@ -11,8 +11,8 @@
 #include "../TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h"
 #include "../TestConfigurations/MqttSnClientNetworkTestValueParameter.h"
 #include "MockClientLinuxTcpNetworkImplementation.h"
-#include "../TestConfigurations/CartesianTestGenerator.h"
-#include "../TestConfigurations/CartesianTestGenerator.cpp"
+#include "../TestConfigurations/CartesianProductTestCaseGenerator.h"
+#include "../TestConfigurations/CartesianProductTestCaseGenerator.cpp"
 
 MqttSnClientTcpNetwork clientNetworkContext = {0};
 device_address forwarderAddress({127, 0, 0, 1, (uint8_t) ((uint16_t) 9999 >> 8), (uint8_t) ((uint16_t) 9999 >> 0)});

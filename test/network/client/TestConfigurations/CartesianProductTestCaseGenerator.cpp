@@ -2,7 +2,7 @@
 // Created by bele on 26.02.19.
 //
 
-#include "CartesianTestGenerator.h"
+#include "CartesianProductTestCaseGenerator.h"
 
 typedef device_address(*MockClientNetworkAddressGenerator)(uint16_t);
 template<MockClientNetworkAddressGenerator generateNetworkAddress, class MockClientNetworkInterfaceType>

@@ -61,7 +61,7 @@ int main() {
     sleep(1);
     forwarder_fd = connectForwarder("127.0.0.1", FORWARDER_PORT);
     if (forwarder_fd < 0) {
-        perror("forwarder socket connect");
+        perror("MqttSnForwarder socket connect");
         exit(EXIT_FAILURE);
     }
 
@@ -83,7 +83,7 @@ int main() {
             uint8_t b[255];
             memcpy(b, &publish, publish.length);
             if (send_fd(forwarder_fd, (uint8_t *) &publish, publish.length) != publish.length) {
-                perror("forwarder socket send");
+                perror("MqttSnForwarder socket send");
                 exit(EXIT_FAILURE);
             }
         }
@@ -109,7 +109,7 @@ int main() {
         char forwarder_rec_buf[MAX_MSG_LEN] = {0};
         int forwarder_rec_buf_len = recv_fd(forwarder_fd, forwarder_rec_buf, MAX_MSG_LEN);
         if (forwarder_rec_buf_len < 0) {
-            perror("forwarder socket recv");
+            perror("MqttSnForwarder socket recv");
             exit(EXIT_FAILURE);
         }
         if (forwarder_rec_buf_len > 0) {

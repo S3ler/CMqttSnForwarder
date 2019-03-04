@@ -40,7 +40,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
                                 p.clientNetworkContext,
                                 p.clientNetworkInit), 0);
     ASSERT_EQ(ClientNetworkConnect(&mqttSnClientNetworkInterface, p.clientNetworkContext), 0);
-    ASSERT_TRUE(clientNetworkGatewayLooper.startNetworkLoop(mqttSnClientNetworkInterface.client_receive,
+    ASSERT_TRUE(clientNetworkGatewayLooper.startNetworkLoop(mqttSnClientNetworkInterface.client_network_receive,
                                                             &mqttSnClientNetworkInterface,
                                                             &receiveBuffer,
                                                             1000,

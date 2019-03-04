@@ -16,9 +16,9 @@ typedef struct MqttSnClientNetworkInterface {
 
     int status;
 
-    int (*client_receive)(struct MqttSnClientNetworkInterface *, MqttSnFixedSizeRingBuffer*, uint32_t, void* context);
+    int (*client_network_receive)(struct MqttSnClientNetworkInterface *, MqttSnFixedSizeRingBuffer*, uint32_t, void* context);
 
-    int (*client_send)(struct MqttSnClientNetworkInterface *, MqttSnFixedSizeRingBuffer*, uint32_t, void* context);
+    int (*client_network_send)(struct MqttSnClientNetworkInterface *, MqttSnFixedSizeRingBuffer*, uint32_t, void* context);
 
     int (*client_network_init)(struct MqttSnClientNetworkInterface*, void* context);
 

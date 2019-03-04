@@ -6,5 +6,5 @@ CXX_FLAGS = -g   -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include -isystem /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest -isystem /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include -isystem /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock 
+CXX_INCLUDES = -I/tmp/tmp.ycYCPoRMKx/forwarder -I/tmp/tmp.ycYCPoRMKx/test/include/gmock-global -I/tmp/tmp.ycYCPoRMKx/test/MqttSnClientNetworkInterface/MockMqttSnFixedSizeRingBuffer -I/tmp/tmp.ycYCPoRMKx/test/MqttSnClientNetworkInterface/MockMqttSnClientNetwork -I/tmp/tmp.ycYCPoRMKx/test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork -isystem /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include -isystem /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest -isystem /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock/include -isystem /tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googlemock 
 

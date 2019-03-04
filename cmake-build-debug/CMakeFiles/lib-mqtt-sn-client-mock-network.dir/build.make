@@ -105,33 +105,9 @@ CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNet
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o.provides.build: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o
 
 
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/flags.make
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o: ../test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o -c /tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp
-
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp > CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.i
-
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.s
-
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o.requires:
-
-.PHONY : CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o.requires
-
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o.provides: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o.requires
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o.provides.build
-.PHONY : CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o.provides
-
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o.provides.build: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o
-
-
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/flags.make
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o: ../test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o -c /tmp/tmp.ycYCPoRMKx/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp
 
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.i: cmake_force
@@ -155,7 +131,7 @@ CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnC
 
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/flags.make
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o: ../test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o -c /tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp
 
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.i: cmake_force
@@ -177,33 +153,33 @@ CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigura
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o.provides.build: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o
 
 
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/flags.make
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o: ../test/network/client/TestConfigurations/CartesianTestGenerator.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o -c /tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianTestGenerator.cpp
+CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/flags.make
+CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o: ../test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o -c /tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp
 
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianTestGenerator.cpp > CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.i
+CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp > CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.i
 
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianTestGenerator.cpp -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.s
+CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.s
 
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o.requires:
+CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o.requires:
 
-.PHONY : CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o.requires
+.PHONY : CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o.requires
 
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o.provides: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o.requires
-	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o.provides.build
-.PHONY : CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o.provides
+CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o.provides: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o.requires
+	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o.provides.build
+.PHONY : CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o.provides
 
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o.provides.build: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o
+CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o.provides.build: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o
 
 
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/flags.make
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o: ../test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o -c /tmp/tmp.ycYCPoRMKx/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp
 
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.i: cmake_force
@@ -227,7 +203,7 @@ CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClien
 
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/flags.make
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o: ../test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o -c /tmp/tmp.ycYCPoRMKx/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp
 
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.i: cmake_force
@@ -253,10 +229,9 @@ CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSn
 lib__mqtt__sn__client__mock__network_OBJECTS = \
 "CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o" \
 "CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o" \
-"CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o" \
 "CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o" \
 "CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o" \
-"CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o" \
+"CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o" \
 "CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o" \
 "CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o"
 
@@ -265,15 +240,14 @@ lib__mqtt__sn__client__mock__network_EXTERNAL_OBJECTS =
 
 liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o
 liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o
-liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o
 liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o
 liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o
-liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o
+liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o
 liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o
 liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o
 liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make
 liblib-mqtt-sn-client-mock-network.a: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX static library liblib-mqtt-sn-client-mock-network.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX static library liblib-mqtt-sn-client-mock-network.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/lib-mqtt-sn-client-mock-network.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lib-mqtt-sn-client-mock-network.dir/link.txt --verbose=$(VERBOSE)
 
@@ -284,10 +258,9 @@ CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build: liblib-mqtt-sn-client-mock
 
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/requires: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o.requires
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/requires: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o.requires
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/requires: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o.requires
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/requires: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o.requires
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/requires: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o.requires
-CMakeFiles/lib-mqtt-sn-client-mock-network.dir/requires: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o.requires
+CMakeFiles/lib-mqtt-sn-client-mock-network.dir/requires: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o.requires
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/requires: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o.requires
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/requires: CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o.requires
 

@@ -5,11 +5,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClient.cpp" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClient.cpp.o"
-  "/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockClient/MockClientMqttSnMessageData.cpp.o"
   "/tmp/tmp.ycYCPoRMKx/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp.o"
   "/tmp/tmp.ycYCPoRMKx/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.cpp.o"
   "/tmp/tmp.ycYCPoRMKx/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp.o"
-  "/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianTestGenerator.cpp" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianTestGenerator.cpp.o"
+  "/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp.o"
   "/tmp/tmp.ycYCPoRMKx/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/TestConfigurations/ClientNetworkMessageDataGenerator.cpp.o"
   "/tmp/tmp.ycYCPoRMKx/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp" "/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles/lib-mqtt-sn-client-mock-network.dir/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp.o"
   )
@@ -17,6 +16,11 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "../forwarder"
+  "../test/include/gmock-global"
+  "../test/MqttSnClientNetworkInterface/MockMqttSnFixedSizeRingBuffer"
+  "../test/MqttSnClientNetworkInterface/MockMqttSnClientNetwork"
+  "../test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork"
   "googletest-src/googletest/include"
   "googletest-src/googletest"
   "googletest-src/googlemock/include"

@@ -6,5 +6,5 @@ C_FLAGS = -g
 
 C_DEFINES = 
 
-C_INCLUDES = 
+C_INCLUDES = -I/tmp/tmp.ycYCPoRMKx/forwarder -I/tmp/tmp.ycYCPoRMKx/test/include/gmock-global -I/tmp/tmp.ycYCPoRMKx/test/MqttSnClientNetworkInterface/MockMqttSnFixedSizeRingBuffer -I/tmp/tmp.ycYCPoRMKx/test/MqttSnClientNetworkInterface/MockMqttSnClientNetwork -I/tmp/tmp.ycYCPoRMKx/test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork 
 

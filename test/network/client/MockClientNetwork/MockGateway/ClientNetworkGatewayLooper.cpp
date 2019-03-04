@@ -5,13 +5,14 @@
 #include "ClientNetworkGatewayLooper.h"
 
 bool ClientNetworkGatewayLooper::startNetworkLoop(int (*clientNetworkReceive)(MqttSnClientNetworkInterface *,
-                                                                         MqttSnFixedSizeRingBuffer *,
-                                                                         uint32_t,
-                                                                         void *),
-                                            MqttSnClientNetworkInterface *n,
-                                            MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                            uint32_t timeout_ms,
-                                            void *context) {
+                                                                              MqttSnFixedSizeRingBuffer *,
+                                                                              uint32_t,
+                                                                              void *),
+                                                  MqttSnClientNetworkInterface *n,
+                                                  MqttSnFixedSizeRingBuffer *receiveBuffer,
+                                                  uint32_t timeout_ms,
+                                                  void *context) {
+
   if (clientNetworkReceive == nullptr) {
     return false;
   }
@@ -42,7 +43,7 @@ void ClientNetworkGatewayLooper::stopNetworkLoop() {
 }
 void ClientNetworkGatewayLooper::networkLoop() {
   while (!stopped) {
-    if(this->clientNetworkReceive(n, receiveBuffer, timeout_ms, context) < 0){
+    if (this->clientNetworkReceive(n, receiveBuffer, timeout_ms, context) < 0) {
       break;
     }
   }

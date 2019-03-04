@@ -12,16 +12,20 @@
 
 class ClientNetworkGatewayLooper {
  public:
+
   bool startNetworkLoop(int (*clientNetworkReceive)(MqttSnClientNetworkInterface *n,
-                                                 MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                                 uint32_t timeout_ms,
-                                                 void *context),
+                                                    MqttSnFixedSizeRingBuffer *receiveBuffer,
+                                                    uint32_t timeout_ms,
+                                                    void *context),
                         MqttSnClientNetworkInterface *n,
                         MqttSnFixedSizeRingBuffer *receiveBuffer,
                         uint32_t timeout_ms,
                         void *context);
+
   void stopNetworkLoop();
+
   void networkLoop();
+
   std::atomic<bool> stopped{false};
   std::atomic<bool> isStopped{true};
   std::thread thread;

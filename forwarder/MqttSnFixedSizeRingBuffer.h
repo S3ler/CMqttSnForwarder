@@ -25,7 +25,7 @@ typedef struct MqttSnMessageData_{
   uint8_t data[MAX_MESSAGE_LENGTH];
 } MqttSnMessageData;
 
-typedef struct {
+typedef struct MqttSnFixedSizeRingBuffer_{
     uint32_t head;
     uint32_t tail;
     uint32_t maxlen;

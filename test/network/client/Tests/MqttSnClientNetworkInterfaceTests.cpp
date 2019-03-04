@@ -9,10 +9,10 @@
 // this is crosschecked when the messageSize is >=2 and by the message counter (2 Message => 4xmessage with one message ID)
 // Message
 
-// send by client => received by forwarder
-// send by forwarder => received by client
-// send by clients => received by forwarder => send back to clients
-// send by forwarder => received by clients => send back to forwarder
+// send by client => received by MqttSnForwarder
+// send by MqttSnForwarder => received by client
+// send by clients => received by MqttSnForwarder => send back to clients
+// send by MqttSnForwarder => received by clients => send back to MqttSnForwarder
 
 
 // TODO test what happens with more than 255 clients with 1 byte message and 2 messag

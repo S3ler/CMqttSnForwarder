@@ -24,6 +24,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/forwarder"/>
 					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
 					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
@@ -49,6 +50,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/forwarder"/>
 					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
 					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
@@ -74,6 +76,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/forwarder"/>
 					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
 					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>
@@ -99,6 +102,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/tmp/tmp.ycYCPoRMKx/forwarder"/>
 					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest/include"/>
 					<Add directory="/tmp/tmp.ycYCPoRMKx/cmake-build-debug/googletest-src/googletest"/>
 					<Add directory="/usr/include/c++/7"/>

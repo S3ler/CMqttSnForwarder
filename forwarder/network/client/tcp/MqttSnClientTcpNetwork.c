@@ -30,8 +30,8 @@ int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
   n->client_network_init = ClientLinuxTcpInit;
   n->client_network_connect = ClientLinuxTcpConnect;
   n->client_network_disconnect = ClientLinuxTcpDisconnect;
-  n->client_receive = ClientLinuxTcpReceive;
-  n->client_send = ClientLinuxTcpSend;
+  n->client_network_receive = ClientLinuxTcpReceive;
+  n->client_network_send = ClientLinuxTcpSend;
   return 0;
 }
 
@@ -300,7 +300,7 @@ int MqttSnClientHandleMasterSocket(MqttSnClientTcpNetwork *clientTcpNetwork, fd_
       return -1;
     }
 
-    // inform user of the socket number - used in gateway_send and client_receive commands
+    // inform user of the socket number - used in gateway_send and client_network_receive commands
     printf("New connection, socket fd is %d, ip is: %s, port: %d\n",
            new_socket, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
 
