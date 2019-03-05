@@ -11,25 +11,14 @@
 
 int MqttSnForwarderStart(MqttSnForwarder *mqttSnForwarder,
                          void *clientNetworkContext,
-                         void *gatewayNetworkContext,
-                         volatile sig_atomic_t *keep_running) {
+                         void *gatewayNetworkContext) {
 
   if (MqttSnForwarderInit(mqttSnForwarder, clientNetworkContext, gatewayNetworkContext) != 0) {
     MqttSnForwarderDeinit(mqttSnForwarder);
     return -1;
   }
 
-  if (ClientNetworkConnect(&mqttSnForwarder->clientNetwork, mqttSnForwarder->clientNetworkContext) != 0) {
-    MqttSnForwarderDeinit(mqttSnForwarder);
-    return -1;
-  }
-
-  if (GatewayNetworkConnect(&mqttSnForwarder->gatewayNetwork, mqttSnForwarder->gatewayNetworkContext) != 0) {
-    MqttSnForwarderDeinit(mqttSnForwarder);
-    return -1;
-  }
-
-  while ((*keep_running == 1) && MqttSnForwarderLoop(mqttSnForwarder) == 0) {}
+  while (MqttSnForwarderLoop(mqttSnForwarder) == 0) {}
 
   MqttSnForwarderDeinit(mqttSnForwarder);
 
@@ -44,6 +33,16 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder, void *clientNetworkCon
   mqttSnForwarder->gatewayNetworkContext = gatewayNetworkContext;
   MqttSnFixedSizeRingBufferInit(&mqttSnForwarder->gatewayNetworkReceiveBuffer);
   MqttSnFixedSizeRingBufferInit(&mqttSnForwarder->gatewayNetworkSendBuffer);
+
+  if (ClientNetworkConnect(&mqttSnForwarder->clientNetwork, mqttSnForwarder->clientNetworkContext) != 0) {
+    MqttSnForwarderDeinit(mqttSnForwarder);
+    return -1;
+  }
+
+  if (GatewayNetworkConnect(&mqttSnForwarder->gatewayNetwork, mqttSnForwarder->gatewayNetworkContext) != 0) {
+    MqttSnForwarderDeinit(mqttSnForwarder);
+    return -1;
+  }
 
   return 0;
 }
@@ -93,7 +92,7 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
       &forwarder->clientNetwork,
       &forwarder->clientNetworkSendBuffer,
       CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
-      forwarder->clientNetworkContext)) {
+      forwarder->clientNetworkContext) != 0) {
     GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
 
@@ -226,6 +225,10 @@ int RemoveMqttSnForwardingHeader(MqttSnMessageData *receiveMessageData, MqttSnMe
 }
 
 int AddMqttSnForwardingHeader(MqttSnMessageData *receiveMessageData, MqttSnMessageData *sendMessageData) {
+  // empty messages are also converted?
+  if (receiveMessageData->data_length == 0) {
+    return -1;
+  }
   if ((receiveMessageData->data_length + FORWARDER_HEADER_LEN + sizeof(device_address)) >
       GATEWAY_NETWORK_MAX_DATA_LEN) {
     return -1;

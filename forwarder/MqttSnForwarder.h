@@ -38,8 +38,7 @@ void sendBufferedMessagesToClients(MqttSnForwarder *forwarder);
 
 int MqttSnForwarderStart(MqttSnForwarder *mqttSnForwarder,
                          void *clientNetworkContext,
-                         void *gatewayNetworkContext,
-                         volatile sig_atomic_t *keep_running);
+                         void *gatewayNetworkContext);
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         void *clientNetworkContext,
