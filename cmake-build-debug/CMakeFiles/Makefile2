@@ -73,7 +73,7 @@ CMakeFiles/lib-mqtt-sn-client-mock-network.dir/all: googletest-build/googlemock/
 CMakeFiles/lib-mqtt-sn-client-mock-network.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/depend
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-mock-network.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=43,44,45,46,47,48,49,50 "Built target lib-mqtt-sn-client-mock-network"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=47,48,49,50,51,52,53,54 "Built target lib-mqtt-sn-client-mock-network"
 .PHONY : CMakeFiles/lib-mqtt-sn-client-mock-network.dir/all
 
 # Include target in all.
@@ -118,7 +118,7 @@ CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/all: googletest-build
 CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/depend
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=19,20,21,22,23,24,25,26 "Built target MqttSnForwarder_LinuxTcpClientNetwork_Tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=23,24,25,26,27,28,29,30 "Built target MqttSnForwarder_LinuxTcpClientNetwork_Tests"
 .PHONY : CMakeFiles/MqttSnForwarder_LinuxTcpClientNetwork_Tests.dir/all
 
 # Include target in all.
@@ -159,7 +159,7 @@ CMakeFiles/mock-mqtt-sn-client-network.dir/all: googletest-build/googlemock/gtes
 CMakeFiles/mock-mqtt-sn-client-network.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/mock-mqtt-sn-client-network.dir/build.make CMakeFiles/mock-mqtt-sn-client-network.dir/depend
 	$(MAKE) -f CMakeFiles/mock-mqtt-sn-client-network.dir/build.make CMakeFiles/mock-mqtt-sn-client-network.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=66,67 "Built target mock-mqtt-sn-client-network"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=70,71 "Built target mock-mqtt-sn-client-network"
 .PHONY : CMakeFiles/mock-mqtt-sn-client-network.dir/all
 
 # Include target in all.
@@ -196,7 +196,7 @@ clean: CMakeFiles/mock-mqtt-sn-client-network.dir/clean
 CMakeFiles/lib-mqtt-sn-client-network.dir/all: CMakeFiles/lib-mqtt-sn-ring-buffer.dir/all
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-network.dir/depend
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-client-network.dir/build.make CMakeFiles/lib-mqtt-sn-client-network.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=51,52 "Built target lib-mqtt-sn-client-network"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=55,56 "Built target lib-mqtt-sn-client-network"
 .PHONY : CMakeFiles/lib-mqtt-sn-client-network.dir/all
 
 # Include target in all.
@@ -233,7 +233,7 @@ clean: CMakeFiles/lib-mqtt-sn-client-network.dir/clean
 CMakeFiles/lib-mqtt-sn-gateway-network.dir/all: CMakeFiles/lib-mqtt-sn-ring-buffer.dir/all
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-network.dir/depend
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-network.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=62,63 "Built target lib-mqtt-sn-gateway-network"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=66,67 "Built target lib-mqtt-sn-gateway-network"
 .PHONY : CMakeFiles/lib-mqtt-sn-gateway-network.dir/all
 
 # Include target in all.
@@ -313,7 +313,7 @@ clean: CMakeFiles/GatewayTests.dir/clean
 CMakeFiles/lib-mqtt-sn-ring-buffer.dir/all:
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-ring-buffer.dir/build.make CMakeFiles/lib-mqtt-sn-ring-buffer.dir/depend
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-ring-buffer.dir/build.make CMakeFiles/lib-mqtt-sn-ring-buffer.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=64,65 "Built target lib-mqtt-sn-ring-buffer"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=68,69 "Built target lib-mqtt-sn-ring-buffer"
 .PHONY : CMakeFiles/lib-mqtt-sn-ring-buffer.dir/all
 
 # Include target in all.
@@ -350,7 +350,7 @@ clean: CMakeFiles/lib-mqtt-sn-ring-buffer.dir/clean
 CMakeFiles/lib-mqtt-sn-forwarder.dir/all:
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-forwarder.dir/build.make CMakeFiles/lib-mqtt-sn-forwarder.dir/depend
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-forwarder.dir/build.make CMakeFiles/lib-mqtt-sn-forwarder.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=53,54,55,56 "Built target lib-mqtt-sn-forwarder"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=57,58,59,60 "Built target lib-mqtt-sn-forwarder"
 .PHONY : CMakeFiles/lib-mqtt-sn-forwarder.dir/all
 
 # Include target in all.
@@ -394,7 +394,7 @@ CMakeFiles/MqttSnForwarderIntegrationTests.dir/all: googletest-build/googlemock/
 CMakeFiles/MqttSnForwarderIntegrationTests.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/depend
 	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=17,18 "Built target MqttSnForwarderIntegrationTests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=17,18,19,20,21,22 "Built target MqttSnForwarderIntegrationTests"
 .PHONY : CMakeFiles/MqttSnForwarderIntegrationTests.dir/all
 
 # Include target in all.
@@ -404,7 +404,7 @@ all: CMakeFiles/MqttSnForwarderIntegrationTests.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/MqttSnForwarderIntegrationTests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles 20
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles 24
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/MqttSnForwarderIntegrationTests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/MqttSnForwarderIntegrationTests.dir/rule
@@ -434,7 +434,7 @@ CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/all: googletest-build/googlemock
 CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/depend
 	$(MAKE) -f CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build.make CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=57,58,59,60,61 "Built target lib-mqtt-sn-gateway-mock-network"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=61,62,63,64,65 "Built target lib-mqtt-sn-gateway-mock-network"
 .PHONY : CMakeFiles/lib-mqtt-sn-gateway-mock-network.dir/all
 
 # Include target in all.
@@ -475,7 +475,7 @@ CMakeFiles/mock-mqtt-sn-gateway-network.dir/all: googletest-build/googlemock/gte
 CMakeFiles/mock-mqtt-sn-gateway-network.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/mock-mqtt-sn-gateway-network.dir/build.make CMakeFiles/mock-mqtt-sn-gateway-network.dir/depend
 	$(MAKE) -f CMakeFiles/mock-mqtt-sn-gateway-network.dir/build.make CMakeFiles/mock-mqtt-sn-gateway-network.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=70,71 "Built target mock-mqtt-sn-gateway-network"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=74,75 "Built target mock-mqtt-sn-gateway-network"
 .PHONY : CMakeFiles/mock-mqtt-sn-gateway-network.dir/all
 
 # Include target in all.
@@ -600,7 +600,7 @@ CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/all: googletest-buil
 CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/depend
 	$(MAKE) -f CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build.make CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=27,28,29,30,31,32 "Built target MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=31,32,33,34,35,36 "Built target MqttSnForwarder_LinuxTcpGatewayNetwork_Tests"
 .PHONY : CMakeFiles/MqttSnForwarder_LinuxTcpGatewayNetwork_Tests.dir/all
 
 # Include target in all.
@@ -641,7 +641,7 @@ CMakeFiles/mock-mqtt-sn-fixed-size-ring-buffer.dir/all: googletest-build/googlem
 CMakeFiles/mock-mqtt-sn-fixed-size-ring-buffer.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/mock-mqtt-sn-fixed-size-ring-buffer.dir/build.make CMakeFiles/mock-mqtt-sn-fixed-size-ring-buffer.dir/depend
 	$(MAKE) -f CMakeFiles/mock-mqtt-sn-fixed-size-ring-buffer.dir/build.make CMakeFiles/mock-mqtt-sn-fixed-size-ring-buffer.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=68,69 "Built target mock-mqtt-sn-fixed-size-ring-buffer"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=72,73 "Built target mock-mqtt-sn-fixed-size-ring-buffer"
 .PHONY : CMakeFiles/mock-mqtt-sn-fixed-size-ring-buffer.dir/all
 
 # Include target in all.
@@ -683,7 +683,7 @@ CMakeFiles/MqttSnGatewayNetworkInterfaceUnitTests.dir/all: googletest-build/goog
 CMakeFiles/MqttSnGatewayNetworkInterfaceUnitTests.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/MqttSnGatewayNetworkInterfaceUnitTests.dir/build.make CMakeFiles/MqttSnGatewayNetworkInterfaceUnitTests.dir/depend
 	$(MAKE) -f CMakeFiles/MqttSnGatewayNetworkInterfaceUnitTests.dir/build.make CMakeFiles/MqttSnGatewayNetworkInterfaceUnitTests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=33,34 "Built target MqttSnGatewayNetworkInterfaceUnitTests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=37,38 "Built target MqttSnGatewayNetworkInterfaceUnitTests"
 .PHONY : CMakeFiles/MqttSnGatewayNetworkInterfaceUnitTests.dir/all
 
 # Include target in all.
@@ -761,7 +761,7 @@ googletest-build/googlemock/CMakeFiles/gmock_main.dir/all: googletest-build/goog
 googletest-build/googlemock/CMakeFiles/gmock_main.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make googletest-build/googlemock/CMakeFiles/gmock_main.dir/depend
 	$(MAKE) -f googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make googletest-build/googlemock/CMakeFiles/gmock_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=37,38 "Built target gmock_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=41,42 "Built target gmock_main"
 .PHONY : googletest-build/googlemock/CMakeFiles/gmock_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -793,7 +793,7 @@ clean: googletest-build/googlemock/CMakeFiles/gmock_main.dir/clean
 googletest-build/googlemock/CMakeFiles/gmock.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f googletest-build/googlemock/CMakeFiles/gmock.dir/build.make googletest-build/googlemock/CMakeFiles/gmock.dir/depend
 	$(MAKE) -f googletest-build/googlemock/CMakeFiles/gmock.dir/build.make googletest-build/googlemock/CMakeFiles/gmock.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=35,36 "Built target gmock"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=39,40 "Built target gmock"
 .PHONY : googletest-build/googlemock/CMakeFiles/gmock.dir/all
 
 # Build rule for subdir invocation for target.
@@ -845,7 +845,7 @@ googletest-build/googlemock/gtest/preinstall:
 googletest-build/googlemock/gtest/CMakeFiles/gtest_main.dir/all: googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f googletest-build/googlemock/gtest/CMakeFiles/gtest_main.dir/build.make googletest-build/googlemock/gtest/CMakeFiles/gtest_main.dir/depend
 	$(MAKE) -f googletest-build/googlemock/gtest/CMakeFiles/gtest_main.dir/build.make googletest-build/googlemock/gtest/CMakeFiles/gtest_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=41,42 "Built target gtest_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=45,46 "Built target gtest_main"
 .PHONY : googletest-build/googlemock/gtest/CMakeFiles/gtest_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -877,7 +877,7 @@ clean: googletest-build/googlemock/gtest/CMakeFiles/gtest_main.dir/clean
 googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all:
 	$(MAKE) -f googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/build.make googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/depend
 	$(MAKE) -f googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/build.make googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=39,40 "Built target gtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/tmp.ycYCPoRMKx/cmake-build-debug/CMakeFiles --progress-num=43,44 "Built target gtest"
 .PHONY : googletest-build/googlemock/gtest/CMakeFiles/gtest.dir/all
 
 # Build rule for subdir invocation for target.

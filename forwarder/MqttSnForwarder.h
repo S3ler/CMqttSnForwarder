@@ -48,13 +48,17 @@ int MqttSnForwarderLoop(MqttSnForwarder *);
 
 void MqttSnForwarderDeinit(MqttSnForwarder *);
 
-int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder);
+int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
+                                        MqttSnMessageData *clientMessageData,
+                                        MqttSnMessageData *gatewayMessageData);
 
-int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder);
+int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
+                                              MqttSnMessageData *gatewayMessageData,
+                                              MqttSnMessageData *clientMessageData);
 
-int AddMqttSnForwardingHeader(MqttSnMessageData *receiveMessageData, MqttSnMessageData *sendMessageData);
+int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessageData *gatewayMessageData);
 
-int RemoveMqttSnForwardingHeader(MqttSnMessageData *receiveMessageData, MqttSnMessageData *sendMessageData);
+int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData, MqttSnMessageData *clientMessageData);
 
 #ifdef __cplusplus
 }

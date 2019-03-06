@@ -697,6 +697,60 @@ test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.cpp.s:
 	$(MAKE) -f CMakeFiles/MqttSnFixedSizeRingBufferUnitTests.dir/build.make CMakeFiles/MqttSnFixedSizeRingBufferUnitTests.dir/test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.cpp.s
 .PHONY : test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.cpp.s
 
+test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.o: test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.o
+
+.PHONY : test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.o
+
+# target to build an object file
+test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.o:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.o
+.PHONY : test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.o
+
+test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.i: test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.i
+
+.PHONY : test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.i
+
+# target to preprocess a source file
+test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.i:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.i
+.PHONY : test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.i
+
+test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.s: test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.s
+
+.PHONY : test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.s
+
+# target to generate assembly for a file
+test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.s:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.s
+.PHONY : test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp.s
+
+test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.o: test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.o
+
+.PHONY : test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.o
+
+# target to build an object file
+test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.o:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.o
+.PHONY : test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.o
+
+test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.i: test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.i
+
+.PHONY : test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.i
+
+# target to preprocess a source file
+test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.i:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.i
+.PHONY : test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.i
+
+test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.s: test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.s
+
+.PHONY : test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.s
+
+# target to generate assembly for a file
+test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.s:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.s
+.PHONY : test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp.s
+
 test/MqttSnForwarder/MqttSnForwarderTests.o: test/MqttSnForwarder/MqttSnForwarderTests.cpp.o
 
 .PHONY : test/MqttSnForwarder/MqttSnForwarderTests.o
@@ -723,6 +777,60 @@ test/MqttSnForwarder/MqttSnForwarderTests.s: test/MqttSnForwarder/MqttSnForwarde
 test/MqttSnForwarder/MqttSnForwarderTests.cpp.s:
 	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/MqttSnForwarderTests.cpp.s
 .PHONY : test/MqttSnForwarder/MqttSnForwarderTests.cpp.s
+
+test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.o: test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.o
+
+.PHONY : test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.o
+
+# target to build an object file
+test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.o:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.o
+.PHONY : test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.o
+
+test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.i: test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.i
+
+.PHONY : test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.i
+
+# target to preprocess a source file
+test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.i:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.i
+.PHONY : test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.i
+
+test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.s: test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.s
+
+.PHONY : test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.s
+
+# target to generate assembly for a file
+test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.s:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.s
+.PHONY : test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp.s
+
+test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.o: test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.o
+
+.PHONY : test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.o
+
+# target to build an object file
+test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.o:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.o
+.PHONY : test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.o
+
+test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.i: test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.i
+
+.PHONY : test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.i
+
+# target to preprocess a source file
+test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.i:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.i
+.PHONY : test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.i
+
+test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.s: test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.s
+
+.PHONY : test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.s
+
+# target to generate assembly for a file
+test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.s:
+	$(MAKE) -f CMakeFiles/MqttSnForwarderIntegrationTests.dir/build.make CMakeFiles/MqttSnForwarderIntegrationTests.dir/test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.s
+.PHONY : test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp.s
 
 test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/GatewayNetworkMockInterface.o: test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/GatewayNetworkMockInterface.cpp.o
 
@@ -1375,9 +1483,21 @@ help:
 	@echo "... test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.o"
 	@echo "... test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.i"
 	@echo "... test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.s"
+	@echo "... test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.o"
+	@echo "... test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.i"
+	@echo "... test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.s"
+	@echo "... test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.o"
+	@echo "... test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.i"
+	@echo "... test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.s"
 	@echo "... test/MqttSnForwarder/MqttSnForwarderTests.o"
 	@echo "... test/MqttSnForwarder/MqttSnForwarderTests.i"
 	@echo "... test/MqttSnForwarder/MqttSnForwarderTests.s"
+	@echo "... test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.o"
+	@echo "... test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.i"
+	@echo "... test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.s"
+	@echo "... test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.o"
+	@echo "... test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.i"
+	@echo "... test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.s"
 	@echo "... test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/GatewayNetworkMockInterface.o"
 	@echo "... test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/GatewayNetworkMockInterface.i"
 	@echo "... test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/GatewayNetworkMockInterface.s"

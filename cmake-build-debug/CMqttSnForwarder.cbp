@@ -1387,10 +1387,37 @@
 		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.h">
 			<Option target="MqttSnFixedSizeRingBufferUnitTests"/>
 		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp">
+			<Option target="MqttSnForwarderIntegrationTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.h">
+			<Option target="MqttSnForwarderIntegrationTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp">
+			<Option target="MqttSnForwarderIntegrationTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.h">
+			<Option target="MqttSnForwarderIntegrationTests"/>
+		</Unit>
 		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/MqttSnForwarderTests.cpp">
 			<Option target="MqttSnForwarderIntegrationTests"/>
 		</Unit>
 		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/MqttSnForwarderTests.h">
+			<Option target="MqttSnForwarderIntegrationTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/MqttSnForwarderTestsGlobalVariables.h">
+			<Option target="MqttSnForwarderIntegrationTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp">
+			<Option target="MqttSnForwarderIntegrationTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.h">
+			<Option target="MqttSnForwarderIntegrationTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp">
+			<Option target="MqttSnForwarderIntegrationTests"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.h">
 			<Option target="MqttSnForwarderIntegrationTests"/>
 		</Unit>
 		<Unit filename="/tmp/tmp.ycYCPoRMKx/test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/FakeClientNetworkInterface.h">
