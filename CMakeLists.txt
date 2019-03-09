@@ -301,13 +301,29 @@ else ()
     add_executable(MqttSnForwarderIntegrationTests
             test/MqttSnForwarder/MqttSnForwarderTests.cpp
             test/MqttSnForwarder/MqttSnForwarderTests.h
-            #test/MqttSnForwarder/MqttSnForwarderAddForwardingHeaderTests.cpp
             test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.cpp
             test/MqttSnForwarder/AddForwardingHeaderToClientMessagesTests.h
-            test/MqttSnForwarder/MqttSnForwarderTestsGlobalVariables.h test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.h test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.h test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.h)
+            test/MqttSnForwarder/MqttSnForwarderTestsGlobalVariables.h
+            test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.cpp
+            test/MqttSnForwarder/AddMqttSnForwardingHeaderTests.h
+            test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.cpp
+            test/MqttSnForwarder/RemoveMqttSnForwardingHeaderTests.h
+            test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.cpp
+            test/MqttSnForwarder/RemoveForwardingHeaderFromGatewayMessagesTests.h
+            test/MqttSnForwarder/SendBufferedMessagesToGatewayTests.cpp
+            test/MqttSnForwarder/SendBufferedMessagesToGatewayTests.h
+            test/MqttSnForwarder/SendBufferedMessagesToClientsTests.cpp
+            test/MqttSnForwarder/SendBufferedMessagesToClientsTests.h
+            test/MqttSnForwarder/PlaceholderNetworkContext/PlaceholderNetworkContext.h
+            test/MqttSnForwarder/MqttSnForwarderLoopTests.cpp
+            test/MqttSnForwarder/MqttSnForwarderLoopTests.h
+            test/MqttSnForwarder/MqttSnForwarderDeinitTests.cpp
+            test/MqttSnForwarder/MqttSnForwarderDeinitTests.h
+            test/MqttSnForwarder/MqttSnForwarderInitTests.cpp
+            test/MqttSnForwarder/MqttSnForwarderInitTests.h)
     target_link_libraries(MqttSnForwarderIntegrationTests
-            gtest gtest_main gmock gmock_main
-            lib-mqtt-sn-forwarder mock-mqtt-sn-fixed-size-ring-buffer mock-mqtt-sn-client-network mock-mqtt-sn-gateway-network)
+            gtest gtest_main gmock gmock_main lib-mqtt-sn-forwarder
+            mock-mqtt-sn-fixed-size-ring-buffer mock-mqtt-sn-client-network mock-mqtt-sn-gateway-network)
 
 endif ()
 

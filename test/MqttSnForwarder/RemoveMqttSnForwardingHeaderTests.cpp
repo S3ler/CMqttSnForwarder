@@ -74,4 +74,5 @@ TEST_F(RemoveMqttSnForwardingHeaderTests, MinimalGatewayMessageData_ReturnsZero)
 TEST_F(RemoveMqttSnForwardingHeaderTests, MinimalGatewayMessageData_HeaderIsRemoved) {
   // TODO: implement me
   GTEST_SKIP() << "Not such tests implemented yet.";
+  ASSERT_TRUE(false) << "No output validation tests implemented yet";
 }

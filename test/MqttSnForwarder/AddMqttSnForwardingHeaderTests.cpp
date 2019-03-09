@@ -69,5 +69,7 @@ TEST_F(AddMqttSnForwardingHeaderTests, AboveMaximumDataLengthClientMessageDataAn
 }
 
 TEST_F(AddMqttSnForwardingHeaderTests, MinimumDataLengthClientMessageData_HeaderIsAddedCorrectly) {
+  // TODO: implement me
   GTEST_SKIP() << "Not such tests implemented yet.";
+  ASSERT_TRUE(false) << "No output validation tests implemented yet";
 }

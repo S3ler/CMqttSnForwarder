@@ -185,3 +185,9 @@ ExternalProject_Add(gmock-global
   TEST_COMMAND      ""
 )
 ]]
+
+What does not work:
+searching for gatewaay - no dynamic connection - whitelisting
+looking for advertisment
+configurations files
+monitoring

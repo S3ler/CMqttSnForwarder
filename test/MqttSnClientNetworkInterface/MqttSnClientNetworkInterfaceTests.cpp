@@ -265,7 +265,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
       .Times(1)
       .WillOnce(Return(-1));
 
-  ASSERT_EQ(ClientNetworkConnect(&mqttSnClientNetworkInterface, context), -1);
+  EXPECT_EQ(ClientNetworkConnect(&mqttSnClientNetworkInterface, context), -1);
 
 }
 

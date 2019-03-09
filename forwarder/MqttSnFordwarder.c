@@ -53,7 +53,8 @@ void MqttSnForwarderDeinit(MqttSnForwarder *forwarder) {
 }
 
 int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
-
+  // TODO when clientNetwork.status == -1 then clientNetwork shall functions shall return -1
+  // TODO test this in clientnetworktests
   if (forwarder->clientNetwork.client_network_receive(
       &forwarder->clientNetwork,
       &forwarder->clientNetworkReceiveBuffer,
@@ -61,7 +62,8 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
       forwarder->clientNetworkContext) != 0) {
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
-
+  // TODO when gatewayNetwork.status == -1 then clientNetwork shall functions shall return -1
+  // TODO test this in gatewaynetworktests
   if (forwarder->gatewayNetwork.gateway_receive(
       &forwarder->gatewayNetwork,
       &forwarder->gatewayNetworkReceiveBuffer,
@@ -87,7 +89,8 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
       GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
     }
   }
-
+  // TODO when gatewayNetwork.status == -1 then clientNetwork shall functions shall return -1
+  // TODO test this in gatewaynetworktests
   if (forwarder->gatewayNetwork.gateway_send(
       &forwarder->gatewayNetwork,
       &forwarder->gatewayNetworkSendBuffer,
@@ -95,7 +98,8 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
       forwarder->gatewayNetworkContext) != 0) {
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
-
+  // TODO when clientNetwork.status == -1 then clientNetwork shall functions shall return -1
+  // TODO test this in clientnetworktests
   if (forwarder->clientNetwork.client_network_send(
       &forwarder->clientNetwork,
       &forwarder->clientNetworkSendBuffer,
@@ -104,33 +108,39 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
     GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
 
-  if (forwarder->clientNetwork.status < 0 && forwarder->gatewayNetwork.status < 0) {
-    // both networks failed => end
-    // printf("both networks failed\n");
-    GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
-    ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
-    return -1;
-  } else if (forwarder->clientNetwork.status < 0 && forwarder->gatewayNetwork.status > 0) {
+  if (forwarder->clientNetwork.status <= 0) {
+    if (forwarder->gatewayNetwork.status <= 0) {
+      // both networks down => end
+      MqttSnForwarderDeinit(forwarder);
+      return -1;
+    }
     // only client network is down
-    // buffered message will be tried to sendNetwork out to the gateway network
+    // send out buffered MqttSnMessageData to Gateway
     sendBufferedMessagesToGateway(forwarder);
-    GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
-    // printf("client network failed\n");
-    return -1;
-  } else if (forwarder->clientNetwork.status > 0 && forwarder->gatewayNetwork.status < 0) {
-    // only gateway network is down
-    // buffered message will be tried to sendNetwork out to the clients
-    sendBufferedMessagesToClients(forwarder);
-    ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
-    // printf("gateway network failed\n");
+    MqttSnForwarderDeinit(forwarder);
     return -1;
   }
+
+  if (forwarder->gatewayNetwork.status <= 0) {
+    if (forwarder->clientNetwork.status <= 0) {
+      // both networks down => end
+      MqttSnForwarderDeinit(forwarder);
+      return -1;
+    }
+    // only gateway network is down
+    // send out buffered MqttSnMessageData to Client
+    sendBufferedMessagesToClients(forwarder);
+    MqttSnForwarderDeinit(forwarder);
+    return -1;
+  }
+
   return 0;
 }
 
 void sendBufferedMessagesToClients(MqttSnForwarder *forwarder) {
-  while (!isEmpty(&forwarder->gatewayNetworkReceiveBuffer) &&
+  while (!isEmpty(&forwarder->gatewayNetworkReceiveBuffer) |
       !isEmpty(&forwarder->clientNetworkSendBuffer)) {
+    /*
     if (forwarder->clientNetwork.client_network_receive(
         &forwarder->clientNetwork,
         &forwarder->clientNetworkReceiveBuffer,
@@ -138,8 +148,15 @@ void sendBufferedMessagesToClients(MqttSnForwarder *forwarder) {
         forwarder->clientNetworkContext) != 0) {
       break;
     }
-    if (RemoveForwardingHeaderFromGatewayMessages(forwarder, NULL, NULL) != 0) {
-      break;
+     */
+
+
+    {
+      MqttSnMessageData gatewayMessageData = {0};
+      MqttSnMessageData clientMessageData = {0};
+      if (RemoveForwardingHeaderFromGatewayMessages(forwarder, &gatewayMessageData, &clientMessageData) != 0) {
+        break;
+      }
     }
     if (forwarder->clientNetwork.client_network_send(
         &forwarder->clientNetwork,
@@ -151,8 +168,9 @@ void sendBufferedMessagesToClients(MqttSnForwarder *forwarder) {
   }
 }
 void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder) {
-  while (!isEmpty(&forwarder->clientNetworkReceiveBuffer) &&
+  while (!isEmpty(&forwarder->clientNetworkReceiveBuffer) |
       !isEmpty(&forwarder->gatewayNetworkSendBuffer)) {
+    /*
     if (forwarder->gatewayNetwork.gateway_receive(
         &forwarder->gatewayNetwork,
         &forwarder->gatewayNetworkReceiveBuffer,
@@ -160,9 +178,15 @@ void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder) {
         forwarder->gatewayNetworkContext) != 0) {
       break;
     }
-    if (AddForwardingHeaderToClientMessages(forwarder, NULL, NULL) != 0) {
-      break;
+    */
+    {
+      MqttSnMessageData gatewayMessageData = {0};
+      MqttSnMessageData clientMessageData = {0};
+      if (AddForwardingHeaderToClientMessages(forwarder, &clientMessageData, &gatewayMessageData) != 0) {
+        break;
+      }
     }
+
     if (forwarder->gatewayNetwork.gateway_send(
         &forwarder->gatewayNetwork,
         &forwarder->gatewayNetworkSendBuffer,
@@ -187,7 +211,7 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
   }
   if (put(&forwarder->clientNetworkSendBuffer, clientMessageData) != 0) {
     // we do our best to not drop message due to RAM loss
-    put(&forwarder->clientNetworkReceiveBuffer, gatewayMessageData);
+    put(&forwarder->gatewayNetworkReceiveBuffer, gatewayMessageData);
   }
   return 0;
 }

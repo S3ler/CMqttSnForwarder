@@ -60,6 +60,8 @@ class AddForwardingHeaderToClientMessagesTests : public ::testing::Test {
   }
   virtual void TearDown() {
 
+      globalMqttSnFixedSizeRingBufferMock = nullptr;
+      globalMqttSnFixedSizeRingBufferMockMap = nullptr;
   }
 
   virtual ~AddForwardingHeaderToClientMessagesTests() {}

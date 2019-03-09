@@ -10,7 +10,11 @@
 #include "../../forwarder/MqttSnClientNetworkInterface.h"
 #include "MockMqttSnClientNetwork/ClientNetworkMock.h"
 
+#ifndef GLOBA_TEST_EXEC
 ClientNetworkMock* globalClientNetworkMockObj = nullptr;
+#else
+extern ClientNetworkMock* globalClientNetworkMockObj;
+#endif
 
 class MqttSnClientNetworkInterfaceTests : public ::testing::Test {
  public:

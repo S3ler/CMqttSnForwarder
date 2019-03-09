@@ -13,11 +13,18 @@ int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
   n->gateway_network_address = gateway_network_address;
   n->mqtt_sn_gateway_network_address = mqtt_sn_gateway_network_address;
   n->gateway_network_init = gateway_network_init;
-  n->gateway_network_init(n, context);
+  if (n->gateway_network_init(n, context) == 0) {
+    n->status = 0;
+  } else {
+    n->status = -1;
+  }
+  return n->status;
 }
 
 int GatewayNetworkConnect(MqttSnGatewayNetworkInterface *n, void *context) {
-  if (n->gateway_network_connect(n, context) == 0) {
+  if (n->status == 0 &&
+      n->gateway_network_connect != 0 &&
+      n->gateway_network_connect(n, context) == 0) {
     n->status = 1;
     return 0;
   } else {
@@ -27,6 +34,8 @@ int GatewayNetworkConnect(MqttSnGatewayNetworkInterface *n, void *context) {
 }
 
 void GatewayNetworkDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
-  n->gateway_network_disconnect(n, context);
+  if (n->gateway_network_disconnect != 0) {
+    n->gateway_network_disconnect(n, context);
+  }
   n->status = -1;
 }
