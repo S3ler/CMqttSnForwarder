@@ -249,7 +249,7 @@ void MqttSnClientHandleClientSockets(MqttSnClientTcpNetwork *clientTcpNetwork, M
     int buffer_length = CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH;
     char buffer[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH];
     int valread = 0;
-    if ((valread = read(sd, buffer, buffer_length)) < 0) {
+    if ((valread = read(sd, buffer, buffer_length)) <= 0) {
       // error => client disconnected
       // Close the socket and mark as 0 in the list for reuse
       close(sd);

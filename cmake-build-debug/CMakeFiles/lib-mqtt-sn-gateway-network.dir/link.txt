@@ -1,2 +1,0 @@
-/usr/bin/ar qc liblib-mqtt-sn-gateway-network.a  CMakeFiles/lib-mqtt-sn-gateway-network.dir/forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c.o
-/usr/bin/ranlib liblib-mqtt-sn-gateway-network.a

@@ -10,11 +10,19 @@
 #include "../MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h"
 #include "../MockClientNetwork/MockClient/MockClient.h"
 #include "../MockClientNetwork/MockClient/MockClientNetworkReceiver.h"
-#include "../MockClientNetwork/MockClient/MockClientMqttSnMessageData.h"
+#include "../MockClientNetwork/MockClient/CompareableMqttSnMessageData.h"
 #include "../TestConfigurations/MqttSnClientNetworkTestValueParameter.h"
 #include "../../../../forwarder/network/client/tcp/MqttSnClientTcpNetwork.h"
 #include "../TestConfigurations/MockClientConfiguration.h"
 #include <list>
+#include <MqttSnFixedSizeRingBufferMock.h>
+#include <gmock/gmock-nice-strict.h>
+
+using testing::StrictMock;
+
+extern MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock;
+extern std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
+    *globalMqttSnFixedSizeRingBufferMockMap;
 
 class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSnClientNetworkTestValueParameter> {
  public:
@@ -28,12 +36,23 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
   std::vector<std::shared_ptr<MockClientNetworkReceiver>> mockClientNetworkReceiver;
   uint8_t *(*generateMessageData)(uint8_t *arr, uint16_t len) = nullptr;
 
-  virtual void SetUp() {
-    MqttSnFixedSizeRingBufferInit(&receiveBuffer);
-    MqttSnFixedSizeRingBufferInit(&sendBuffer);
+  std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *> mqttSnFixedSizeRingBufferMockMap;
+  StrictMock<MqttSnFixedSizeRingBufferMock> defaultMqttSnFixedSizeRingBufferMock;
+  StrictMock<MqttSnFixedSizeRingBufferMock> mockReceiveBuffer;
+  StrictMock<MqttSnFixedSizeRingBufferMock> mockSendBuffer;
 
+  uint16_t toTestMessageLength;
+  uint16_t toTestMessageCount;
+  bool useIdentifier;
+
+  virtual void SetUp() {
     MqttSnClientNetworkTestValueParameter const &a = GetParam();
     MqttSnGatewayClientNetworkTestConfiguration p = a.mqttSnClientNetworkTestFixture;
+
+    globalMqttSnFixedSizeRingBufferMock = &defaultMqttSnFixedSizeRingBufferMock;
+    globalMqttSnFixedSizeRingBufferMockMap = &mqttSnFixedSizeRingBufferMockMap;
+    mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&receiveBuffer, &mockReceiveBuffer));
+    mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&sendBuffer, &mockSendBuffer));
 
     ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                                 &p.forwarderAddress,
@@ -57,12 +76,17 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
                                                             receiver.get()));
 
       ASSERT_TRUE(mockClient->start_loop());
-      ASSERT_TRUE(mockClient->isNetworkConnected());
+      while (!mockClient->isNetworkConnected()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      }
 
       mockClients.push_back(mockClient);
       mockClientNetworkReceiver.push_back(receiver);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+
+    toTestMessageLength = a.messageLength;
+    toTestMessageCount = a.messageCount;
+    useIdentifier = a.mqttSnClientNetworkTestFixture.useIdentifier;
 
   }
 
@@ -71,16 +95,24 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     for (auto &mockClient : mockClients) {
       mockClient->stop_loop();
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+    for (auto &mockClient : mockClients) {
+      while (!mockClient->getDone()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      }
+    }
 
     clientNetworkGatewayLooper.stopNetworkLoop();
     while (!clientNetworkGatewayLooper.isStopped) {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     ClientNetworkDisconnect(&mqttSnClientNetworkInterface,
-        GetParam().mqttSnClientNetworkTestFixture.clientNetworkContext);
+                            GetParam().mqttSnClientNetworkTestFixture.clientNetworkContext);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    globalMqttSnFixedSizeRingBufferMockMap = nullptr;
+    globalMqttSnFixedSizeRingBufferMock = nullptr;
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 
   MqttSnClientNetworkInterfaceTests() {
@@ -90,8 +122,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
   virtual ~MqttSnClientNetworkInterfaceTests() {
 
   }
+
 };
-
-
 
 #endif //CMQTTSNFORWARDER_BASEMQTTSNCLIENTNETWORKTESTS_H

@@ -6,10 +6,12 @@
 #include "MockClient.h"
 
 void MockClient::loop() {
+  done = false;
   while (!stopped) {
     mockClientNetworkInterface->loopNetwork();
   }
   mockClientNetworkInterface->disconnectNetwork();
+  done = true;
 }
 
 bool MockClient::start_loop() {
@@ -85,6 +87,22 @@ int MockClient::send(uint8_t *data, uint16_t length) {
   return mockClientNetworkInterface->sendToNetwork(forwarderAddress, data, length);
 }
 
+int MockClient::send(CompareableMqttSnMessageData* compareableMqttSnMessageData){
+  if (mockClientNetworkInterface == nullptr) {
+    throw std::invalid_argument("mockClientNetworkInterface not initialized");
+  }
+  if (receiver == nullptr) {
+    throw std::invalid_argument("receiver not initialized");
+  }
+  if (this->networkAddress == nullptr) {
+    throw std::invalid_argument("gateway networkAddress not set");
+  }
+  return mockClientNetworkInterface->sendToNetwork(forwarderAddress,
+      &compareableMqttSnMessageData->data[0],
+      compareableMqttSnMessageData->data_length);
+}
+
+
 MockClientNetworkReceiverInterface *MockClient::getMockClientNetworkReceiverInterface() {
   return receiver;
 }
@@ -105,4 +123,7 @@ MockClient::MockClient(uint16_t identifier,
 
 uint16_t MockClient::getIdentifier() {
   return identifier;
+}
+const std::atomic<bool> &MockClient::getDone() const {
+  return done;
 }

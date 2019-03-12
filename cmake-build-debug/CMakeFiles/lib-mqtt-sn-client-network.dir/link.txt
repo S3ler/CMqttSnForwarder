@@ -1,2 +1,0 @@
-/usr/bin/ar qc liblib-mqtt-sn-client-network.a  CMakeFiles/lib-mqtt-sn-client-network.dir/forwarder/network/client/tcp/MqttSnClientTcpNetwork.c.o
-/usr/bin/ranlib liblib-mqtt-sn-client-network.a

@@ -14,6 +14,11 @@
 #include "../TestConfigurations/CartesianProductTestCaseGenerator.h"
 #include "../TestConfigurations/CartesianProductTestCaseGenerator.cpp"
 
+
+MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock = nullptr;
+std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
+    *globalMqttSnFixedSizeRingBufferMockMap = nullptr;
+
 MqttSnClientTcpNetwork clientNetworkContext = {0};
 device_address forwarderAddress({127, 0, 0, 1, (uint8_t) ((uint16_t) 9999 >> 8), (uint8_t) ((uint16_t) 9999 >> 0)});
 std::vector<std::shared_ptr<MockClientLinuxTcpNetworkImplementation>> mockClientTcpNetworkInterfaces;

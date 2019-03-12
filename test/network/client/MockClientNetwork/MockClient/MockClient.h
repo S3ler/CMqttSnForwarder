@@ -10,6 +10,7 @@
 #include "MockClientNetworkInterface.h"
 #include "MockClientNetworkReceiverInterface.h"
 #include "../../../../../forwarder/global_defines.h"
+#include "CompareableMqttSnMessageData.h"
 #include <thread>
 
 class MockClientNetworkInterface;
@@ -26,6 +27,8 @@ class MockClient {
 
   int send(uint8_t *data, uint16_t length);
 
+  int send(CompareableMqttSnMessageData* compareableMqttSnMessageData);
+
   void receive(uint8_t *data, uint16_t length);
 
   void setNetworkAddress(device_address *networkAddress);
@@ -40,6 +43,8 @@ class MockClient {
 
   uint16_t getIdentifier();
 
+  const std::atomic<bool> &getDone() const;
+
   MockClient(uint16_t identifier,
              const device_address *networkAddress,
              device_address *forwarderAddress,
@@ -52,6 +57,7 @@ class MockClient {
   std::thread thread;
   const device_address *networkAddress;
   std::atomic<bool> stopped{false};
+  std::atomic<bool> done{false};
   MockClientNetworkInterface *mockClientNetworkInterface = nullptr;
   device_address *forwarderAddress = nullptr;
 };
