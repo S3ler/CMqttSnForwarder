@@ -11,6 +11,7 @@
 #include "MockClientNetworkReceiverInterface.h"
 #include "../../../../../forwarder/global_defines.h"
 #include "CompareableMqttSnMessageData.h"
+#include "MockClientNetworkReceiver.h"
 #include <thread>
 
 class MockClientNetworkInterface;
@@ -37,25 +38,25 @@ class MockClient {
 
   void setMockClientNetworkInterface(MockClientNetworkInterface *mockClientNetworkInterface);
 
-  MockClientNetworkReceiverInterface* getMockClientNetworkReceiverInterface();
-
-  void setMockClientNetworkReceiverInterface(MockClientNetworkReceiverInterface* receiver);
+  MockClientNetworkReceiver* getMockClientNetworkReceiver();
 
   uint16_t getIdentifier();
+
+  device_address *getNetworkAddress() const;
 
   const std::atomic<bool> &getDone() const;
 
   MockClient(uint16_t identifier,
-             const device_address *networkAddress,
+             device_address *networkAddress,
              device_address *forwarderAddress,
              MockClientNetworkInterface *mockClientNetworkInterface,
-             MockClientNetworkReceiverInterface *receiver);
+             MockClientNetworkReceiver *receiver);
 
  private:
   uint16_t identifier;
-  MockClientNetworkReceiverInterface* receiver;
+  MockClientNetworkReceiver* receiver;
   std::thread thread;
-  const device_address *networkAddress;
+  device_address *networkAddress;
   std::atomic<bool> stopped{false};
   std::atomic<bool> done{false};
   MockClientNetworkInterface *mockClientNetworkInterface = nullptr;

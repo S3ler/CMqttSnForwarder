@@ -7,7 +7,8 @@
 
 #include <cstdint>
 #include "MockClient.h"
-#include "../../../../../forwarder/global_defines.h"
+#include <global_defines.h>
+#include "../MockClient/MockClientNetworkReceiver.h"
 
 class MockClient;
 
@@ -27,7 +28,7 @@ class MockClientNetworkInterface {
 
   virtual void disconnectNetwork()=0;
 
-  virtual void loopNetwork()=0;
+  virtual int loopNetwork(MockClientNetworkReceiver *pReceiver) =0;
 };
 
 #endif //CMQTTSNFORWARDER_MOCKCLIENTNETWORKINTERFACE_H

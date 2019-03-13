@@ -46,7 +46,7 @@ int MqttSnClientHandleMasterSocket(MqttSnClientTcpNetwork *clientTcpNetwork, fd_
 void MqttSnClientHandleClientSockets(MqttSnClientTcpNetwork *clientTcpNetwork, MqttSnFixedSizeRingBuffer *receiveBuffer,
                                      fd_set *readfds);
 
-int compareDeviceAddress(int peer_fd, device_address *peer_adress);
+int getDeviceAddressFromFileDescriptor(int peer_fd, device_address *peer_address);
 
 void close_client_connection(MqttSnClientTcpNetwork *clientTcpNetwork, int i);
 

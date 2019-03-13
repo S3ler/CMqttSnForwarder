@@ -20,7 +20,7 @@ class MockClientLinuxTcpNetworkImplementation : public MockClientNetworkInterfac
   int sendToNetwork(device_address *to, const uint8_t *buf, uint8_t len) override;
   bool connectNetwork(device_address *address) override;
   void disconnectNetwork() override;
-  void loopNetwork() override;
+  int loopNetwork(MockClientNetworkReceiver *pReceiver) override;
 
 };
 

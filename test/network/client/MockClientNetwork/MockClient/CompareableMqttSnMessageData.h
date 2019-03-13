@@ -14,10 +14,20 @@
 
 class CompareableMqttSnMessageData {
  public:
+
   const bool use_identifier;
   const device_address address;
   const uint16_t data_length;
   const std::vector<uint8_t> data;
+
+  CompareableMqttSnMessageData(device_address *address,
+                               uint8_t *data,
+                               uint16_t data_length,
+                               bool useIdentifier)
+      : address(*address),
+        data_length(data_length),
+        use_identifier(useIdentifier),
+        data(data, data + data_length) {}
 
   CompareableMqttSnMessageData(const device_address address, const uint16_t data_length, const uint16_t identifier)
       : address(address),
@@ -27,13 +37,18 @@ class CompareableMqttSnMessageData {
     // TODO test what happens with more than 255 clients with 1 byte message and 2 messag
   }
 
+  CompareableMqttSnMessageData(const uint16_t data_length, const device_address *address, const uint16_t identifier)
+      : address(*address),
+        data_length(data_length),
+        use_identifier(true),
+        data(generateMessageData(data_length, identifier, true)) {
+  }
+
   CompareableMqttSnMessageData(const uint16_t data_length, const uint16_t identifier)
       : address({0}),
         data_length(data_length),
         use_identifier(true),
-        data(generateMessageData(data_length, identifier, true)) {
-    // TODO test what happens with more than 255 clients with 1 byte message and 2 messag
-  }
+        data(generateMessageData(data_length, identifier, true)) {}
 
   std::vector<uint8_t> generateMessageData(uint16_t data_length, const uint16_t identifier, const bool useIdentifier) {
     std::vector<uint8_t> result;

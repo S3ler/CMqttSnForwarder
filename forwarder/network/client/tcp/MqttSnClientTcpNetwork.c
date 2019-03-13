@@ -198,7 +198,7 @@ int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffe
     if (clientTcpNetwork->client_socket[i] <= 0) {
       continue;
     }
-    if (compareDeviceAddress(clientTcpNetwork->client_socket[i], &peer_address) != 0) {
+    if (getDeviceAddressFromFileDescriptor(clientTcpNetwork->client_socket[i], &peer_address) != 0) {
       continue;
     }
     if (memcmp(peer_address.bytes, sendMessage.address.bytes, sizeof(device_address)) != 0) {
@@ -220,10 +220,10 @@ void close_client_connection(MqttSnClientTcpNetwork *clientTcpNetwork, int i) {
   clientTcpNetwork->client_socket[i] = -1;
 }
 
-int compareDeviceAddress(int peer_fd, device_address *peer_address) {
-  int addrlen;
+int getDeviceAddressFromFileDescriptor(int peer_fd, device_address *peer_address) {
   struct sockaddr_in address;
-  getpeername(peer_fd, (struct sockaddr *) &address, (socklen_t *) &addrlen);
+  socklen_t addrlen = sizeof(address);
+  getpeername(peer_fd, (struct sockaddr *) &address, &addrlen);
 
   unsigned char *ip = (unsigned char *) &address.sin_addr.s_addr;
   (*peer_address).bytes[0] = ip[0];

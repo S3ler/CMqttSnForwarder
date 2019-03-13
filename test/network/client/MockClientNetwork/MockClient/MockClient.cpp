@@ -7,8 +7,10 @@
 
 void MockClient::loop() {
   done = false;
-  while (!stopped) {
-    mockClientNetworkInterface->loopNetwork();
+  while (!stopped & mockClientNetworkInterface->isNetworkConnected()) {
+    if (mockClientNetworkInterface->loopNetwork(receiver) != 0) {
+      break;
+    }
   }
   mockClientNetworkInterface->disconnectNetwork();
   done = true;
@@ -59,7 +61,7 @@ void MockClient::receive(uint8_t *data, uint16_t length) {
   if (this->networkAddress == nullptr) {
     throw std::invalid_argument("gateway networkAddress not set");
   }
-  this->receiver->receive_any_message(data, length);
+  this->receiver->receive_any_message(nullptr, data, length);
 }
 
 void MockClient::setForwarderAddress(device_address *forwarderAddress) {
@@ -103,18 +105,15 @@ int MockClient::send(CompareableMqttSnMessageData* compareableMqttSnMessageData)
 }
 
 
-MockClientNetworkReceiverInterface *MockClient::getMockClientNetworkReceiverInterface() {
+MockClientNetworkReceiver *MockClient::getMockClientNetworkReceiver() {
   return receiver;
-}
-void MockClient::setMockClientNetworkReceiverInterface(MockClientNetworkReceiverInterface *receiver) {
-  this->receiver = receiver;
 }
 
 MockClient::MockClient(uint16_t identifier,
-                       const device_address *networkAddress,
+                       device_address *networkAddress,
                        device_address *forwarderAddress,
                        MockClientNetworkInterface *mockClientNetworkInterface,
-                       MockClientNetworkReceiverInterface *receiver) :
+                       MockClientNetworkReceiver *receiver) :
     identifier(identifier),
     networkAddress(networkAddress),
     forwarderAddress(forwarderAddress),
@@ -126,4 +125,7 @@ uint16_t MockClient::getIdentifier() {
 }
 const std::atomic<bool> &MockClient::getDone() const {
   return done;
+}
+device_address *MockClient::getNetworkAddress() const {
+  return networkAddress;
 }

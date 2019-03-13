@@ -31,9 +31,9 @@ template<MockClientNetworkAddressGenerator generateNetworkAddress, class MockCli
           std::shared_ptr<MockClientNetworkInterfaceType>
               mockClientNetworkInterfaceType(new MockClientNetworkInterfaceType);
           mockClientNetworkInterfaces.push_back(mockClientNetworkInterfaceType);
-          MockClientConfiguration
-              mockClientIdentifier
-              (generateNetworkAddress(client_count), client_count, mockClientNetworkInterfaceType.get());
+          MockClientConfiguration mockClientIdentifier
+              (generateNetworkAddress(client_count-min_client_count), client_count-min_client_count, mockClientNetworkInterfaceType.get());
+          // client_count-min_client_count => MockClient identfier start with 0
           mockClientIdentifiers.push_back(mockClientIdentifier);
         }
         MqttSnClientNetworkTestValueParameter mqttSnClientNetworkTestTypeParameter

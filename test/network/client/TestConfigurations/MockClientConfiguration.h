@@ -9,10 +9,10 @@
 #include "../MockClientNetwork/MockClient/MockClientNetworkInterface.h"
 
 class MockClientConfiguration {
-  public:
+ public:
   device_address address;
   uint16_t identifier;
-  MockClientNetworkInterface* mockClientNetworkInterface;
+  MockClientNetworkInterface *mockClientNetworkInterface;
 
   MockClientConfiguration(device_address address,
                           uint16_t identifier,

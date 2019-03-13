@@ -28,7 +28,8 @@ MqttSnGatewayClientNetworkTestConfiguration mqttSnGatewayClientNetworkTestConfig
                                                                                         true);
 device_address generateMockClientTcpNetworkAddress(uint16_t mockClientIdentifier) {
   // a zeroed device address tells the test set to use the given device address
-  device_address mockClientNetworkAddress({0, 0, 0, 0, 0, 0});
+  // device_address mockClientNetworkAddress({0, 0, 0, 0, 0, 0});
+  device_address mockClientNetworkAddress({127, 0, 0, 1, 0, 0});
   return mockClientNetworkAddress;
 }
 
