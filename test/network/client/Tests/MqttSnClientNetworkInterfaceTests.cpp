@@ -19,8 +19,6 @@
 TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVariableLength) {
   ASSERT_TRUE(clientNetworkGatewayLooper.pauseLoop());
 
-
-
   for (uint16_t messageCount = 0; messageCount < toTestMessageCount; ++messageCount) {
     // we send message in RoundRobin for each client
     for (const auto &mockClient : mockClients) {
@@ -57,6 +55,9 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVa
             if (counter < expectedMockClientSnMessageDatas.size()) {
               messageData->address = expectedMockClientSnMessageDatas[counter].address;
               messageData->data_length = expectedMockClientSnMessageDatas[counter].data_length;
+              memcpy(&messageData->data,
+                     &expectedMockClientSnMessageDatas[counter].data[0],
+                     expectedMockClientSnMessageDatas[counter].data_length);
               counter++;
               return 0;
             }

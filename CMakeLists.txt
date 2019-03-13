@@ -254,6 +254,44 @@ else ()
             gtest gtest_main gmock gmock_main lib-mqtt-sn-forwarder
             mock-mqtt-sn-fixed-size-ring-buffer mock-mqtt-sn-client-network mock-mqtt-sn-gateway-network)
 
+    add_executable(GatewayTests
+            test/network/gateway/MockGatewayNetwork/MockGateway.cpp
+            test/network/gateway/MockGatewayNetwork/MockGateway.h
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkReceiver.h
+            test/network/gateway/MockGatewayNetwork/MockGatewayNetworkInterface.h
+
+            test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.cpp
+            test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.h
+
+            test/network/gateway/TestConfigurations/MockGatewayConfiguration.h
+            test/network/gateway/TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.cpp
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkMessageDataGenerator.h
+            test/network/gateway/TestConfigurations/MqttSnGatewayNetworkValueParameter.h
+
+            test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp
+            test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h
+
+            test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.cpp
+            test/network/gateway/Tcp/MockGatewayLinuxTcpNetworkImplementation.h
+
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp
+            test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkInterfaceTests.cpp
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceInitializationTests.cpp
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceInitializationTests.h
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceConnectTests.cpp
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceConnectTests.h
+            test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkDisconnectTests.cpp
+            test/network/gateway/Tcp/LinuxTcpMqttSnGatewayNetworkDisconnectTests.h
+            test/network/gateway/Tcp/TextFixture.h
+            test/network/gateway/Tcp/TextFixture.cpp)
+
+    target_link_libraries(GatewayTests
+            gtest gtest_main gmock gmock_main pthread
+            lib-mqtt-sn-forwarder
+            lib-mqtt-sn-gateway-network)
 endif ()
 
 
