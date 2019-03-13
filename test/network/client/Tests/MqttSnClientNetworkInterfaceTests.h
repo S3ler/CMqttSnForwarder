@@ -39,6 +39,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
   std::vector<std::shared_ptr<MockClient>> mockClients;
   std::vector<std::shared_ptr<MockClientNetworkReceiver>> mockClientNetworkReceiver;
   uint8_t *(*generateMessageData)(uint8_t *arr, uint16_t len) = nullptr;
+  device_address (*getDeviceAddressFromNetworkContext)(uint16_t identifier, void *context) = nullptr;
 
   std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *> mqttSnFixedSizeRingBufferMockMap;
   StrictMock<MqttSnFixedSizeRingBufferMock> defaultMqttSnFixedSizeRingBufferMock;
@@ -48,14 +49,18 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
   uint16_t toTestMessageLength;
   uint16_t toTestMessageCount;
   bool useIdentifier;
+
   volatile std::atomic<uint32_t> counter;
   std::vector<CompareableMqttSnMessageData> expectedMockClientSnMessageDatas;
   std::vector<CompareableMqttSnMessageData> actualMockClientSnMessageDatas;
+
+
   virtual void SetUp() {
     counter=0;
     MqttSnClientNetworkTestValueParameter const &a = GetParam();
     MqttSnGatewayClientNetworkTestConfiguration p = a.mqttSnClientNetworkTestFixture;
 
+    this->getDeviceAddressFromNetworkContext = p.getDeviceAddressFromMqttSnClientTcpNetworkContext;
     this->clientNetworkContext = p.clientNetworkContext;
 
     ON_CALL(mockSendBuffer, pop(&sendBuffer, _))
@@ -78,6 +83,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
                                                             &sendBuffer,
                                                             10,
                                                             clientNetworkContext));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
     this->generateMessageData = a.messageDataGenerator;
 
@@ -98,7 +104,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
       mockClients.push_back(mockClient);
       mockClientNetworkReceiver.push_back(receiver);
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     toTestMessageLength = a.messageLength;
     toTestMessageCount = a.messageCount;
@@ -140,23 +146,19 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
 
   }
 
+  /*
   device_address getDeviceAddressFromNetworkContext(uint16_t identifier, void *context) {
     // TODO problem describe: we only have the address at the forwarder side, which is not equal to the combination ip+port on the client side
     // TODO this function must be a function pointer within the MqttSnGatewayClientNetworkTestConfiguration
     MqttSnClientTcpNetwork *clientTcpNetwork = (MqttSnClientTcpNetwork *) context;
-
     device_address peer_address = {0};
     if (clientTcpNetwork->client_socket[identifier] <= 0) {
-      std::cout << "bad: " << std::to_string(clientTcpNetwork->client_socket[identifier])<<std::endl;
       throw std::bad_exception();
     }
-
     getDeviceAddressFromFileDescriptor(clientTcpNetwork->client_socket[identifier], &peer_address);
-
     return peer_address;
-
   }
-
+  */
 };
 
 #endif //CMQTTSNFORWARDER_BASEMQTTSNCLIENTNETWORKTESTS_H

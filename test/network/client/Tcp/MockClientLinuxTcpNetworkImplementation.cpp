@@ -135,7 +135,8 @@ int MockClientLinuxTcpNetworkImplementation::loopNetwork(MockClientNetworkReceiv
     if ((valread = read(sd, buffer, buffer_length)) <= 0) {
       return -1;
     } else {
-      if (valread >= MAX_MESSAGE_LENGTH) {
+      if (valread > MAX_MESSAGE_LENGTH) {
+        perror("MAX_MESSAGE_LENGTH");
         return 0;
       }
       // convert IP-Address to device_address

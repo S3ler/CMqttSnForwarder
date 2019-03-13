@@ -14,10 +14,19 @@
 #include "../TestConfigurations/CartesianProductTestCaseGenerator.h"
 #include "../TestConfigurations/CartesianProductTestCaseGenerator.cpp"
 
-
 MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock = nullptr;
 std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
     *globalMqttSnFixedSizeRingBufferMockMap = nullptr;
+
+device_address getDeviceAddressFromMqttSnClientTcpNetworkContext(uint16_t identifier, void *context) {
+  MqttSnClientTcpNetwork *clientTcpNetwork = (MqttSnClientTcpNetwork *) context;
+  device_address peer_address = {0};
+  if (clientTcpNetwork->client_socket[identifier] <= 0) {
+    throw std::bad_exception();
+  }
+  getDeviceAddressFromFileDescriptor(clientTcpNetwork->client_socket[identifier], &peer_address);
+  return peer_address;
+}
 
 MqttSnClientTcpNetwork clientNetworkContext = {0};
 device_address forwarderAddress({127, 0, 0, 1, (uint8_t) ((uint16_t) 9999 >> 8), (uint8_t) ((uint16_t) 9999 >> 0)});
@@ -25,6 +34,7 @@ std::vector<std::shared_ptr<MockClientLinuxTcpNetworkImplementation>> mockClient
 MqttSnGatewayClientNetworkTestConfiguration mqttSnGatewayClientNetworkTestConfiguration(forwarderAddress,
                                                                                         &clientNetworkContext,
                                                                                         ClientLinuxTcpInit,
+                                                                                        getDeviceAddressFromMqttSnClientTcpNetworkContext,
                                                                                         true);
 device_address generateMockClientTcpNetworkAddress(uint16_t mockClientIdentifier) {
   // a zeroed device address tells the test set to use the given device address
@@ -52,8 +62,8 @@ struct PrintToStringMqttSnClientNetworkTestValueParameterParamName {
 };
 
 INSTANTIATE_TEST_SUITE_P(SendReceiveTests,
-    MqttSnClientNetworkInterfaceTests,
-    ::testing::ValuesIn(clientNetworkTestParameter.begin(), clientNetworkTestParameter.end()),
-    PrintToStringMqttSnClientNetworkTestValueParameterParamName());
+                         MqttSnClientNetworkInterfaceTests,
+                         ::testing::ValuesIn(clientNetworkTestParameter.begin(), clientNetworkTestParameter.end()),
+                         PrintToStringMqttSnClientNetworkTestValueParameterParamName());
 
 #endif //CMQTTSNFORWARDER_TCPMQTTSNCLIENTNETWORKINTERFACETESTS_H
