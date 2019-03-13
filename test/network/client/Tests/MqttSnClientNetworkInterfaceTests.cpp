@@ -19,9 +19,7 @@
 TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVariableLength) {
   ASSERT_TRUE(clientNetworkGatewayLooper.pauseLoop());
 
-  volatile std::atomic<uint32_t> counter(0);
-  std::vector<CompareableMqttSnMessageData> expectedMockClientSnMessageDatas;
-  std::vector<CompareableMqttSnMessageData> actualMockClientSnMessageDatas;
+
 
   for (uint16_t messageCount = 0; messageCount < toTestMessageCount; ++messageCount) {
     // we send message in RoundRobin for each client
@@ -38,7 +36,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVa
       EXPECT_CALL((*mockClient->getMockClientNetworkReceiver()), receive_any_message(_, _, _))
           .Times(1)
           .WillRepeatedly(Invoke(
-              [this, &actualMockClientSnMessageDatas]
+              [this]
                   (device_address *address,
                    uint8_t *data,
                    uint16_t data_length) -> void {
@@ -52,7 +50,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVa
   EXPECT_CALL(mockSendBuffer, pop(&sendBuffer, _))
       .Times(AtLeast(mockClients.size() * toTestMessageCount))
       .WillRepeatedly(Invoke(
-          [this, &expectedMockClientSnMessageDatas, &counter]
+          [this]
               (MqttSnFixedSizeRingBuffer *queue,
                MqttSnMessageData *messageData) -> int {
             memset(messageData, 0, sizeof(MqttSnMessageData));

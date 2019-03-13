@@ -103,59 +103,59 @@ void MockClientLinuxTcpNetworkImplementation::disconnectNetwork() {
 }
 
 int MockClientLinuxTcpNetworkImplementation::loopNetwork(MockClientNetworkReceiver *pReceiver) {
-  uint32_t timeout_ms = 1000;
+  uint32_t timeout_ms = 100;
   struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
   if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
     interval.tv_sec = 0;
     interval.tv_usec = 100;
+  }
+  // init read fd set
+  // new
+  int max_sd;
+  fd_set readfds;
+  FD_ZERO(&readfds);
 
-    // init read fd set
-    // new
-    int max_sd;
-    fd_set readfds;
-    FD_ZERO(&readfds);
+  FD_SET(forwarder_socket_fd, &readfds);
+  max_sd = forwarder_socket_fd;
 
-    FD_SET(forwarder_socket_fd, &readfds);
-    max_sd = forwarder_socket_fd;
+  int activity = select(max_sd + 1, &readfds, NULL, NULL, &interval);
 
-    int activity = select(max_sd + 1, &readfds, NULL, NULL, &interval);
-
-    if ((activity < 0) && (errno != EINTR)) {
-      //printf("loopNetwork select error");
-      return 0;
-    }
-    if (activity == 0) {
-      return 0;
-    }
-    if (FD_ISSET(forwarder_socket_fd, &readfds)) {
-      int sd = forwarder_socket_fd;
-      uint8_t buffer[MAX_MESSAGE_LENGTH + 10];
-      int buffer_length = MAX_MESSAGE_LENGTH + 10;
-      int valread;
-      if ((valread = read(sd, buffer, buffer_length)) <= 0) {
-        return -1;
-      } else {
-        if (valread >= MAX_MESSAGE_LENGTH) {
-          return 0;
-        }
-        // convert IP-Address to device_address
-        device_address sender_address;
-        struct sockaddr_in address;
-        socklen_t addrlen = sizeof(struct sockaddr_in);
-        getpeername(forwarder_socket_fd, (struct sockaddr *) &address, &addrlen);
-        unsigned char *ip = (unsigned char *) &address.sin_addr.s_addr;
-        sender_address.bytes[0] = ip[0];
-        sender_address.bytes[1] = ip[1];
-        sender_address.bytes[2] = ip[2];
-        sender_address.bytes[3] = ip[3];
-        uint16_t port_as_number = (uint16_t) htons(address.sin_port);
-        sender_address.bytes[4] = (uint8_t) (port_as_number >> 8);
-        sender_address.bytes[5] = (uint8_t) (port_as_number >> 0);
-        pReceiver->receive_any_message(&sender_address, buffer, buffer_length);
+  if ((activity < 0) && (errno != EINTR)) {
+    //printf("loopNetwork select error");
+    return 0;
+  }
+  if (activity == 0) {
+    return 0;
+  }
+  if (FD_ISSET(forwarder_socket_fd, &readfds)) {
+    int sd = forwarder_socket_fd;
+    uint8_t buffer[MAX_MESSAGE_LENGTH + 10];
+    int buffer_length = MAX_MESSAGE_LENGTH + 10;
+    int valread;
+    if ((valread = read(sd, buffer, buffer_length)) <= 0) {
+      return -1;
+    } else {
+      if (valread >= MAX_MESSAGE_LENGTH) {
         return 0;
       }
+      // convert IP-Address to device_address
+      device_address sender_address;
+      struct sockaddr_in address;
+      socklen_t addrlen = sizeof(struct sockaddr_in);
+      getpeername(forwarder_socket_fd, (struct sockaddr *) &address, &addrlen);
+      unsigned char *ip = (unsigned char *) &address.sin_addr.s_addr;
+      sender_address.bytes[0] = ip[0];
+      sender_address.bytes[1] = ip[1];
+      sender_address.bytes[2] = ip[2];
+      sender_address.bytes[3] = ip[3];
+      uint16_t port_as_number = (uint16_t) htons(address.sin_port);
+      sender_address.bytes[4] = (uint8_t) (port_as_number >> 8);
+      sender_address.bytes[5] = (uint8_t) (port_as_number >> 0);
+      pReceiver->receive_any_message(&sender_address, buffer, valread);
+      return 0;
     }
   }
+
   return 0;
 }
 void MockClientLinuxTcpNetworkImplementation::setNetworkAddress(device_address *address) {

@@ -73,10 +73,13 @@ void ClientNetworkGatewayLooper::networkLoop() {
   while (!stopped) {
     if (paused) {
       isPaused = true;
-      while (paused) {
+      while (paused & !stopped) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
       }
       isPaused = false;
+      if(stopped){
+        break;
+      }
     }
 
     if (clientNetworkReceive != nullptr) {

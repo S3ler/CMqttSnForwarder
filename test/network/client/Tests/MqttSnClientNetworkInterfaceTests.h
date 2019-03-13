@@ -48,8 +48,11 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
   uint16_t toTestMessageLength;
   uint16_t toTestMessageCount;
   bool useIdentifier;
-
+  volatile std::atomic<uint32_t> counter;
+  std::vector<CompareableMqttSnMessageData> expectedMockClientSnMessageDatas;
+  std::vector<CompareableMqttSnMessageData> actualMockClientSnMessageDatas;
   virtual void SetUp() {
+    counter=0;
     MqttSnClientNetworkTestValueParameter const &a = GetParam();
     MqttSnGatewayClientNetworkTestConfiguration p = a.mqttSnClientNetworkTestFixture;
 
@@ -73,7 +76,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
                                                             &mqttSnClientNetworkInterface,
                                                             &receiveBuffer,
                                                             &sendBuffer,
-                                                            1000,
+                                                            10,
                                                             clientNetworkContext));
 
     this->generateMessageData = a.messageDataGenerator;
