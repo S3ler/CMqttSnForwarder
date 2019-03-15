@@ -34,7 +34,6 @@ class CompareableMqttSnMessageData {
         data_length(data_length),
         use_identifier(true),
         data(generateMessageData(data_length, identifier, true)) {
-    // TODO test what happens with more than 255 clients with 1 byte message and 2 messag
   }
 
   CompareableMqttSnMessageData(const uint16_t data_length, const device_address *address, const uint16_t identifier)
@@ -51,14 +50,39 @@ class CompareableMqttSnMessageData {
         data(generateMessageData(data_length, identifier, true)) {}
 
   std::vector<uint8_t> generateMessageData(uint16_t data_length, const uint16_t identifier, const bool useIdentifier) {
+    if (data_length < 2) {
+      // TODO exception
+    }
+    if (useIdentifier && data_length < 3) {
+      // TODO exception
+    }
+
     std::vector<uint8_t> result;
-    for (uint16_t i = 0; i < data_length; ++i) {
-      result.push_back(static_cast<uint8_t>(i % UINT8_MAX));
+    uint16_t bytesGenerated = 0;
+    bool threeOctetsLengthMessageHeader = false;
+    if (data_length > UINT8_MAX) {
+      // generate three octets length message header
+      result.push_back(static_cast<uint8_t>(0x01));
+      result.push_back(static_cast<uint8_t>(data_length >> 8));
+      result.push_back(static_cast<uint8_t>(data_length >> 0));
+      bytesGenerated = 3;
+      threeOctetsLengthMessageHeader = true;
+    } else {
+      // generate one octets length message header
+      result.push_back(static_cast<uint8_t>(data_length));
+      bytesGenerated = 1;
+    }
+
+    for (; bytesGenerated < data_length; ++bytesGenerated) {
+      result.push_back(static_cast<uint8_t>(bytesGenerated % UINT8_MAX));
     }
     if (useIdentifier) {
-      result[0] = static_cast<uint8_t>(identifier >> 0);
-      if (data_length > 1) {
-        result[1] = static_cast<uint8_t>(identifier >> 8);
+      if (threeOctetsLengthMessageHeader) {
+        result[4] = static_cast<uint8_t>(identifier >> 0);
+        result[5] = static_cast<uint8_t>(identifier >> 8);
+      }else{
+        result[1] = static_cast<uint8_t>(identifier >> 0);
+        result[2] = static_cast<uint8_t>(identifier >> 8);
       }
     }
     return result;

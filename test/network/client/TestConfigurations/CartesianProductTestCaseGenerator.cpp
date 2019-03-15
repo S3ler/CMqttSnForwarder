@@ -11,20 +11,27 @@ template<MockClientNetworkAddressGenerator generateNetworkAddress, class MockCli
     std::vector<std::shared_ptr<MockClientNetworkInterfaceType>> &mockClientNetworkInterfaces) {
   ::std::vector<MqttSnClientNetworkTestValueParameter> result;
 
-  uint16_t min_message_length = 1;
+  uint16_t min_message_length = CMQTTSNFORWARDER_CARTESIANTESTGENERATOR_MIN_MESSAGE_LENGTH;
+  // TODO add compile checks for min_message_length < MAX_MESSAGE_LENGTH
+  if (mqttSnClientNetworkTestFixture.useIdentifier) {
+    // TODO compile time maybe
+    min_message_length = 3;
+  }
+
+  uint16_t message_length_steps = static_cast<uint16_t>(MAX_MESSAGE_LENGTH / 2) - min_message_length;
   uint16_t max_message_length = MAX_MESSAGE_LENGTH;
 
-  uint16_t min_client_count = 1;
-  uint16_t max_client_count = 10;
+  uint16_t min_client_count = 2;
+  uint16_t max_client_count = 3;
 
-  uint16_t min_message_count = 1;
-  uint16_t max_message_counter = 2;
+  uint16_t min_message_count = 2;
+  uint16_t max_message_counter = 3;
 
   for (uint16_t client_count = min_client_count; client_count <= max_client_count; ++client_count) {
 
     for (uint16_t message_count = min_message_count; message_count <= max_message_counter; ++message_count) {
       for (uint16_t message_length = min_message_length; message_length <= max_message_length;
-           message_length += 255 / 2) {
+           message_length += message_length_steps) {
         std::vector<MockClientConfiguration> mockClientIdentifiers;
 
         for (uint16_t i = min_client_count; i <= client_count; ++i) {
@@ -32,7 +39,9 @@ template<MockClientNetworkAddressGenerator generateNetworkAddress, class MockCli
               mockClientNetworkInterfaceType(new MockClientNetworkInterfaceType);
           mockClientNetworkInterfaces.push_back(mockClientNetworkInterfaceType);
           MockClientConfiguration mockClientIdentifier
-              (generateNetworkAddress(client_count-min_client_count), client_count-min_client_count, mockClientNetworkInterfaceType.get());
+              (generateNetworkAddress(client_count - min_client_count),
+               client_count - min_client_count,
+               mockClientNetworkInterfaceType.get());
           // client_count-min_client_count => MockClient identfier start with 0
           mockClientIdentifiers.push_back(mockClientIdentifier);
         }

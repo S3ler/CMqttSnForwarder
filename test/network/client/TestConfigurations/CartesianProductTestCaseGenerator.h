@@ -8,6 +8,8 @@
 #include "../../../../forwarder/global_defines.h"
 #include "MqttSnClientNetworkTestValueParameter.h"
 
+#define CMQTTSNFORWARDER_CARTESIANTESTGENERATOR_MIN_MESSAGE_LENGTH 2
+
 typedef device_address(*MockClientNetworkAddressGenerator)(uint16_t);
 template<MockClientNetworkAddressGenerator generateNetworkAddress, class MockClientNetworkInterfaceType>
 ::std::vector<MqttSnClientNetworkTestValueParameter> getParameterMqttSnClientNetworkTestTypeParameter(

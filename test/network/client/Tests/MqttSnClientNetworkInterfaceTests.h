@@ -54,6 +54,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
   std::vector<CompareableMqttSnMessageData> expectedMockClientSnMessageDatas;
   std::vector<CompareableMqttSnMessageData> actualMockClientSnMessageDatas;
 
+  std::list<CompareableMqttSnMessageData> forwarderMqttSnMessageDataBuffer;
 
   virtual void SetUp() {
     counter=0;
@@ -62,6 +63,15 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
 
     this->getDeviceAddressFromNetworkContext = p.getDeviceAddressFromMqttSnClientTcpNetworkContext;
     this->clientNetworkContext = p.clientNetworkContext;
+
+    toTestMessageLength = a.messageLength;
+    toTestMessageCount = a.messageCount;
+    useIdentifier = a.mqttSnClientNetworkTestFixture.useIdentifier;
+
+    if (toTestMessageLength < 2 |
+        useIdentifier && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
+      GTEST_SKIP();
+    }
 
     ON_CALL(mockSendBuffer, pop(&sendBuffer, _))
         .WillByDefault(Return(-1));
@@ -106,13 +116,14 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    toTestMessageLength = a.messageLength;
-    toTestMessageCount = a.messageCount;
-    useIdentifier = a.mqttSnClientNetworkTestFixture.useIdentifier;
-
   }
 
   virtual void TearDown() {
+
+    if (toTestMessageLength < 2 |
+        useIdentifier && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
+      GTEST_SKIP();
+    }
 
     for (auto &mockClient : mockClients) {
       mockClient->stop_loop();
