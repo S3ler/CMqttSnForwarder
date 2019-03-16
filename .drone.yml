@@ -2,15 +2,10 @@ kind: pipeline
 name: default
 
 steps:
-  - name: send
-    image: plugins/webhook
-    settings:
-      urls: http://arsmb.de/cmqttsnforwarder
-
   - name: prepare
     image: ubuntu
     commands:
-    - sudo apt-get update && apt-get install -y cmake gcc
+    - apt-get update && apt-get install -y cmake gcc
     - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
     - make MqttSnForwarder_LinuxTcpClientNetwork_Tests
     - ./MqttSnForwarder_LinuxTcpClientNetwork_Tests
