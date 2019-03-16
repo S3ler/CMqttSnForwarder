@@ -5,7 +5,7 @@ steps:
   - name: prepare
     image: ubuntu
     commands:
-    - apt-get update && apt-get install -y cmake gcc
+    - apt-get update && apt-get install -y cmake gcc g++
     - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
     - make MqttSnForwarder_LinuxTcpClientNetwork_Tests
     - ./MqttSnForwarder_LinuxTcpClientNetwork_Tests
