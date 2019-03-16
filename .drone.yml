@@ -8,7 +8,7 @@ steps:
       urls: http://arsmb.de/cmqttsnforwarder
 
   - name: prepare
-    image: rikorose/gcc-cmake
+    image: ubuntu
     commands:
     - apt-get update && apt-get install -y git cmake gcc g++
     - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
