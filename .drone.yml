@@ -9,4 +9,4 @@ steps:
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
       - make MqttSnForwarderIntegrationTests
       - ./MqttSnForwarderIntegrationTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:~/XML_Report.xml"
-      - cat ~\XML_Report.xml
+      - cat ~/XML_Report.xml
