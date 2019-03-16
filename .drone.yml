@@ -1,0 +1,20 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: send
+    image: plugins/webhook
+    settings:
+      urls: http://arsmb.de/cmqttsnforwarder
+
+  - name: prepare
+    image: ubuntu
+    commands:
+    - docker build --tag cmakegcc  --file Dockerfile .
+
+  - name: test
+    image: cmakegcc
+    commands:
+    - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
+    - make MqttSnForwarder_LinuxTcpClientNetwork_Tests
+    - ./MqttSnForwarder_LinuxTcpClientNetwork_Tests
