@@ -18,7 +18,8 @@ set(IMPLEMENTATIONL_FILES
         forwarder/MqttSnFordwarder.c
         forwarder/global_defines.h
         forwarder/MqttSnGatewayNetworkInterface.c
-        forwarder/MqttSnClientNetworkInterface.c)
+        forwarder/MqttSnClientNetworkInterface.c
+)
 include_directories(forwarder)
 
 set(MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES
@@ -27,11 +28,15 @@ set(MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES
 
 set(TCP_GATWAY_NETWORK_FILES
         forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h
-        forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c)
+        forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c
+        forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.c
+        forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.h)
 
 set(TCP_CLIENT_NETWORK_FILES
         forwarder/network/client/tcp/MqttSnClientTcpNetwork.h
-        forwarder/network/client/tcp/MqttSnClientTcpNetwork.c)
+        forwarder/network/client/tcp/MqttSnClientTcpNetwork.c
+        forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.c
+        forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.h)
 
 add_library(lib-mqtt-sn-forwarder ${IMPLEMENTATIONL_FILES})
 
