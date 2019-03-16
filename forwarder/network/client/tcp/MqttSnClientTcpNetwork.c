@@ -23,6 +23,8 @@ int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
   clientTcpNetwork->max_clients = CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS;
   for (int i = 0; i < clientTcpNetwork->max_clients; ++i) {
     clientTcpNetwork->client_socket[i] = -1;
+    memset(clientTcpNetwork->client_buffer[i], 0, CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH);
+    clientTcpNetwork->client_buffer_bytes[i] = 0;
   }
   uint16_t port = n->client_network_address->bytes[5];
   port += (uint16_t) n->client_network_address->bytes[4] << 8;
@@ -237,39 +239,225 @@ int getDeviceAddressFromFileDescriptor(int peer_fd, device_address *peer_address
   return 0;
 }
 
-void MqttSnClientHandleClientSockets(MqttSnClientTcpNetwork *clientTcpNetwork, MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                     fd_set *readfds) {
-  for (int i = 0; i < clientTcpNetwork->max_clients; i++) {
-    int sd = clientTcpNetwork->client_socket[i];
+int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNetwork *clientTcpNetwork,
+                                                               MqttSnFixedSizeRingBuffer *receiveBuffer,
+                                                               int client_socket_position) {
+  int client_fd = clientTcpNetwork->client_socket[client_socket_position];
+  uint16_t buffer_length = CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH;
+  uint8_t buffer[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH];
+  ssize_t read_bytes = 0;
+  if ((read_bytes = read(client_fd, buffer, buffer_length)) <= 0) {
+    return -1;
+  }
 
-    if (FD_ISSET(sd, readfds) == 0) {
-      continue;
+  if (clientTcpNetwork->client_buffer[client_socket_position][0] == 0) {
+    // no message in buffer, new message, read message bytes
+    if (save_multiple_new_messages(buffer,
+                                   read_bytes,
+                                   get_client_device_address(client_fd),
+                                   clientTcpNetwork->client_buffer[client_socket_position],
+                                   &clientTcpNetwork->client_buffer_bytes[client_socket_position],
+                                   receiveBuffer) == 0) {
+      return 0;
     }
+    return -1;
 
-    int buffer_length = CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH;
-    char buffer[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH];
-    int valread = 0;
-    if ((valread = read(sd, buffer, buffer_length)) <= 0) {
-      // error => client disconnected
-      // Close the socket and mark as 0 in the list for reuse
-      close(sd);
-      clientTcpNetwork->client_socket[i] = 0;
-      continue;
+  } else {
+    if (save_incomplete_message(buffer,
+                                read_bytes,
+                                get_client_device_address(client_fd),
+                                clientTcpNetwork->client_buffer[client_socket_position],
+                                &clientTcpNetwork->client_buffer_bytes[client_socket_position],
+                                receiveBuffer) == 0) {
+      return 0;
     }
-
-    if (valread > MAX_MESSAGE_LENGTH) {
-      continue;
+    if (save_multiple_messages(buffer,
+                               read_bytes,
+                               get_client_device_address(client_fd),
+                               clientTcpNetwork->client_buffer[client_socket_position],
+                               &clientTcpNetwork->client_buffer_bytes[client_socket_position],
+                               receiveBuffer) == 0) {
+      return 0;
     }
-
-    MqttSnMessageData receiveMessageData = {0};
-    receiveMessageData.data_length = valread;
-    memcpy(receiveMessageData.data, buffer, receiveMessageData.data_length);
-    receiveMessageData.address = getClientDeviceAddress(sd);
-
-    put(receiveBuffer, &receiveMessageData);
+    return -1;
   }
 }
-device_address getClientDeviceAddress(int client_file_descriptor) {
+
+uint16_t get_message_length(uint8_t *data) {
+  MqttSnMessageHeaderThreeOctetsLengthField
+      *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
+  if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01) {
+    return threeOctetsLengthField->length;
+  }
+  MqttSnMessageHeaderOneOctetLengthField
+      *oneOctetLengthField = (MqttSnMessageHeaderOneOctetLengthField *) data;
+  return oneOctetLengthField->length;
+}
+
+int save_message_into_receive_buffer(uint8_t *data,
+                                     uint16_t data_length,
+                                     device_address address,
+                                     MqttSnFixedSizeRingBuffer *receiveBuffer) {
+  MqttSnMessageData receiveMessageData = {0};
+  receiveMessageData.data_length = data_length;
+  memcpy(receiveMessageData.data, data, receiveMessageData.data_length);
+  receiveMessageData.address = address;
+  put(receiveBuffer, &receiveMessageData);
+  return 0;
+}
+
+int save_complete_new_message(uint8_t *data,
+                              ssize_t data_length,
+                              device_address address,
+                              uint8_t *client_buffer,
+                              uint16_t *client_buffer_bytes,
+                              MqttSnFixedSizeRingBuffer *receiveBuffer) {
+  if (data_length != get_message_length(data)) {
+    return -1;
+  }
+  save_message_into_receive_buffer(data, (uint16_t) data_length, address, receiveBuffer);
+  memset(client_buffer, 0, CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH);
+  *client_buffer_bytes = 0;
+  return 0;
+}
+
+int save_incomplete_new_message(uint8_t *data,
+                                ssize_t data_length,
+                                device_address address,
+                                uint8_t *client_buffer,
+                                uint16_t *client_buffer_bytes,
+                                MqttSnFixedSizeRingBuffer *receiveBuffer) {
+  if (data_length < get_message_length(data)) {
+    return -1;
+  }
+  memcpy(client_buffer, data, (size_t) data_length);
+  *client_buffer_bytes = (uint16_t) data_length;
+  return 0;
+}
+
+int save_multiple_new_messages(uint8_t *data,
+                               ssize_t data_length,
+                               device_address address,
+                               uint8_t *client_buffer,
+                               uint16_t *client_buffer_bytes,
+                               MqttSnFixedSizeRingBuffer *receiveBuffer) {
+  if (data_length < get_message_length(data)) {
+    return -1;
+  }
+  ssize_t read_bytes = 0;
+  int16_t message_length = get_message_length(data);
+  for (; data_length >= read_bytes + message_length;
+         read_bytes += message_length, message_length = get_message_length(data)) {
+    if (save_complete_new_message(data + read_bytes,
+                                  message_length,
+                                  address,
+                                  client_buffer,
+                                  client_buffer_bytes,
+                                  receiveBuffer) == 0) {
+      continue;
+    } else {
+      return -1;
+    }
+  }
+  if (data_length == read_bytes) {
+    // only complete messages in buffer, all messages saved
+    return 0;
+  }
+
+  if (save_incomplete_new_message(data + read_bytes,
+                                  data_length - read_bytes,
+                                  address,
+                                  client_buffer,
+                                  client_buffer_bytes,
+                                  receiveBuffer) == 0) {
+    return 0;
+  }
+  return -1;
+}
+
+int save_completed_message(uint8_t *data,
+                           ssize_t data_length,
+                           device_address address,
+                           uint8_t *client_buffer,
+                           uint16_t *client_buffer_bytes,
+                           MqttSnFixedSizeRingBuffer *receiveBuffer) {
+  if (*client_buffer_bytes + data_length != get_message_length(client_buffer)) {
+    return -1;
+  }
+  memcpy(client_buffer + *client_buffer_bytes, data, (size_t) data_length);
+  *client_buffer_bytes += (uint16_t) data_length;
+  save_message_into_receive_buffer(client_buffer, (uint16_t) *client_buffer_bytes, address, receiveBuffer);
+  memset(client_buffer, 0, CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH);
+  *client_buffer_bytes = 0;
+  return 0;
+}
+
+int save_incomplete_message(uint8_t *data,
+                            ssize_t data_length,
+                            device_address address,
+                            uint8_t *client_buffer,
+                            uint16_t *client_buffer_bytes,
+                            MqttSnFixedSizeRingBuffer *receiveBuffer) {
+  if (*client_buffer_bytes + data_length < get_message_length(client_buffer)) {
+    return -1;
+  }
+  memcpy(client_buffer + *client_buffer_bytes, data, (size_t) data_length);
+  *client_buffer_bytes += (uint16_t) data_length;
+  return 0;
+}
+
+int save_multiple_messages(uint8_t *data,
+                           ssize_t data_length,
+                           device_address address,
+                           uint8_t *client_buffer,
+                           uint16_t *client_buffer_bytes,
+                           MqttSnFixedSizeRingBuffer *receiveBuffer) {
+  if (*client_buffer_bytes + data_length > get_message_length(client_buffer)) {
+    return -1;
+  }
+  uint16_t completed_message_bytes = get_message_length(client_buffer) - *client_buffer_bytes;
+  if (save_completed_message(data,
+                             get_message_length(client_buffer) - *client_buffer_bytes,
+                             address,
+                             client_buffer,
+                             client_buffer_bytes,
+                             receiveBuffer) != 0) {
+    return -1;
+  }
+  if (save_multiple_messages(data + data_length,
+                             data_length - (ssize_t) completed_message_bytes,
+                             address,
+                             client_buffer,
+                             client_buffer_bytes,
+                             receiveBuffer) == 0) {
+    return -1;
+  }
+  return 0;
+}
+
+void MqttSnClientHandleClientSockets(MqttSnClientTcpNetwork *clientTcpNetwork, MqttSnFixedSizeRingBuffer *receiveBuffer,
+                                     fd_set *readfds) {
+  for (int client_socket_position = 0;
+       client_socket_position < clientTcpNetwork->max_clients;
+       client_socket_position++) {
+    int client_fd = clientTcpNetwork->client_socket[client_socket_position];
+
+    if (FD_ISSET(client_fd, readfds) == 0) {
+      continue;
+    }
+    if (save_received_messages_from_tcp_socket_into_receive_buffer(clientTcpNetwork,
+                                                                   receiveBuffer,
+                                                                   client_socket_position) != 0) {
+      close(client_fd);
+      clientTcpNetwork->client_socket[client_socket_position] = 0;
+      memset(clientTcpNetwork->client_buffer[client_socket_position],
+             0,
+             CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH);
+      clientTcpNetwork->client_buffer_bytes[client_socket_position] = 0;
+    }
+  }
+}
+device_address get_client_device_address(int client_file_descriptor) {
 
   struct sockaddr_in address;
   int addrlen = sizeof(struct sockaddr_in);
@@ -306,11 +494,13 @@ int MqttSnClientHandleMasterSocket(MqttSnClientTcpNetwork *clientTcpNetwork, fd_
            new_socket, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
 
     // add new socket to array of sockets
-    for (int j = 0; j < clientTcpNetwork->max_clients; ++j) {
+    for (int client_socket_position = 0;
+         client_socket_position < clientTcpNetwork->max_clients;
+         ++client_socket_position) {
       // if position is empty
-      if (clientTcpNetwork->client_socket[j] == -1) {
-        clientTcpNetwork->client_socket[j] = new_socket;
-        printf("Adding to list of sockets as %d\n", j);
+      if (clientTcpNetwork->client_socket[client_socket_position] == -1) {
+        clientTcpNetwork->client_socket[client_socket_position] = new_socket;
+        printf("Adding to list of sockets as %d\n", client_socket_position);
 
         break;
       }
