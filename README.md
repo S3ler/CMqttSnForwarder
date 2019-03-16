@@ -1,3 +1,7 @@
+
+[![Build Status](http://arsmb.de/api/badges/S3ler/CMqttSnForwarder/status.svg)](http://arsmb.de/S3ler/CMqttSnForwarder)
+
+
 # C MQTT-SN Forwarder
 What does not work yet:
 automatically choice of MQTT-SN Gateway (we need a SearchGW and parsing prodecure)
