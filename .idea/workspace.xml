@@ -32,6 +32,8 @@
   <component name="ChangeListManager">
     <list default="true" id="61f1f14f-a9c1-40c4-9dec-ddb457b07ad0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.drone.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.drone.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/build-linux-autotools.sh" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/build-linux-autotools.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/build-linux-bazel.sh" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/build-linux-bazel.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/env-linux.sh" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/env-linux.sh" afterDir="false" />
@@ -94,19 +96,19 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.drone.yml">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="12" column="55" selection-start-line="12" selection-start-column="55" selection-end-line="12" selection-end-column="55" />
+            <state relative-caret-position="451">
+              <caret line="140" selection-start-line="140" selection-end-line="140" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+        <entry file="file://$PROJECT_DIR$/.drone.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="186" column="68" selection-start-line="186" selection-start-column="68" selection-end-line="186" selection-end-column="68" />
+            <state relative-caret-position="336">
+              <caret line="16" column="51" selection-start-line="16" selection-start-column="51" selection-end-line="16" selection-end-column="51" />
             </state>
           </provider>
         </entry>
@@ -115,10 +117,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>MqttSnForwarderDeinit_</find>
-      <find>MqttSnForwarderTests</find>
-      <find>MqttSnForwarderLoop_</find>
-      <find>globalMqttSnFixedSizeRingBufferMockMap</find>
       <find>clientNetworkReceiveBuffer</find>
       <find>ASSERT_EQ(MqttSnForwarderInit(&amp;mqttSnForwarder, clientNetworkContext, gatewayNetworkContext), 0);</find>
       <find>ReturnsZ</find>
@@ -145,6 +143,10 @@
       <find>save_message_into_receive_buffer</find>
       <find>MqttSnTcpNetworkMessageParser</find>
       <find>MqttSnClientNetworkInterfaceUnitTests</find>
+      <find>MqttSnClientNetworkInterfaceUnitTests</find>
+      <find>MqttSnGatewayNetworkInterfaceUnitTests</find>
+      <find>MqttSnFixedSizeRingBufferUnitTests</find>
+      <find>MqttSnForwarderLinuxTcpGatewayNetworkTests</find>
     </findStrings>
     <replaceStrings>
       <replace>peer_adress</replace>
@@ -257,37 +259,28 @@
             <path>
               <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
               <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
-              <item name="forwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="network" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
               <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
-              <item name="forwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="network" type="462c0819:PsiDirectoryNode" />
               <item name="client" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
               <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
-              <item name="forwarder" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="network" type="462c0819:PsiDirectoryNode" />
               <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="tcp" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
-              <item name="forwarder" type="462c0819:PsiDirectoryNode" />
-              <item name="network" type="462c0819:PsiDirectoryNode" />
-              <item name="gateway" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CMqttSnForwarder" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CMqttSnForwarder" type="462c0819:PsiDirectoryNode" />
-              <item name="forwarder" type="462c0819:PsiDirectoryNode" />
-              <item name="network" type="462c0819:PsiDirectoryNode" />
-              <item name="tcphelper" type="462c0819:PsiDirectoryNode" />
+              <item name="Tests" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -329,8 +322,14 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.MqttSnClientNetworkInterfaceUnitTests">
+  <component name="RunManager" selected="Google Test.All in MqttSnClientNetworkInterfaceTests.h">
     <configuration name="All in MqttSnClientNetworkInterfaceTests.cpp" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CMqttSnForwarder" TARGET_NAME="MqttSnClientNetworkInterfaceUnitTests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CMqttSnForwarder" RUN_TARGET_NAME="MqttSnClientNetworkInterfaceUnitTests" TEST_PATTERN="all-tests(file://$PROJECT_DIR$/test/MqttSnClientNetworkInterface/MqttSnClientNetworkInterfaceTests.cpp)" TEST_MODE="PATTERN">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in MqttSnClientNetworkInterfaceTests.h" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CMqttSnForwarder" TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CMqttSnForwarder" RUN_TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" TEST_PATTERN="all-tests(file://$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h)" TEST_MODE="PATTERN">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
@@ -373,12 +372,6 @@
       </method>
     </configuration>
     <configuration name="All in MqttSnGatewayNetworkInterfaceUnitTests" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" nameIsGenerated="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CMqttSnForwarder" TARGET_NAME="MqttSnGatewayNetworkInterfaceUnitTests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CMqttSnForwarder" RUN_TARGET_NAME="MqttSnGatewayNetworkInterfaceUnitTests" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SendReceiveTests-MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CMqttSnForwarder" TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CMqttSnForwarder" RUN_TARGET_NAME="MqttSnForwarder_LinuxTcpClientNetwork_Tests" TEST_PATTERN="SendReceiveTests/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:SendReceiveTests/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests" TEST_MODE="PATTERN">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
@@ -491,19 +484,19 @@
       <item itemvalue="Google Test.All in MqttSnFixedSizeRingBufferUnitTests" />
       <item itemvalue="Google Test.All in MqttSnForwarderIntegrationTests" />
       <item itemvalue="Google Test.All in MqttSnGatewayNetworkInterfaceUnitTests" />
-      <item itemvalue="Google Test.SendReceiveTests-MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests" />
       <item itemvalue="Google Test.All in MqttSnClientNetworkInterfaceTests.cpp" />
       <item itemvalue="Google Test.All in MqttSnFixedSizeRingBufferTests.cpp" />
       <item itemvalue="Google Test.All in MqttSnForwarderTests.cpp" />
       <item itemvalue="Google Test.All in MqttSnForwarderTests.h" />
+      <item itemvalue="Google Test.All in MqttSnClientNetworkInterfaceTests.h" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Google Test.All in MqttSnClientNetworkInterfaceTests.h" />
         <item itemvalue="Google Test.All in MqttSnForwarderTests.h" />
         <item itemvalue="Google Test.All in MqttSnForwarderTests.cpp" />
         <item itemvalue="Google Test.All in MqttSnFixedSizeRingBufferTests.cpp" />
         <item itemvalue="Google Test.All in MqttSnClientNetworkInterfaceTests.cpp" />
-        <item itemvalue="Google Test.SendReceiveTests-MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests" />
       </list>
     </recent_temporary>
   </component>
@@ -630,7 +623,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="690448000" />
+    <option name="totallyTimeSpent" value="691652000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -650,19 +643,19 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.47121534" weight="0.32694152" />
-      <window_info anchor="bottom" x="1677" y="227" width="1876" height="491" id="Run" maximized="true" order="2" sideWeight="0.44337195" weight="0.63470757" />
+      <window_info anchor="bottom" x="1677" y="227" width="1876" height="491" id="Run" maximized="true" order="2" sideWeight="0.44337195" weight="0.33173537" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.6003861" weight="0.34611696" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3279003" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.24066924" weight="0.40556088" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4993565" visible="true" weight="0.3279003" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4993565" weight="0.3279003" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.52878463" side_tool="true" weight="0.32694152" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.3279003" />
       <window_info anchor="bottom" id="CMake" order="12" weight="0.20230106" />
       <window_info anchor="bottom" id="Inspection Results" order="13" weight="0.32921812" />
-      <window_info anchor="bottom" id="File Transfer" order="14" weight="0.32885906" />
+      <window_info anchor="bottom" id="File Transfer" order="14" visible="true" weight="0.32885906" />
       <window_info anchor="bottom" id="Statistic" order="15" weight="0.5656759" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -1087,17 +1080,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/.drone.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="186" column="68" selection-start-line="186" selection-start-column="68" selection-end-line="186" selection-end-column="68" />
+        <state relative-caret-position="336">
+          <caret line="16" column="51" selection-start-line="16" selection-start-column="51" selection-end-line="16" selection-end-column="51" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.drone.yml">
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="12" column="55" selection-start-line="12" selection-start-column="55" selection-end-line="12" selection-end-column="55" />
+        <state relative-caret-position="451">
+          <caret line="140" selection-start-line="140" selection-end-line="140" />
         </state>
       </provider>
     </entry>

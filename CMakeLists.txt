@@ -129,7 +129,7 @@ else ()
             gtest gtest_main gmock gmock_main pthread
             lib-mqtt-sn-forwarder)
 
-    add_executable(MqttSnForwarder_LinuxTcpClientNetwork_Tests
+    add_executable(MqttSnForwarderLinuxTcpClientNetworkTests
 
             test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp
             test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h
@@ -139,7 +139,7 @@ else ()
             test/network/client/Tcp/MockClientLinuxTcpNetworkImplementation.h
             test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp)
 
-    target_link_libraries(MqttSnForwarder_LinuxTcpClientNetwork_Tests
+    target_link_libraries(MqttSnForwarderLinuxTcpClientNetworkTests
             gtest gtest_main gmock gmock_main pthread
             mock-mqtt-sn-fixed-size-ring-buffer
             lib-mqtt-sn-client-mock-network)
@@ -163,7 +163,7 @@ else ()
             test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h)
     target_link_libraries(lib-mqtt-sn-gateway-mock-network gtest gtest_main gmock gmock_main pthread)
 
-    add_executable(MqttSnForwarderLinuxTcpGatewayNetworkTests
+    add_executable(MqttSnForwarder_LinuxTcpGatewayNetwork_Tests
             forwarder/global_defines.h
 
             test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h
@@ -184,7 +184,7 @@ else ()
             test/network/gateway/MockForwarderGatewayNetworkLooper/MockForwarderGatewayNetworkLooper.h
             test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp
             test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h)
-    target_link_libraries(MqttSnForwarderLinuxTcpGatewayNetworkTests
+    target_link_libraries(MqttSnForwarder_LinuxTcpGatewayNetwork_Tests
             gtest gtest_main gmock gmock_main pthread lib-mqtt-sn-gateway-network)
 
     add_library(mock-mqtt-sn-fixed-size-ring-buffer

@@ -8,10 +8,10 @@ steps:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
       - make MqttSnClientNetworkInterfaceUnitTests
-      - ./MqttSnClientNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:/MqttSnClientNetworkInterfaceUnitTestsReport.xml"
+      - ./MqttSnClientNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes
       - make MqttSnGatewayNetworkInterfaceUnitTests
-      - ./MqttSnGatewayNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:/MqttSnGatewayNetworkInterfaceUnitTestsReport.xml"
+      - ./MqttSnGatewayNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes
       - make MqttSnFixedSizeRingBufferUnitTests
-      - ./MqttSnFixedSizeRingBufferUnitTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:/MqttSnFixedSizeRingBufferUnitTestsReport.xml"
-      - make MqttSnForwarderLinuxTcpGatewayNetworkTests
-      - ./MqttSnForwarderLinuxTcpGatewayNetworkTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:/MqttSnForwarderIntegrationTestsReport.xml"
+      - ./MqttSnFixedSizeRingBufferUnitTests --gtest_filter=* --gtest_color=yes
+      - make MqttSnForwarderLinuxTcpClientNetworkTests
+      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=* --gtest_color=yes
