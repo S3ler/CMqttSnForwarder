@@ -8,5 +8,7 @@ steps:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
       - make MqttSnForwarderIntegrationTests
-      - ./MqttSnForwarderIntegrationTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:/report.xml"
-      - cat /report.xml
+      - ./MqttSnClientNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:/MqttSnClientNetworkInterfaceUnitTestsReport.xml"
+      - ./MqttSnGatewayNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:/MqttSnGatewayNetworkInterfaceUnitTestsReport.xml"
+      - ./MqttSnFixedSizeRingBufferUnitTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:/MqttSnFixedSizeRingBufferUnitTestsReport.xml"
+      - ./MqttSnForwarderLinuxTcpGatewayNetworkTests --gtest_filter=* --gtest_color=yes --gtest_output="xml:/MqttSnForwarderIntegrationTestsReport.xml"
