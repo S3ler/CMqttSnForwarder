@@ -2,16 +2,66 @@ kind: pipeline
 name: default
 
 steps:
-  - name: prepare
+  - name: MqttSnClientNetworkInterfaceUnitTests
     image: ubuntu
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
       - make MqttSnClientNetworkInterfaceUnitTests
       - ./MqttSnClientNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes
+
+  - name: MqttSnGatewayNetworkInterfaceUnitTests
+    image: ubuntu
+    commands:
+      - apt-get update && apt-get install -y git cmake gcc g++
+      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
       - make MqttSnGatewayNetworkInterfaceUnitTests
       - ./MqttSnGatewayNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes
+
+  - name: MqttSnFixedSizeRingBufferUnitTests
+    image: ubuntu
+    commands:
+      - apt-get update && apt-get install -y git cmake gcc g++
+      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
       - make MqttSnFixedSizeRingBufferUnitTests
       - ./MqttSnFixedSizeRingBufferUnitTests --gtest_filter=* --gtest_color=yes
+
+  - name: MqttSnForwarderIntegrationTests
+    image: ubuntu
+    commands:
+      - apt-get update && apt-get install -y git cmake gcc g++
+      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
+      - make MqttSnForwarderIntegrationTests
+      - ./MqttSnForwarderIntegrationTests --gtest_color=yes
+
+  - name: TcpSendMultipleClientMultipleMessageVariableLength
+    image: ubuntu
+    commands:
+      - apt-get update && apt-get install -y git cmake gcc g++
+      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
       - make MqttSnForwarderLinuxTcpClientNetworkTests
-      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=* --gtest_color=yes
+      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength --gtest_color=yes
+
+  - name: TcpReceiveMultipleClientMultipleMessageVariableLength
+    image: ubuntu
+    commands:
+      - apt-get update && apt-get install -y git cmake gcc g++
+      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
+      - make MqttSnForwarderLinuxTcpClientNetworkTests
+      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength --gtest_color=yes
+
+  - name: TcpSendToClientsReceiveOnForwarderTests
+    image: ubuntu
+    commands:
+      - apt-get update && apt-get install -y git cmake gcc g++
+      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
+      - make MqttSnForwarderLinuxTcpClientNetworkTests
+      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests --gtest_color=yes
+
+  - name: ReceiveOnForwarderSendToClientTests
+    image: ubuntu
+    commands:
+      - apt-get update && apt-get install -y git cmake gcc g++
+      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
+      - make MqttSnForwarderLinuxTcpClientNetworkTests
+      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests --gtest_color=yes
