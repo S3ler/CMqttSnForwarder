@@ -38,9 +38,9 @@ template<MockClientNetworkAddressGenerator generateNetworkAddress, class MockCli
 
   uint16_t packet_size = 512; // TODO make more variantion
 
-  for (uint16_t client_count = min_client_count; client_count <= max_client_count; ++client_count) {
+  for (uint16_t client_count = min_client_count; client_count <= max_client_count; client_count+=2) {
 
-    for (uint16_t message_count = min_message_count; message_count <= max_message_counter; ++message_count) {
+    for (uint16_t message_count = min_message_count; message_count <= max_message_counter; message_count+=2) {
       for (uint16_t message_length = min_message_length; message_length <= max_message_length;
            message_length += message_length_steps) {
         std::vector<MockClientConfiguration> mockClientIdentifiers;
