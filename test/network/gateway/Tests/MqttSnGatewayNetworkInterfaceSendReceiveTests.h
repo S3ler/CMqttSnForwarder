@@ -59,7 +59,6 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
 
   virtual void SetUp() {
 
-
     MqttSnGatewayNetworkValueParameter const &a = GetParam();
     MqttSnForwarderGatewayNetworkTestConfiguration p = a.mqttSnForwarderGatewayNetworkTestConfiguration;
 
@@ -94,6 +93,9 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
       // TODO
       throw std::exception();
     }
+
+    // TODO exchange later with:
+    /*
     for (auto mockGatewayConfiguration : a.mockGatewayConfigurations) {
       std::shared_ptr<MockGatewayNetworkReceiver> receiver(new MockGatewayNetworkReceiver);
       std::shared_ptr<MockGateway> mockGateway(new MockGateway(mockGatewayConfiguration.gatewayIdentifier,
@@ -106,8 +108,21 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
       this->mockGatewayNetworkReceiver = receiver;
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+    */
+    {
+      auto mockGatewayConfiguration = a.mockGatewayConfigurations.front();
+      std::shared_ptr<MockGatewayNetworkReceiver> receiver(new MockGatewayNetworkReceiver);
+      std::shared_ptr<MockGateway> mockGateway(new MockGateway(mockGatewayConfiguration.gatewayIdentifier,
+                                                               &mockGatewayConfiguration.address,
+                                                               mockGatewayConfiguration.mockGatewayNetworkInterface,
+                                                               receiver.get()));
+      ASSERT_TRUE(mockGateway->start_loop());
+      ASSERT_TRUE(mockGateway->isNetworkConnected());
+      this->mockGateway = mockGateway;
+      this->mockGatewayNetworkReceiver = receiver;
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
     if (a.searchGateway) {
       ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                    &p.forwarderGatewayNetworkAddress,
@@ -155,7 +170,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
     gatewayNetworkContext = nullptr;
 
     mockGateway->stop_loop();
-    while(!mockGateway->getDone()){
+    while (!mockGateway->getDone()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
