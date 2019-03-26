@@ -7,15 +7,16 @@
 
 #include <cstdint>
 #include "../../../../forwarder/global_defines.h"
-#include "../MockGatewayNetwork/MockGatewayNetworkInterface.h"
+#include "../MockGateway/MockGatewayNetworkInterface.h"
+
 class MockGatewayConfiguration {
  public:
   uint8_t gatewayIdentifier;
   device_address address;
-  MockGatewayNetworkInterface* mockGatewayNetworkInterface;
+  MockGatewayNetworkInterface *mockGatewayNetworkInterface;
 
-  MockGatewayConfiguration(uint8_t gatewayIdentifier,
-                           device_address &address,
+  MockGatewayConfiguration(device_address address,
+                           uint8_t gatewayIdentifier,
                            MockGatewayNetworkInterface *mockGatewayNetworkInterface) : gatewayIdentifier(
       gatewayIdentifier), address(address), mockGatewayNetworkInterface(mockGatewayNetworkInterface) {}
 };

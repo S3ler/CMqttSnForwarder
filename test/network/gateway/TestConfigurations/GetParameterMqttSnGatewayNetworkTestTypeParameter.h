@@ -9,10 +9,13 @@
 #include "MqttSnGatewayNetworkValueParameter.h"
 #include <vector>
 
+#define CMQTTSNFORWARDER_CARTESIANTESTGENERATOR_GATEWAY_NETWORK_MIN_MESSAGE_LENGTH 3
+
 typedef device_address(*MockGatewayNetworkAddressGenerator)(uint16_t);
-template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockClientNetworkInterfaceType>
+
+template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGatewayNetworkInterfaceType>
 ::std::vector<MqttSnGatewayNetworkValueParameter> getParameterMqttSnGatewayNetworkTestTypeParameter(
     MqttSnForwarderGatewayNetworkTestConfiguration &mqttSnClientNetworkTestFixture,
-    std::vector<std::shared_ptr<MockClientNetworkInterfaceType>> &mockGatewayNetworkInterfaces);
+    std::vector<std::shared_ptr<MockGatewayNetworkInterfaceType>> &mockGatewayNetworkInterfaces);
 
 #endif //CMQTTSNFORWARDER_GETPARAMETERMQTTSNGATEWAYNETWORKTESTTYPEPARAMETER_H

@@ -12,7 +12,7 @@
 #include "../../../../../forwarder/global_defines.h"
 #include "../../../../../forwarder/MqttSnFixedSizeRingBuffer.h"
 
-class CompareableMqttSnMessageData {
+class ComparableClientMqttSnMessageData {
  public:
 
   const bool use_identifier;
@@ -20,36 +20,34 @@ class CompareableMqttSnMessageData {
   const uint16_t data_length;
   const std::vector<uint8_t> data;
 
-  CompareableMqttSnMessageData(device_address *address,
-                               uint8_t *data,
-                               uint16_t data_length,
-                               bool useIdentifier)
+  ComparableClientMqttSnMessageData(const MqttSnMessageData &mqttSnMessageData,
+                                    bool useIdentifier = false)
+      : address(mqttSnMessageData.address),
+        data_length(mqttSnMessageData.data_length),
+        use_identifier(useIdentifier),
+        data(mqttSnMessageData.data, mqttSnMessageData.data + mqttSnMessageData.data_length) {}
+
+  ComparableClientMqttSnMessageData(device_address *address,
+                                    uint8_t *data,
+                                    uint16_t data_length,
+                                    bool useIdentifier)
       : address(*address),
         data_length(data_length),
         use_identifier(useIdentifier),
         data(data, data + data_length) {}
 
-  CompareableMqttSnMessageData(const device_address address, const uint16_t data_length, const uint16_t identifier)
-      : address(address),
-        data_length(data_length),
-        use_identifier(true),
-        data(generateMessageData(data_length, identifier, true)) {
-  }
-
-  CompareableMqttSnMessageData(const uint16_t data_length, const device_address *address, const uint16_t identifier)
+  ComparableClientMqttSnMessageData(const uint16_t data_length,
+                                    const device_address *address,
+                                    const uint16_t identifier)
       : address(*address),
         data_length(data_length),
         use_identifier(true),
         data(generateMessageData(data_length, identifier, true)) {
   }
 
-  CompareableMqttSnMessageData(const uint16_t data_length, const uint16_t identifier)
-      : address({0}),
-        data_length(data_length),
-        use_identifier(true),
-        data(generateMessageData(data_length, identifier, true)) {}
-
-  std::vector<uint8_t> generateMessageData(uint16_t data_length, const uint16_t identifier, const bool useIdentifier) {
+  std::vector<uint8_t> generateMessageData(uint16_t data_length,
+                                           const uint16_t identifier,
+                                           const bool useIdentifier) {
     if (data_length < 2) {
       // TODO exception
     }
@@ -80,7 +78,7 @@ class CompareableMqttSnMessageData {
       if (threeOctetsLengthMessageHeader) {
         result[4] = static_cast<uint8_t>(identifier >> 0);
         result[5] = static_cast<uint8_t>(identifier >> 8);
-      }else{
+      } else {
         result[1] = static_cast<uint8_t>(identifier >> 0);
         result[2] = static_cast<uint8_t>(identifier >> 8);
       }
@@ -88,13 +86,7 @@ class CompareableMqttSnMessageData {
     return result;
   }
 
-  CompareableMqttSnMessageData(const MqttSnMessageData &mqttSnMessageData, bool useIdentifier = false)
-      : address(mqttSnMessageData.address),
-        data_length(mqttSnMessageData.data_length),
-        use_identifier(useIdentifier),
-        data(mqttSnMessageData.data, mqttSnMessageData.data + mqttSnMessageData.data_length) {}
-
-  bool operator==(const CompareableMqttSnMessageData &rhs) const {
+  bool operator==(const ComparableClientMqttSnMessageData &rhs) const {
     if (use_identifier) {
       return rhs.use_identifier == use_identifier & data_length == rhs.data_length & data == rhs.data;
     }
@@ -103,12 +95,12 @@ class CompareableMqttSnMessageData {
 
   }
 
-  bool operator!=(const CompareableMqttSnMessageData &rhs) const {
+  bool operator!=(const ComparableClientMqttSnMessageData &rhs) const {
     return !(rhs == *this);
   }
 
-  friend std::ostream &operator<<(std::ostream &os, const CompareableMqttSnMessageData &data) {
-    os << "address: ";
+  friend std::ostream &operator<<(std::ostream &os, const ComparableClientMqttSnMessageData &data) {
+    os << "forwarderAddress: ";
     for (uint16_t i = 0; i < sizeof(device_address); i++) {
       os << std::to_string(data.address.bytes[i]);
       if (i != sizeof(device_address) - 1) {

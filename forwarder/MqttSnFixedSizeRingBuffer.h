@@ -16,7 +16,7 @@ extern "C" {
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN 100
 
 #ifndef MAX_MESSAGE_LENGTH
-#define MAX_MESSAGE_LENGTH 255
+#define MAX_MESSAGE_LENGTH 1024
 #endif
 
 typedef struct MqttSnMessageData_{

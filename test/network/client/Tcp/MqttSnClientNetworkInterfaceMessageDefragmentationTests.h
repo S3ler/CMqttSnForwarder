@@ -1,23 +1,18 @@
 //
-// Created by bele on 11.02.19.
+// Created by SomeDude on 25.03.2019.
 //
 
-#ifndef CMQTTSNFORWARDER_BASEMQTTSNCLIENTNETWORKTESTS_H
-#define CMQTTSNFORWARDER_BASEMQTTSNCLIENTNETWORKTESTS_H
+#ifndef CMQTTSNFORWARDER_MQTTSNCLIENTNETWORKINTERFACEMESSAGEDEFRAGMENTATIONTESTS_H
+#define CMQTTSNFORWARDER_MQTTSNCLIENTNETWORKINTERFACEMESSAGEDEFRAGMENTATIONTESTS_H
 
 #include <gtest/gtest.h>
 #include <gmock/gmock-nice-strict.h>
-
-#include "../../../../forwarder/MqttSnClientNetworkInterface.h"
-#include "../MockClientNetwork/MockClient/MockClient.h"
-#include "../MockClientNetwork/MockClient/MockClientNetworkReceiver.h"
-#include "MockClient/ComparableClientMqttSnMessageData.h"
-#include "../TestConfigurations/MqttSnClientNetworkTestValueParameter.h"
-#include "../../../../forwarder/network/client/tcp/MqttSnClientTcpNetwork.h"
-#include "../TestConfigurations/MockClientConfiguration.h"
-#include <list>
 #include <MqttSnFixedSizeRingBufferMock.h>
-#include <MockForwardLooper/ClientNetworkGatewayLooper.h>
+#include <MockClientNetwork/MockForwardLooper/ClientNetworkGatewayLooper.h>
+#include <MockClientNetwork/MockClient/MockClient.h>
+#include "MqttSnClientNetworkTcpNetworkDefragmentationTestParameter.h"
+#include <ComparableClientMqttSnMessageData.h>
+#include <list>
 
 using testing::NiceMock;
 using testing::StrictMock;
@@ -28,7 +23,8 @@ extern MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock;
 extern std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
     *globalMqttSnFixedSizeRingBufferMockMap;
 
-class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSnClientNetworkTestValueParameter> {
+class MqttSnClientNetworkInterfaceMessageDefragmentationTests :
+    public ::testing::TestWithParam<MqttSnClientNetworkTcpNetworkDefragmentationTestParameter> {
  public:
   MqttSnClientNetworkInterface mqttSnClientNetworkInterface = {0};
   ClientNetworkGatewayLooper clientNetworkGatewayLooper;
@@ -48,6 +44,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
 
   uint16_t toTestMessageLength;
   uint16_t toTestMessageCount;
+  uint16_t toTestPacketSize;
   bool useIdentifier;
 
   volatile std::atomic<uint32_t> counter;
@@ -57,9 +54,9 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
   std::list<ComparableClientMqttSnMessageData> forwarderMqttSnMessageDataBuffer;
 
   virtual void SetUp() {
-    counter=0;
+    counter = 0;
 
-    MqttSnClientNetworkTestValueParameter const &a = GetParam();
+    MqttSnClientNetworkTcpNetworkDefragmentationTestParameter const &a = GetParam();
     MqttSnGatewayClientNetworkTestConfiguration p = a.mqttSnClientNetworkTestFixture;
 
     this->getDeviceAddressFromNetworkContext = p.getDeviceAddressFromMqttSnClientTcpNetworkContext;
@@ -67,6 +64,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
 
     toTestMessageLength = a.messageLength;
     toTestMessageCount = a.messageCount;
+    toTestPacketSize = a.packetSize;
     useIdentifier = p.useIdentifier;
 
     if (toTestMessageLength < 2 |
@@ -153,27 +151,14 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 
-  MqttSnClientNetworkInterfaceTests() {
+  MqttSnClientNetworkInterfaceMessageDefragmentationTests() {
 
   }
 
-  virtual ~MqttSnClientNetworkInterfaceTests() {
+  virtual ~MqttSnClientNetworkInterfaceMessageDefragmentationTests() {
 
   }
 
-  /*
-  device_address getDeviceAddressFromNetworkContext(uint16_t identifier, void *context) {
-    // TODO problem describe: we only have the forwarderAddress at the forwarder side, which is not equal to the combination ip+port on the client side
-    // TODO this function must be a function pointer within the MqttSnGatewayClientNetworkTestConfiguration
-    MqttSnClientTcpNetwork *clientTcpNetwork = (MqttSnClientTcpNetwork *) context;
-    device_address peer_address = {0};
-    if (clientTcpNetwork->client_socket[identifier] <= 0) {
-      throw std::bad_exception();
-    }
-    getDeviceAddressFromFileDescriptor(clientTcpNetwork->client_socket[identifier], &peer_address);
-    return peer_address;
-  }
-  */
 };
 
-#endif //CMQTTSNFORWARDER_BASEMQTTSNCLIENTNETWORKTESTS_H
+#endif //CMQTTSNFORWARDER_MQTTSNCLIENTNETWORKINTERFACEMESSAGEDEFRAGMENTATIONTESTS_H

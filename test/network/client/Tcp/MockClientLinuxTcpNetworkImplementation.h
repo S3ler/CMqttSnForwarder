@@ -9,19 +9,26 @@
 
 class MockClientLinuxTcpNetworkImplementation : public MockClientNetworkInterface {
  private:
-  MockClient *mockClient;
   int forwarder_socket_fd = -1;
-  device_address *address;
- public:
-  void setMockClient(MockClient *client) override;
-  void setNetworkAddress(device_address *address)override;
-  bool isNetworkConnected() override;
-  bool isNetworkDisconnected() override;
-  int sendToNetwork(device_address *to, const uint8_t *buf, uint8_t len) override;
-  bool connectNetwork(device_address *address) override;
-  void disconnectNetwork() override;
-  int loopNetwork(MockClientNetworkReceiver *pReceiver) override;
+  device_address *forwarderAddress;
 
+ public:
+  bool isNetworkConnected() override;
+
+  bool isNetworkDisconnected() override;
+
+  device_address getForwarderDeviceAddress() override;
+
+  int sendToNetwork(const device_address *to, const uint8_t *buf, uint16_t dataLength) override;
+
+  bool connectNetwork(device_address *forwarderAddress) override;
+
+  void disconnectNetwork() override;
+
+  int loopNetwork(MockClientNetworkReceiver *receiver) override;
+
+ private:
+  int getDeviceAddressFromFileDescriptor(int peer_fd, device_address *peerAddress);
 };
 
 #endif //CMQTTSNFORWARDER_MOCKCLIENTLINUXTCPNETWORKIMPLEMENTATION_H

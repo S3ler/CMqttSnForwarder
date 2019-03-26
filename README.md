@@ -250,7 +250,7 @@ monitoring
             test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiver.h
             test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp
             test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h
-            test/network/client/MockClientNetwork/MockClient/CompareableMqttSnMessageData.h
+            test/network/client/MockClientNetwork/MockClient/ComparableClientMqttSnMessageData.h
             test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h
             test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h
             test/network/client/TestConfigurations/MockClientConfiguration.h
@@ -277,7 +277,7 @@ monitoring
             test/network/client/MockClientNetwork/MockClient/MockClientNetworkReceiver.h
             test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.cpp
             test/network/client/MockClientNetwork/MockGateway/ClientNetworkGatewayLooper.h
-            test/network/client/MockClientNetwork/MockClient/CompareableMqttSnMessageData.h
+            test/network/client/MockClientNetwork/MockClient/ComparableClientMqttSnMessageData.h
             test/network/client/TestConfigurations/MqttSnClientNetworkTestValueParameter.h
             test/network/client/TestConfigurations/MqttSnGatewayClientNetworkTestConfiguration.h
             test/network/client/TestConfigurations/MockClientConfiguration.h

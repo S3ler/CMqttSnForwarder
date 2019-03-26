@@ -251,39 +251,56 @@ int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNe
     return -1;
   }
 
+  device_address client_address = get_client_device_address(client_fd);
+
+  return save_messages_into_receive_buffer(buffer,
+                                           read_bytes,
+                                           client_address,
+                                           clientTcpNetwork->client_buffer[client_socket_position],
+                                           &clientTcpNetwork->client_buffer_bytes[client_socket_position],
+                                           receiveBuffer);
+/*
   if (clientTcpNetwork->client_buffer[client_socket_position][0] == 0) {
     // no message in buffer, new message, read message bytes
-    if (save_multiple_new_messages(buffer,
-                                   read_bytes,
-                                   get_client_device_address(client_fd),
-                                   clientTcpNetwork->client_buffer[client_socket_position],
-                                   &clientTcpNetwork->client_buffer_bytes[client_socket_position],
-                                   receiveBuffer) == 0) {
+    if (save_incomplete_new_message(buffer,
+                                    read_bytes,
+                                    get_client_device_address(client_fd),
+                                    clientTcpNetwork->client_buffer[client_socket_position],
+                                    &clientTcpNetwork->client_buffer_bytes[client_socket_position],
+                                    receiveBuffer) == 0) {
       return 0;
     }
-    return -1;
-
-  } else {
-    if (save_incomplete_message(buffer,
-                                read_bytes,
-                                get_client_device_address(client_fd),
-                                clientTcpNetwork->client_buffer[client_socket_position],
-                                &clientTcpNetwork->client_buffer_bytes[client_socket_position],
-                                receiveBuffer) == 0) {
-      return 0;
-    }
-    if (save_multiple_messages(buffer,
-                               read_bytes,
-                               get_client_device_address(client_fd),
-                               clientTcpNetwork->client_buffer[client_socket_position],
-                               &clientTcpNetwork->client_buffer_bytes[client_socket_position],
-                               receiveBuffer) == 0) {
+    if (save_multiple_complete_new_messages(buffer,
+                                            read_bytes,
+                                            get_client_device_address(client_fd),
+                                            clientTcpNetwork->client_buffer[client_socket_position],
+                                            &clientTcpNetwork->client_buffer_bytes[client_socket_position],
+                                            receiveBuffer) == 0) {
       return 0;
     }
     return -1;
   }
-}
+  // messages already in buffer, new message, read message bytes
+  if (save_incomplete_message(buffer,
+                              read_bytes,
+                              get_client_device_address(client_fd),
+                              clientTcpNetwork->client_buffer[client_socket_position],
+                              &clientTcpNetwork->client_buffer_bytes[client_socket_position],
+                              receiveBuffer) == 0) {
+    return 0;
+  }
 
+  if (save_multiple_messages(buffer,
+                             read_bytes,
+                             get_client_device_address(client_fd),
+                             clientTcpNetwork->client_buffer[client_socket_position],
+                             &clientTcpNetwork->client_buffer_bytes[client_socket_position],
+                             receiveBuffer) == 0) {
+    return 0;
+  }
+  return -1;
+  */
+}
 
 void MqttSnClientHandleClientSockets(MqttSnClientTcpNetwork *clientTcpNetwork, MqttSnFixedSizeRingBuffer *receiveBuffer,
                                      fd_set *readfds) {

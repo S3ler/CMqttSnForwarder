@@ -7,8 +7,8 @@
 #include "MqttSnClientNetworkInterfaceTests.h"
 
 TEST_P(MqttSnClientNetworkInterfaceTests, SendMultipleClientMultipleMessageVariableLength) {
-  std::vector<CompareableMqttSnMessageData> expectedMockClientSnMessageDatas;
-  std::vector<CompareableMqttSnMessageData> actualMockClientSnMessageDatas;
+  std::vector<ComparableClientMqttSnMessageData> expectedMockClientSnMessageDatas;
+  std::vector<ComparableClientMqttSnMessageData> actualMockClientSnMessageDatas;
 
   EXPECT_CALL(mockReceiveBuffer, put(&receiveBuffer, _))
       .Times(toTestMessageCount * mockClients.size())
@@ -16,7 +16,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, SendMultipleClientMultipleMessageVaria
           [this, &actualMockClientSnMessageDatas]
               (MqttSnFixedSizeRingBuffer *receiveBuffer,
                MqttSnMessageData *receiveData) -> int {
-            CompareableMqttSnMessageData data(*receiveData, useIdentifier);
+            ComparableClientMqttSnMessageData data(*receiveData, useIdentifier);
             actualMockClientSnMessageDatas.push_back(data);
             return 0;
           }
@@ -25,7 +25,9 @@ TEST_P(MqttSnClientNetworkInterfaceTests, SendMultipleClientMultipleMessageVaria
   for (uint16_t messageCount = 0; messageCount < toTestMessageCount; ++messageCount) {
     // we send message in RoundRobin for each client
     for (const auto &mockClient : mockClients) {
-      CompareableMqttSnMessageData data(toTestMessageLength, mockClient->getIdentifier());
+      ComparableClientMqttSnMessageData data(toTestMessageLength,
+                                             mockClient->getClientDeviceAddress(),
+                                             mockClient->getIdentifier());
       expectedMockClientSnMessageDatas.push_back(data);
 
       ASSERT_EQ(mockClient->send(&data), data.data_length);
@@ -43,12 +45,12 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVa
     // we send message in RoundRobin for each client
     for (const auto &mockClient : mockClients) {
       if (useIdentifier) {
-        *mockClient->getNetworkAddress() =
+        *mockClient->getClientDeviceAddress() =
             getDeviceAddressFromNetworkContext(mockClient->getIdentifier(), clientNetworkContext);
       }
-      CompareableMqttSnMessageData data(toTestMessageLength,
-                                        mockClient->getNetworkAddress(),
-                                        mockClient->getIdentifier());
+      ComparableClientMqttSnMessageData data(toTestMessageLength,
+                                             mockClient->getClientDeviceAddress(),
+                                             mockClient->getIdentifier());
       expectedMockClientSnMessageDatas.push_back(data);
 
       EXPECT_CALL((*mockClient->getMockClientNetworkReceiver()), receive_any_message(_, _, _))
@@ -57,7 +59,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVa
                   (device_address *address,
                    uint8_t *data,
                    uint16_t data_length) -> void {
-                CompareableMqttSnMessageData messageData(address, data, data_length, useIdentifier);
+                ComparableClientMqttSnMessageData messageData(address, data, data_length, useIdentifier);
                 actualMockClientSnMessageDatas.push_back(messageData);
               }
           ));
@@ -100,12 +102,12 @@ TEST_P(MqttSnClientNetworkInterfaceTests, SendToClientsReceiveOnForwarderTests) 
     // we send message in RoundRobin for each client
     for (const auto &mockClient : mockClients) {
       if (useIdentifier) {
-        *mockClient->getNetworkAddress() =
+        *mockClient->getClientDeviceAddress() =
             getDeviceAddressFromNetworkContext(mockClient->getIdentifier(), clientNetworkContext);
       }
-      CompareableMqttSnMessageData data(toTestMessageLength,
-                                        mockClient->getNetworkAddress(),
-                                        mockClient->getIdentifier());
+      ComparableClientMqttSnMessageData data(toTestMessageLength,
+                                             mockClient->getClientDeviceAddress(),
+                                             mockClient->getIdentifier());
       expectedMockClientSnMessageDatas.push_back(data);
 
       EXPECT_CALL((*mockClient->getMockClientNetworkReceiver()), receive_any_message(_, _, _))
@@ -114,7 +116,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, SendToClientsReceiveOnForwarderTests) 
                   (device_address *address,
                    uint8_t *data,
                    uint16_t data_length) -> void {
-                ASSERT_EQ(mockClient->send(data, data_length), data_length);
+                ASSERT_EQ(mockClient->send(address, data, data_length), data_length);
               }
           ));
     }
@@ -126,7 +128,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, SendToClientsReceiveOnForwarderTests) 
           [this]
               (MqttSnFixedSizeRingBuffer *receiveBuffer,
                MqttSnMessageData *receiveData) -> int {
-            CompareableMqttSnMessageData data(*receiveData, useIdentifier);
+            ComparableClientMqttSnMessageData data(*receiveData, useIdentifier);
             actualMockClientSnMessageDatas.push_back(data);
             return 0;
           }
@@ -175,7 +177,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveOnForwarderSendToClientTests) {
           [this]
               (MqttSnFixedSizeRingBuffer *receiveBuffer,
                MqttSnMessageData *receiveData) -> int {
-            CompareableMqttSnMessageData data(*receiveData, useIdentifier);
+            ComparableClientMqttSnMessageData data(*receiveData, useIdentifier);
             forwarderMqttSnMessageDataBuffer.push_back(data);
             return 0;
           }
@@ -204,7 +206,9 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveOnForwarderSendToClientTests) {
   for (uint16_t messageCount = 0; messageCount < toTestMessageCount; ++messageCount) {
     // we send message in RoundRobin for each client
     for (const auto &mockClient : mockClients) {
-      CompareableMqttSnMessageData data(toTestMessageLength, mockClient->getIdentifier());
+      ComparableClientMqttSnMessageData data(toTestMessageLength,
+                                             mockClient->getClientDeviceAddress(),
+                                             mockClient->getIdentifier());
       expectedMockClientSnMessageDatas.push_back(data);
 
       EXPECT_CALL((*mockClient->getMockClientNetworkReceiver()), receive_any_message(_, _, _))
@@ -213,7 +217,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveOnForwarderSendToClientTests) {
                   (device_address *address,
                    uint8_t *data,
                    uint16_t data_length) -> void {
-                CompareableMqttSnMessageData messageData(address, data, data_length, useIdentifier);
+                ComparableClientMqttSnMessageData messageData(address, data, data_length, useIdentifier);
                 actualMockClientSnMessageDatas.push_back(messageData);
               }
           ));

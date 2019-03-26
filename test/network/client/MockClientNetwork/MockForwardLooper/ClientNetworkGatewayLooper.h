@@ -18,12 +18,10 @@ class ClientNetworkGatewayLooper {
                                   MqttSnFixedSizeRingBuffer *,
                                   uint32_t,
                                   void *),
-
-      int (*client_network_send)(struct MqttSnClientNetworkInterface *,
-                                 MqttSnFixedSizeRingBuffer *,
-                                 uint32_t,
-                                 void *context),
-
+      int (*clientNetworkSend)(MqttSnClientNetworkInterface *,
+                               MqttSnFixedSizeRingBuffer *,
+                               uint32_t,
+                               void *context),
       MqttSnClientNetworkInterface *n,
       MqttSnFixedSizeRingBuffer *receiveBuffer,
       MqttSnFixedSizeRingBuffer *sendBuffer,
@@ -43,9 +41,10 @@ class ClientNetworkGatewayLooper {
 
   std::atomic<bool> stopped{false};
   std::atomic<bool> isStopped{true};
-  std::thread thread;
 
  private:
+  std::thread thread;
+
   int (*clientNetworkReceive)(MqttSnClientNetworkInterface *,
                               MqttSnFixedSizeRingBuffer *,
                               uint32_t,
@@ -59,7 +58,6 @@ class ClientNetworkGatewayLooper {
   MqttSnFixedSizeRingBuffer *sendBuffer;
   uint32_t timeout_ms;
   void *context;
-
 
 };
 

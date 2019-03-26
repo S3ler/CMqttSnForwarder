@@ -1,22 +1,16 @@
 //
-// Created by bele on 26.02.19.
+// Created by SomeDude on 23.03.2019.
 //
 
-#ifndef CMQTTSNFORWARDER_MQTTSNGATEWAYNETWORKINTERFACETESTS_H
-#define CMQTTSNFORWARDER_MQTTSNGATEWAYNETWORKINTERFACETESTS_H
+#ifndef CMQTTSNFORWARDER_MQTTSNGATEWAYNETWORKINTERFACEMESSAGEDEFRAGMENTATIONTESTS_H
+#define CMQTTSNFORWARDER_MQTTSNGATEWAYNETWORKINTERFACEMESSAGEDEFRAGMENTATIONTESTS_H
 
 #include <gtest/gtest.h>
-#include <gmock/gmock-nice-strict.h>
+#include <MockForwardLooper/MockForwarderGatewayNetworkLooper.h>
 #include <MqttSnFixedSizeRingBufferMock.h>
-#include "../TestConfigurations/MqttSnGatewayNetworkValueParameter.h"
-#include "../../../../forwarder/MqttSnFixedSizeRingBuffer.h"
-#include "../../../../forwarder/MqttSnGatewayNetworkInterface.h"
-#include "../TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h"
-#include "../Tcp/MockGatewayLinuxTcpNetworkImplementation.h"
-#include "TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h"
-#include "../TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp"
-#include "../MockForwardLooper/MockForwarderGatewayNetworkLooper.h"
+#include <gmock/gmock-nice-strict.h>
 #include <list>
+#include "MqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter.h"
 
 using testing::Return;
 using testing::AtLeast;
@@ -27,8 +21,8 @@ extern MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock;
 extern std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
     *globalMqttSnFixedSizeRingBufferMockMap;
 
-class MqttSnGatewayNetworkInterfaceSendReceiveTests
-    : public ::testing::TestWithParam<MqttSnGatewayNetworkValueParameter> {
+class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
+    : public ::testing::TestWithParam<MqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter> {
  public:
   MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
   MockForwarderGatewayNetworkLooper gatewayNetworkForwarderLooper;
@@ -50,6 +44,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
  public:
   uint16_t toTestMessageLength;
   uint16_t toTestMessageCount;
+  uint16_t packetSize;
   bool useIdentifier;
 
  public:
@@ -59,8 +54,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
 
   virtual void SetUp() {
 
-
-    MqttSnGatewayNetworkValueParameter const &a = GetParam();
+    MqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter const &a = GetParam();
     MqttSnForwarderGatewayNetworkTestConfiguration p = a.mqttSnForwarderGatewayNetworkTestConfiguration;
 
     this->getDeviceAddressFromNetworkContext = p.getDeviceAddressFromMqttSnClientTcpNetworkContext;
@@ -68,6 +62,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
 
     toTestMessageLength = a.messageLength;
     toTestMessageCount = a.messageCount;
+    packetSize = a.packetSize;
     useIdentifier = p.useIdentifier;
 
     if (toTestMessageLength < 2 |
@@ -130,7 +125,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
                                                                &sendBuffer,
                                                                1000,
                                                                p.gatewayNetworkContext));
-    std::this_thread::sleep_for(std::chrono::milliseconds(30000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
   }
 
@@ -155,19 +150,14 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
     gatewayNetworkContext = nullptr;
 
     mockGateway->stop_loop();
-    while(!mockGateway->getDone()){
+    while (!mockGateway->getDone()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 
-  MqttSnGatewayNetworkInterfaceSendReceiveTests() {
-
-  }
-
-  virtual ~MqttSnGatewayNetworkInterfaceSendReceiveTests() {
-
-  }
+  MqttSnGatewayNetworkInterfaceMessageDefragmentationTests() {}
+  virtual ~MqttSnGatewayNetworkInterfaceMessageDefragmentationTests() {}
 };
 
-#endif //CMQTTSNFORWARDER_MQTTSNGATEWAYNETWORKINTERFACETESTS_H
+#endif //CMQTTSNFORWARDER_MQTTSNGATEWAYNETWORKINTERFACEMESSAGEDEFRAGMENTATIONTESTS_H

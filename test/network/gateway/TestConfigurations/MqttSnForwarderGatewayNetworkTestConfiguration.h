@@ -16,16 +16,19 @@ class MqttSnForwarderGatewayNetworkTestConfiguration {
       device_address &forwarderGatewayNetworkAddress,
       void *gatewayNetworkContext,
       int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface *, void *),
+      device_address (*getDeviceAddressFromMqttSnClientTcpNetworkContext)(uint16_t identifier, void *context),
       bool useIdentifier = false) :
       forwarderGatewayNetworkAddress(forwarderGatewayNetworkAddress),
       gatewayNetworkContext(gatewayNetworkContext),
       gateway_network_init(gateway_network_init),
+      getDeviceAddressFromMqttSnClientTcpNetworkContext(getDeviceAddressFromMqttSnClientTcpNetworkContext),
       useIdentifier(useIdentifier) {}
 
   bool useIdentifier = false;
   device_address forwarderGatewayNetworkAddress;
   void *gatewayNetworkContext = nullptr;
   int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface *, void *context) = nullptr;
+  device_address (*getDeviceAddressFromMqttSnClientTcpNetworkContext)(uint16_t identifier, void *context) = nullptr;
 
   friend std::ostream &operator<<(std::ostream &os,
                                   const MqttSnForwarderGatewayNetworkTestConfiguration &configuration) {

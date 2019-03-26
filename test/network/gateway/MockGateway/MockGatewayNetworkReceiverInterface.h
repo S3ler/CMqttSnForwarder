@@ -9,10 +9,8 @@
 
 class MockGatewayNetworkReceiverInterface {
  public:
+  virtual void receive_any_message(device_address *address, uint8_t *data, uint16_t length) = 0;
 
   virtual ~MockGatewayNetworkReceiverInterface() {};
-
-  virtual void receive_any_message(uint8_t *data, uint16_t length) = 0;
-
 };
 #endif //CMQTTSNFORWARDER_MOCKGATEWAYNETWORKRECEIVERINTERFACE_H

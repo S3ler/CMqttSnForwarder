@@ -13,6 +13,9 @@
 #include "MockClientLinuxTcpNetworkImplementation.h"
 #include "../TestConfigurations/CartesianProductTestCaseGenerator.h"
 #include "../TestConfigurations/CartesianProductTestCaseGenerator.cpp"
+#include "MqttSnClientNetworkTcpNetworkDefragmentationTestParameter.h"
+#include "GetMqttSnClientNetworkTcpNetworkDefragmentationTestParameter.h"
+#include "MqttSnClientNetworkInterfaceMessageDefragmentationTests.h"
 
 MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock = nullptr;
 std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
@@ -37,18 +40,26 @@ MqttSnGatewayClientNetworkTestConfiguration mqttSnGatewayClientNetworkTestConfig
                                                                                         getDeviceAddressFromMqttSnClientTcpNetworkContext,
                                                                                         true);
 device_address generateMockClientTcpNetworkAddress(uint16_t mockClientIdentifier) {
-  // a zeroed device address tells the test set to use the given device address
+  // a zeroed device forwarderAddress tells the test set to use the given device forwarderAddress
   // device_address mockClientNetworkAddress({0, 0, 0, 0, 0, 0});
   device_address mockClientNetworkAddress({127, 0, 0, 1, 0, 0});
   return mockClientNetworkAddress;
 }
 
-::std::vector<MqttSnClientNetworkTestValueParameter>
+std::vector<MqttSnClientNetworkTestValueParameter>
     clientNetworkTestParameter = getParameterMqttSnClientNetworkTestTypeParameter<generateMockClientTcpNetworkAddress,
                                                                                   MockClientLinuxTcpNetworkImplementation>(
     mqttSnGatewayClientNetworkTestConfiguration,
     mockClientTcpNetworkInterfaces
 );
+
+std::vector<MqttSnClientNetworkTcpNetworkDefragmentationTestParameter>
+    clientNetworkDefragmentationTestParameter =
+    getMqttSnClientNetworkTcpNetworkDefragmentationTestParameter<generateMockClientTcpNetworkAddress,
+                                                                 MockClientLinuxTcpNetworkImplementation>(
+        mqttSnGatewayClientNetworkTestConfiguration,
+        mockClientTcpNetworkInterfaces
+    );
 
 struct PrintToStringMqttSnClientNetworkTestValueParameterParamName {
   template<class ParamType>
@@ -64,6 +75,12 @@ struct PrintToStringMqttSnClientNetworkTestValueParameterParamName {
 INSTANTIATE_TEST_SUITE_P(SendReceiveTests,
                          MqttSnClientNetworkInterfaceTests,
                          ::testing::ValuesIn(clientNetworkTestParameter.begin(), clientNetworkTestParameter.end()),
+                         PrintToStringMqttSnClientNetworkTestValueParameterParamName());
+
+INSTANTIATE_TEST_SUITE_P(DefragmentationTests,
+                         MqttSnClientNetworkInterfaceMessageDefragmentationTests,
+                         ::testing::ValuesIn(clientNetworkDefragmentationTestParameter.begin(),
+                                             clientNetworkDefragmentationTestParameter.end()),
                          PrintToStringMqttSnClientNetworkTestValueParameterParamName());
 
 #endif //CMQTTSNFORWARDER_TCPMQTTSNCLIENTNETWORKINTERFACETESTS_H

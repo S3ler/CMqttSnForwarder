@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
+#include <network/tcphelper/MqttSnTcpNetworkMessageParser.h>
 #include "MqttSnGatewayTcpNetwork.h"
 #include "../../../MqttSnFixedSizeRingBuffer.h"
 
@@ -121,7 +122,6 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   // int activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
 
   if ((activity < 0) && (errno != EINTR)) {
-    printf("gateway network select error");
     return -1;
   }
   if (activity == 0) {
@@ -129,9 +129,19 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
     return 0;
   }
 
+  if (FD_ISSET(tcpNetwork->my_socket, &readfds) == 0) {
+    return 0;
+  }
+
+  if (save_receive_gateway_message_from_tcp_socket_into_receive_buffer(tcpNetwork, receiveBuffer) != 0) {
+    GatewayLinuxTcpDisconnect(n, context);
+    return -1;
+  }
+  /*
   if (MqttSnGatewayHandleMasterSocket(tcpNetwork, receiveBuffer, &readfds) != 0) {
     return -1;
   }
+  */
   /*
   setsockopt(tcpNetwork->my_socket, SOL_SOCKET, SO_RCVTIMEO, (char *) &interval, sizeof(struct timeval));
 
@@ -168,21 +178,22 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   receivedMessageData.data_length = bytes;
 
   // convert IP-Address to device_address
-  struct sockaddr_in networkAddress;
+  struct sockaddr_in gatewayAddress;
   int addrlen = sizeof(struct sockaddr_in);
-  getpeername(tcpNetwork->my_socket, (struct sockaddr *) &networkAddress, (socklen_t *) &addrlen);
-  unsigned char *ip = (unsigned char *) &networkAddress.sin_addr.s_addr;
-  receivedMessageData.networkAddress.bytes[0] = ip[0];
-  receivedMessageData.networkAddress.bytes[1] = ip[1];
-  receivedMessageData.networkAddress.bytes[2] = ip[2];
-  receivedMessageData.networkAddress.bytes[3] = ip[3];
+  getpeername(tcpNetwork->my_socket, (struct sockaddr *) &gatewayAddress, (socklen_t *) &addrlen);
+  unsigned char *ip = (unsigned char *) &gatewayAddress.sin_addr.s_addr;
+  receivedMessageData.gatewayAddress.bytes[0] = ip[0];
+  receivedMessageData.gatewayAddress.bytes[1] = ip[1];
+  receivedMessageData.gatewayAddress.bytes[2] = ip[2];
+  receivedMessageData.gatewayAddress.bytes[3] = ip[3];
 
-  uint16_t port_as_number = (uint16_t) htons(networkAddress.sin_port);
-  receivedMessageData.networkAddress.bytes[4] = (uint8_t) (port_as_number >> 8);
-  receivedMessageData.networkAddress.bytes[5] = (uint8_t) (port_as_number >> 0);
+  uint16_t port_as_number = (uint16_t) htons(gatewayAddress.sin_port);
+  receivedMessageData.gatewayAddress.bytes[4] = (uint8_t) (port_as_number >> 8);
+  receivedMessageData.gatewayAddress.bytes[5] = (uint8_t) (port_as_number >> 0);
 
   put(receiveBuffer, &receivedMessageData);
   */
+
   return 0;
 }
 
@@ -201,7 +212,7 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuf
     uint16_t len = gatewaySendMessageData.data_length;
 
     setsockopt(tcpNetwork->my_socket, SOL_SOCKET, SO_SNDTIMEO, (char *) &tv, sizeof(struct timeval));
-    int rc = write(tcpNetwork->my_socket, gatewaySendMessageData.data, gatewaySendMessageData.data_length);
+    ssize_t rc = write(tcpNetwork->my_socket, gatewaySendMessageData.data, gatewaySendMessageData.data_length);
 
     if (rc != len) {
       put(sendBuffer, &gatewaySendMessageData);
@@ -219,24 +230,6 @@ void MqttSnGatewaytNetworkInitReadFdSet(MqttSnGatewayTcpNetwork *clientTcpNetwor
   // add master socket to set
   FD_SET(clientTcpNetwork->my_socket, readfds);
   (*max_sd) = clientTcpNetwork->my_socket;
-
-  // add child sockets to set
-  /*
-  for (int i = 0; i < clientTcpNetwork->max_clients; i++) {
-      // socket descriptor
-      int sd = clientTcpNetwork->client_socket[i];
-
-      // if valid socket descriptor then add to read list
-      if (sd > 0) {
-          FD_SET(sd, readfds);
-      }
-
-      // highest file descriptor number, need it for the select function
-      if (sd > (*max_sd)) {
-          (*max_sd) = sd;
-      }
-  }
-  */
 }
 
 int MqttSnGatewayHandleMasterSocket(MqttSnGatewayTcpNetwork *clientTcpNetwork,
@@ -265,7 +258,7 @@ int MqttSnGatewayHandleMasterSocket(MqttSnGatewayTcpNetwork *clientTcpNetwork,
       // Echo back the message that came in
     else {
       // set the string terminating NULL byte on the end of the data read
-      if (valread >= MAX_MESSAGE_LENGTH) {
+      if (valread > MAX_MESSAGE_LENGTH) {
         return 0;
       }
       MqttSnMessageData receiveMessageData = {0};
@@ -293,4 +286,161 @@ int MqttSnGatewayHandleMasterSocket(MqttSnGatewayTcpNetwork *clientTcpNetwork,
 
   }
   return 0;
+}
+
+int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
+    MqttSnGatewayTcpNetwork *gatewayTcpNetwork,
+    MqttSnFixedSizeRingBuffer *receiveBuffer) {
+  int gateway_fd = gatewayTcpNetwork->my_socket;
+  uint16_t buffer_length = CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH;
+  uint8_t buffer[CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH];
+  ssize_t read_bytes = 0;
+  if ((read_bytes = read(gateway_fd, buffer, buffer_length)) <= 0) {
+    return -1;
+  }
+
+  // convert IP-Address to device_address
+  device_address gateway_address = {0};
+  struct sockaddr_in address;
+  int addrlen = sizeof(struct sockaddr_in);
+  getpeername(gateway_fd, (struct sockaddr *) &address, (socklen_t *) &addrlen);
+  unsigned char *ip = (unsigned char *) &address.sin_addr.s_addr;
+  gateway_address.bytes[0] = ip[0];
+  gateway_address.bytes[1] = ip[1];
+  gateway_address.bytes[2] = ip[2];
+  gateway_address.bytes[3] = ip[3];
+
+  uint16_t port_as_number = (uint16_t) htons(address.sin_port);
+  gateway_address.bytes[4] = (uint8_t) (port_as_number >> 8);
+  gateway_address.bytes[5] = (uint8_t) (port_as_number >> 0);
+
+  return save_messages_into_receive_buffer(buffer,
+                                           read_bytes,
+                                           gateway_address,
+                                           gatewayTcpNetwork->gateway_buffer,
+                                           &gatewayTcpNetwork->gateway_buffer_bytes,
+                                           receiveBuffer);
+  /*
+  if (gatewayTcpNetwork->gateway_buffer[0] == 0) {
+    // no message in buffer, new message, read message bytes
+    if (save_incomplete_new_message(buffer,
+                                    read_bytes,
+                                    gateway_address,
+                                    gatewayTcpNetwork->gateway_buffer,
+                                    &gatewayTcpNetwork->gateway_buffer_bytes,
+                                    receiveBuffer) == 0) {
+      return 0;
+    }
+    if (save_multiple_complete_new_messages(buffer,
+                                            read_bytes,
+                                            gateway_address,
+                                            gatewayTcpNetwork->gateway_buffer,
+                                            &gatewayTcpNetwork->gateway_buffer_bytes,
+                                            receiveBuffer) == 0) {
+      return 0;
+    }
+    return -1;
+  }
+  if (isThreeBytesHeader(gatewayTcpNetwork->gateway_buffer, gatewayTcpNetwork->gateway_buffer_bytes) &&
+      !isCompleteThreeBytesHeader(gatewayTcpNetwork->gateway_buffer, gatewayTcpNetwork->gateway_buffer_bytes)) {
+    if (gatewayTcpNetwork->gateway_buffer_bytes == 1) {
+      if (read_bytes == 1) {
+        // copy and increase - then we are done
+        gatewayTcpNetwork->gateway_buffer[gatewayTcpNetwork->gateway_buffer_bytes] = buffer[0];
+        gatewayTcpNetwork->gateway_buffer_bytes += 1;
+        return 0;
+      } else if (read_bytes == 2) {
+        // copy and increase - then we are done
+        gatewayTcpNetwork->gateway_buffer[gatewayTcpNetwork->gateway_buffer_bytes] = buffer[0];
+        gatewayTcpNetwork->gateway_buffer[gatewayTcpNetwork->gateway_buffer_bytes + 1] = buffer[1];
+        gatewayTcpNetwork->gateway_buffer_bytes += 2;
+        return 0;
+      } else {
+        // copy into buffer but do not increase - rest ist handled in the following methods
+        gatewayTcpNetwork->gateway_buffer[gatewayTcpNetwork->gateway_buffer_bytes] = buffer[0];
+        gatewayTcpNetwork->gateway_buffer[gatewayTcpNetwork->gateway_buffer_bytes + 1] = buffer[1];
+      }
+    } else if (gatewayTcpNetwork->gateway_buffer_bytes == 2) {
+      if (read_bytes == 1) {
+        // copy and increase - then we are done
+        gatewayTcpNetwork->gateway_buffer[gatewayTcpNetwork->gateway_buffer_bytes] = buffer[0];
+        gatewayTcpNetwork->gateway_buffer_bytes += 1;
+        return 0;
+      } else {
+        // copy into buffer but do not increase - rest ist handled in the following methods
+        gatewayTcpNetwork->gateway_buffer[gatewayTcpNetwork->gateway_buffer_bytes] = buffer[0];
+        gatewayTcpNetwork->gateway_buffer[gatewayTcpNetwork->gateway_buffer_bytes + 1] = buffer[1];
+      }
+    }
+
+  }
+  // messages already in buffer, new message, read message bytes
+  if (save_incomplete_message(buffer,
+                              read_bytes,
+                              gateway_address,
+                              gatewayTcpNetwork->gateway_buffer,
+                              &gatewayTcpNetwork->gateway_buffer_bytes,
+                              receiveBuffer) == 0) {
+    return 0;
+  }
+  if (save_multiple_messages(buffer,
+                             read_bytes,
+                             gateway_address,
+                             gatewayTcpNetwork->gateway_buffer,
+                             &gatewayTcpNetwork->gateway_buffer_bytes,
+                             receiveBuffer) == 0) {
+    return 0;
+  }
+  return -1;
+  */
+  /*
+// TODO read
+  int sd = gatewayTcpNetwork->my_socket;
+  // Check if it was for closing, and also read the incoming message
+  char buffer[1024];
+  int buffer_length = 1024;
+  int valread;
+  if ((valread = read(sd, buffer, buffer_length)) == 0) {
+    // Somebody disconnected, get his details and print
+    int addrlen;
+    struct sockaddr_in address;
+    getpeername(sd, (struct sockaddr *) &address, (socklen_t *) &addrlen);
+    printf("Gateway disconnected, ip %s, port %d \n",
+           inet_ntoa(address.sin_addr), ntohs(address.sin_port));
+
+    // Close the socket and mark as 0 in the list for reuse
+    close(sd);
+    clientTcpNetwork->my_socket = 0;
+    return -1;
+  }
+    // Echo back the message that came in
+  else {
+    // set the string terminating NULL byte on the end of the data read
+    if (valread > MAX_MESSAGE_LENGTH) {
+      return 0;
+    }
+    MqttSnMessageData receiveMessageData = {0};
+    receiveMessageData.data_length = valread;
+    memcpy(receiveMessageData.data, buffer, receiveMessageData.data_length);
+
+    // convert IP-Address to device_address
+    struct sockaddr_in address;
+    int addrlen = sizeof(struct sockaddr_in);
+    getpeername(clientTcpNetwork->my_socket, (struct sockaddr *) &address, (socklen_t *) &addrlen);
+    unsigned char *ip = (unsigned char *) &address.sin_addr.s_addr;
+    receiveMessageData.address.bytes[0] = ip[0];
+    receiveMessageData.address.bytes[1] = ip[1];
+    receiveMessageData.address.bytes[2] = ip[2];
+    receiveMessageData.address.bytes[3] = ip[3];
+
+    uint16_t port_as_number = (uint16_t) htons(address.sin_port);
+    receiveMessageData.address.bytes[4] = (uint8_t) (port_as_number >> 8);
+    receiveMessageData.address.bytes[5] = (uint8_t) (port_as_number >> 0);
+
+    put(receiveBuffer, &receiveMessageData);
+    // buffer[valread] = '\0';
+    // sendNetwork(sd, buffer, strlen(buffer), 0);
+  }
+  return 0;
+   */
 }

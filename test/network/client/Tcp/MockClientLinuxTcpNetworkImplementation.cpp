@@ -7,11 +7,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <unistd.h>
+#include <MqttSnFixedSizeRingBuffer.h>
 #include "MockClientLinuxTcpNetworkImplementation.h"
-
-void MockClientLinuxTcpNetworkImplementation::setMockClient(MockClient *client) {
-  this->mockClient = client;
-}
 
 bool MockClientLinuxTcpNetworkImplementation::isNetworkConnected() {
   return !isNetworkDisconnected();
@@ -21,22 +18,26 @@ bool MockClientLinuxTcpNetworkImplementation::isNetworkDisconnected() {
   return forwarder_socket_fd == -1;
 }
 
-int MockClientLinuxTcpNetworkImplementation::sendToNetwork(device_address *to, const uint8_t *buf, uint8_t len) {
+int MockClientLinuxTcpNetworkImplementation::sendToNetwork(const device_address *to,
+                                                           const uint8_t *buf,
+                                                           uint16_t dataLength) {
+  // TODO what if to != forwarder_address
   if (forwarder_socket_fd == -1) {
     return 0;
   }
   // check if Tcp socket is connected, if not then do it!
-  if (send(forwarder_socket_fd, buf, len, 0) != len) {
+  if (send(forwarder_socket_fd, buf, dataLength, 0) != dataLength) {
     close(forwarder_socket_fd);
     forwarder_socket_fd = -1;
   }
-  return len;
+  return dataLength;
 }
 
-bool MockClientLinuxTcpNetworkImplementation::connectNetwork(device_address *address) {
+bool MockClientLinuxTcpNetworkImplementation::connectNetwork(device_address *forwarderAddress) {
+  this->forwarderAddress = forwarderAddress;
 
-  uint16_t port = address->bytes[4] << 8;
-  port += address->bytes[5] << 0;
+  uint16_t port = forwarderAddress->bytes[4] << 8;
+  port += forwarderAddress->bytes[5] << 0;
 
   // create forwarder_socket
   if ((forwarder_socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -57,7 +58,10 @@ bool MockClientLinuxTcpNetworkImplementation::connectNetwork(device_address *add
   char ipAsString[255] = {0};
   sprintf(ipAsString,
           "%d.%d.%d.%d",
-          address->bytes[0], address->bytes[1], address->bytes[2], address->bytes[3]);
+          forwarderAddress->bytes[0],
+          forwarderAddress->bytes[1],
+          forwarderAddress->bytes[2],
+          forwarderAddress->bytes[3]);
 
   addrinfo *result = NULL;
   addrinfo hints = {0, AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP, 0, NULL, NULL, NULL};
@@ -102,7 +106,7 @@ void MockClientLinuxTcpNetworkImplementation::disconnectNetwork() {
   forwarder_socket_fd = -1;
 }
 
-int MockClientLinuxTcpNetworkImplementation::loopNetwork(MockClientNetworkReceiver *pReceiver) {
+int MockClientLinuxTcpNetworkImplementation::loopNetwork(MockClientNetworkReceiver *receiver) {
   uint32_t timeout_ms = 100;
   struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
   if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
@@ -152,13 +156,35 @@ int MockClientLinuxTcpNetworkImplementation::loopNetwork(MockClientNetworkReceiv
       uint16_t port_as_number = (uint16_t) htons(address.sin_port);
       sender_address.bytes[4] = (uint8_t) (port_as_number >> 8);
       sender_address.bytes[5] = (uint8_t) (port_as_number >> 0);
-      pReceiver->receive_any_message(&sender_address, buffer, valread);
+      receiver->receive_any_message(&sender_address, buffer, valread);
       return 0;
     }
   }
 
   return 0;
 }
-void MockClientLinuxTcpNetworkImplementation::setNetworkAddress(device_address *address) {
-  this->address = address;
+device_address MockClientLinuxTcpNetworkImplementation::getForwarderDeviceAddress() {
+  device_address result = {0};
+  if (forwarder_socket_fd >= 0) {
+    getDeviceAddressFromFileDescriptor(forwarder_socket_fd, &result);
+  }
+  return result;
+}
+
+int MockClientLinuxTcpNetworkImplementation::getDeviceAddressFromFileDescriptor(int peer_fd,
+                                                                                device_address *peerAddress) {
+  struct sockaddr_in address;
+  socklen_t addrlen = sizeof(address);
+  getpeername(peer_fd, (struct sockaddr *) &address, &addrlen);
+
+  unsigned char *ip = (unsigned char *) &address.sin_addr.s_addr;
+  (*peerAddress).bytes[0] = ip[0];
+  (*peerAddress).bytes[1] = ip[1];
+  (*peerAddress).bytes[2] = ip[2];
+  (*peerAddress).bytes[3] = ip[3];
+
+  uint16_t port_as_number = (uint16_t) htons(address.sin_port);
+  (*peerAddress).bytes[4] = (uint8_t) (port_as_number >> 8);
+  (*peerAddress).bytes[5] = (uint8_t) (port_as_number >> 0);
+  return 0;
 }
