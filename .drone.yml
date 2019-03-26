@@ -10,8 +10,8 @@ steps:
         path: /var/local/drone/reports
     commands:
       - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
-      - echo "DRONE_REPO ${DRONE_REPO}"
-      - echo "DRONE_BUILD_NUMBER ${DRONE_BUILD_NUMBER}"
+      - echo "DRONE_REPO ${DRONE_REPO} \n \
+              DRONE_BUILD_NUMBER ${DRONE_BUILD_NUMBER}"
       - echo ${DRONE_REPO}
       - echo ${DRONE_BUILD_NUMBER}
       - echo "DRONE_REPO" ${DRONE_REPO}
