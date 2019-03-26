@@ -10,10 +10,6 @@ steps:
         path: /var/local/drone/reports
     commands:
       - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
-      - echo "DRONE_BRANCH ${DRONE_BRANCH}\n
-        DRONE_BUILD_CREATED ${DRONE_BUILD_CREATED}\n
-        DRONE_BUILD_EVENT ${DRONE_BUILD_EVENT}\n"
-
 
   - name: build
     image: ubuntu
