@@ -4,6 +4,7 @@ name: default
 steps:
   - name: MqttSnClientNetworkInterfaceUnitTests
     image: ubuntu
+    depends_on: [ clone ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
@@ -12,6 +13,7 @@ steps:
 
   - name: MqttSnGatewayNetworkInterfaceUnitTests
     image: ubuntu
+    depends_on: [ clone ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
@@ -20,6 +22,7 @@ steps:
 
   - name: MqttSnFixedSizeRingBufferUnitTests
     image: ubuntu
+    depends_on: [ clone ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
@@ -28,6 +31,7 @@ steps:
 
   - name: MqttSnForwarderIntegrationTests
     image: ubuntu
+    depends_on: [ clone ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
@@ -36,6 +40,7 @@ steps:
 
   - name: TcpSendMultipleClientMultipleMessageVariableLength
     image: ubuntu
+    depends_on: [ clone ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
@@ -44,6 +49,7 @@ steps:
 
   - name: TcpReceiveMultipleClientMultipleMessageVariableLength
     image: ubuntu
+    depends_on: [ clone ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
@@ -52,6 +58,7 @@ steps:
 
   - name: TcpSendToClientsReceiveOnForwarderTests
     image: ubuntu
+    depends_on: [ clone ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
@@ -60,6 +67,7 @@ steps:
 
   - name: ReceiveOnForwarderSendToClientTests
     image: ubuntu
+    depends_on: [ clone ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
