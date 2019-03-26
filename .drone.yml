@@ -110,3 +110,4 @@ steps:
     depends_on: [ GatewayDefragmentationTests ]
     commands:
       - ./ReceiveFromGatewaySendToGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway --gtest_color=no
+
