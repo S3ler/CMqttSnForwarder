@@ -2,74 +2,66 @@ kind: pipeline
 name: default
 
 steps:
-  - name: MqttSnClientNetworkInterfaceUnitTests
+  - name: build
     image: ubuntu
     depends_on: [ clone ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
       - make MqttSnClientNetworkInterfaceUnitTests
+      - make MqttSnGatewayNetworkInterfaceUnitTests
+      - make MqttSnFixedSizeRingBufferUnitTests
+      - make MqttSnForwarderIntegrationTests
+      - make MqttSnForwarderLinuxTcpClientNetworkTests
+      - cp MqttSnForwarderLinuxTcpClientNetworkTests TcpSendMultipleClientMultipleMessageVariableLength
+      - cp MqttSnForwarderLinuxTcpClientNetworkTests TcpReceiveMultipleClientMultipleMessageVariableLength
+      - cp MqttSnForwarderLinuxTcpClientNetworkTests TcpSendToClientsReceiveOnForwarderTests
+      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveOnForwarderSendToClientTests
+
+  - name: MqttSnClientNetworkInterfaceUnitTests
+    image: ubuntu
+    depends_on: [ build ]
+    commands:
       - ./MqttSnClientNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnGatewayNetworkInterfaceUnitTests
     image: ubuntu
-    depends_on: [ clone ]
+    depends_on: [ build ]
     commands:
-      - apt-get update && apt-get install -y git cmake gcc g++
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
-      - make MqttSnGatewayNetworkInterfaceUnitTests
       - ./MqttSnGatewayNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnFixedSizeRingBufferUnitTests
     image: ubuntu
-    depends_on: [ clone ]
+    depends_on: [ build ]
     commands:
-      - apt-get update && apt-get install -y git cmake gcc g++
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
-      - make MqttSnFixedSizeRingBufferUnitTests
       - ./MqttSnFixedSizeRingBufferUnitTests --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnForwarderIntegrationTests
     image: ubuntu
-    depends_on: [ clone ]
+    depends_on: [ build ]
     commands:
-      - apt-get update && apt-get install -y git cmake gcc g++
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
-      - make MqttSnForwarderIntegrationTests
       - ./MqttSnForwarderIntegrationTests --gtest_color=yes
 
   - name: TcpSendMultipleClientMultipleMessageVariableLength
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
     commands:
-      - apt-get update && apt-get install -y git cmake gcc g++
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
-      - make MqttSnForwarderLinuxTcpClientNetworkTests
-      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength --gtest_color=yes
+      - ./TcpSendMultipleClientMultipleMessageVariableLength --gtest_filter=MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength --gtest_color=yes
 
   - name: TcpReceiveMultipleClientMultipleMessageVariableLength
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
     commands:
-      - apt-get update && apt-get install -y git cmake gcc g++
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
-      - make MqttSnForwarderLinuxTcpClientNetworkTests
-      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength --gtest_color=yes
+      - ./TcpReceiveMultipleClientMultipleMessageVariableLength --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength --gtest_color=yes
 
   - name: TcpSendToClientsReceiveOnForwarderTests
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
     commands:
-      - apt-get update && apt-get install -y git cmake gcc g++
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
-      - make MqttSnForwarderLinuxTcpClientNetworkTests
-      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests --gtest_color=yes
+      - ./TcpSendToClientsReceiveOnForwarderTests --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests --gtest_color=yes
 
   - name: ReceiveOnForwarderSendToClientTests
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
     commands:
-      - apt-get update && apt-get install -y git cmake gcc g++
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
-      - make MqttSnForwarderLinuxTcpClientNetworkTests
-      - ./MqttSnForwarderLinuxTcpClientNetworkTests --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests --gtest_color=yes
+      - ./ReceiveOnForwarderSendToClientTests --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests --gtest_color=yes
