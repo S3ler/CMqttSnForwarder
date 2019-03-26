@@ -33,7 +33,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="61f1f14f-a9c1-40c4-9dec-ddb457b07ad0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.drone.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.drone.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/build-linux-autotools.sh" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/build-linux-autotools.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/build-linux-bazel.sh" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/build-linux-bazel.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/env-linux.sh" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-src/ci/env-linux.sh" afterDir="false" />
@@ -98,8 +97,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.drone.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="63">
-              <caret line="3" selection-start-line="3" selection-end-line="3" />
+            <state relative-caret-position="-1745">
+              <caret line="13" column="52" lean-forward="true" selection-start-line="13" selection-start-column="52" selection-end-line="13" selection-end-column="52" />
             </state>
           </provider>
         </entry>
@@ -661,7 +660,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="862296000" />
+    <option name="totallyTimeSpent" value="862601000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -673,9 +672,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="2575" height="1415" extended-state="6" />
+    <frame x="-7" y="0" width="1293" height="1407" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49473685" visible="true" weight="0.1499006" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49473685" visible="true" weight="0.30575833" />
       <window_info id="Structure" order="1" sideWeight="0.50526315" side_tool="true" weight="0.21908316" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -687,7 +686,7 @@
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49959448" weight="0.32735777" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.24066924" weight="0.2244739" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.4993565" visible="true" weight="0.32501948" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.4993565" visible="true" weight="0.32705882" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.46309814" side_tool="true" weight="0.49803922" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32735777" />
       <window_info anchor="bottom" id="CMake" order="12" weight="0.20031177" />
@@ -1271,8 +1270,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.drone.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        <state relative-caret-position="-1745">
+          <caret line="13" column="52" lean-forward="true" selection-start-line="13" selection-start-column="52" selection-end-line="13" selection-end-column="52" />
         </state>
       </provider>
     </entry>

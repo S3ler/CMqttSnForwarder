@@ -6,6 +6,9 @@ steps:
   - name: prepare
     image: ubuntu
     depends_on: [ clone ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
     commands:
       - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
       - echo "DRONE_BRANCH ${DRONE_BRANCH}
