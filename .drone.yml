@@ -2,15 +2,6 @@ kind: pipeline
 name: default
 
 steps:
-  - name: prepare
-    image: ubuntu
-    depends_on: [ clone ]
-    volumes:
-      - name: reports
-        path: /var/local/drone/reports
-    commands:
-      - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
-
   - name: build
     image: ubuntu
     depends_on: [ prepare ]
