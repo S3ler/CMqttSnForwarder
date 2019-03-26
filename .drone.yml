@@ -7,10 +7,15 @@ steps:
     depends_on: [ clone ]
     volumes:
       - name: reports
-        path: /var/local/cmqttsnforwarder/reports
+        path: /var/local/drone/reports
     commands:
-      - mkdir --parents /var/local/cmqttsnforwarder/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
-      - echo ${DRONE_BUILD_STARTED}
+      - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
+      - echo "DRONE_REPO ${DRONE_REPO}"
+      - echo "DRONE_BUILD_NUMBER ${DRONE_BUILD_NUMBER}"
+      - echo ${DRONE_REPO}
+      - echo ${DRONE_BUILD_NUMBER}
+      - echo "DRONE_REPO" ${DRONE_REPO}
+      - echo "DRONE_BUILD_NUMBER" ${DRONE_BUILD_NUMBER}
 
   - name: build
     image: ubuntu
@@ -124,4 +129,4 @@ steps:
 volumes:
   - name: reports
     host:
-      path: /var/local/cmqttsnforwarder/reports
+      path: /var/local/drone/reports
