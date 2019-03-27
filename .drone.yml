@@ -77,10 +77,7 @@ steps:
       - cp a a
       
   - name: postbuild
-    image: ubuntu
-    trigger:
-      status:
-      - failure
+    image: ubuntuy
     depends_on: [ build ]
     commands:
       - touch asdf
