@@ -104,7 +104,10 @@ steps:
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
     commands:
-      - ./MqttSnClientNetworkInterfaceMessageDefragmentationTests --gtest_filter=DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests.*/*:DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests/*.* --gtest_color=no
+      - ./MqttSnClientNetworkInterfaceMessageDefragmentationTests \
+        --gtest_output=xml:MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml \
+        --gtest_filter=DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests.*/*:DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests/*.* \
+        --gtest_color=yes
 
   - name: SendMultipleClientMultipleMessageVariableLength
     image: ubuntu
@@ -122,44 +125,44 @@ steps:
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
     commands:
-      - ./SendToClientsReceiveOnForwarderTests --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests --gtest_color=no
+      - ./SendToClientsReceiveOnForwarderTests --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests --gtest_color=yes
 
   - name: ReceiveOnForwarderSendToClientTests
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
     commands:
-      - ./ReceiveOnForwarderSendToClientTests --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests --gtest_color=no
+      - ./ReceiveOnForwarderSendToClientTests --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests --gtest_color=yes
 
 
   - name: GatewayDefragmentationTests
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
     commands:
-      - ./GatewayDefragmentationTests --gtest_filter=GatewayDefragmentationTests/MqttSnGatewayNetworkInterfaceMessageDefragmentationTests.*/*:GatewayDefragmentationTests/MqttSnGatewayNetworkInterfaceMessageDefragmentationTests/*.* --gtest_color=no
+      - ./GatewayDefragmentationTests --gtest_filter=GatewayDefragmentationTests/MqttSnGatewayNetworkInterfaceMessageDefragmentationTests.*/*:GatewayDefragmentationTests/MqttSnGatewayNetworkInterfaceMessageDefragmentationTests/*.* --gtest_color=yes
 
   - name: SendToGateway
     image: ubuntu
     depends_on: [ GatewayDefragmentationTests ]
     commands:
-      - ./SendToGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGateway --gtest_color=no
+      - ./SendToGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGateway --gtest_color=yes
 
   - name: ReceiveFromGateway
     image: ubuntu
     depends_on: [ GatewayDefragmentationTests ]
     commands:
-      - ./ReceiveFromGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGateway --gtest_color=no
+      - ./ReceiveFromGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGateway --gtest_color=yes
 
   - name: SendToGatewayReceiveOnForwarder
     image: ubuntu
     depends_on: [ GatewayDefragmentationTests ]
     commands:
-      - ./SendToGatewayReceiveOnForwarder --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder --gtest_color=no
+      - ./SendToGatewayReceiveOnForwarder --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder --gtest_color=yes
 
   - name: ReceiveFromGatewaySendToGateway
     image: ubuntu
     depends_on: [ GatewayDefragmentationTests ]
     commands:
-      - ./ReceiveFromGatewaySendToGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway --gtest_color=no
+      - ./ReceiveFromGatewaySendToGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway --gtest_color=yes
 
 volumes:
   - name: reports
