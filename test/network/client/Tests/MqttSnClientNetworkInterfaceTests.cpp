@@ -88,7 +88,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVa
 
   ASSERT_TRUE(clientNetworkGatewayLooper.resumeLoop());
   //   std::this_thread::sleep_for(std::chrono::milliseconds(mockClients.size() * toTestMessageCount * 1000));
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   EXPECT_THAT(actualMockClientSnMessageDatas, testing::UnorderedElementsAreArray(expectedMockClientSnMessageDatas));
 }
