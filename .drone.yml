@@ -66,10 +66,13 @@ clone:
 steps:
   - name: build
     image: ubuntu
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
     commands:
       - ls -l
-      - apt-get update && apt-get install -y git cmake gcc g++ 2>&1 | tee aptget_report
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" 2>&1 | tee cmake_report
+      - apt-get update && apt-get install -y git cmake gcc g++ 2>&1 | tee /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/aptget_report
+      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" 2>&1 | tee /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/cmake_report
       - make MqttSnClientNetworkInterfaceUnitTests
       - make MqttSnGatewayNetworkInterfaceUnitTests
       - make MqttSnFixedSizeRingBufferUnitTests
@@ -86,6 +89,11 @@ steps:
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGateway
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
+
+volumes:
+  - name: reports
+    host:
+      path: /var/local/drone/reports
 
 trigger:
   status: [ success ]
