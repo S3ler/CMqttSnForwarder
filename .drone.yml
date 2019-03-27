@@ -62,6 +62,7 @@ steps:
   - name: build
     image: ubuntu
     commands:
+      - ls -l
       - apt-get update && apt-get install -y git cmake gcc g++ 2>&1 | tee aptget_report
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" 2>&1 | tee cmake_report
       - make MqttSnClientNetworkInterfaceUnitTests
@@ -99,6 +100,7 @@ steps:
   - name: MqttSnClientNetworkInterfaceUnitTests
     image: ubuntu
     commands:
+      - ls -l
       - ./MqttSnClientNetworkInterfaceUnitTests
         --gtest_output=xml:MqttSnClientNetworkInterfaceUnitTests.xml
         --gtest_filter=* --gtest_color=yes
@@ -142,6 +144,7 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
+      - ls -l
       - cp MqttSnClientNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnClientNetworkInterfaceUnitTests.xml
       - cp MqttSnGatewayNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnGatewayNetworkInterfaceUnitTests.xml
       - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnFixedSizeRingBufferUnitTests.xml
