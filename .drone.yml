@@ -1,10 +1,10 @@
----
 kind: pipeline
-name: prepare_reports
+name: default
 
 steps:
-  - name: prepare_reports
+  - name: prepare
     image: ubuntu
+    depends_on: [ clone ]
     volumes:
       - name: reports
         path: /var/local/drone/reports
@@ -51,29 +51,17 @@ steps:
         DRONE_TAG ${DRONE_TAG}\n
         DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/config
 
-volumes:
-  - name: reports
-    host:
-      path: /var/local/drone/reports
----
-kind: pipeline
-name: build
-
-steps:
   - name: build
     image: ubuntu
-    volumes:
-      - name: reports
-        path: /var/local/drone/reports
     commands:
-      - apt-get update && apt-get install -y git cmake gcc g++ 2>&1 | tee /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/aptget_report
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" 2>&1 | tee /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/cmake_report
-      - make MqttSnClientNetworkInterfaceUnitTests
-      - make MqttSnGatewayNetworkInterfaceUnitTests
-      - make MqttSnFixedSizeRingBufferUnitTests
-      - make MqttSnForwarderIntegrationTests
-      - make MqttSnForwarderLinuxTcpClientNetworkTests
-      - make MqttSnForwarderLinuxTcpGatewayNetworkTests
+      - apt-get update && apt-get install -y git cmake gcc g++  2>&1 | tee apt_report
+      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" 2>&1 | tee cmake_report
+      - make MqttSnClientNetworkInterfaceUnitTests &&
+        make MqttSnGatewayNetworkInterfaceUnitTests &&
+        make MqttSnFixedSizeRingBufferUnitTests &&
+        make MqttSnForwarderIntegrationTests &&
+        make MqttSnForwarderLinuxTcpClientNetworkTests &&
+        make MqttSnForwarderLinuxTcpGatewayNetworkTests 2>&1 | tee make_report
       - cp MqttSnForwarderLinuxTcpClientNetworkTests MqttSnClientNetworkInterfaceMessageDefragmentationTests
       - cp MqttSnForwarderLinuxTcpClientNetworkTests SendMultipleClientMultipleMessageVariableLength
       - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveMultipleClientMultipleMessageVariableLength
@@ -85,95 +73,62 @@ steps:
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
 
-volumes:
-  - name: reports
-    host:
-      path: /var/local/drone/reports
-
-trigger:
-  status: [ success ]
-
-depends_on: [ prepare_reports ]
-
----
-kind: pipeline
-name: unit_test
-
-steps:
-
-steps:
-  - name: build
-    image: ubuntu
-    commands:
-      - apt-get update && apt-get install -y git cmake gcc g++
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
-      - make MqttSnClientNetworkInterfaceUnitTests
-      - make MqttSnGatewayNetworkInterfaceUnitTests
-      - make MqttSnFixedSizeRingBufferUnitTests
-      - make MqttSnForwarderIntegrationTests
-
-  - name: MqttSnClientNetworkInterfaceUnitTests
+  - name: gather_build_report
     image: ubuntu
     volumes:
       - name: reports
         path: /var/local/drone/reports
     commands:
+      - cp apt_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/apt_report
+      - cp cmake_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/cmake_report
+      - cp make_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/make_report
+    when:
+      status: [ success, failure ]
+    depeneds_on: [ build ]
+
+  - name: MqttSnClientNetworkInterfaceUnitTests
+    image: ubuntu
+    commands:
       - ./MqttSnClientNetworkInterfaceUnitTests
-        --gtest_output=xml:/var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnClientNetworkInterfaceUnitTests.xml
+        --gtest_output=xml:MqttSnClientNetworkInterfaceUnitTests.xml
         --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnGatewayNetworkInterfaceUnitTests
     image: ubuntu
-    volumes:
-      - name: reports
-        path: /var/local/drone/reports
     commands:
       - ./MqttSnGatewayNetworkInterfaceUnitTests
-        --gtest_output=xml:/var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnGatewayNetworkInterfaceUnitTests.xml
+        --gtest_output=xml:MqttSnGatewayNetworkInterfaceUnitTests.xml
         --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnFixedSizeRingBufferUnitTests
     image: ubuntu
-    volumes:
-      - name: reports
-        path: /var/local/drone/reports
     commands:
       - ./MqttSnFixedSizeRingBufferUnitTests
-        --gtest_output=xml:/var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnFixedSizeRingBufferUnitTests.xml
+        --gtest_output=xml:MqttSnFixedSizeRingBufferUnitTests.xml
         --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnForwarderIntegrationTests
     image: ubuntu
-    volumes:
-      - name: reports
-        path: /var/local/drone/reports
     commands:
       - ./MqttSnForwarderIntegrationTests
-        --gtest_output=xml:/var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnForwarderIntegrationTests.xml
+        --gtest_output=xml:MqttSnForwarderIntegrationTests.xml
         --gtest_filter=* --gtest_color=yes
 
-  - name: gatherreports
+  - name: gather_test_report
     image: ubuntu
     volumes:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - ls -l
-      - touch /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/shouldbehere
+      - cp MqttSnClientNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnClientNetworkInterfaceUnitTests.xml
+      - cp MqttSnGatewayNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnGatewayNetworkInterfaceUnitTests.xml
+      - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnFixedSizeRingBufferUnitTests.xml
+      - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnForwarderIntegrationTests.xml
     when:
       status: [ success, failure ]
-    depeneds_on: [ MqttSnForwarderIntegrationTests ]
-
-trigger:
-  status:
-  - success
-
-depends_on:
-- build
+    depeneds_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
 
 volumes:
   - name: reports
     host:
       path: /var/local/drone/reports
-
-
