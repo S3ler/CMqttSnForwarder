@@ -75,7 +75,7 @@ steps:
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
       
-  - name: MqttSnClientNetworkInterfaceUnitTests
+  - name: postbuild
     image: ubuntu
     trigger:
       status:
