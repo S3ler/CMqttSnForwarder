@@ -1,11 +1,10 @@
+---
 kind: pipeline
-name: default
-
+name: prepare_reports
 
 steps:
   - name: prepare
     image: ubuntu
-    depends_on: [ clone ]
     volumes:
       - name: reports
         path: /var/local/drone/reports
@@ -52,9 +51,19 @@ steps:
         DRONE_TAG ${DRONE_TAG}\n
         DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/config
 
+  trigger:
+    status:
+      - success
+
+  depends_on:
+    - clone
+---
+kind: pipeline
+name: build
+
+steps:
   - name: build
     image: ubuntu
-    depends_on: [ prepare ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
@@ -75,96 +84,78 @@ steps:
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
 
+  trigger:
+    status:
+      - success
+
+  depends_on:
+    - prepare
+
+---
+kind: pipeline
+name: unit_test
+steps:
   - name: MqttSnClientNetworkInterfaceUnitTests
     image: ubuntu
-    depends_on: [ build ]
     commands:
-      - ./MqttSnClientNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes
+      - ./MqttSnClientNetworkInterfaceUnitTests
+        --gtest_output=xml:MqttSnClientNetworkInterfaceUnitTests.xml
+        --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnGatewayNetworkInterfaceUnitTests
     image: ubuntu
-    depends_on: [ build ]
     commands:
-      - ./MqttSnGatewayNetworkInterfaceUnitTests --gtest_filter=* --gtest_color=yes
+      - ./MqttSnGatewayNetworkInterfaceUnitTests
+        --gtest_output=xml:MqttSnGatewayNetworkInterfaceUnitTests.xml
+        --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnFixedSizeRingBufferUnitTests
     image: ubuntu
-    depends_on: [ build ]
     commands:
-      - ./MqttSnFixedSizeRingBufferUnitTests --gtest_filter=* --gtest_color=yes
+      - ./MqttSnFixedSizeRingBufferUnitTests
+        --gtest_output=xml:MqttSnFixedSizeRingBufferUnitTests.xml
+        --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnForwarderIntegrationTests
     image: ubuntu
-    depends_on: [ build ]
     commands:
-      - ./MqttSnForwarderIntegrationTests --gtest_color=yes
+      - ./MqttSnForwarderIntegrationTests
+        --gtest_output=xml:MqttSnForwarderIntegrationTests.xml
+        --gtest_filter=* --gtest_color=yes
 
+  trigger:
+    status:
+    - success
 
-  - name: MqttSnClientNetworkInterfaceMessageDefragmentationTests
+  depends_on:
+    - build
+
+---
+kind: pipeline
+name: gather_unittest_reports
+steps:
+  - name: gather_unittest_reports
     image: ubuntu
-    depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
     commands:
-      - ./MqttSnClientNetworkInterfaceMessageDefragmentationTests
-        --gtest_output=xml:MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
-        --gtest_filter=DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests.*/*:DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests/*.*
-        --gtest_color=yes
+      - cp MqttSnClientNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnClientNetworkInterfaceUnitTests.xml
+      - cp MqttSnGatewayNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnGatewayNetworkInterfaceUnitTests.xml
+      - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnFixedSizeRingBufferUnitTests.xml
+      - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnForwarderIntegrationTests.xml
 
-  - name: SendMultipleClientMultipleMessageVariableLength
-    image: ubuntu
-    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
-    commands:
-      - ./SendMultipleClientMultipleMessageVariableLength --gtest_filter=MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength --gtest_color=yes
+  trigger:
+    status:
+      - success
+      - failure
 
-  - name: ReceiveMultipleClientMultipleMessageVariableLength
-    image: ubuntu
-    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
-    commands:
-      - ./ReceiveMultipleClientMultipleMessageVariableLength --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength --gtest_color=yes
+  depends_on:
+    - unit_test
 
-  - name: SendToClientsReceiveOnForwarderTests
-    image: ubuntu
-    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
-    commands:
-      - ./SendToClientsReceiveOnForwarderTests --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests --gtest_color=yes
-
-  - name: ReceiveOnForwarderSendToClientTests
-    image: ubuntu
-    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
-    commands:
-      - ./ReceiveOnForwarderSendToClientTests --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests --gtest_color=yes
-
-
-  - name: GatewayDefragmentationTests
-    image: ubuntu
-    depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
-    commands:
-      - ./GatewayDefragmentationTests --gtest_filter=GatewayDefragmentationTests/MqttSnGatewayNetworkInterfaceMessageDefragmentationTests.*/*:GatewayDefragmentationTests/MqttSnGatewayNetworkInterfaceMessageDefragmentationTests/*.* --gtest_color=yes
-
-  - name: SendToGateway
-    image: ubuntu
-    depends_on: [ GatewayDefragmentationTests ]
-    commands:
-      - ./SendToGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGateway --gtest_color=yes
-
-  - name: ReceiveFromGateway
-    image: ubuntu
-    depends_on: [ GatewayDefragmentationTests ]
-    commands:
-      - ./ReceiveFromGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGateway --gtest_color=yes
-
-  - name: SendToGatewayReceiveOnForwarder
-    image: ubuntu
-    depends_on: [ GatewayDefragmentationTests ]
-    commands:
-      - ./SendToGatewayReceiveOnForwarder --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder --gtest_color=yes
-
-  - name: ReceiveFromGatewaySendToGateway
-    image: ubuntu
-    depends_on: [ GatewayDefragmentationTests ]
-    commands:
-      - ./ReceiveFromGatewaySendToGateway --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway --gtest_color=yes
 
 volumes:
   - name: reports
     host:
       path: /var/local/drone/reports
+
