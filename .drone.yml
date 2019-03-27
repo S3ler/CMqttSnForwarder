@@ -148,6 +148,17 @@ steps:
         --gtest_filter=DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests.*/*:DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests/*.*
         --gtest_color=yes
 
+  - name: SendMultipleClientMultipleMessageVariableLength
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
+    commands:
+      - ./SendMultipleClientMultipleMessageVariableLength
+        --gtest_output=xml:SendMultipleClientMultipleMessageVariableLength.xml
+        --gtest_filter=MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength
+        --gtest_color=yes
+
   - name: GatewayDefragmentationTests
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
@@ -161,12 +172,13 @@ steps:
     image: ubuntu
     when:
       status: [ success, failure ]
-    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests, GatewayDefragmentationTests, IntegrationTestSuite1A, IntegrationTestSuite1B, IntegrationTestSuite2A, IntegrationTestSuite2B ]
+    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests, SendMultipleClientMultipleMessageVariableLength, GatewayDefragmentationTests ]
     volumes:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceMessageDefragmentationTests
+      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
+      - cp SendMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendMultipleClientMultipleMessageVariableLength.xml
       - cp GatewayDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/GatewayDefragmentationTests.xml
 
 
