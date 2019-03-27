@@ -3,17 +3,55 @@ kind: pipeline
 name: prepare_reports
 
 steps:
-- name: prepare
-  image: ubuntu
-  volumes:
-    - name: reports
-      path: /var/local/drone/reports
-  commands:
-    - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
-
+  - name: prepare_reports
+    image: ubuntu
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
+      - echo "DRONE_BRANCH ${DRONE_BRANCH}\n
+        DRONE_BUILD_CREATED ${DRONE_BUILD_CREATED}\n
+        DRONE_BUILD_EVENT ${DRONE_BUILD_EVENT}\n
+        DRONE_BUILD_NUMBER ${DRONE_BUILD_NUMBER}\n
+        DRONE_BUILD_STARTED ${DRONE_BUILD_STARTED}\n
+        DRONE_COMMIT_AFTER ${DRONE_COMMIT_AFTER}\n
+        DRONE_COMMIT_AUTHOR ${DRONE_COMMIT_AUTHOR}\n
+        DRONE_COMMIT_AUTHOR_AVATAR ${DRONE_COMMIT_AUTHOR_AVATAR}\n
+        DRONE_COMMIT_AUTHOR_EMAIL ${DRONE_COMMIT_AUTHOR_EMAIL}\n
+        DRONE_COMMIT_AUTHOR_NAME ${DRONE_COMMIT_AUTHOR_NAME}\n
+        DRONE_COMMIT_BEFORE ${DRONE_COMMIT_BEFORE}\n
+        DRONE_COMMIT_BRANCH ${DRONE_COMMIT_BRANCH}\n
+        DRONE_COMMIT_LINK ${DRONE_COMMIT_LINK}\n
+        DRONE_COMMIT ${DRONE_COMMIT}\n
+        DRONE_COMMIT_MESSAGE ${DRONE_COMMIT_MESSAGE}\n
+        DRONE_COMMIT_REF ${DRONE_COMMIT_REF}\n
+        DRONE_COMMIT_SHA ${DRONE_COMMIT_SHA}\n
+        DRONE_GIT_HTTP_URL ${DRONE_GIT_HTTP_URL}\n
+        DRONE_GIT_SSH_URL ${DRONE_GIT_SSH_URL}\n
+        DRONE_MACHINE ${DRONE_MACHINE}\n
+        DRONE_PULL_REQUEST ${DRONE_PULL_REQUEST}\n
+        DRONE_REPO ${DRONE_REPO}\n
+        DRONE_REPO_BRANCH ${DRONE_REPO_BRANCH}\n
+        DRONE_REMOTE_URL ${DRONE_REMOTE_URL}\n
+        DRONE_REPO_LINK ${DRONE_REPO_LINK}\n
+        DRONE_REPO_NAME ${DRONE_REPO_NAME}\n
+        DRONE_REPO_NAMESPACE ${DRONE_REPO_NAMESPACE}\n
+        DRONE_REPO_PRIVATE ${DRONE_REPO_PRIVATE}\n
+        DRONE_REPO_SCM ${DRONE_REPO_SCM}\n
+        DRONE_REPO_VISIBILITY ${DRONE_REPO_VISIBILITY}\n
+        DRONE_RUNNER_HOST ${DRONE_RUNNER_HOST}\n
+        DRONE_RUNNER_HOSTNAME ${DRONE_RUNNER_HOSTNAME}\n
+        DRONE_RUNNER_PLATFORM ${DRONE_RUNNER_PLATFORM}\n
+        DRONE_SOURCE_BRANCH ${DRONE_SOURCE_BRANCH}\n
+        DRONE_SYSTEM_HOST ${DRONE_SYSTEM_HOST}\n
+        DRONE_SYSTEM_HOSTNAME ${DRONE_SYSTEM_HOSTNAME}\n
+        DRONE_RUNNER_LABEL ${DRONE_RUNNER_LABEL}\n
+        DRONE_SYSTEM_VERSION ${DRONE_SYSTEM_VERSION}\n
+        DRONE_TAG ${DRONE_TAG}\n
+        DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/config
 
 volumes:
   - name: reports
     host:
       path: /var/local/drone/reports
-
