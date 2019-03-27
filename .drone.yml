@@ -159,9 +159,9 @@ steps:
         path: /var/local/drone/reports
     commands:
       - ls -l
-      - touch /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/somefile
+      - touch /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/shouldbehere
     when:
-      status: [ success ]
+      status: [ success, failure ]
     depeneds_on: [ MqttSnForwarderIntegrationTests ]
 
 trigger:
