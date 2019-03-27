@@ -51,11 +51,6 @@ steps:
         DRONE_TAG ${DRONE_TAG}\n
         DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/drone_report
 
-volumes:
-  - name: reports
-    host:
-      path: /var/local/drone/reports
-
 
   - name: Build
     image: ubuntu
@@ -142,3 +137,8 @@ volumes:
       - cp MqttSnGatewayNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnGatewayNetworkInterfaceUnitTests.xml
       - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnFixedSizeRingBufferUnitTests.xml
       - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnForwarderIntegrationTests.xml
+
+volumes:
+  - name: reports
+    host:
+      path: /var/local/drone/reports
