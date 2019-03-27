@@ -74,7 +74,6 @@ steps:
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGateway
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
-      - cp a a
       
   - name: postbuild
     image: ubuntuy
