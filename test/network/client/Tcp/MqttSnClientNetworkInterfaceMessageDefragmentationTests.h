@@ -55,7 +55,6 @@ class MqttSnClientNetworkInterfaceMessageDefragmentationTests :
 
   virtual void SetUp() {
     counter = 0;
-    ASSERT_TRUE(false) << "Test should fail!";
 
     MqttSnClientNetworkTcpNetworkDefragmentationTestParameter const &a = GetParam();
     MqttSnGatewayClientNetworkTestConfiguration p = a.mqttSnClientNetworkTestFixture;

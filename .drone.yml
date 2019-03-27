@@ -105,7 +105,7 @@ steps:
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
     commands:
       - ./MqttSnClientNetworkInterfaceMessageDefragmentationTests
-        --gtest_output=xml:/var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
+        --gtest_output=xml:MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
         --gtest_filter=DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests.*/*:DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests/*.*
         --gtest_color=yes
 
