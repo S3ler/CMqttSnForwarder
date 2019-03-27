@@ -138,6 +138,38 @@ steps:
       - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnFixedSizeRingBufferUnitTests.xml
       - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnForwarderIntegrationTests.xml
 
+
+  - name: MqttSnClientNetworkInterfaceMessageDefragmentationTests
+    image: ubuntu
+    depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
+    commands:
+      - ./MqttSnClientNetworkInterfaceMessageDefragmentationTests
+        --gtest_output=xml:MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
+        --gtest_filter=DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests.*/*:DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests/*.*
+        --gtest_color=yes
+
+  - name: GatewayDefragmentationTests
+    image: ubuntu
+    depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
+    commands:
+      - ./GatewayDefragmentationTests
+        --gtest_output=xml:GatewayDefragmentationTests.xml
+        --gtest_filter=GatewayDefragmentationTests/MqttSnGatewayNetworkInterfaceMessageDefragmentationTests.*/*:GatewayDefragmentationTests/MqttSnGatewayNetworkInterfaceMessageDefragmentationTests/*.*
+        --gtest_color=yes
+
+  - name: GatherIntegrationTestSuiteReports
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests, GatewayDefragmentationTests, IntegrationTestSuite1A, IntegrationTestSuite1B, IntegrationTestSuite2A, IntegrationTestSuite2B ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceMessageDefragmentationTests
+      - cp GatewayDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/GatewayDefragmentationTests.xml
+
+
 volumes:
   - name: reports
     host:
