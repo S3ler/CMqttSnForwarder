@@ -125,6 +125,29 @@ trigger:
 depends_on:
 - build
 
+---
+kind: pipeline
+name: gather_unittest_reports
+
+steps:
+  - name: gather_unittest_reports
+    image: ubuntu
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cp MqttSnClientNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnClientNetworkInterfaceUnitTests.xml
+      - cp MqttSnGatewayNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnGatewayNetworkInterfaceUnitTests.xml
+      - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnFixedSizeRingBufferUnitTests.xml
+      - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnForwarderIntegrationTests.xml
+
+trigger:
+  status:
+  - success
+  - failure
+
+depends_on:
+- unit_test
 
 volumes:
   - name: reports
