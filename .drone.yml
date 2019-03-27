@@ -177,9 +177,9 @@ steps:
     depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
     commands:
       - ./SendToClientsReceiveOnForwarderTests
-      --gtest_output=xml:SendToClientsReceiveOnForwarderTests.xml
-      --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests
-      --gtest_color=yes
+        --gtest_output=xml:SendToClientsReceiveOnForwarderTests.xml
+        --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests
+        --gtest_color=yes
 
   - name: ReceiveOnForwarderSendToClientTests
     image: ubuntu
@@ -188,9 +188,9 @@ steps:
     depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
     commands:
       - ./ReceiveOnForwarderSendToClientTests
-      --gtest_output=xml:ReceiveOnForwarderSendToClientTests.xml
-      --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests
-      --gtest_color=yes
+        --gtest_output=xml:ReceiveOnForwarderSendToClientTests.xml
+        --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests
+        --gtest_color=yes
 
   - name: GatewayDefragmentationTests
     image: ubuntu
