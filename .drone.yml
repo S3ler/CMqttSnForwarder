@@ -11,12 +11,6 @@ steps:
   commands:
     - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
 
-trigger:
-  status:
-  - success
-
-depends_on:
-- clone
 
 volumes:
   - name: reports
