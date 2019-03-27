@@ -83,8 +83,7 @@ steps:
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
 
 trigger:
-  status:
-  - success
+  status: [ success ]
 
 depends_on:
 - prepare_reports
