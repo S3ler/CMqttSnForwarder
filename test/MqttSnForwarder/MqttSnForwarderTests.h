@@ -44,7 +44,6 @@ class MqttSnForwarderTests : public ::testing::Test {
   NiceMock<MqttSnFixedSizeRingBufferMock> gatewayNetworkSendBuffer;
 
   virtual void SetUp() {
-    ASSERT_TRUE(false);
     globalClientNetworkMockObj = &clientNetworkMock;
     globalGatewayNetworkMockObj = &gatewayNetworkMock;
 
