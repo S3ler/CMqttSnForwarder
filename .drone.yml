@@ -78,11 +78,10 @@ steps:
       
   - name: postbuild
     image: ubuntu
-    depends_on: [ build ]
     trigger:
       status:
-      - success
       - failure
+    depends_on: [ build ]
     commands:
       - touch asdf
       - ls -l
