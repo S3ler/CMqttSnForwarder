@@ -85,6 +85,46 @@ trigger:
 depends_on:
 - prepare_reports
 
+---
+kind: pipeline
+name: unit_test
+
+steps:
+  - name: MqttSnClientNetworkInterfaceUnitTests
+    image: ubuntu
+    commands:
+      - ./MqttSnClientNetworkInterfaceUnitTests
+        --gtest_output=xml:MqttSnClientNetworkInterfaceUnitTests.xml
+        --gtest_filter=* --gtest_color=yes
+
+  - name: MqttSnGatewayNetworkInterfaceUnitTests
+    image: ubuntu
+    commands:
+      - ./MqttSnGatewayNetworkInterfaceUnitTests
+        --gtest_output=xml:MqttSnGatewayNetworkInterfaceUnitTests.xml
+        --gtest_filter=* --gtest_color=yes
+
+  - name: MqttSnFixedSizeRingBufferUnitTests
+    image: ubuntu
+    commands:
+      - ./MqttSnFixedSizeRingBufferUnitTests
+        --gtest_output=xml:MqttSnFixedSizeRingBufferUnitTests.xml
+        --gtest_filter=* --gtest_color=yes
+
+  - name: MqttSnForwarderIntegrationTests
+    image: ubuntu
+    commands:
+      - ./MqttSnForwarderIntegrationTests
+        --gtest_output=xml:MqttSnForwarderIntegrationTests.xml
+        --gtest_filter=* --gtest_color=yes
+
+trigger:
+  status:
+  - success
+
+depends_on:
+- build
+
 
 volumes:
   - name: reports
