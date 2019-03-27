@@ -76,8 +76,12 @@ steps:
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
       
   - name: postbuild
-    image: ubuntuy
+    image: ubuntu
     depends_on: [ build ]
+    trigger:
+      status:
+      - success
+      - failure
     commands:
       - touch asdf
       - ls -l
