@@ -73,7 +73,7 @@ steps:
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
 
-  - name: gather_build_report
+  - name: gather_build_report_success
     image: ubuntu
     volumes:
       - name: reports
@@ -84,11 +84,26 @@ steps:
       - cp cmake_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/cmake_report
       - cp make_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/make_report
     when:
-      status: [ success, failure ]
+      status: [ success ]
+    depeneds_on: [ build ]
+
+  - name: gather_build_report_failure
+    image: ubuntu
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - ls -l
+      - cp apt_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/apt_report
+      - cp cmake_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/cmake_report
+      - cp make_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/make_report
+    when:
+      status: [ failure ]
     depeneds_on: [ build ]
 
   - name: MqttSnClientNetworkInterfaceUnitTests
     image: ubuntu
+    depeneds_on: [ build ]
     commands:
       - ./MqttSnClientNetworkInterfaceUnitTests
         --gtest_output=xml:MqttSnClientNetworkInterfaceUnitTests.xml
@@ -96,6 +111,7 @@ steps:
 
   - name: MqttSnGatewayNetworkInterfaceUnitTests
     image: ubuntu
+    depeneds_on: [ build ]
     commands:
       - ./MqttSnGatewayNetworkInterfaceUnitTests
         --gtest_output=xml:MqttSnGatewayNetworkInterfaceUnitTests.xml
@@ -103,6 +119,7 @@ steps:
 
   - name: MqttSnFixedSizeRingBufferUnitTests
     image: ubuntu
+    depeneds_on: [ build ]
     commands:
       - ./MqttSnFixedSizeRingBufferUnitTests
         --gtest_output=xml:MqttSnFixedSizeRingBufferUnitTests.xml
@@ -110,6 +127,7 @@ steps:
 
   - name: MqttSnForwarderIntegrationTests
     image: ubuntu
+    depeneds_on: [ build ]
     commands:
       - ./MqttSnForwarderIntegrationTests
         --gtest_output=xml:MqttSnForwarderIntegrationTests.xml
