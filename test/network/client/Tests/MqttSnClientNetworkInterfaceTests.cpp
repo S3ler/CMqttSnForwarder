@@ -223,7 +223,7 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveOnForwarderSendToClientTests) {
           ));
 
       ASSERT_EQ(mockClient->send(&data), data.data_length);
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
   }
 

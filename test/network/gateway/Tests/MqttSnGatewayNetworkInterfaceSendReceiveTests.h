@@ -85,10 +85,6 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
     //MqttSnFixedSizeRingBufferInit(&receiveBuffer);
     //MqttSnFixedSizeRingBufferInit(&sendBuffer);
 
-    if (a.mockGatewayConfigurations.size() > 1) {
-      // TODO
-      throw std::exception();
-    }
     if (a.searchGateway) {
       // TODO
       throw std::exception();
@@ -120,7 +116,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
       ASSERT_TRUE(mockGateway->isNetworkConnected());
       this->mockGateway = mockGateway;
       this->mockGatewayNetworkReceiver = receiver;
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     if (a.searchGateway) {
@@ -145,7 +141,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
                                                                &sendBuffer,
                                                                1000,
                                                                p.gatewayNetworkContext));
-    std::this_thread::sleep_for(std::chrono::milliseconds(30000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
   }
 
