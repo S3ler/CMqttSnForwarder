@@ -13,10 +13,10 @@ steps:
 
   trigger:
     status:
-      - success
+    - success
 
   depends_on:
-    - clone
+  - clone
 ---
 kind: pipeline
 name: build
@@ -46,10 +46,10 @@ steps:
 
   trigger:
     status:
-      - success
+    - success
 
   depends_on:
-    - prepare
+  - prepare
 
 ---
 kind: pipeline
@@ -88,7 +88,7 @@ steps:
     - success
 
   depends_on:
-    - build
+  - build
 
 ---
 kind: pipeline
@@ -107,11 +107,11 @@ steps:
 
   trigger:
     status:
-      - success
-      - failure
+    - success
+    - failure
 
   depends_on:
-    - unit_test
+  - unit_test
 
 
 volumes:
