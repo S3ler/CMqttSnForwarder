@@ -152,6 +152,18 @@ steps:
         --gtest_output=xml:/var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnForwarderIntegrationTests.xml
         --gtest_filter=* --gtest_color=yes
 
+  - name: gatherreports
+    image: ubuntu
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - ls -l
+      - touch /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/somefile
+    when:
+      status: [ success ]
+    depeneds_on: [ MqttSnForwarderIntegrationTests ]
+
 trigger:
   status:
   - success
