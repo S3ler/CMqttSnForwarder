@@ -234,14 +234,14 @@ steps:
         --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder
         --gtest_color=yes
 
-  - name: SendToGatewayReceiveOnForwarder
+  - name: ReceiveFromGatewaySendToGateway
     image: ubuntu
     when:
       status: [ success, failure ]
     depends_on: [ GatewayDefragmentationTests ]
     commands:
       - ./ReceiveFromGatewaySendToGateway
-        --gtest_output=xml:SendToGatewayReceiveOnForwarder.xml
+        --gtest_output=xml:ReceiveFromGatewaySendToGateway.xml
         --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway
         --gtest_color=yes
 
