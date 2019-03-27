@@ -83,6 +83,7 @@
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/test/gtest_xml_output_unittest.py" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/test/gtest_xml_output_unittest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/test/gtest_xml_test_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/test/gtest_xml_test_utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/xcode/Scripts/versiongenerate.py" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/googletest-src/googletest/xcode/Scripts/versiongenerate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.h" beforeDir="false" afterPath="$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -95,11 +96,11 @@
   <component name="ExportTestResults" exportFormat="Xml" outputFolder="$PROJECT_DIR$" userTempatePath="" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.drone.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1802">
-              <caret line="106" column="144" selection-start-line="106" selection-start-column="144" selection-end-line="106" selection-end-column="144" />
+            <state relative-caret-position="255">
+              <caret line="90" column="17" lean-forward="true" selection-start-line="90" selection-start-column="17" selection-end-line="90" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -125,11 +126,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="935">
-              <caret line="225" column="61" lean-forward="true" selection-start-line="225" selection-start-column="61" selection-end-line="225" selection-end-column="61" />
+            <state relative-caret-position="296">
+              <caret line="58" lean-forward="true" selection-start-line="58" selection-end-line="58" />
+              <folding>
+                <element signature="e#212#236#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="102">
+              <caret line="6" column="87" lean-forward="true" selection-start-line="6" selection-start-column="87" selection-end-line="6" selection-end-column="87" />
             </state>
           </provider>
         </entry>
@@ -178,15 +191,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="279">
               <caret line="2425" selection-start-line="2425" selection-end-line="2425" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/network/gateway/MockGateway/MockGateway.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="245">
-              <caret line="40" selection-start-line="40" selection-end-line="40" />
             </state>
           </provider>
         </entry>
@@ -299,8 +303,6 @@
         <option value="$PROJECT_DIR$/test/network/client/Tcp/GetMqttSnClientNetworkTcpNetworkDefragmentationTestParameter.cpp" />
         <option value="$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkTcpNetworkDefragmentationTestParameter.h" />
         <option value="$PROJECT_DIR$/test/network/client/Tcp/TcpMqttSnClientNetworkInterfaceTests.cpp" />
-        <option value="$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.h" />
-        <option value="$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.cpp" />
         <option value="$PROJECT_DIR$/forwarder/network/client/tcp/MqttSnClientTcpNetwork.c" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/test/network/client/Tcp/GetMqttSnClientNetworkTcpNetworkDefragmentationTestParameter.h" />
@@ -309,6 +311,8 @@
         <option value="$PROJECT_DIR$/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp" />
         <option value="$PROJECT_DIR$/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp" />
         <option value="$PROJECT_DIR$/.drone.yml" />
+        <option value="$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.cpp" />
+        <option value="$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.h" />
       </list>
     </option>
   </component>
@@ -319,10 +323,10 @@
     <auto-save>true</auto-save>
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-12" />
-    <option name="width" value="1941" />
-    <option name="height" value="2112" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="1909" />
+    <option name="width" value="1940" />
+    <option name="height" value="2111" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -712,7 +716,7 @@
       <workItem from="1553532113398" duration="22999000" />
       <workItem from="1553612153807" duration="1787000" />
       <workItem from="1553614134103" duration="9028000" />
-      <workItem from="1553649426426" duration="1960000" />
+      <workItem from="1553649426426" duration="2669000" />
     </task>
     <servers />
   </component>
@@ -749,7 +753,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="867405000" />
+    <option name="totallyTimeSpent" value="868114000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -761,10 +765,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="2575" height="1415" extended-state="6" />
+    <frame x="1273" y="0" width="1293" height="1407" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49473685" visible="true" weight="0.32882702" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49473685" visible="true" weight="0.39821574" />
       <window_info id="Structure" order="1" sideWeight="0.50526315" side_tool="true" weight="0.21908316" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -776,7 +780,7 @@
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49959448" weight="0.32735777" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.24066924" weight="0.2244739" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4993565" visible="true" weight="0.2852689" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4993565" visible="true" weight="0.28705883" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.46309814" side_tool="true" weight="0.49803922" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32735777" />
       <window_info anchor="bottom" id="CMake" order="12" weight="0.20031177" />
@@ -894,11 +898,6 @@
           <url>file://$PROJECT_DIR$/forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.c</url>
           <line>270</line>
           <option name="timeStamp" value="473" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.cpp</url>
-          <line>74</line>
-          <option name="timeStamp" value="505" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -1167,23 +1166,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="66" column="20" selection-start-line="66" selection-start-column="20" selection-end-line="66" selection-end-column="20" />
-          <folding>
-            <element signature="e#212#236#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="811">
-          <caret line="98" selection-start-line="98" selection-end-line="98" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="364">
@@ -1319,13 +1301,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="31" column="109" selection-start-line="31" selection-start-column="109" selection-end-line="31" selection-end-column="109" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/network/gateway/TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
@@ -1338,8 +1313,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.drone.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1802">
-          <caret line="106" column="144" selection-start-line="106" selection-start-column="144" selection-end-line="106" selection-end-column="144" />
+        <state relative-caret-position="255">
+          <caret line="90" column="17" lean-forward="true" selection-start-line="90" selection-start-column="17" selection-end-line="90" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/client/TestConfigurations/CartesianProductTestCaseGenerator.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="31" column="109" selection-start-line="31" selection-start-column="109" selection-end-line="31" selection-end-column="109" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="87" lean-forward="true" selection-start-line="6" selection-start-column="87" selection-end-line="6" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/network/client/Tcp/MqttSnClientNetworkInterfaceMessageDefragmentationTests.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="58" lean-forward="true" selection-start-line="58" selection-end-line="58" />
+          <folding>
+            <element signature="e#212#236#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

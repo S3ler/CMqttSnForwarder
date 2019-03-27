@@ -104,10 +104,11 @@ steps:
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
     commands:
-      - ./MqttSnClientNetworkInterfaceMessageDefragmentationTests \
-        --gtest_output=xml:MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml \
-        --gtest_filter=DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests.*/*:DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests/*.* \
+      - ./MqttSnClientNetworkInterfaceMessageDefragmentationTests
+        --gtest_output=xml:MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
+        --gtest_filter=DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests.*/*:DefragmentationTests/MqttSnClientNetworkInterfaceMessageDefragmentationTests/*.*
         --gtest_color=yes
+      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
 
   - name: SendMultipleClientMultipleMessageVariableLength
     image: ubuntu
