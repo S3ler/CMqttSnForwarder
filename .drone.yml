@@ -80,8 +80,8 @@ steps:
     image: ubuntu
     trigger:
       status:
-      - success
       - failure
+    depends_on: [ build ]
     commands:
       - touch asdf
       - ls -l
