@@ -51,6 +51,11 @@ steps:
         DRONE_TAG ${DRONE_TAG}\n
         DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/config
 
+
+volumes:
+  - name: reports
+    host:
+      path: /var/local/drone/reports
 ---
 kind: pipeline
 name: build
@@ -157,7 +162,3 @@ trigger:
 depends_on:
 - unit_test
 
-volumes:
-  - name: reports
-    host:
-      path: /var/local/drone/reports
