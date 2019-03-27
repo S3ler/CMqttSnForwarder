@@ -3,116 +3,20 @@ kind: pipeline
 name: prepare_reports
 
 steps:
-  - name: prepare
-    image: ubuntu
-    volumes:
-      - name: reports
-        path: /var/local/drone/reports
-    commands:
-      - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
+- name: prepare
+  image: ubuntu
+  volumes:
+    - name: reports
+      path: /var/local/drone/reports
+  commands:
+    - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
 
-  trigger:
-    status:
-    - success
+trigger:
+  status:
+  - success
 
-  depends_on:
-  - clone
----
-kind: pipeline
-name: build
-
-steps:
-  - name: build
-    image: ubuntu
-    commands:
-      - apt-get update && apt-get install -y git cmake gcc g++
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
-      - make MqttSnClientNetworkInterfaceUnitTests
-      - make MqttSnGatewayNetworkInterfaceUnitTests
-      - make MqttSnFixedSizeRingBufferUnitTests
-      - make MqttSnForwarderIntegrationTests
-      - make MqttSnForwarderLinuxTcpClientNetworkTests
-      - make MqttSnForwarderLinuxTcpGatewayNetworkTests
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests MqttSnClientNetworkInterfaceMessageDefragmentationTests
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests SendMultipleClientMultipleMessageVariableLength
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveMultipleClientMultipleMessageVariableLength
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests SendToClientsReceiveOnForwarderTests
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveOnForwarderSendToClientTests
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests GatewayDefragmentationTests
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGateway
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGateway
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
-
-  trigger:
-    status:
-    - success
-
-  depends_on:
-  - prepare
-
----
-kind: pipeline
-name: unit_test
-steps:
-  - name: MqttSnClientNetworkInterfaceUnitTests
-    image: ubuntu
-    commands:
-      - ./MqttSnClientNetworkInterfaceUnitTests
-        --gtest_output=xml:MqttSnClientNetworkInterfaceUnitTests.xml
-        --gtest_filter=* --gtest_color=yes
-
-  - name: MqttSnGatewayNetworkInterfaceUnitTests
-    image: ubuntu
-    commands:
-      - ./MqttSnGatewayNetworkInterfaceUnitTests
-        --gtest_output=xml:MqttSnGatewayNetworkInterfaceUnitTests.xml
-        --gtest_filter=* --gtest_color=yes
-
-  - name: MqttSnFixedSizeRingBufferUnitTests
-    image: ubuntu
-    commands:
-      - ./MqttSnFixedSizeRingBufferUnitTests
-        --gtest_output=xml:MqttSnFixedSizeRingBufferUnitTests.xml
-        --gtest_filter=* --gtest_color=yes
-
-  - name: MqttSnForwarderIntegrationTests
-    image: ubuntu
-    commands:
-      - ./MqttSnForwarderIntegrationTests
-        --gtest_output=xml:MqttSnForwarderIntegrationTests.xml
-        --gtest_filter=* --gtest_color=yes
-
-  trigger:
-    status:
-    - success
-
-  depends_on:
-  - build
-
----
-kind: pipeline
-name: gather_unittest_reports
-steps:
-  - name: gather_unittest_reports
-    image: ubuntu
-    volumes:
-      - name: reports
-        path: /var/local/drone/reports
-    commands:
-      - cp MqttSnClientNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnClientNetworkInterfaceUnitTests.xml
-      - cp MqttSnGatewayNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnGatewayNetworkInterfaceUnitTests.xml
-      - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnFixedSizeRingBufferUnitTests.xml
-      - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnForwarderIntegrationTests.xml
-
-  trigger:
-    status:
-    - success
-    - failure
-
-  depends_on:
-  - unit_test
-
+depends_on:
+- clone
 
 volumes:
   - name: reports
