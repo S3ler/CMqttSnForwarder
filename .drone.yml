@@ -159,6 +159,39 @@ steps:
         --gtest_filter=MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength
         --gtest_color=yes
 
+  - name: ReceiveMultipleClientMultipleMessageVariableLength
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
+    commands:
+      - ./ReceiveMultipleClientMultipleMessageVariableLength
+        --gtest_output=xml:ReceiveMultipleClientMultipleMessageVariableLength.xml
+        --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength
+        --gtest_color=yes
+
+  - name: SendToClientsReceiveOnForwarderTests
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
+    commands:
+      - ./SendToClientsReceiveOnForwarderTests
+      --gtest_output=xml:SendToClientsReceiveOnForwarderTests.xml
+      --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests
+      --gtest_color=yes
+
+  - name: ReceiveOnForwarderSendToClientTests
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests ]
+    commands:
+      - ./ReceiveOnForwarderSendToClientTests
+      --gtest_output=xml:ReceiveOnForwarderSendToClientTests.xml
+      --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests
+      --gtest_color=yes
+
   - name: GatewayDefragmentationTests
     image: ubuntu
     depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
@@ -172,13 +205,16 @@ steps:
     image: ubuntu
     when:
       status: [ success, failure ]
-    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests, SendMultipleClientMultipleMessageVariableLength, GatewayDefragmentationTests ]
+    depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests, SendMultipleClientMultipleMessageVariableLength, ReceiveMultipleClientMultipleMessageVariableLength, SendToClientsReceiveOnForwarderTests, ReceiveOnForwarderSendToClientTests, GatewayDefragmentationTests ]
     volumes:
       - name: reports
         path: /var/local/drone/reports
     commands:
       - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
       - cp SendMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendMultipleClientMultipleMessageVariableLength.xml
+      - cp ReceiveMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveMultipleClientMultipleMessageVariableLength.xml
+      - cp SendToClientsReceiveOnForwarderTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendToClientsReceiveOnForwarderTests.xml
+      - cp ReceiveOnForwarderSendToClientTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveOnForwarderSendToClientTests.xml
       - cp GatewayDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/GatewayDefragmentationTests.xml
 
 
