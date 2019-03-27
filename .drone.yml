@@ -66,7 +66,6 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - ls -l
       - apt-get update && apt-get install -y git cmake gcc g++ 2>&1 | tee /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/aptget_report
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" 2>&1 | tee /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/cmake_report
       - make MqttSnClientNetworkInterfaceUnitTests
@@ -94,8 +93,7 @@ volumes:
 trigger:
   status: [ success ]
 
-depends_on:
-- prepare_reports
+depends_on: [ prepare_reports ]
 
 ---
 kind: pipeline
@@ -107,7 +105,6 @@ steps:
   - name: build
     image: ubuntu
     commands:
-      - ls -l
       - apt-get update && apt-get install -y git cmake gcc g++
       - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles"
       - make MqttSnClientNetworkInterfaceUnitTests
@@ -121,7 +118,6 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - ls -l
       - ./MqttSnClientNetworkInterfaceUnitTests
         --gtest_output=xml:/var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/MqttSnClientNetworkInterfaceUnitTests.xml
         --gtest_filter=* --gtest_color=yes
