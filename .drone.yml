@@ -74,7 +74,18 @@ steps:
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGateway
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
       - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
-
+      
+  - name: MqttSnClientNetworkInterfaceUnitTests
+    image: ubuntu
+    trigger:
+      status:
+      - success
+      - failure
+    commands:
+      - touch asdf
+      - ls -l
+      - echo "123"
+      
   - name: MqttSnClientNetworkInterfaceUnitTests
     image: ubuntu
     depends_on: [ build ]
