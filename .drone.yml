@@ -59,7 +59,7 @@ steps:
     depends_on: [ PrepareReports ]
     commands:
       - apt-get update && apt-get install -y git cmake gcc g++ 2>&1 | tee apt_report
-      - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" 2>&1 | tee cmake_report
+      - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G "CodeBlocks - Unix Makefiles" 2>&1 | tee cmake_report
       - make MqttSnClientNetworkInterfaceUnitTests &&
         make MqttSnGatewayNetworkInterfaceUnitTests &&
         make MqttSnFixedSizeRingBufferUnitTests &&

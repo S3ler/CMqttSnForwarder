@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 project(CMqttSnForwarder C CXX)
 
+if (BUILD_TESTING)
+    project(CMqttSnForwarder C CXX)
+else ()
+    project(CMqttSnForwarder C)
+endif (BUILD_TESTING)
+
 if (DEFINED CMAKE_CXX_COMPILER_ENV_VAR)
     set(CMAKE_CXX_STANDARD 11)
 endif ()
@@ -48,12 +54,14 @@ target_link_libraries(lib-mqtt-sn-gateway-network lib-mqtt-sn-ring-buffer)
 add_library(lib-mqtt-sn-client-network ${TCP_CLIENT_NETWORK_FILES})
 target_link_libraries(lib-mqtt-sn-client-network lib-mqtt-sn-ring-buffer)
 
-if (CMAKE_C_STANDARD)
+if (NOT BUILD_TESTING)
     message("Bulding as C project")
     add_executable(CMqttSnForwarder main/main.c)
-    target_link_libraries(CMqttSnForwarder lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    target_link_libraries(CMqttSnForwarder
+            pthread
+            lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
     add_executable(CMqttSnForwarderTester testermain.c forwarder/global_defines.h)
-    target_link_libraries(CMqttSnForwarderTester lib-mqtt-sn-forwarder)
+    target_link_libraries(CMqttSnForwarderTester lib-mqtt-sn-forwarder pthread)
 else ()
     message("Bulding as C++ project")
 
