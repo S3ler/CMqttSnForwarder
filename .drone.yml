@@ -87,7 +87,6 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - cp apt_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/apt_report
       - cp cmake_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/cmake_report
       - cp make_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/make_report
 
