@@ -29,11 +29,18 @@ int MockGatewayLinuxTcpNetworkImplementation::sendNetwork(const device_address *
     return -1;
   }
 
-  if (send(forwarder_socket_fd, data, dataLength, 0) != dataLength) { // TODO maybe we need to call send multiple times
-    close(forwarder_socket_fd);
-    forwarder_socket_fd = -1;
+  // check if Tcp socket is connected, if not then do it!
+  uint16_t total_send_bytes = 0;
+  while(total_send_bytes < dataLength){
+    uint16_t send_bytes = send(forwarder_socket_fd, data, dataLength, 0);
+    if (send_bytes <= 0) {
+      close(forwarder_socket_fd);
+      forwarder_socket_fd = -1;
+      return -1;
+    }
+    total_send_bytes += send_bytes;
   }
-  return dataLength;
+  return total_send_bytes;
 }
 
 bool MockGatewayLinuxTcpNetworkImplementation::connectNetwork(device_address *gatewayDeviceAddress) {

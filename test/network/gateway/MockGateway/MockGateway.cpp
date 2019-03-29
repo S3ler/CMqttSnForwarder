@@ -45,7 +45,7 @@ void MockGateway::stop_loop() {
 }
 
 int MockGateway::send(const device_address *to, const uint8_t *data, uint16_t length) {
-  mockGatewayNetworkInterface->sendNetwork(to, data, length);
+  return mockGatewayNetworkInterface->sendNetwork(to, data, length);
 }
 
 int MockGateway::send(ComparableGatewayMqttSnMessageData *comparableGatewayMqttSnMessageData) {

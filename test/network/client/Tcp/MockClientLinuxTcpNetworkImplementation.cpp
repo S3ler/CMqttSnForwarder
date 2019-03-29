@@ -26,11 +26,17 @@ int MockClientLinuxTcpNetworkImplementation::sendToNetwork(const device_address 
     return 0;
   }
   // check if Tcp socket is connected, if not then do it!
-  if (send(forwarder_socket_fd, buf, dataLength, 0) != dataLength) {
-    close(forwarder_socket_fd);
-    forwarder_socket_fd = -1;
+  uint16_t total_send_bytes = 0;
+  while(total_send_bytes < dataLength){
+    uint16_t send_bytes = send(forwarder_socket_fd, buf, dataLength, 0);
+    if (send_bytes <= 0) {
+      close(forwarder_socket_fd);
+      forwarder_socket_fd = -1;
+      return -1;
+    }
+    total_send_bytes += send_bytes;
   }
-  return dataLength;
+  return total_send_bytes;
 }
 
 bool MockClientLinuxTcpNetworkImplementation::connectNetwork(device_address *forwarderAddress) {

@@ -1,4 +1,4 @@
-
+// TODO: Real defragmentationtest without network (fake-network implementations) for interface conformation + interface conformationtestsiii
 
 [![Build Status](http://arsmb.de/api/badges/S3ler/CMqttSnForwarder/status.svg)](http://arsmb.de/S3ler/CMqttSnForwarder)
 
