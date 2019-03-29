@@ -53,7 +53,7 @@ steps:
 
 
   - name: Build
-    image: rikorose/gcc-cmake:7
+    image: rikorose/gcc-cmake
     when:
       status: [ success ]
     depends_on: [ PrepareReports ]
