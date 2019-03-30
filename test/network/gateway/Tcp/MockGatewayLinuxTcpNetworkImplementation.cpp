@@ -16,7 +16,9 @@ bool MockGatewayLinuxTcpNetworkImplementation::isNetworkDisconnected() {
   return master_socket_fd == -1;
 }
 
-int MockGatewayLinuxTcpNetworkImplementation::sendNetwork(const device_address *to, const uint8_t *data, uint16_t dataLength) {
+int MockGatewayLinuxTcpNetworkImplementation::sendNetwork(const device_address *to,
+                                                          const uint8_t *data,
+                                                          uint16_t dataLength) {
   if (forwarder_socket_fd == -1) {
     return -1;
   }
@@ -31,7 +33,7 @@ int MockGatewayLinuxTcpNetworkImplementation::sendNetwork(const device_address *
 
   // check if Tcp socket is connected, if not then do it!
   uint16_t total_send_bytes = 0;
-  while(total_send_bytes < dataLength){
+  while (total_send_bytes < dataLength) {
     uint16_t send_bytes = send(forwarder_socket_fd, data, dataLength, 0);
     if (send_bytes <= 0) {
       close(forwarder_socket_fd);
@@ -181,7 +183,7 @@ int MockGatewayLinuxTcpNetworkImplementation::receiveForwarderMessage(MockGatewa
   // int activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
 
   if ((activity < 0) && (errno != EINTR)) {
-    printf("select error");
+    //printf("select error");
     exit(EXIT_FAILURE);
   }
   if (activity == 0) {
@@ -189,13 +191,12 @@ int MockGatewayLinuxTcpNetworkImplementation::receiveForwarderMessage(MockGatewa
     return 0;
   }
 
-  int sd = forwarder_socket_fd;
-  if (FD_ISSET(sd, &readfds)) {
-    // Check if it was for closing, and also read the incoming message
+  if (FD_ISSET(forwarder_socket_fd, &readfds)) {
+    int sd = forwarder_socket_fd;
     uint8_t buffer[MockGatewayLinuxTcpNetworkImplementation_BUFFER_SIZE];
     int buffer_length = MockGatewayLinuxTcpNetworkImplementation_BUFFER_SIZE;
     int valread;
-    if ((valread = read(sd, buffer, buffer_length)) == 0) {
+    if ((valread = read(sd, buffer, buffer_length)) <= 0) {
       // client_socket broken
       close(sd);
       forwarder_socket_fd = -1;
