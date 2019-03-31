@@ -203,6 +203,8 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveOnForwarderSendToClientTests) {
           }
       ));
 
+  ASSERT_TRUE(clientNetworkGatewayLooper.resumeLoop());
+
   for (uint16_t messageCount = 0; messageCount < toTestMessageCount; ++messageCount) {
     // we send message in RoundRobin for each client
     for (const auto &mockClient : mockClients) {
@@ -227,7 +229,6 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveOnForwarderSendToClientTests) {
     }
   }
 
-  ASSERT_TRUE(clientNetworkGatewayLooper.resumeLoop());
   std::this_thread::sleep_for(std::chrono::milliseconds(15000));
 
   EXPECT_THAT(actualMockClientSnMessageDatas, testing::UnorderedElementsAreArray(expectedMockClientSnMessageDatas));
