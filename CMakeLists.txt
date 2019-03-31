@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.10)
 project(CMqttSnForwarder C CXX)
 
 if (BUILD_TESTING)
@@ -295,31 +295,36 @@ else ()
             mock-mqtt-sn-fixed-size-ring-buffer mock-mqtt-sn-client-network mock-mqtt-sn-gateway-network)
 
 
-    #set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
-    LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
-    INCLUDE(CodeCoverage)
-    APPEND_COVERAGE_COMPILER_FLAGS()
-    #LIST(APPEND Coverage_GENHTML_ARGS "--rc lcov_branch_coverage=1")
-    set(COVERAGE_LCOV_EXCLUDES '/usr/*' 'test/*' '${PROJECT_SOURCE_DIR}/test/*' '${CMAKE_CURRENT_BINARY_DIR}/*')
+    if (${CMAKE_VERSION} VERSION_GREATER "3.12.0" AND CMAKE_COMPILER_IS_GNUCXX)
+        #set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
+        LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
+        INCLUDE(CodeCoverage)
+        APPEND_COVERAGE_COMPILER_FLAGS()
+        #LIST(APPEND Coverage_GENHTML_ARGS "--rc lcov_branch_coverage=1")
+        set(COVERAGE_LCOV_EXCLUDES '/usr/*' 'test/*' '${PROJECT_SOURCE_DIR}/test/*' '${CMAKE_CURRENT_BINARY_DIR}/*')
 
-    #set(RING_EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFordwarder.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnClientNetworkInterface.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnGatewayNetworkInterface.*')
-    SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "MqttSnFixedSizeRingBufferUnitTests_coverage"
-            EXECUTABLE "MqttSnFixedSizeRingBufferUnitTests"
-            DEPENDENCIES "MqttSnFixedSizeRingBufferUnitTests"
-            EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFordwarder.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnClientNetworkInterface.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnGatewayNetworkInterface.*')
+        #set(RING_EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFordwarder.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnClientNetworkInterface.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnGatewayNetworkInterface.*')
+        SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "MqttSnFixedSizeRingBufferUnitTests_coverage"
+                EXECUTABLE "MqttSnFixedSizeRingBufferUnitTests"
+                DEPENDENCIES "MqttSnFixedSizeRingBufferUnitTests"
+                EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFordwarder.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnClientNetworkInterface.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnGatewayNetworkInterface.*')
 
-    SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "MqttSnForwarderIntegrationTests_coverage"
-            EXECUTABLE "MqttSnForwarderIntegrationTests"
-            DEPENDENCIES "MqttSnForwarderIntegrationTests"
-            EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFixedSizeRingBuffer.*')
+        SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "MqttSnForwarderIntegrationTests_coverage"
+                EXECUTABLE "MqttSnForwarderIntegrationTests"
+                DEPENDENCIES "MqttSnForwarderIntegrationTests"
+                EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFixedSizeRingBuffer.*')
 
-    #SETUP_TARGET_FOR_COVERAGE_GCOVR_XML(NAME "MqttSnForwarderIntegrationTests_coverage"
-    #        EXECUTABLE "MqttSnForwarderIntegrationTests"
-    #        DEPENDENCIES "MqttSnForwarderIntegrationTests")
-    #SETUP_TARGET_FOR_COVERAGE_LCOV(NAME "MqttSnClientNetworkInterfaceUnitTests_coverage"
-    #        EXECUTABLE "MqttSnClientNetworkInterfaceUnitTests")
-    #SETUP_TARGET_FOR_COVERAGE_LCOV(NAME "MqttSnGatewayNetworkInterfaceUnitTests_coverage"
-    #        EXECUTABLE "MqttSnGatewayNetworkInterfaceUnitTests")
+        #SETUP_TARGET_FOR_COVERAGE_GCOVR_XML(NAME "MqttSnForwarderIntegrationTests_coverage"
+        #        EXECUTABLE "MqttSnForwarderIntegrationTests"
+        #        DEPENDENCIES "MqttSnForwarderIntegrationTests")
+        #SETUP_TARGET_FOR_COVERAGE_LCOV(NAME "MqttSnClientNetworkInterfaceUnitTests_coverage"
+        #        EXECUTABLE "MqttSnClientNetworkInterfaceUnitTests")
+        #SETUP_TARGET_FOR_COVERAGE_LCOV(NAME "MqttSnGatewayNetworkInterfaceUnitTests_coverage"
+        #        EXECUTABLE "MqttSnGatewayNetworkInterfaceUnitTests")
+    else ()
+        message("Consider to switch to CMake 3.12.0 and GNUCXX for test coverage")
+    endif ()
+
 
 endif ()
 
