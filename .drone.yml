@@ -9,7 +9,7 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     environment:
-      - P=tcp
+      - P: tcp
     commands:
       - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${P}
       - echo "DRONE_BRANCH ${DRONE_BRANCH}\n
