@@ -9,7 +9,7 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}
+      - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL}
       - echo "DRONE_BRANCH ${DRONE_BRANCH}\n
         DRONE_BUILD_CREATED ${DRONE_BUILD_CREATED}\n
         DRONE_BUILD_EVENT ${DRONE_BUILD_EVENT}\n
@@ -53,7 +53,6 @@ steps:
     environment:
       - PROTOCOL=tcp
 
-
   - name: Build
     image: gcc7cmake:3.14.0
     when:
@@ -89,10 +88,9 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - cp cmake_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/cmake_report
-      - cp make_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/make_report
-    environment:
-      - PROTOCOL_NAME=tcp
+      - cp cmake_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/cmake_report
+      - cp make_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/make_report
+
 
   - name: MqttSnClientNetworkInterfaceUnitTests
     image: ubuntu
@@ -136,12 +134,11 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - cp MqttSnClientNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/MqttSnClientNetworkInterfaceUnitTests.xml
-      - cp MqttSnGatewayNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/MqttSnGatewayNetworkInterfaceUnitTests.xml
-      - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/MqttSnFixedSizeRingBufferUnitTests.xml
-      - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/MqttSnForwarderIntegrationTests.xml
-    environment:
-      - PROTOCOL_NAME=tcp
+      - cp MqttSnClientNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceUnitTests.xml
+      - cp MqttSnGatewayNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnGatewayNetworkInterfaceUnitTests.xml
+      - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnFixedSizeRingBufferUnitTests.xml
+      - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnForwarderIntegrationTests.xml
+
 
   - name: MqttSnClientNetworkInterfaceMessageDefragmentationTests
     image: ubuntu
@@ -258,18 +255,16 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
-      - cp SendMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/SendMultipleClientMultipleMessageVariableLength.xml
-      - cp ReceiveMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/ReceiveMultipleClientMultipleMessageVariableLength.xml
-      - cp SendToClientsReceiveOnForwarderTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/SendToClientsReceiveOnForwarderTests.xml
-      - cp ReceiveOnForwarderSendToClientTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/ReceiveOnForwarderSendToClientTests.xml
-      - cp GatewayDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/GatewayDefragmentationTests.xml
-      - cp SendToGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/SendToGateway.xml
-      - cp ReceiveFromGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/ReceiveFromGateway.xml
-      - cp SendToGatewayReceiveOnForwarder.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/ReceivSendToGatewayReceiveOnForwardereFromGateway.xml
-      - cp ReceiveFromGatewaySendToGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/ReceiveFromGatewaySendToGateway.xml
-    environment:
-      - PROTOCOL_NAME=tcp
+      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
+      - cp SendMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendMultipleClientMultipleMessageVariableLength.xml
+      - cp ReceiveMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveMultipleClientMultipleMessageVariableLength.xml
+      - cp SendToClientsReceiveOnForwarderTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendToClientsReceiveOnForwarderTests.xml
+      - cp ReceiveOnForwarderSendToClientTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveOnForwarderSendToClientTests.xml
+      - cp GatewayDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/GatewayDefragmentationTests.xml
+      - cp SendToGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendToGateway.xml
+      - cp ReceiveFromGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveFromGateway.xml
+      - cp SendToGatewayReceiveOnForwarder.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceivSendToGatewayReceiveOnForwardereFromGateway.xml
+      - cp ReceiveFromGatewaySendToGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveFromGatewaySendToGateway.xml
 
 volumes:
   - name: reports
