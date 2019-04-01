@@ -419,9 +419,7 @@ steps:
 
   - name: SendMultipleClientMultipleMessageVariableLength
     image: ubuntu
-    when:
-      status: [ success, failure ]
-    depends_on: [ GatherUnitTestSuiteReports ]
+    depends_on: [ Build ]
     commands:
       - ./SendMultipleClientMultipleMessageVariableLength
         --gtest_output=xml:SendMultipleClientMultipleMessageVariableLength.xml
@@ -430,9 +428,7 @@ steps:
 
   - name: ReceiveMultipleClientMultipleMessageVariableLength
     image: ubuntu
-    when:
-      status: [ success, failure ]
-    depends_on: [ GatherUnitTestSuiteReports ]
+    depends_on: [ Build ]
     commands:
       - ./ReceiveMultipleClientMultipleMessageVariableLength
         --gtest_output=xml:ReceiveMultipleClientMultipleMessageVariableLength.xml
@@ -441,9 +437,7 @@ steps:
 
   - name: SendToClientsReceiveOnForwarderTests
     image: ubuntu
-    when:
-      status: [ success, failure ]
-    depends_on: [ GatherUnitTestSuiteReports ]
+    depends_on: [ Build ]
     commands:
       - ./SendToClientsReceiveOnForwarderTests
         --gtest_output=xml:SendToClientsReceiveOnForwarderTests.xml
@@ -452,9 +446,7 @@ steps:
 
   - name: ReceiveOnForwarderSendToClientTests
     image: ubuntu
-    when:
-      status: [ success, failure ]
-    depends_on: [ GatherUnitTestSuiteReports ]
+    depends_on: [ Build ]
     commands:
       - ./ReceiveOnForwarderSendToClientTests
         --gtest_output=xml:ReceiveOnForwarderSendToClientTests.xml
@@ -463,9 +455,7 @@ steps:
 
   - name: SendToGateway
     image: ubuntu
-    when:
-      status: [ success, failure ]
-    depends_on: [ GatherUnitTestSuiteReports ]
+    depends_on: [ Build ]
     commands:
       - ./SendToGateway
         --gtest_output=xml:SendToGateway.xml
@@ -474,9 +464,7 @@ steps:
 
   - name: ReceiveFromGateway
     image: ubuntu
-    when:
-      status: [ success, failure ]
-    depends_on: [ GatherUnitTestSuiteReports ]
+    depends_on: [ Build ]
     commands:
       - ./ReceiveFromGateway
         --gtest_output=xml:ReceiveFromGateway.xml
@@ -485,9 +473,7 @@ steps:
 
   - name: SendToGatewayReceiveOnForwarder
     image: ubuntu
-    when:
-      status: [ success, failure ]
-    depends_on: [ GatherUnitTestSuiteReports ]
+    depends_on: [ Build ]
     commands:
       - ./SendToGatewayReceiveOnForwarder
         --gtest_output=xml:SendToGatewayReceiveOnForwarder.xml
@@ -496,9 +482,7 @@ steps:
 
   - name: ReceiveFromGatewaySendToGateway
     image: ubuntu
-    when:
-      status: [ success, failure ]
-    depends_on: [ GatherUnitTestSuiteReports ]
+    depends_on: [ Build ]
     commands:
       - ./ReceiveFromGatewaySendToGateway
         --gtest_output=xml:ReceiveFromGatewaySendToGateway.xml
