@@ -9,8 +9,7 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - PROTOCOL_NAME="tcp"
-      - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}
+      - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}
       - echo "DRONE_BRANCH ${DRONE_BRANCH}\n
         DRONE_BUILD_CREATED ${DRONE_BUILD_CREATED}\n
         DRONE_BUILD_EVENT ${DRONE_BUILD_EVENT}\n
@@ -50,7 +49,7 @@ steps:
         DRONE_RUNNER_LABEL ${DRONE_RUNNER_LABEL}\n
         DRONE_SYSTEM_VERSION ${DRONE_SYSTEM_VERSION}\n
         DRONE_TAG ${DRONE_TAG}\n
-        DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/${PROTOCOL_NAME}/drone_report
+        DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/drone_report
 
 
   - name: Build
