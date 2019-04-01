@@ -1,6 +1,10 @@
 kind: pipeline
 name: LinuxTcp
 
+platform:
+  os: linux
+  arch: amd64
+
 steps:
   - name: PrepareReports
     image: ubuntu
@@ -250,6 +254,262 @@ steps:
     when:
       status: [ success, failure ]
     depends_on: [ MqttSnClientNetworkInterfaceMessageDefragmentationTests, SendMultipleClientMultipleMessageVariableLength, ReceiveMultipleClientMultipleMessageVariableLength, SendToClientsReceiveOnForwarderTests, ReceiveOnForwarderSendToClientTests, GatewayDefragmentationTests, SendToGateway, ReceiveFromGateway, SendToGatewayReceiveOnForwarder, ReceiveFromGatewaySendToGateway ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
+      - cp SendMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendMultipleClientMultipleMessageVariableLength.xml
+      - cp ReceiveMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveMultipleClientMultipleMessageVariableLength.xml
+      - cp SendToClientsReceiveOnForwarderTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendToClientsReceiveOnForwarderTests.xml
+      - cp ReceiveOnForwarderSendToClientTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveOnForwarderSendToClientTests.xml
+      - cp GatewayDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/GatewayDefragmentationTests.xml
+      - cp SendToGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendToGateway.xml
+      - cp ReceiveFromGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveFromGateway.xml
+      - cp SendToGatewayReceiveOnForwarder.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceivSendToGatewayReceiveOnForwardereFromGateway.xml
+      - cp ReceiveFromGatewaySendToGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveFromGatewaySendToGateway.xml
+
+volumes:
+  - name: reports
+    host:
+      path: /var/local/drone/reports
+
+---
+kind: pipeline
+name: LinuxUdp
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: PrepareReports
+    image: ubuntu
+    depends_on: [ clone ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - mkdir --parents /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}
+      - echo "DRONE_BRANCH ${DRONE_BRANCH}\n
+        DRONE_BUILD_CREATED ${DRONE_BUILD_CREATED}\n
+        DRONE_BUILD_EVENT ${DRONE_BUILD_EVENT}\n
+        DRONE_BUILD_NUMBER ${DRONE_BUILD_NUMBER}\n
+        DRONE_BUILD_STARTED ${DRONE_BUILD_STARTED}\n
+        DRONE_COMMIT_AFTER ${DRONE_COMMIT_AFTER}\n
+        DRONE_COMMIT_AUTHOR ${DRONE_COMMIT_AUTHOR}\n
+        DRONE_COMMIT_AUTHOR_AVATAR ${DRONE_COMMIT_AUTHOR_AVATAR}\n
+        DRONE_COMMIT_AUTHOR_EMAIL ${DRONE_COMMIT_AUTHOR_EMAIL}\n
+        DRONE_COMMIT_AUTHOR_NAME ${DRONE_COMMIT_AUTHOR_NAME}\n
+        DRONE_COMMIT_BEFORE ${DRONE_COMMIT_BEFORE}\n
+        DRONE_COMMIT_BRANCH ${DRONE_COMMIT_BRANCH}\n
+        DRONE_COMMIT_LINK ${DRONE_COMMIT_LINK}\n
+        DRONE_COMMIT ${DRONE_COMMIT}\n
+        DRONE_COMMIT_MESSAGE ${DRONE_COMMIT_MESSAGE}\n
+        DRONE_COMMIT_REF ${DRONE_COMMIT_REF}\n
+        DRONE_COMMIT_SHA ${DRONE_COMMIT_SHA}\n
+        DRONE_GIT_HTTP_URL ${DRONE_GIT_HTTP_URL}\n
+        DRONE_GIT_SSH_URL ${DRONE_GIT_SSH_URL}\n
+        DRONE_MACHINE ${DRONE_MACHINE}\n
+        DRONE_PULL_REQUEST ${DRONE_PULL_REQUEST}\n
+        DRONE_REPO ${DRONE_REPO}\n
+        DRONE_REPO_BRANCH ${DRONE_REPO_BRANCH}\n
+        DRONE_REMOTE_URL ${DRONE_REMOTE_URL}\n
+        DRONE_REPO_LINK ${DRONE_REPO_LINK}\n
+        DRONE_REPO_NAME ${DRONE_REPO_NAME}\n
+        DRONE_REPO_NAMESPACE ${DRONE_REPO_NAMESPACE}\n
+        DRONE_REPO_PRIVATE ${DRONE_REPO_PRIVATE}\n
+        DRONE_REPO_SCM ${DRONE_REPO_SCM}\n
+        DRONE_REPO_VISIBILITY ${DRONE_REPO_VISIBILITY}\n
+        DRONE_RUNNER_HOST ${DRONE_RUNNER_HOST}\n
+        DRONE_RUNNER_HOSTNAME ${DRONE_RUNNER_HOSTNAME}\n
+        DRONE_RUNNER_PLATFORM ${DRONE_RUNNER_PLATFORM}\n
+        DRONE_SOURCE_BRANCH ${DRONE_SOURCE_BRANCH}\n
+        DRONE_SYSTEM_HOST ${DRONE_SYSTEM_HOST}\n
+        DRONE_SYSTEM_HOSTNAME ${DRONE_SYSTEM_HOSTNAME}\n
+        DRONE_RUNNER_LABEL ${DRONE_RUNNER_LABEL}\n
+        DRONE_SYSTEM_VERSION ${DRONE_SYSTEM_VERSION}\n
+        DRONE_TAG ${DRONE_TAG}\n
+        DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/drone_report
+
+
+  - name: Build
+    image: gcc7cmake:3.14.0
+    when:
+      status: [ success ]
+    depends_on: [ PrepareReports ]
+    commands:
+      - ls -l
+      - cp lcovrc /etc/lcovrc
+      - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G "CodeBlocks - Unix Makefiles" 2>&1 | tee cmake_report
+      - cmake --build . --target MqttSnClientNetworkInterfaceUnitTests -- -j $(nproc) &&
+        cmake --build . --target MqttSnGatewayNetworkInterfaceUnitTests -- -j $(nproc) &&
+        cmake --build . --target MqttSnFixedSizeRingBufferUnitTests -- -j $(nproc) &&
+        cmake --build . --target MqttSnForwarderIntegrationTests -- -j $(nproc) &&
+        cmake --build . --target MqttSnForwarderLinuxUdpGatewayNetworkTests -- -j $(nproc) 2>&1 | tee make_report
+#      - cp MqttSnForwarderLinuxTcpClientNetworkTests MqttSnClientNetworkInterfaceMessageDefragmentationTests
+#      - cp MqttSnForwarderLinuxTcpClientNetworkTests SendMultipleClientMultipleMessageVariableLength
+#      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveMultipleClientMultipleMessageVariableLength
+#      - cp MqttSnForwarderLinuxTcpClientNetworkTests SendToClientsReceiveOnForwarderTests
+#      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveOnForwarderSendToClientTests
+      - cp MqttSnForwarderLinuxUdpGatewayNetworkTests SendToGateway
+      - cp MqttSnForwarderLinuxUdpGatewayNetworkTests ReceiveFromGateway
+      - cp MqttSnForwarderLinuxUdpGatewayNetworkTests SendToGatewayReceiveOnForwarder
+      - cp MqttSnForwarderLinuxUdpGatewayNetworkTests ReceiveFromGatewaySendToGateway
+
+  - name: GatherBuildReports
+    image: ubuntu
+    depends_on: [ Build ]
+    when:
+      status: [ success, failure ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cp cmake_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/cmake_report
+      - cp make_report /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/make_report
+
+
+  - name: MqttSnClientNetworkInterfaceUnitTests
+    image: ubuntu
+    depends_on: [ Build ]
+    commands:
+      - ./MqttSnClientNetworkInterfaceUnitTests
+        --gtest_output=xml:MqttSnClientNetworkInterfaceUnitTests.xml
+        --gtest_filter=* --gtest_color=yes
+
+  - name: MqttSnGatewayNetworkInterfaceUnitTests
+    image: ubuntu
+    depends_on: [ Build ]
+    commands:
+      - ./MqttSnGatewayNetworkInterfaceUnitTests
+        --gtest_output=xml:MqttSnGatewayNetworkInterfaceUnitTests.xml
+        --gtest_filter=* --gtest_color=yes
+
+  - name: MqttSnFixedSizeRingBufferUnitTests
+    image: ubuntu
+    depends_on: [ Build ]
+    commands:
+      - ./MqttSnFixedSizeRingBufferUnitTests
+        --gtest_output=xml:MqttSnFixedSizeRingBufferUnitTests.xml
+        --gtest_filter=* --gtest_color=yes
+
+  - name: MqttSnForwarderIntegrationTests
+    image: ubuntu
+    depends_on: [ Build ]
+    commands:
+      - ./MqttSnForwarderIntegrationTests
+        --gtest_output=xml:MqttSnForwarderIntegrationTests.xml
+        --gtest_filter=* --gtest_color=yes
+
+
+  - name: GatherUnitTestSuiteReports
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ MqttSnClientNetworkInterfaceUnitTests, MqttSnGatewayNetworkInterfaceUnitTests, MqttSnFixedSizeRingBufferUnitTests, MqttSnForwarderIntegrationTests ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cp MqttSnClientNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceUnitTests.xml
+      - cp MqttSnGatewayNetworkInterfaceUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnGatewayNetworkInterfaceUnitTests.xml
+      - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnFixedSizeRingBufferUnitTests.xml
+      - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnForwarderIntegrationTests.xml
+
+  - name: SendMultipleClientMultipleMessageVariableLength
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ GatherUnitTestSuiteReports ]
+    commands:
+      - ./SendMultipleClientMultipleMessageVariableLength
+        --gtest_output=xml:SendMultipleClientMultipleMessageVariableLength.xml
+        --gtest_filter=MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.SendMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.SendMultipleClientMultipleMessageVariableLength
+        --gtest_color=yes
+
+  - name: ReceiveMultipleClientMultipleMessageVariableLength
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ GatherUnitTestSuiteReports ]
+    commands:
+      - ./ReceiveMultipleClientMultipleMessageVariableLength
+        --gtest_output=xml:ReceiveMultipleClientMultipleMessageVariableLength.xml
+        --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength:MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength:*/MqttSnClientNetworkInterfaceTests.ReceiveMultipleClientMultipleMessageVariableLength/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveMultipleClientMultipleMessageVariableLength
+        --gtest_color=yes
+
+  - name: SendToClientsReceiveOnForwarderTests
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ GatherUnitTestSuiteReports ]
+    commands:
+      - ./SendToClientsReceiveOnForwarderTests
+        --gtest_output=xml:SendToClientsReceiveOnForwarderTests.xml
+        --gtest_filter=MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests:MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests:*/MqttSnClientNetworkInterfaceTests.SendToClientsReceiveOnForwarderTests/*:*/MqttSnClientNetworkInterfaceTests/*.SendToClientsReceiveOnForwarderTests
+        --gtest_color=yes
+
+  - name: ReceiveOnForwarderSendToClientTests
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ GatherUnitTestSuiteReports ]
+    commands:
+      - ./ReceiveOnForwarderSendToClientTests
+        --gtest_output=xml:ReceiveOnForwarderSendToClientTests.xml
+        --gtest_filter=MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests:MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests:*/MqttSnClientNetworkInterfaceTests.ReceiveOnForwarderSendToClientTests/*:*/MqttSnClientNetworkInterfaceTests/*.ReceiveOnForwarderSendToClientTests
+        --gtest_color=yes
+
+  - name: SendToGateway
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ GatherUnitTestSuiteReports ]
+    commands:
+      - ./SendToGateway
+        --gtest_output=xml:SendToGateway.xml
+        --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGateway
+        --gtest_color=yes
+
+  - name: ReceiveFromGateway
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ GatherUnitTestSuiteReports ]
+    commands:
+      - ./ReceiveFromGateway
+        --gtest_output=xml:ReceiveFromGateway.xml
+        --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGateway
+        --gtest_color=yes
+
+  - name: SendToGatewayReceiveOnForwarder
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ GatherUnitTestSuiteReports ]
+    commands:
+      - ./SendToGatewayReceiveOnForwarder
+        --gtest_output=xml:SendToGatewayReceiveOnForwarder.xml
+        --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.SendToGatewayReceiveOnForwarder/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.SendToGatewayReceiveOnForwarder
+        --gtest_color=yes
+
+  - name: ReceiveFromGatewaySendToGateway
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ GatherUnitTestSuiteReports ]
+    commands:
+      - ./ReceiveFromGatewaySendToGateway
+        --gtest_output=xml:ReceiveFromGatewaySendToGateway.xml
+        --gtest_filter=MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway:MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway:*/MqttSnGatewayNetworkInterfaceSendReceiveTests.ReceiveFromGatewaySendToGateway/*:*/MqttSnGatewayNetworkInterfaceSendReceiveTests/*.ReceiveFromGatewaySendToGateway
+        --gtest_color=yes
+
+  - name: GatherIntegrationTestSuiteReports
+    image: ubuntu
+    when:
+      status: [ success, failure ]
+    depends_on: [ SendMultipleClientMultipleMessageVariableLength, ReceiveMultipleClientMultipleMessageVariableLength, SendToClientsReceiveOnForwarderTests, ReceiveOnForwarderSendToClientTests, SendToGateway, ReceiveFromGateway, SendToGatewayReceiveOnForwarder, ReceiveFromGatewaySendToGateway ]
     volumes:
       - name: reports
         path: /var/local/drone/reports
