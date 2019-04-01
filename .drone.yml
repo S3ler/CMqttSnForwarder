@@ -1,5 +1,5 @@
 kind: pipeline
-name: linux/tcp
+name: LinuxTcp
 
 steps:
   - name: PrepareReports
