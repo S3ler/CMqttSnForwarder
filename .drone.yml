@@ -493,7 +493,8 @@ steps:
     image: ubuntu
     when:
       status: [ success, failure ]
-    depends_on: [ SendMultipleClientMultipleMessageVariableLength, ReceiveMultipleClientMultipleMessageVariableLength, SendToClientsReceiveOnForwarderTests, ReceiveOnForwarderSendToClientTests, SendToGateway, ReceiveFromGateway, SendToGatewayReceiveOnForwarder, ReceiveFromGatewaySendToGateway ]
+    depends_on: [ SendToGateway, ReceiveFromGateway, SendToGatewayReceiveOnForwarder, ReceiveFromGatewaySendToGateway ]
+#    depends_on: [ SendMultipleClientMultipleMessageVariableLength, ReceiveMultipleClientMultipleMessageVariableLength, SendToClientsReceiveOnForwarderTests, ReceiveOnForwarderSendToClientTests, SendToGateway, ReceiveFromGateway, SendToGatewayReceiveOnForwarder, ReceiveFromGatewaySendToGateway ]
     volumes:
       - name: reports
         path: /var/local/drone/reports
