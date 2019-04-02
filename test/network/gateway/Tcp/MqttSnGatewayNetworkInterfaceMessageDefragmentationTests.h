@@ -65,7 +65,7 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
     packetSize = a.packetSize;
     useIdentifier = p.useIdentifier;
 
-    mqttSnGatewayDeviceAddress = a.mqttSnGatewayNetworkAddress;
+    mqttSnGatewayDeviceAddress = a.gatewayToConnectAddress;
 
     if (toTestMessageLength < 2 |
         useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
@@ -108,13 +108,13 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
 
     if (a.searchGateway) {
       ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
-                                   &p.forwarderGatewayNetworkAddress,
+                                   &p.forwarderAddress,
                                    NULL,
                                    p.gatewayNetworkContext,
                                    p.gateway_network_init), 0);
     } else {
       ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
-                                   &p.forwarderGatewayNetworkAddress,
+                                   &p.forwarderAddress,
                                    &mqttSnGatewayDeviceAddress,
                                    p.gatewayNetworkContext,
                                    p.gateway_network_init), 0);

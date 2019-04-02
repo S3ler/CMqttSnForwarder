@@ -22,12 +22,12 @@ std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
     *globalMqttSnFixedSizeRingBufferMockMap;
 
 device_address generateMockGatewayUdpNetworkAddress(uint16_t mockClientIdentifier) {
-  uint16_t p = 10000 + mockClientIdentifier;
+  uint16_t p = 20000 + mockClientIdentifier;
   device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
   return mockGatewayDeviceAddress;
 }
 
-device_address forwarderGatewayNetworkAddress({127, 0, 0, 1, (uint8_t) (9999 >> 8), (uint8_t) (9999 >> 0)});
+device_address forwarderGatewayNetworkAddress({127, 0, 0, 1, (uint8_t) (10000 >> 8), (uint8_t) (10000 >> 0)});
 MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
 std::vector<std::shared_ptr<MockGatewayLinuxUdpNetworkImplementation>> mockGatewayUdpNetworkInterfaces;
 

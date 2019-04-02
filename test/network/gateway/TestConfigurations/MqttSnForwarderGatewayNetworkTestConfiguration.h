@@ -18,14 +18,14 @@ class MqttSnForwarderGatewayNetworkTestConfiguration {
       int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface *, void *),
       device_address (*getDeviceAddressFromMqttSnGatewayNetworkContext)(uint16_t identifier, void *context),
       bool useIdentifier = false) :
-      forwarderGatewayNetworkAddress(forwarderGatewayNetworkAddress),
+      forwarderAddress(forwarderGatewayNetworkAddress),
       gatewayNetworkContext(gatewayNetworkContext),
       gateway_network_init(gateway_network_init),
       getDeviceAddressFromMqttSnGatewayNetworkContext(getDeviceAddressFromMqttSnGatewayNetworkContext),
       useIdentifier(useIdentifier) {}
 
   bool useIdentifier = false;
-  device_address forwarderGatewayNetworkAddress;
+  device_address forwarderAddress;
   void *gatewayNetworkContext = nullptr;
   int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface *, void *context) = nullptr;
   device_address (*getDeviceAddressFromMqttSnGatewayNetworkContext)(uint16_t identifier, void *context) = nullptr;
@@ -33,8 +33,8 @@ class MqttSnForwarderGatewayNetworkTestConfiguration {
   friend std::ostream &operator<<(std::ostream &os,
                                   const MqttSnForwarderGatewayNetworkTestConfiguration &configuration) {
     /*
-      os << "useIdentifier: " << configuration.useIdentifier << " forwarderGatewayNetworkAddress: "
-      << configuration.forwarderGatewayNetworkAddress << " gatewayNetworkContext: "
+      os << "useIdentifier: " << configuration.useIdentifier << " forwarderAddress: "
+      << configuration.forwarderAddress << " gatewayNetworkContext: "
       << configuration.gatewayNetworkContext << " gateway_network_init: " << configuration.gateway_network_init;
     */
     return os;

@@ -34,7 +34,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
   MqttSnFixedSizeRingBuffer receiveBuffer = {0};
   MqttSnFixedSizeRingBuffer sendBuffer = {0};
   void *gatewayNetworkContext = nullptr;
-  device_address mqttSnGatewayDeviceAddress = {0};
+  device_address gatewayToConnectAddress = {0};
 
   std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *> mqttSnFixedSizeRingBufferMockMap;
   StrictMock<MqttSnFixedSizeRingBufferMock> defaultMqttSnFixedSizeRingBufferMock;
@@ -67,7 +67,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
     toTestMessageLength = a.messageLength;
     toTestMessageCount = a.messageCount;
     useIdentifier = p.useIdentifier;
-    mqttSnGatewayDeviceAddress = a.mqttSnGatewayNetworkAddress;
+    gatewayToConnectAddress = a.gatewayToConnectAddress;
 
     if (toTestMessageLength < 2 |
         useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
@@ -122,7 +122,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
       std::shared_ptr<MockGatewayNetworkReceiver> receiver(new MockGatewayNetworkReceiver);
       std::shared_ptr<MockGateway> mockGateway(new MockGateway(mockGatewayConfiguration.gatewayIdentifier,
                                                                &mockGatewayConfiguration.address,
-                                                               &mqttSnGatewayDeviceAddress,
+                                                               &p.forwarderAddress,
                                                                mockGatewayConfiguration.mockGatewayNetworkInterface,
                                                                receiver.get()));
       ASSERT_TRUE(mockGateway->start_loop());
@@ -134,14 +134,14 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     if (a.searchGateway) {
       ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
-                                   &p.forwarderGatewayNetworkAddress,
                                    NULL,
+                                   &p.forwarderAddress,
                                    p.gatewayNetworkContext,
                                    p.gateway_network_init), 0);
     } else {
       ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
-                                   &p.forwarderGatewayNetworkAddress,
-                                   &mqttSnGatewayDeviceAddress,
+                                   &gatewayToConnectAddress,
+                                   &p.forwarderAddress,
                                    p.gatewayNetworkContext,
                                    p.gateway_network_init), 0);
     }

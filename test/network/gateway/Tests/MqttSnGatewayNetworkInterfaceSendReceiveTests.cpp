@@ -13,12 +13,16 @@ TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, SendToGateway) {
       *mockGateway->getGatewayDeviceAddress() = getDeviceAddressFromNetworkContext(mockGateway->getIdentifier(),
                                                                                    gatewayNetworkContext);
     }
-    ComparableGatewayMqttSnMessageData data(toTestMessageLength,
-                                            mockGateway->getGatewayDeviceAddress(),
+    ComparableGatewayMqttSnMessageData expectedData(toTestMessageLength,
+                                            mockGateway->getForwarderDeviceAddress(),
                                             mockGateway->getIdentifier(),
                                             useIdentifier);
-    expectedMockGatewayMqttSnMessageDatas.push_back(data);
-    forwarderMqttSnMessageDataBuffer.push_back(data);
+    expectedMockGatewayMqttSnMessageDatas.push_back(expectedData);
+    ComparableGatewayMqttSnMessageData toSendData(toTestMessageLength,
+                                                    mockGateway->getGatewayDeviceAddress(),
+                                                    mockGateway->getIdentifier(),
+                                                    useIdentifier);
+    forwarderMqttSnMessageDataBuffer.push_back(toSendData);
   }
 
   //ON_CALL(mockSendBuffer, pop(&sendBuffer, _))

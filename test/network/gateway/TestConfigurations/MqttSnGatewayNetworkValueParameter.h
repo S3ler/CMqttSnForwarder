@@ -21,7 +21,7 @@ class MqttSnGatewayNetworkValueParameter {
   uint16_t messageCount;
   uint16_t messageLength;
   uint8_t *(*messageDataGenerator)(uint8_t *arr, uint16_t len);
-  device_address mqttSnGatewayNetworkAddress;
+  device_address gatewayToConnectAddress;
   bool searchGateway = false;
   MqttSnForwarderGatewayNetworkTestConfiguration &mqttSnForwarderGatewayNetworkTestConfiguration;
 
@@ -35,7 +35,7 @@ class MqttSnGatewayNetworkValueParameter {
         messageCount(messageCount),
         messageLength(messageLength),
         mqttSnForwarderGatewayNetworkTestConfiguration(mqttSnForwarderGatewayNetworkTestConfiguration),
-        mqttSnGatewayNetworkAddress(mqttSnGatewayNetworkAddress),
+        gatewayToConnectAddress(mqttSnGatewayNetworkAddress),
         messageDataGenerator(msgDataGenerator) {
     device_address emptyDeviceAddress = {0};
     searchGateway = memcmp(emptyDeviceAddress.bytes, mqttSnGatewayNetworkAddress.bytes, sizeof(device_address)) == 0;
