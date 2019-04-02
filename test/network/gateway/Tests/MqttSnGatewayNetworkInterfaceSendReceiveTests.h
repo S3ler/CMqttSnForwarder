@@ -84,8 +84,8 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
     ON_CALL(mockReceiveBuffer, put(&receiveBuffer, _))
         .WillByDefault(Return(-1));
 
-    std::cout << "&sendBuffer: " << std::to_string((uintptr_t) &sendBuffer) << std::endl;
-    std::cout << "&receiveBuffer: " << std::to_string((uintptr_t) &receiveBuffer) << std::endl;
+    std::cout << "&sendBuffer: 0x" << std::hex << (uintptr_t) &sendBuffer << std::endl;
+    std::cout << "&receiveBuffer: 0x" << std::hex << (uintptr_t) &receiveBuffer << std::endl;
 
     globalMqttSnFixedSizeRingBufferMock = &defaultMqttSnFixedSizeRingBufferMock;
     globalMqttSnFixedSizeRingBufferMockMap = &mqttSnFixedSizeRingBufferMockMap;
