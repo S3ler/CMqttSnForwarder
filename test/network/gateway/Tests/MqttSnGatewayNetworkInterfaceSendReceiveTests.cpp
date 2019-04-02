@@ -182,7 +182,7 @@ TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, SendToGatewayReceiveOnForw
 
 
 // send by gateway => received by MqttSnForwarder => send back to gateway
-TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, ReceiveFromGa+tewaySendToGateway) {
+TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, ReceiveFromGatewaySendToGateway) {
   ASSERT_TRUE(gatewayNetworkForwarderLooper.pauseLoop());
 
   EXPECT_CALL(mockReceiveBuffer, put(&receiveBuffer, _))
