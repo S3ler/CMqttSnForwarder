@@ -23,7 +23,7 @@ class MockGatewayLinuxTcpNetworkImplementation : public MockGatewayNetworkInterf
 
   int sendNetwork(const device_address *to, const uint8_t *data, uint16_t dataLength) override;
 
-  bool connectNetwork(device_address *gatewayDeviceAddress) override;
+  bool connectNetwork(device_address *gatewayDeviceAddress, device_address *forwarderDeviceAddress) override;
 
   void disconnectNetwork() override;
 

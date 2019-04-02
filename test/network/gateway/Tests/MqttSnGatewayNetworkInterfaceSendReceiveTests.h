@@ -12,7 +12,6 @@
 #include "../../../../forwarder/MqttSnFixedSizeRingBuffer.h"
 #include "../../../../forwarder/MqttSnGatewayNetworkInterface.h"
 #include "../TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h"
-#include "../Tcp/MockGatewayLinuxTcpNetworkImplementation.h"
 #include "TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h"
 #include "../TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp"
 #include "../MockForwardLooper/MockForwarderGatewayNetworkLooper.h"
@@ -62,12 +61,13 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
     MqttSnGatewayNetworkValueParameter const &a = GetParam();
     MqttSnForwarderGatewayNetworkTestConfiguration p = a.mqttSnForwarderGatewayNetworkTestConfiguration;
 
-    this->getDeviceAddressFromNetworkContext = p.getDeviceAddressFromMqttSnClientTcpNetworkContext;
+    this->getDeviceAddressFromNetworkContext = p.getDeviceAddressFromMqttSnGatewayNetworkContext;
     this->gatewayNetworkContext = p.gatewayNetworkContext;
 
     toTestMessageLength = a.messageLength;
     toTestMessageCount = a.messageCount;
     useIdentifier = p.useIdentifier;
+    mqttSnGatewayDeviceAddress = a.mqttSnGatewayNetworkAddress;
 
     if (toTestMessageLength < 2 |
         useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
@@ -110,6 +110,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
       std::shared_ptr<MockGatewayNetworkReceiver> receiver(new MockGatewayNetworkReceiver);
       std::shared_ptr<MockGateway> mockGateway(new MockGateway(mockGatewayConfiguration.gatewayIdentifier,
                                                                &mockGatewayConfiguration.address,
+                                                               &mqttSnGatewayDeviceAddress,
                                                                mockGatewayConfiguration.mockGatewayNetworkInterface,
                                                                receiver.get()));
       ASSERT_TRUE(mockGateway->start_loop());
@@ -126,7 +127,6 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
                                    p.gatewayNetworkContext,
                                    p.gateway_network_init), 0);
     } else {
-      mqttSnGatewayDeviceAddress = a.mqttSnGatewayNetworkAddress;
       ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                    &p.forwarderGatewayNetworkAddress,
                                    &mqttSnGatewayDeviceAddress,

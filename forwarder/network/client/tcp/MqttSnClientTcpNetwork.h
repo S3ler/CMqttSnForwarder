@@ -55,6 +55,9 @@ void close_client_connection(MqttSnClientTcpNetwork *clientTcpNetwork, int i);
 
 device_address get_client_device_address(int client_file_descriptor);
 
+int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNetwork *clientTcpNetwork,
+                                                               MqttSnFixedSizeRingBuffer *receiveBuffer,
+                                                               int client_socket_position);
 
 #ifdef __cplusplus
 }

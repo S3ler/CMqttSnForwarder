@@ -20,7 +20,7 @@ class MockGatewayNetworkInterface {
 
   virtual int sendNetwork(const device_address *to, const uint8_t *buf, uint16_t len) = 0;
 
-  virtual bool connectNetwork(device_address *gatewayDeviceAddress) = 0;
+  virtual bool connectNetwork(device_address *gatewayDeviceAddress, device_address *forwarderDeviceAddress) = 0;
 
   virtual void disconnectNetwork() = 0;
 

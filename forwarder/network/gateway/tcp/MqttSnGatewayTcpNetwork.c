@@ -292,8 +292,10 @@ int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
     MqttSnGatewayTcpNetwork *gatewayTcpNetwork,
     MqttSnFixedSizeRingBuffer *receiveBuffer) {
   int gateway_fd = gatewayTcpNetwork->my_socket;
-  uint16_t buffer_length = CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH;
-  uint8_t buffer[CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH];
+  uint16_t buffer_length = 1024; // FIXME
+  uint8_t buffer[1024]; // FIXME
+  //uint16_t buffer_length = CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH; // FIXME
+  //uint8_t buffer[CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH]; // FIXME
   ssize_t read_bytes = 0;
   if ((read_bytes = read(gateway_fd, buffer, buffer_length)) <= 0) {
     return -1;

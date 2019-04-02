@@ -38,6 +38,13 @@ set(TCP_GATWAY_NETWORK_FILES
         forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.c
         forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.h)
 
+set(UDP_GATWAY_NETWORK_FILES
+        forwarder/network/gateway/udp/MqttSnGatewayUdpNetwork.h
+        forwarder/network/gateway/udp/MqttSnGatewayUdpNetwork.c
+        forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.h
+        forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.c
+        )
+
 set(TCP_CLIENT_NETWORK_FILES
         forwarder/network/client/tcp/MqttSnClientTcpNetwork.h
         forwarder/network/client/tcp/MqttSnClientTcpNetwork.c
@@ -48,7 +55,7 @@ add_library(lib-mqtt-sn-forwarder ${IMPLEMENTATIONL_FILES})
 
 add_library(lib-mqtt-sn-ring-buffer ${MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES})
 
-add_library(lib-mqtt-sn-gateway-network ${TCP_GATWAY_NETWORK_FILES})
+add_library(lib-mqtt-sn-gateway-network ${TCP_GATWAY_NETWORK_FILES} ${UDP_GATWAY_NETWORK_FILES})
 target_link_libraries(lib-mqtt-sn-gateway-network lib-mqtt-sn-ring-buffer)
 
 add_library(lib-mqtt-sn-client-network ${TCP_CLIENT_NETWORK_FILES})
@@ -216,11 +223,35 @@ else ()
             test/network/gateway/Tcp/GetMqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter.cpp
             test/network/gateway/Tcp/GetMqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter.h
             test/network/gateway/Tcp/MqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter.h
+
+
+
             )
     target_link_libraries(MqttSnForwarderLinuxTcpGatewayNetworkTests
             gtest gtest_main gmock gmock_main pthread
             mock-mqtt-sn-fixed-size-ring-buffer
             lib-mqtt-sn-gateway-mock-network)
+
+    add_executable(MqttSnForwarderLinuxUdpGatewayNetworkTests
+
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.cpp
+            test/network/gateway/Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h
+
+            ${UDP_GATWAY_NETWORK_FILES}
+
+            test/network/gateway/Udp/MockGatewayLinuxUdpNetworkImplementation.cpp
+            test/network/gateway/Udp/MockGatewayLinuxUdpNetworkImplementation.h
+            test/network/gateway/Udp/LinuxUdpMqttSnGatewayNetworkInterfaceTests.cpp
+
+            forwarder/global_defines.h
+            test/network/gateway/MockGateway/ComparableGatewayMqttSnMessageData.h
+
+            )
+    target_link_libraries(MqttSnForwarderLinuxUdpGatewayNetworkTests
+            gtest gtest_main gmock gmock_main pthread
+            mock-mqtt-sn-fixed-size-ring-buffer
+            lib-mqtt-sn-gateway-mock-network)
+
 
     add_library(mock-mqtt-sn-fixed-size-ring-buffer
             test/MqttSnClientNetworkInterface/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMockInterface.cpp

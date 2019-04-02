@@ -17,6 +17,7 @@
 #include "MqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter.h"
 #include "MqttSnGatewayNetworkInterfaceMessageDefragmentationTests.h"
 #include "GetMqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter.h"
+#include <netinet/in.h>
 
 int getDeviceAddressFromFileDescriptor1(int peer_fd, device_address *peer_address) {
   struct sockaddr_in address;
@@ -48,7 +49,7 @@ device_address generateMockGatewayTcpNetworkAddress(uint16_t mockClientIdentifie
 }
 
 device_address forwarderGatewayNetworkAddress({0, 0, 0, 0, 0, 0});
-MqttSnGatewayTcpNetwork gatewayNetworkContext = {0};
+MqttSnGatewayTcpNetwork tcpGatewayNetworkContext = {0};
 std::vector<std::shared_ptr<MockGatewayLinuxTcpNetworkImplementation>> mockGatewayTcpNetworkInterfaces;
 
 device_address getDeviceAddressFromMqttSnGatewayTcpNetworkContext(uint16_t identifier, void *context) {
@@ -63,7 +64,7 @@ device_address getDeviceAddressFromMqttSnGatewayTcpNetworkContext(uint16_t ident
 
 MqttSnForwarderGatewayNetworkTestConfiguration mqttSnForwarderGatewayNetworkTestConfiguration(
     forwarderGatewayNetworkAddress,
-    &gatewayNetworkContext,
+    &tcpGatewayNetworkContext,
     GatewayLinuxTcpInit,
     getDeviceAddressFromMqttSnGatewayTcpNetworkContext,
     true);

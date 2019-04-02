@@ -45,7 +45,8 @@ int MockGatewayLinuxTcpNetworkImplementation::sendNetwork(const device_address *
   return total_send_bytes;
 }
 
-bool MockGatewayLinuxTcpNetworkImplementation::connectNetwork(device_address *gatewayDeviceAddress) {
+bool MockGatewayLinuxTcpNetworkImplementation::connectNetwork(device_address *gatewayDeviceAddress,
+                                                              device_address *forwarderDeviceAddress) {
   this->gatewayDeviceAddress = gatewayDeviceAddress;
 
   uint16_t port = gatewayDeviceAddress->bytes[4] << 8;
@@ -90,13 +91,6 @@ void MockGatewayLinuxTcpNetworkImplementation::disconnectNetwork() {
 }
 
 int MockGatewayLinuxTcpNetworkImplementation::loopNetwork(MockGatewayNetworkReceiver *receiver) {
-
-  int timeout_ms = 100;
-  struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
-  if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
-    interval.tv_sec = 0;
-    interval.tv_usec = 100;
-  }
 
   if (forwarder_socket_fd == -1) {
     return awaitForwarderConnection(receiver);
@@ -183,8 +177,7 @@ int MockGatewayLinuxTcpNetworkImplementation::receiveForwarderMessage(MockGatewa
   // int activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
 
   if ((activity < 0) && (errno != EINTR)) {
-    //printf("select error");
-    exit(EXIT_FAILURE);
+    return -1;
   }
   if (activity == 0) {
     // no connection
@@ -196,10 +189,14 @@ int MockGatewayLinuxTcpNetworkImplementation::receiveForwarderMessage(MockGatewa
     uint8_t buffer[MockGatewayLinuxTcpNetworkImplementation_BUFFER_SIZE];
     int buffer_length = MockGatewayLinuxTcpNetworkImplementation_BUFFER_SIZE;
     int valread;
+    // TODO what happens if too much data are send aka packetsize > MockGatewayLinuxUdpNetworkImplementation_BUFFER_SIZE
+    // TODO read out first 3 bytes, peek datasize, if too long remove next datasize bytes out of buffer
+    // TODO write a testcase for this behaviour
     if ((valread = read(sd, buffer, buffer_length)) <= 0) {
       // client_socket broken
       close(sd);
       forwarder_socket_fd = -1;
+      return -1;
     } else {
       device_address peerAddress;
       if (getDeviceAddressFromFileDescriptor(forwarder_socket_fd, &peerAddress) < 0) {

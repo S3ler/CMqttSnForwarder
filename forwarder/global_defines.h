@@ -22,4 +22,22 @@ typedef struct MQTT_SN_FORWARD_ENCAPSULATION {
 } MQTT_SN_FORWARD_ENCAPSULATION;
 #pragma pack(pop)
 
+#pragma pack(push)
+#pragma pack(1)
+typedef struct MqttSnMessageHeaderOneOctetLengthField {
+  uint8_t length;
+  uint8_t msg_type;
+} MqttSnMessageHeaderOneOctetLengthField;
+#pragma pack(pop)
+
+#pragma pack(push)
+#pragma pack(1)
+typedef struct MqttSnMessageHeaderThreeOctetsLengthField {
+  uint8_t three_octets_length_field_indicator;
+  uint8_t msb_length;
+  uint8_t lsb_length;
+  uint8_t msg_type;
+} MqttSnMessageHeaderThreeOctetsLengthField;
+#pragma pack(pop)
+
 #endif //GATEWAY_GLOBAL_DEFINES_H

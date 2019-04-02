@@ -17,7 +17,8 @@ TEST_P(MqttSnGatewayNetworkInterfaceMessageDefragmentationTests, Defragmentation
     }
     ComparableGatewayMqttSnMessageData data(toTestMessageLength,
                                             mockGateway->getGatewayDeviceAddress(),
-                                            mockGateway->getIdentifier());
+                                            mockGateway->getIdentifier(),
+                                            useIdentifier);
     expectedMockGatewayMqttSnMessageDatas.push_back(data);
   }
 

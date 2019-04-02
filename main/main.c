@@ -2,6 +2,7 @@
 #include "../forwarder/MqttSnFixedSizeRingBuffer.h"
 #include "../forwarder/MqttSnForwarder.h"
 #include "../forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h"
+#include "../forwarder/network/gateway/udp/MqttSnGatewayUdpNetwork.h"
 #include "../forwarder/network/client/tcp/MqttSnClientTcpNetwork.h"
 
 #include <stdio.h>
@@ -24,25 +25,40 @@ void *inc_c(void *mqttSnForwarder_ptr) {
   return NULL;
 }
 
+
+
 int main(int argc, char *argv[]) {
+  MqttSnGatewayTcpNetwork tcpGatewayNetworkContext = {0};
+  MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
+  int gateway_network = 2;
 
   signal(SIGINT, sig_handler);
   pthread_t mqttSnForwarder_thread;
 
   MqttSnForwarder mqttSnForwarder = {0};
-  MqttSnGatewayTcpNetwork gatewayNetworkContext = {0};
   device_address forwarderGatewayNetworkAddress = {0};
   MqttSnClientTcpNetwork clientNetworkContext = {0};
-
+  void* networkContest = NULL;
   uint16_t gatewayNetworkPort = 8888;
   device_address
       mqttSnGatewayNetworkAddress =
       {127, 0, 0, 1, (uint8_t) (gatewayNetworkPort >> 8), (uint8_t) (gatewayNetworkPort >> 0)};
-  GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
-                     &forwarderGatewayNetworkAddress,
-                     &mqttSnGatewayNetworkAddress,
-                     &gatewayNetworkContext,
-                     GatewayLinuxTcpInit);
+
+  if (gateway_network == 1) {
+    GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
+                       &forwarderGatewayNetworkAddress,
+                       &mqttSnGatewayNetworkAddress,
+                       &tcpGatewayNetworkContext,
+                       GatewayLinuxTcpInit);
+  } else if (gateway_network == 2) {
+    GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
+                       &forwarderGatewayNetworkAddress,
+                       &mqttSnGatewayNetworkAddress,
+                       &udpGatewayNetworkContext,
+                       GatewayLinuxUdpInit);
+    networkContest = &udpGatewayNetworkContext;
+  }
+
 
   uint16_t clientNetworkPort = 9999;
   device_address
@@ -52,7 +68,7 @@ int main(int argc, char *argv[]) {
                     &clientNetworkContext,
                     ClientLinuxTcpInit);
 
-  if (MqttSnForwarderInit(&mqttSnForwarder, &clientNetworkContext, &gatewayNetworkContext) != 0) {
+  if (MqttSnForwarderInit(&mqttSnForwarder, &clientNetworkContext, networkContest) != 0) {
     fprintf(stderr,
             "Error init MqttSnForwarder\n");
     MqttSnForwarderDeinit(&mqttSnForwarder);

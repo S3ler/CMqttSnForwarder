@@ -6,10 +6,12 @@
 
 MockGateway::MockGateway(uint8_t identifier,
                          device_address *gatewayAddress,
+                         device_address *forwarderAddress,
                          MockGatewayNetworkInterface *mockGatewayNetworkInterface,
                          MockGatewayNetworkReceiver *receiver)
     : receiver(receiver),
       gatewayAddress(gatewayAddress),
+      forwarderAddress(forwarderAddress),
       mockGatewayNetworkInterface(mockGatewayNetworkInterface),
       identifier(identifier) {}
 
@@ -25,7 +27,7 @@ void MockGateway::loop() {
 }
 
 bool MockGateway::start_loop() {
-  if (!mockGatewayNetworkInterface->connectNetwork(gatewayAddress)) {
+  if (!mockGatewayNetworkInterface->connectNetwork(gatewayAddress, forwarderAddress)) {
     return false;
   }
   this->thread = std::thread(&MockGateway::loop, this);

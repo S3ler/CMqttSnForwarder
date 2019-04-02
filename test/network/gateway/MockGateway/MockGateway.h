@@ -17,8 +17,17 @@ class MockGatewayNetworkInterface;
 
 class MockGateway {
  public:
+  /**
+   *
+   * @param identifier
+   * @param gatewayAddress
+   * @param forwarderAddress can be nullptr
+   * @param mockGatewayNetworkInterface
+   * @param receiver
+   */
   MockGateway(uint8_t identifier,
               device_address *gatewayAddress,
+              device_address *forwarderAddress,
               MockGatewayNetworkInterface *mockGatewayNetworkInterface,
               MockGatewayNetworkReceiver *receiver);
 
@@ -48,7 +57,7 @@ class MockGateway {
   uint8_t identifier;
   MockGatewayNetworkReceiver *receiver = nullptr;
   std::thread thread;
-  //device_address *forwarderAddress = nullptr;
+  device_address *forwarderAddress = nullptr;
   device_address *gatewayAddress = nullptr;
   std::atomic<bool> stopped{false};
   std::atomic<bool> done{false};

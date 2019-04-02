@@ -57,13 +57,15 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
     MqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter const &a = GetParam();
     MqttSnForwarderGatewayNetworkTestConfiguration p = a.mqttSnForwarderGatewayNetworkTestConfiguration;
 
-    this->getDeviceAddressFromNetworkContext = p.getDeviceAddressFromMqttSnClientTcpNetworkContext;
+    this->getDeviceAddressFromNetworkContext = p.getDeviceAddressFromMqttSnGatewayNetworkContext;
     this->gatewayNetworkContext = p.gatewayNetworkContext;
 
     toTestMessageLength = a.messageLength;
     toTestMessageCount = a.messageCount;
     packetSize = a.packetSize;
     useIdentifier = p.useIdentifier;
+
+    mqttSnGatewayDeviceAddress = a.mqttSnGatewayNetworkAddress;
 
     if (toTestMessageLength < 2 |
         useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
@@ -93,6 +95,7 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
       std::shared_ptr<MockGatewayNetworkReceiver> receiver(new MockGatewayNetworkReceiver);
       std::shared_ptr<MockGateway> mockGateway(new MockGateway(mockGatewayConfiguration.gatewayIdentifier,
                                                                &mockGatewayConfiguration.address,
+                                                               &mqttSnGatewayDeviceAddress,
                                                                mockGatewayConfiguration.mockGatewayNetworkInterface,
                                                                receiver.get()));
       ASSERT_TRUE(mockGateway->start_loop());
@@ -110,7 +113,6 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
                                    p.gatewayNetworkContext,
                                    p.gateway_network_init), 0);
     } else {
-      mqttSnGatewayDeviceAddress = a.mqttSnGatewayNetworkAddress;
       ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                    &p.forwarderGatewayNetworkAddress,
                                    &mqttSnGatewayDeviceAddress,

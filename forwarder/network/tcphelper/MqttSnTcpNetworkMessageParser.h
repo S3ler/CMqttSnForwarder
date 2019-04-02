@@ -9,25 +9,10 @@
 #include <global_defines.h>
 #include <stdio.h>
 #include <MqttSnFixedSizeRingBuffer.h>
-#include <network/client/tcp/MqttSnClientTcpNetwork.h>
 
-#pragma pack(push)
-#pragma pack(1)
-typedef struct MqttSnMessageHeaderOneOctetLengthField {
-  uint8_t length;
-  uint8_t msg_type;
-} MqttSnMessageHeaderOneOctetLengthField;
-#pragma pack(pop)
-
-#pragma pack(push)
-#pragma pack(1)
-typedef struct MqttSnMessageHeaderThreeOctetsLengthField {
-  uint8_t three_octets_length_field_indicator;
-  uint8_t msb_length;
-  uint8_t lsb_length;
-  uint8_t msg_type;
-} MqttSnMessageHeaderThreeOctetsLengthField;
-#pragma pack(pop)
+#ifndef CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH
+#define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH 1024
+#endif
 
 int save_messages_into_receive_buffer(uint8_t *data,
                                       ssize_t data_length,
@@ -41,10 +26,6 @@ uint16_t get_message_length(uint8_t *data);
 int isCompleteThreeBytesHeader(uint8_t *data, ssize_t data_length);
 
 int isThreeBytesHeader(uint8_t *data, ssize_t data_length);
-
-int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNetwork *clientTcpNetwork,
-                                                               MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                                               int client_socket_position);
 
 int save_message_into_receive_buffer(uint8_t *data,
                                      uint16_t data_length,

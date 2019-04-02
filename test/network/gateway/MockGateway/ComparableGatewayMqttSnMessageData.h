@@ -36,10 +36,11 @@ class ComparableGatewayMqttSnMessageData {
 
   ComparableGatewayMqttSnMessageData(const uint16_t data_length,
                                      const device_address *address,
-                                     const uint16_t identifier)
+                                     const uint16_t identifier,
+                                     const bool useIdentifier)
       : address(*address),
         data_length(data_length),
-        use_identifier(true),
+        use_identifier(useIdentifier),
         data(generateMessageData(data_length, identifier, true)) {
   }
 

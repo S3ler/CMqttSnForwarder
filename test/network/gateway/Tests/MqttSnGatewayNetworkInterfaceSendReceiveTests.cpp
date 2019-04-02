@@ -15,7 +15,8 @@ TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, SendToGateway) {
     }
     ComparableGatewayMqttSnMessageData data(toTestMessageLength,
                                             mockGateway->getGatewayDeviceAddress(),
-                                            mockGateway->getIdentifier());
+                                            mockGateway->getIdentifier(),
+                                            useIdentifier);
     expectedMockGatewayMqttSnMessageDatas.push_back(data);
     forwarderMqttSnMessageDataBuffer.push_back(data);
   }
@@ -55,7 +56,7 @@ TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, SendToGateway) {
       ));
 
   ASSERT_TRUE(gatewayNetworkForwarderLooper.resumeLoop());
-  std::this_thread::sleep_for(std::chrono::milliseconds(toTestMessageCount*1500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(toTestMessageCount * 1500));
   std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
   EXPECT_THAT(actualMockGatewaySnMessageDatas,
@@ -72,7 +73,8 @@ TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, ReceiveFromGateway) {
     }
     ComparableGatewayMqttSnMessageData data(toTestMessageLength,
                                             mockGateway->getGatewayDeviceAddress(),
-                                            mockGateway->getIdentifier());
+                                            mockGateway->getIdentifier(),
+                                            useIdentifier);
     expectedMockGatewayMqttSnMessageDatas.push_back(data);
   }
 
@@ -117,7 +119,8 @@ TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, SendToGatewayReceiveOnForw
     }
     ComparableGatewayMqttSnMessageData data(toTestMessageLength,
                                             mockGateway->getGatewayDeviceAddress(),
-                                            mockGateway->getIdentifier());
+                                            mockGateway->getIdentifier(),
+                                            useIdentifier);
     expectedMockGatewayMqttSnMessageDatas.push_back(data);
     forwarderMqttSnMessageDataBuffer.push_back(data);
   }
@@ -226,7 +229,10 @@ TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, ReceiveFromGatewaySendToGa
   for (uint16_t messageCounter = 0; messageCounter < toTestMessageCount; ++messageCounter) {
 
     device_address forwarderDeviceAddress = mockGateway->getForwarderDeviceAddress();
-    ComparableGatewayMqttSnMessageData data(toTestMessageLength, &forwarderDeviceAddress, mockGateway->getIdentifier());
+    ComparableGatewayMqttSnMessageData data(toTestMessageLength,
+                                            &forwarderDeviceAddress,
+                                            mockGateway->getIdentifier(),
+                                            useIdentifier);
     expectedMockGatewayMqttSnMessageDatas.push_back(data);
 
     ASSERT_EQ(mockGateway->send(&data), data.data_length);
