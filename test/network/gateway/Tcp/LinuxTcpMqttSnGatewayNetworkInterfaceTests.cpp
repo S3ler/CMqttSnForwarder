@@ -83,10 +83,10 @@ std::vector<MqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter> gatewayN
         mockGatewayTcpNetworkInterfaces
     );
 
-struct PrintToStringMqttSnClientGatewayNetworkTestValueParameterParamName {
+struct PrintToStringMqttSnClientGatewayTcpNetworkTestValueParameterParamName {
   template<class ParamType>
   std::string operator()(const ::testing::TestParamInfo<ParamType> &info) const {
-    std::string result = std::to_string(info.index);
+    std::string result = "Tcp" + std::to_string(info.index);
     std::stringstream buffer;
     buffer << info.param;
     result.append(buffer.str());
@@ -109,12 +109,12 @@ INSTANTIATE_TEST_SUITE_P(GatewayConnectTests,
 INSTANTIATE_TEST_SUITE_P(GatewaySendReceiveTests,
                          MqttSnGatewayNetworkInterfaceSendReceiveTests,
                          ::testing::ValuesIn(gatewayNetworkTestParameter.begin(), gatewayNetworkTestParameter.end()),
-                         PrintToStringMqttSnClientGatewayNetworkTestValueParameterParamName());
+                         PrintToStringMqttSnClientGatewayTcpNetworkTestValueParameterParamName());
 
 INSTANTIATE_TEST_SUITE_P(GatewayDefragmentationTests,
                          MqttSnGatewayNetworkInterfaceMessageDefragmentationTests,
                          ::testing::ValuesIn(gatewayNetworkDefragmentationTestParameter.begin(),
                                              gatewayNetworkDefragmentationTestParameter.end()),
-                         PrintToStringMqttSnClientGatewayNetworkTestValueParameterParamName());
+                         PrintToStringMqttSnClientGatewayTcpNetworkTestValueParameterParamName());
 
 #endif //CMQTTSNFORWARDER_LINUXTCPMQTTSNGATEWAYNETWORKINTERFACETESTS_H

@@ -21,8 +21,8 @@ TEST_P(MqttSnGatewayNetworkInterfaceSendReceiveTests, SendToGateway) {
     forwarderMqttSnMessageDataBuffer.push_back(data);
   }
 
-  ON_CALL(mockSendBuffer, pop(&sendBuffer, _))
-      .WillByDefault(Return(-1));
+  //ON_CALL(mockSendBuffer, pop(&sendBuffer, _))
+  //    .WillByDefault(Return(-1));
   EXPECT_CALL(mockSendBuffer, pop(&sendBuffer, _))
       .Times(AtLeast(toTestMessageCount))
       .WillRepeatedly(Invoke(

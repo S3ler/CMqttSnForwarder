@@ -17,8 +17,6 @@
 #include "../Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h"
 #include "../../../MqttSnClientNetworkInterface/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h"
 
-
-
 MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock;
 std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
     *globalMqttSnFixedSizeRingBufferMockMap;
@@ -57,7 +55,7 @@ std::vector<MqttSnGatewayNetworkValueParameter> udpGatewayNetworkTestParameter =
 struct PrintToStringMqttSnGatewayUdpNetworkTestValueParameterParamName {
   template<class ParamType>
   std::string operator()(const ::testing::TestParamInfo<ParamType> &info) const {
-    std::string result = std::to_string(info.index);
+    std::string result = "Udp" + std::to_string(info.index);
     std::stringstream buffer;
     buffer << info.param;
     result.append(buffer.str());
