@@ -34,6 +34,7 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
     // TODO implement searching for gateway
   }
 
+  /*
   char ipAsString[255] = {0};
   sprintf(ipAsString,
           "%d.%d.%d.%d",
@@ -41,14 +42,13 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
           networkInterface->mqtt_sn_gateway_network_address->bytes[1],
           networkInterface->mqtt_sn_gateway_network_address->bytes[2],
           networkInterface->mqtt_sn_gateway_network_address->bytes[3]);
-  uint16_t port = (((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[4]) << 8)
+  uint16_t port_msb = ((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[4] << 8);
+  uint16_t port_lsb = ((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[5]);
+  uint16_t port = ((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[4] << 8)
       + ((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[5]);
-  /*
-  char *addr = tcpNetwork->ip;
-  int port = tcpNetwork->port;
-  */
+
   char *addr = ipAsString;
-  if (addr == NULL || port == 0) {
+  if (addr == NULL) {
     return -1;
   }
 
@@ -62,7 +62,7 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   if ((rc = getaddrinfo(addr, NULL, &hints, &result)) == 0) {
     struct addrinfo *res = result;
 
-    /* prefer ip4 addresses */
+    // prefer ip4 addresses
     while (res) {
       if (res->ai_family == AF_INET) {
         result = res;
@@ -80,16 +80,32 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
 
     freeaddrinfo(result);
   }
+  */
 
-  if (rc == 0) {
-    tcpNetwork->my_socket = socket(family, type, 0);
-    if (tcpNetwork->my_socket != -1)
-      rc = connect(tcpNetwork->my_socket, (struct sockaddr *) &address, sizeof(address));
-    else
-      rc = -1;
+  uint32_t gateway_ip = (((uint32_t) networkInterface->mqtt_sn_gateway_network_address->bytes[0]) << 24)
+      + (((uint32_t) networkInterface->mqtt_sn_gateway_network_address->bytes[1]) << 16)
+      + (((uint32_t) networkInterface->mqtt_sn_gateway_network_address->bytes[2]) << 8)
+      + (((uint32_t) networkInterface->mqtt_sn_gateway_network_address->bytes[3]) << 0);
+
+  uint16_t gateway_port = ((uint16_t) networkInterface->gateway_network_address->bytes[4] << 8)
+      + ((uint16_t) networkInterface->gateway_network_address->bytes[5]);
+
+  struct sockaddr_in address;
+  address.sin_port = htons(gateway_port);
+  address.sin_family = AF_INET;
+  address.sin_addr.s_addr = htonl(gateway_ip);
+
+  int connect_result = 0;
+  if (connect_result == 0) {
+    tcpNetwork->my_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (tcpNetwork->my_socket != -1) {
+      connect_result = connect(tcpNetwork->my_socket, (struct sockaddr *) &address, sizeof(address));
+    } else {
+      connect_result = -1;
+    }
   }
 
-  return rc;
+  return connect_result;
 }
 
 void GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
