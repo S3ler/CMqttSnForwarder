@@ -174,7 +174,7 @@ sockaddr_in MockGatewayLinuxUdpNetworkImplementation::getSockAddrInFromDeviceAdd
 
   struct sockaddr_in address;
   address.sin_family = family;
-  address.sin_port = port;
+  address.sin_port = htons(port);
   address.sin_addr.s_addr = htonl(ip);
 
   return address;

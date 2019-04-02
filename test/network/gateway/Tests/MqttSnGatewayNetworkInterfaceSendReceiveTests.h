@@ -84,8 +84,8 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
     ON_CALL(mockReceiveBuffer, put(&receiveBuffer, _))
         .WillByDefault(Return(-1));
 
-    std::cout << "&sendBuffer: 0x" << std::hex << (uintptr_t) &sendBuffer << std::endl;
-    std::cout << "&receiveBuffer: 0x" << std::hex << (uintptr_t) &receiveBuffer << std::endl;
+    // std::cout << "&sendBuffer: 0x" << std::hex << (uintptr_t) &sendBuffer << std::endl;
+    // std::cout << "&receiveBuffer: 0x" << std::hex << (uintptr_t) &receiveBuffer << std::endl;
 
     globalMqttSnFixedSizeRingBufferMock = &defaultMqttSnFixedSizeRingBufferMock;
     globalMqttSnFixedSizeRingBufferMockMap = &mqttSnFixedSizeRingBufferMockMap;
@@ -173,15 +173,18 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
                              GetParam().mqttSnForwarderGatewayNetworkTestConfiguration.gatewayNetworkContext);
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    globalMqttSnFixedSizeRingBufferMockMap = nullptr;
-    globalMqttSnFixedSizeRingBufferMock = nullptr;
-    gatewayNetworkContext = nullptr;
 
     mockGateway->stop_loop();
     while (!mockGateway->getDone()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+
+    globalMqttSnFixedSizeRingBufferMockMap = nullptr;
+    globalMqttSnFixedSizeRingBufferMock = nullptr;
+    gatewayNetworkContext = nullptr;
+
   }
 
   MqttSnGatewayNetworkInterfaceSendReceiveTests() {

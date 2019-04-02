@@ -181,11 +181,18 @@ int save_receive_gateway_message_from_udp_socket_into_receive_buffer(
 
   device_address gateway_address = {0};
 
+  /*
   unsigned char *ip = (unsigned char *) &forwarder_sockaddr.sin_addr.s_addr;
   gateway_address.bytes[0] = ip[0];
   gateway_address.bytes[1] = ip[1];
   gateway_address.bytes[2] = ip[2];
   gateway_address.bytes[3] = ip[3];
+  */
+  uint32_t ip = ntohl(forwarder_sockaddr.sin_addr.s_addr);
+  gateway_address.bytes[0] = (uint8_t) (ip >> 24);
+  gateway_address.bytes[1] = (uint8_t) (ip >> 16);
+  gateway_address.bytes[2] = (uint8_t) (ip >> 8);
+  gateway_address.bytes[3] = (uint8_t) (ip >> 0);
 
   uint16_t port_as_number = (uint16_t) ntohs(forwarder_sockaddr.sin_port);
   gateway_address.bytes[4] = (uint8_t) (port_as_number >> 8);
