@@ -29,7 +29,7 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
   MqttSnFixedSizeRingBuffer receiveBuffer = {0};
   MqttSnFixedSizeRingBuffer sendBuffer = {0};
   void *gatewayNetworkContext = nullptr;
-  device_address mqttSnGatewayDeviceAddress = {0};
+  device_address gatewayToConnectAddress = {0};
 
   std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *> mqttSnFixedSizeRingBufferMockMap;
   StrictMock<MqttSnFixedSizeRingBufferMock> defaultMqttSnFixedSizeRingBufferMock;
@@ -65,7 +65,7 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
     packetSize = a.packetSize;
     useIdentifier = p.useIdentifier;
 
-    mqttSnGatewayDeviceAddress = a.gatewayToConnectAddress;
+    gatewayToConnectAddress = a.gatewayToConnectAddress;
 
     if (toTestMessageLength < 2 |
         useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
@@ -74,6 +74,16 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
 
     ON_CALL(mockSendBuffer, pop(&sendBuffer, _))
         .WillByDefault(Return(-1));
+    ON_CALL(mockSendBuffer, put(&sendBuffer, _))
+        .WillByDefault(Return(-1));
+
+    ON_CALL(mockReceiveBuffer, pop(&receiveBuffer, _))
+        .WillByDefault(Return(-1));
+    ON_CALL(mockReceiveBuffer, put(&receiveBuffer, _))
+        .WillByDefault(Return(-1));
+
+    // std::cout << "&sendBuffer: 0x" << std::hex << (uintptr_t) &sendBuffer << std::endl;
+    // std::cout << "&receiveBuffer: 0x" << std::hex << (uintptr_t) &receiveBuffer << std::endl;
 
     globalMqttSnFixedSizeRingBufferMock = &defaultMqttSnFixedSizeRingBufferMock;
     globalMqttSnFixedSizeRingBufferMockMap = &mqttSnFixedSizeRingBufferMockMap;
@@ -83,39 +93,36 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
     //MqttSnFixedSizeRingBufferInit(&receiveBuffer);
     //MqttSnFixedSizeRingBufferInit(&sendBuffer);
 
-    if (a.mockGatewayConfigurations.size() > 1) {
-      // TODO
-      throw std::exception();
-    }
     if (a.searchGateway) {
       // TODO
       throw std::exception();
     }
-    for (auto mockGatewayConfiguration : a.mockGatewayConfigurations) {
+
+    {
+      auto mockGatewayConfiguration = a.mockGatewayConfigurations.front();
       std::shared_ptr<MockGatewayNetworkReceiver> receiver(new MockGatewayNetworkReceiver);
       std::shared_ptr<MockGateway> mockGateway(new MockGateway(mockGatewayConfiguration.gatewayIdentifier,
                                                                &mockGatewayConfiguration.address,
-                                                               &mqttSnGatewayDeviceAddress,
+                                                               &p.forwarderAddress,
                                                                mockGatewayConfiguration.mockGatewayNetworkInterface,
                                                                receiver.get()));
       ASSERT_TRUE(mockGateway->start_loop());
       ASSERT_TRUE(mockGateway->isNetworkConnected());
       this->mockGateway = mockGateway;
       this->mockGatewayNetworkReceiver = receiver;
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
     if (a.searchGateway) {
       ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
-                                   &p.forwarderAddress,
                                    NULL,
+                                   &p.forwarderAddress,
                                    p.gatewayNetworkContext,
                                    p.gateway_network_init), 0);
     } else {
       ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
+                                   &gatewayToConnectAddress,
                                    &p.forwarderAddress,
-                                   &mqttSnGatewayDeviceAddress,
                                    p.gatewayNetworkContext,
                                    p.gateway_network_init), 0);
     }
