@@ -499,7 +499,7 @@ steps:
       - name: reports
         path: /var/local/drone/reports
     commands:
-      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
+#      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
       - cp SendMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendMultipleClientMultipleMessageVariableLength.xml
       - cp ReceiveMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveMultipleClientMultipleMessageVariableLength.xml
       - cp SendToClientsReceiveOnForwarderTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendToClientsReceiveOnForwarderTests.xml
