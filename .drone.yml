@@ -500,11 +500,10 @@ steps:
         path: /var/local/drone/reports
     commands:
 #      - cp MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnClientNetworkInterfaceMessageDefragmentationTests.xml
-      - cp SendMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendMultipleClientMultipleMessageVariableLength.xml
-      - cp ReceiveMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveMultipleClientMultipleMessageVariableLength.xml
-      - cp SendToClientsReceiveOnForwarderTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendToClientsReceiveOnForwarderTests.xml
-      - cp ReceiveOnForwarderSendToClientTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveOnForwarderSendToClientTests.xml
-      - cp GatewayDefragmentationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/GatewayDefragmentationTests.xml
+#      - cp SendMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendMultipleClientMultipleMessageVariableLength.xml
+#      - cp ReceiveMultipleClientMultipleMessageVariableLength.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveMultipleClientMultipleMessageVariableLength.xml
+#      - cp SendToClientsReceiveOnForwarderTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendToClientsReceiveOnForwarderTests.xml
+#      - cp ReceiveOnForwarderSendToClientTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveOnForwarderSendToClientTests.xml
       - cp SendToGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/SendToGateway.xml
       - cp ReceiveFromGateway.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceiveFromGateway.xml
       - cp SendToGatewayReceiveOnForwarder.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/ReceivSendToGatewayReceiveOnForwardereFromGateway.xml
