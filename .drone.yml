@@ -349,9 +349,9 @@ steps:
         cmake --build . --target MqttSnForwarderLinuxUdpClientNetworkTests -- -j $(nproc) &&
         cmake --build . --target MqttSnForwarderLinuxUdpGatewayNetworkTests -- -j $(nproc) 2>&1 | tee make_report
       - cp MqttSnForwarderLinuxUdpClientNetworkTests SendMultipleClientMultipleMessageVariableLength
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveMultipleClientMultipleMessageVariableLength
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests SendToClientsReceiveOnForwarderTests
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveOnForwarderSendToClientTests
+      - cp MqttSnForwarderLinuxUdpClientNetworkTests ReceiveMultipleClientMultipleMessageVariableLength
+      - cp MqttSnForwarderLinuxUdpClientNetworkTests SendToClientsReceiveOnForwarderTests
+      - cp MqttSnForwarderLinuxUdpClientNetworkTests ReceiveOnForwarderSendToClientTests
       - cp MqttSnForwarderLinuxUdpGatewayNetworkTests SendToGateway
       - cp MqttSnForwarderLinuxUdpGatewayNetworkTests ReceiveFromGateway
       - cp MqttSnForwarderLinuxUdpGatewayNetworkTests SendToGatewayReceiveOnForwarder
