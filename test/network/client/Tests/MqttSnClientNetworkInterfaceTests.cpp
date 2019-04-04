@@ -217,8 +217,9 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveOnForwarderSendToClientTests) {
   for (uint16_t messageCount = 0; messageCount < toTestMessageCount; ++messageCount) {
     // we send message in RoundRobin for each client
     for (const auto &mockClient : mockClients) {
+      device_address forwarder_address = mockClient->getForwarderDeviceAddress();
       ComparableClientMqttSnMessageData data(toTestMessageLength,
-                                             mockClient->getClientDeviceAddress(),
+                                             &forwarder_address,
                                              mockClient->getIdentifier(),
                                              useIdentifier);
       expectedMockClientSnMessageDatas.push_back(data);
