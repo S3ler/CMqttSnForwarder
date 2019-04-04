@@ -103,7 +103,7 @@ class MqttSnClientNetworkInterfaceMessageDefragmentationTests :
     for (auto mockClientConfiguration : a.mockClientConfigurations) {
       std::shared_ptr<MockClientNetworkReceiver> receiver(new MockClientNetworkReceiver);
       std::shared_ptr<MockClient> mockClient(new MockClient(mockClientConfiguration.identifier,
-                                                            &mockClientConfiguration.address,
+                                                            mockClientConfiguration.address,
                                                             &p.forwarderAddress,
                                                             mockClientConfiguration.mockClientNetworkInterface,
                                                             receiver.get()));
