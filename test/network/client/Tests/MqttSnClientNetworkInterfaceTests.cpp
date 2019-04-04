@@ -27,11 +27,12 @@ TEST_P(MqttSnClientNetworkInterfaceTests, SendMultipleClientMultipleMessageVaria
     for (const auto &mockClient : mockClients) {
       ComparableClientMqttSnMessageData data(toTestMessageLength,
                                              mockClient->getClientDeviceAddress(),
-                                             mockClient->getIdentifier());
+                                             mockClient->getIdentifier(),
+                                             useIdentifier);
       expectedMockClientSnMessageDatas.push_back(data);
-
-      ASSERT_EQ(mockClient->send(&data), data.data_length);
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      device_address forwarder_address = mockClient->getForwarderDeviceAddress();
+      ASSERT_EQ(mockClient->send(&forwarder_address, &data.data[0], data.data_length), data.data_length);
+      std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     }
   }
 
@@ -48,11 +49,18 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVa
         *mockClient->getClientDeviceAddress() =
             getDeviceAddressFromNetworkContext(mockClient->getIdentifier(), clientNetworkContext);
       }
-      ComparableClientMqttSnMessageData data(toTestMessageLength,
-                                             mockClient->getClientDeviceAddress(),
-                                             mockClient->getIdentifier());
-      expectedMockClientSnMessageDatas.push_back(data);
+      device_address forwarderAddress = mockClient->getForwarderDeviceAddress();
+      ComparableClientMqttSnMessageData expectedData(toTestMessageLength,
+                                                      &forwarderAddress,
+                                                      mockClient->getIdentifier(),
+                                                      useIdentifier);
+      expectedMockClientSnMessageDatas.push_back(expectedData);
 
+      ComparableClientMqttSnMessageData toSendData(toTestMessageLength,
+                                                   mockClient->getClientDeviceAddress(),
+                                                   mockClient->getIdentifier(),
+                                                   useIdentifier);
+      forwarderMqttSnMessageDataBuffer.push_back(toSendData);
       EXPECT_CALL((*mockClient->getMockClientNetworkReceiver()), receive_any_message(_, _, _))
           .WillRepeatedly(Invoke(
               [this]
@@ -73,13 +81,13 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveMultipleClientMultipleMessageVa
               (MqttSnFixedSizeRingBuffer *queue,
                MqttSnMessageData *messageData) -> int {
             memset(messageData, 0, sizeof(MqttSnMessageData));
-            if (counter < expectedMockClientSnMessageDatas.size()) {
-              messageData->address = expectedMockClientSnMessageDatas[counter].address;
-              messageData->data_length = expectedMockClientSnMessageDatas[counter].data_length;
+            if (!forwarderMqttSnMessageDataBuffer.empty()) {
+              messageData->address = forwarderMqttSnMessageDataBuffer.front().address;
+              messageData->data_length = forwarderMqttSnMessageDataBuffer.front().data_length;
               memcpy(&messageData->data,
-                     &expectedMockClientSnMessageDatas[counter].data[0],
-                     expectedMockClientSnMessageDatas[counter].data_length);
-              counter++;
+                     &forwarderMqttSnMessageDataBuffer.front().data[0],
+                     forwarderMqttSnMessageDataBuffer.front().data_length);
+              forwarderMqttSnMessageDataBuffer.pop_front();
               return 0;
             }
             return -1;
@@ -107,7 +115,8 @@ TEST_P(MqttSnClientNetworkInterfaceTests, SendToClientsReceiveOnForwarderTests) 
       }
       ComparableClientMqttSnMessageData data(toTestMessageLength,
                                              mockClient->getClientDeviceAddress(),
-                                             mockClient->getIdentifier());
+                                             mockClient->getIdentifier(),
+                                             useIdentifier);
       expectedMockClientSnMessageDatas.push_back(data);
 
       EXPECT_CALL((*mockClient->getMockClientNetworkReceiver()), receive_any_message(_, _, _))
@@ -210,7 +219,8 @@ TEST_P(MqttSnClientNetworkInterfaceTests, ReceiveOnForwarderSendToClientTests) {
     for (const auto &mockClient : mockClients) {
       ComparableClientMqttSnMessageData data(toTestMessageLength,
                                              mockClient->getClientDeviceAddress(),
-                                             mockClient->getIdentifier());
+                                             mockClient->getIdentifier(),
+                                             useIdentifier);
       expectedMockClientSnMessageDatas.push_back(data);
 
       EXPECT_CALL((*mockClient->getMockClientNetworkReceiver()), receive_any_message(_, _, _))

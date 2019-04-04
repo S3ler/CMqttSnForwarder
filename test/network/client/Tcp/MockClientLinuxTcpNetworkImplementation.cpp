@@ -39,7 +39,8 @@ int MockClientLinuxTcpNetworkImplementation::sendToNetwork(const device_address 
   return total_send_bytes;
 }
 
-bool MockClientLinuxTcpNetworkImplementation::connectNetwork(device_address *forwarderAddress) {
+bool MockClientLinuxTcpNetworkImplementation::connectNetwork(device_address *forwarderAddress,
+                                                             device_address *clientAddress) {
   this->forwarderAddress = forwarderAddress;
 
   uint16_t port = forwarderAddress->bytes[4] << 8;

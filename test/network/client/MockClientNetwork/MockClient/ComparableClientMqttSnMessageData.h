@@ -45,6 +45,16 @@ class ComparableClientMqttSnMessageData {
         data(generateMessageData(data_length, identifier, true)) {
   }
 
+  ComparableClientMqttSnMessageData(const uint16_t data_length,
+                                    const device_address *address,
+                                    const uint16_t identifier,
+                                    const bool useIdentifier)
+      : address(*address),
+        data_length(data_length),
+        use_identifier(useIdentifier),
+        data(generateMessageData(data_length, identifier, true)) {
+  }
+
   std::vector<uint8_t> generateMessageData(uint16_t data_length,
                                            const uint16_t identifier,
                                            const bool useIdentifier) {

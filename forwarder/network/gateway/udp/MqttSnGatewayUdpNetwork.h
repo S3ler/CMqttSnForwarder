@@ -2,8 +2,8 @@
 // Created by bele on 26.01.19.
 //
 
-#ifndef CMQTTSNFORWARDER_MQTTSNUDPNETWORK_H
-#define CMQTTSNFORWARDER_MQTTSNUDPNETWORK_H
+#ifndef CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_H
+#define CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,13 +32,8 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
 int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, uint32_t timeout_ms,
                         void *context);
 
-int save_receive_gateway_message_from_udp_socket_into_receive_buffer(
-    MqttSnGatewayNetworkInterface *networkInterface,
-    MqttSnGatewayUdpNetwork *gatewayUdpNetwork,
-    MqttSnFixedSizeRingBuffer *receiveBuffer);
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif //CMQTTSNFORWARDER_MQTTSNUDPNETWORK_H
+#endif //CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_H

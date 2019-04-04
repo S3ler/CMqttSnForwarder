@@ -20,7 +20,8 @@ TEST_P(MqttSnClientNetworkInterfaceMessageDefragmentationTests, DefragmentationT
       }
       ComparableClientMqttSnMessageData data(toTestMessageLength,
                                              mockClient->getClientDeviceAddress(),
-                                             mockClient->getIdentifier());
+                                             mockClient->getIdentifier(),
+                                             useIdentifier);
       expectedMockClientSnMessageDatas.push_back(data);
       mockClientMqttSnMessageDatas.push_back(data);
     }

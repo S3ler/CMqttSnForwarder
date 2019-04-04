@@ -42,14 +42,19 @@ set(UDP_GATWAY_NETWORK_FILES
         forwarder/network/gateway/udp/MqttSnGatewayUdpNetwork.h
         forwarder/network/gateway/udp/MqttSnGatewayUdpNetwork.c
         forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.h
-        forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.c
-        )
+        forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.c)
 
 set(TCP_CLIENT_NETWORK_FILES
         forwarder/network/client/tcp/MqttSnClientTcpNetwork.h
         forwarder/network/client/tcp/MqttSnClientTcpNetwork.c
         forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.c
         forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.h)
+
+set(UDP_CLIENT_NETWORK_FILES
+        forwarder/network/client/udp/MqttSnClientUdpNetwork.c
+        forwarder/network/client/udp/MqttSnClientUdpNetwork.h
+        forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.h
+        forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.c)
 
 add_library(lib-mqtt-sn-forwarder ${IMPLEMENTATIONL_FILES})
 
@@ -58,17 +63,27 @@ add_library(lib-mqtt-sn-ring-buffer ${MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES})
 add_library(lib-mqtt-sn-gateway-network ${TCP_GATWAY_NETWORK_FILES} ${UDP_GATWAY_NETWORK_FILES})
 target_link_libraries(lib-mqtt-sn-gateway-network lib-mqtt-sn-ring-buffer)
 
-add_library(lib-mqtt-sn-client-network ${TCP_CLIENT_NETWORK_FILES})
+add_library(lib-mqtt-sn-client-network ${TCP_CLIENT_NETWORK_FILES} ${UDP_CLIENT_NETWORK_FILES})
 target_link_libraries(lib-mqtt-sn-client-network lib-mqtt-sn-ring-buffer)
 
 if (NOT BUILD_TESTING)
     message("Bulding as C project")
-    add_executable(CMqttSnForwarder main/main.c)
-    target_link_libraries(CMqttSnForwarder
+
+    add_executable(TcpCMqttSnForwarder main/tcpmain.c)
+    target_link_libraries(TcpCMqttSnForwarder
             pthread
             lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
-    add_executable(CMqttSnForwarderTester testermain.c forwarder/global_defines.h)
-    target_link_libraries(CMqttSnForwarderTester lib-mqtt-sn-forwarder pthread)
+
+    add_executable(UdpCMqttSnForwarder main/udpmain.c)
+    target_link_libraries(UdpCMqttSnForwarder
+            pthread
+            lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+
+    add_executable(TcpCMqttSnForwarderTester tcptestermain.c forwarder/global_defines.h)
+    target_link_libraries(TcpCMqttSnForwarderTester lib-mqtt-sn-forwarder pthread)
+
+    add_executable(UdpCMqttSnForwarderTester udptestermain.c forwarder/global_defines.h)
+    target_link_libraries(UdpCMqttSnForwarderTester lib-mqtt-sn-forwarder pthread)
 else ()
     message("Bulding as C++ project")
 
@@ -172,6 +187,22 @@ else ()
             mock-mqtt-sn-fixed-size-ring-buffer
             lib-mqtt-sn-client-mock-network)
 
+    add_executable(MqttSnForwarderLinuxUdpClientNetworkTests
+
+            test/network/client/Tests/MqttSnClientNetworkInterfaceTests.cpp
+            test/network/client/Tests/MqttSnClientNetworkInterfaceTests.h
+
+            ${UDP_CLIENT_NETWORK_FILES}
+
+            test/network/client/Udp/MockClientLinuxUdpNetworkImplementation.cpp
+            test/network/client/Udp/MockClientLinuxUdpNetworkImplementation.h
+            test/network/client/Udp/UdpMqttSnClientNetworkInterfaceTests.cpp
+            )
+    target_link_libraries(MqttSnForwarderLinuxUdpClientNetworkTests
+            gtest gtest_main gmock gmock_main pthread
+            mock-mqtt-sn-fixed-size-ring-buffer
+            lib-mqtt-sn-client-mock-network)
+
     add_library(lib-mqtt-sn-gateway-mock-network
             forwarder/global_defines.h
             test/network/gateway/MockGateway/ComparableGatewayMqttSnMessageData.h
@@ -225,7 +256,6 @@ else ()
             test/network/gateway/Tcp/MqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter.h
 
 
-
             )
     target_link_libraries(MqttSnForwarderLinuxTcpGatewayNetworkTests
             gtest gtest_main gmock gmock_main pthread
@@ -265,7 +295,7 @@ else ()
             test/MqttSnClientNetworkInterface/MockMqttSnClientNetwork/ClientNetworkMockInterface.cpp
             test/MqttSnClientNetworkInterface/MockMqttSnClientNetwork/ClientNetworkMockInterface.h
             test/MqttSnClientNetworkInterface/MockMqttSnClientNetwork/ClientNetworkMock.h
-            test/MqttSnClientNetworkInterface/MockMqttSnClientNetwork/FakeClientNetworkInterface.h)
+            test/MqttSnClientNetworkInterface/MockMqttSnClientNetwork/FakeClientNetworkInterface.h test/network/helper/mock/udp/MockLinuxUdpHelper.cpp test/network/helper/mock/udp/MockLinuxUdpHelper.h)
     include_directories(test/MqttSnClientNetworkInterface/MockMqttSnClientNetwork)
     target_link_libraries(mock-mqtt-sn-client-network
             gtest gtest_main gmock gmock_main lib-mqtt-sn-forwarder)
@@ -274,7 +304,7 @@ else ()
             test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/GatewayNetworkMockInterface.cpp
             test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/GatewayNetworkMock.h
             test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/GatewayNetworkMockInterface.h
-            test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/FakeClientNetworkInterface.h)
+            test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork/FakeClientNetworkInterface.h test/network/helper/mock/udp/MockLinuxUdpHelper.cpp test/network/helper/mock/udp/MockLinuxUdpHelper.h)
     include_directories(test/MqttSnGatewayNetworkInterface/MockMqttSnGatewayNetwork)
     target_link_libraries(mock-mqtt-sn-gateway-network
             gtest gtest_main gmock gmock_main lib-mqtt-sn-forwarder)

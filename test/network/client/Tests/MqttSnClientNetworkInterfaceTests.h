@@ -56,6 +56,8 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
 
   std::list<ComparableClientMqttSnMessageData> forwarderMqttSnMessageDataBuffer;
 
+  device_address forwarderAddress = {0};
+
   virtual void SetUp() {
     counter=0;
 
@@ -68,6 +70,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     toTestMessageLength = a.messageLength;
     toTestMessageCount = a.messageCount;
     useIdentifier = p.useIdentifier;
+    forwarderAddress = p.forwarderAddress;
 
     if (toTestMessageLength < 2 |
         useIdentifier && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
@@ -75,6 +78,13 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     }
 
     ON_CALL(mockSendBuffer, pop(&sendBuffer, _))
+        .WillByDefault(Return(-1));
+    ON_CALL(mockSendBuffer, put(&sendBuffer, _))
+        .WillByDefault(Return(-1));
+
+    ON_CALL(mockReceiveBuffer, pop(&receiveBuffer, _))
+        .WillByDefault(Return(-1));
+    ON_CALL(mockReceiveBuffer, put(&receiveBuffer, _))
         .WillByDefault(Return(-1));
 
     globalMqttSnFixedSizeRingBufferMock = &defaultMqttSnFixedSizeRingBufferMock;
@@ -86,7 +96,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     //MqttSnFixedSizeRingBufferInit(&sendBuffer);
 
     ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
-                                &p.forwarderAddress,
+                                &forwarderAddress,
                                 p.clientNetworkContext,
                                 p.clientNetworkInit), 0);
     ASSERT_EQ(ClientNetworkConnect(&mqttSnClientNetworkInterface, p.clientNetworkContext), 0);
@@ -104,9 +114,10 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     // connect each mockClient to the network - one after another. not multiple at once
     for (auto mockClientConfiguration : a.mockClientConfigurations) {
       std::shared_ptr<MockClientNetworkReceiver> receiver(new MockClientNetworkReceiver);
+      device_address mockClientAddress = mockClientConfiguration.address;
       std::shared_ptr<MockClient> mockClient(new MockClient(mockClientConfiguration.identifier,
-                                                            &mockClientConfiguration.address,
-                                                            &p.forwarderAddress,
+                                                            mockClientConfiguration.address,
+                                                            &forwarderAddress,
                                                             mockClientConfiguration.mockClientNetworkInterface,
                                                             receiver.get()));
 

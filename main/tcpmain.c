@@ -10,6 +10,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <network/client/udp/MqttSnClientUdpNetwork.h>
 
 static volatile sig_atomic_t keep_running = 1;
 
@@ -25,50 +26,45 @@ void *inc_c(void *mqttSnForwarder_ptr) {
   return NULL;
 }
 
-
-
 int main(int argc, char *argv[]) {
   MqttSnGatewayTcpNetwork tcpGatewayNetworkContext = {0};
-  MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
-  int gateway_network = 2;
+  MqttSnClientTcpNetwork tcpClientNetworkContext = {0};
 
   signal(SIGINT, sig_handler);
   pthread_t mqttSnForwarder_thread;
 
   MqttSnForwarder mqttSnForwarder = {0};
-  device_address forwarderGatewayNetworkAddress = {0};
-  MqttSnClientTcpNetwork clientNetworkContext = {0};
-  void* networkContest = NULL;
-  uint16_t gatewayNetworkPort = 8888;
+  uint16_t mqttSnGatewayNetworkPort = 22222;
   device_address
       mqttSnGatewayNetworkAddress =
-      {127, 0, 0, 1, (uint8_t) (gatewayNetworkPort >> 8), (uint8_t) (gatewayNetworkPort >> 0)};
-
-  if (gateway_network == 1) {
-    GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
-                       &forwarderGatewayNetworkAddress,
-                       &mqttSnGatewayNetworkAddress,
-                       &tcpGatewayNetworkContext,
-                       GatewayLinuxTcpInit);
-  } else if (gateway_network == 2) {
-    GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
-                       &forwarderGatewayNetworkAddress,
-                       &mqttSnGatewayNetworkAddress,
-                       &udpGatewayNetworkContext,
-                       GatewayLinuxUdpInit);
-    networkContest = &udpGatewayNetworkContext;
-  }
-
-
-  uint16_t clientNetworkPort = 9999;
+      {127, 0, 0, 1, (uint8_t) (mqttSnGatewayNetworkPort >> 8), (uint8_t) (mqttSnGatewayNetworkPort >> 0)};
+  uint16_t forwarderGatewayNetworkPort = 8888;
   device_address
-      clientNetworkAddress = {127, 0, 0, 1, (uint8_t) (clientNetworkPort >> 8), (uint8_t) (clientNetworkPort >> 0)};
-  ClientNetworkInit(&mqttSnForwarder.clientNetwork,
-                    &clientNetworkAddress,
-                    &clientNetworkContext,
-                    ClientLinuxTcpInit);
+      forwarderGatewayNetworkAddress =
+      {127, 0, 0, 1, (uint8_t) (forwarderGatewayNetworkPort >> 8), (uint8_t) (forwarderGatewayNetworkPort >> 0)};
 
-  if (MqttSnForwarderInit(&mqttSnForwarder, &clientNetworkContext, networkContest) != 0) {
+  uint16_t forwarderClientNetworkPort = 9999;
+  device_address
+      forwarderClientNetworkAddress =
+      {127, 0, 0, 1, (uint8_t) (forwarderClientNetworkPort >> 8), (uint8_t) (forwarderClientNetworkPort >> 0)};
+
+  void *gatewayNetworkContext = NULL;
+  void *clientNetworkContext = NULL;
+
+  GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
+                     &mqttSnGatewayNetworkAddress,
+                     &forwarderGatewayNetworkAddress,
+                     &tcpGatewayNetworkContext,
+                     GatewayLinuxTcpInit);
+  gatewayNetworkContext = &tcpGatewayNetworkContext;
+
+  ClientNetworkInit(&mqttSnForwarder.clientNetwork,
+                    &forwarderClientNetworkAddress,
+                    &tcpClientNetworkContext,
+                    ClientLinuxTcpInit);
+  clientNetworkContext = &tcpClientNetworkContext;
+
+  if (MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext) != 0) {
     fprintf(stderr,
             "Error init MqttSnForwarder\n");
     MqttSnForwarderDeinit(&mqttSnForwarder);

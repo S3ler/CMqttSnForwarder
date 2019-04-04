@@ -55,6 +55,7 @@ void MockForwarderGatewayNetworkLooper::stopNetworkLoop() {
 }
 
 void MockForwarderGatewayNetworkLooper::networkLoop() {
+  isStopped = false;
   while (!stopped) {
     if (paused) {
       isPaused = true;

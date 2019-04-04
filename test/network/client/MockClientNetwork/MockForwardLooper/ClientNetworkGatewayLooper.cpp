@@ -53,10 +53,10 @@ bool ClientNetworkGatewayLooper::startNetworkLoop(
 
 void ClientNetworkGatewayLooper::stopNetworkLoop() {
   stopped = true;
-  isStopped = false;
 }
 
 void ClientNetworkGatewayLooper::networkLoop() {
+  isStopped = false;
   while (!stopped) {
     if (paused) {
       isPaused = true;
@@ -82,6 +82,9 @@ bool ClientNetworkGatewayLooper::pauseLoop() {
   paused = true;
   while (!isPaused) {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    if (isStopped) {
+      break;
+    }
   }
   return true;
 }
@@ -90,6 +93,9 @@ bool ClientNetworkGatewayLooper::resumeLoop() {
   paused = false;
   while (isPaused) {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    if (isStopped) {
+      break;
+    }
   }
   return true;
 }

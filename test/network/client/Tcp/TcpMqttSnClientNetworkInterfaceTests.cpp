@@ -61,10 +61,10 @@ std::vector<MqttSnClientNetworkTcpNetworkDefragmentationTestParameter>
         mockClientTcpNetworkInterfaces
     );
 
-struct PrintToStringMqttSnClientNetworkTestValueParameterParamName {
+struct PrintToStringMqttSnClientTcpNetworkTestValueParameterParamName {
   template<class ParamType>
   std::string operator()(const ::testing::TestParamInfo<ParamType> &info) const {
-    std::string result = std::to_string(info.index);
+    std::string result = "Tcp" + std::to_string(info.index);
     std::stringstream buffer;
     buffer << info.param;
     result.append(buffer.str());
@@ -75,12 +75,12 @@ struct PrintToStringMqttSnClientNetworkTestValueParameterParamName {
 INSTANTIATE_TEST_SUITE_P(SendReceiveTests,
                          MqttSnClientNetworkInterfaceTests,
                          ::testing::ValuesIn(clientNetworkTestParameter.begin(), clientNetworkTestParameter.end()),
-                         PrintToStringMqttSnClientNetworkTestValueParameterParamName());
+                         PrintToStringMqttSnClientTcpNetworkTestValueParameterParamName());
 
 INSTANTIATE_TEST_SUITE_P(DefragmentationTests,
                          MqttSnClientNetworkInterfaceMessageDefragmentationTests,
                          ::testing::ValuesIn(clientNetworkDefragmentationTestParameter.begin(),
                                              clientNetworkDefragmentationTestParameter.end()),
-                         PrintToStringMqttSnClientNetworkTestValueParameterParamName());
+                         PrintToStringMqttSnClientTcpNetworkTestValueParameterParamName());
 
 #endif //CMQTTSNFORWARDER_TCPMQTTSNCLIENTNETWORKINTERFACETESTS_H

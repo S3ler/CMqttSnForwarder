@@ -5,6 +5,16 @@
 #include "MqttSnUdpNetworkMessageParser.h"
 #include <string.h>
 #include <network/gateway/udp/MqttSnGatewayUdpNetwork.h>
+#include <sys/socket.h>
+#include <sys/param.h>
+#include <unistd.h>
+#include <errno.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <arpa/inet.h>
+#include <sys/select.h>
 
 int save_udp_messages_into_receive_buffer(uint8_t *buffer,
                                           ssize_t read_bytes,
@@ -61,7 +71,6 @@ int isThreeBytesUdpHeader(uint8_t *data, ssize_t data_length) {
   return 0;
 }
 
-
 int save_complete_new_udp_message(uint8_t *data,
                                   ssize_t data_length,
                                   device_address address,
@@ -83,4 +92,129 @@ int save_udp_message_into_receive_buffer(uint8_t *data,
   receiveMessageData.address = address;
   put(receiveBuffer, &receiveMessageData);
   return 0;
+}
+
+int initialize_udp_socket(uint16_t port) {
+  int socket_fd;
+
+  if ((socket_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    close(socket_fd);
+    return -1;
+  }
+
+  int option = true;
+  if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char *) &option, sizeof(option)) < 0) {
+    close(socket_fd);
+    return -1;
+  }
+
+  // type of socket created
+  struct sockaddr_in sockaddr;
+  sockaddr.sin_family = AF_INET;
+  sockaddr.sin_addr.s_addr = INADDR_ANY;
+  sockaddr.sin_port = htons(port);
+
+  if (bind(socket_fd, (struct sockaddr *) &sockaddr, sizeof(sockaddr)) < 0) {
+    close(socket_fd);
+    return -1;
+  }
+
+  return socket_fd;
+}
+
+ssize_t send_udp_message(int socket_fd, const device_address *to, const uint8_t *data, uint16_t data_length) {
+  struct sockaddr_in to_sockaddr = get_sockaddr_in_from_device_address(to);
+  socklen_t to_sockaddr_socklen = sizeof(to_sockaddr);
+
+  int flags = 0;
+  ssize_t send_bytes =
+      sendto(socket_fd, data, data_length, flags, (const struct sockaddr *) &to_sockaddr, to_sockaddr_socklen);
+  if (send_bytes == -1) {
+    return -1;
+  }
+  return send_bytes;
+}
+
+int is_udp_message_received(int socket_fd, uint32_t timeout_ms) {
+  struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
+  if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
+    interval.tv_sec = 0;
+    interval.tv_usec = 100;
+  }
+
+  fd_set readfds;
+  FD_ZERO(&readfds);
+
+  FD_SET(socket_fd, &readfds);
+  int max_sd = socket_fd;
+
+  int activity = select(max_sd + 1, &readfds, NULL, NULL, &interval);
+
+  if ((activity < 0) && (errno != EINTR)) {
+    return -1;
+  }
+  if (activity == 0) {
+    return 0;
+  }
+  if (FD_ISSET(socket_fd, &readfds) == 0) {
+    return 0;
+  }
+  return 1;
+}
+
+int receive_udp_message(int socket_fd, MqttSnFixedSizeRingBuffer *receiveBuffer, uint16_t max_data_length) {
+  uint8_t buffer[max_data_length];
+  int buffer_length = max_data_length;
+  ssize_t read_bytes;
+
+  struct sockaddr_in recv_sockaddr;
+  memset(&recv_sockaddr, 0, sizeof(recv_sockaddr));
+  socklen_t recv_sockaddr_socklen = sizeof(recv_sockaddr);
+
+  // TODO what happens if too much data are send aka packetsize > MockGatewayLinuxUdpNetworkImplementation_BUFFER_SIZE
+  // TODO read out first 3 bytes, peek datasize, if too long remove next datasize bytes out of buffer
+  // TODO write a testcase for this behaviour
+
+  if ((read_bytes = recvfrom(socket_fd, buffer, buffer_length, MSG_WAITALL,
+                             (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) <= 0) {
+    return -1;
+  }
+
+  device_address received_address = get_device_address_from_sockaddr_in(&recv_sockaddr);
+
+  return save_udp_messages_into_receive_buffer(buffer,
+                                               read_bytes,
+                                               received_address,
+                                               receiveBuffer);
+}
+
+struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *deviceAddress) {
+  uint16_t port = (((uint16_t) deviceAddress->bytes[4]) << 8)
+      + ((uint16_t) deviceAddress->bytes[5]);
+  sa_family_t family = AF_INET;
+  uint32_t ip = (((uint32_t) deviceAddress->bytes[0]) << 24)
+      + (((uint32_t) deviceAddress->bytes[1]) << 16)
+      + (((uint32_t) deviceAddress->bytes[2]) << 8)
+      + (((uint32_t) deviceAddress->bytes[3]) << 0);
+
+  struct sockaddr_in address;
+  address.sin_family = family;
+  address.sin_port = htons(port);
+  address.sin_addr.s_addr = htonl(ip);
+
+  return address;
+}
+
+device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr) {
+  device_address result = {0};
+  unsigned char *ip = (unsigned char *) &sockaddr->sin_addr.s_addr;
+  result.bytes[0] = ip[0];
+  result.bytes[1] = ip[1];
+  result.bytes[2] = ip[2];
+  result.bytes[3] = ip[3];
+
+  uint16_t port_as_number = (uint16_t) ntohs(sockaddr->sin_port);
+  result.bytes[4] = (uint8_t) (port_as_number >> 8);
+  result.bytes[5] = (uint8_t) (port_as_number >> 0);
+  return result;
 }

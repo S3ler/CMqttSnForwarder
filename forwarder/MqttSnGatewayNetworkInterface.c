@@ -6,12 +6,12 @@
 
 int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
                        device_address *gateway_network_address,
-                       device_address *mqtt_sn_gateway_network_address,
+                       device_address *forwarder_network_address,
                        void *context,
                        int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface *, void *context)) {
   n->status = 0;
   n->gateway_network_address = gateway_network_address;
-  n->mqtt_sn_gateway_network_address = mqtt_sn_gateway_network_address;
+  n->forwarder_network_address = forwarder_network_address;
   n->gateway_network_init = gateway_network_init;
   if (n->gateway_network_init(n, context) == 0) {
     n->status = 0;

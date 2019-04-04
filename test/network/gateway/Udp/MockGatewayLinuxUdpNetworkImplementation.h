@@ -25,8 +25,6 @@ class MockGatewayLinuxUdpNetworkImplementation : public MockGatewayNetworkInterf
   int loopNetwork(MockGatewayNetworkReceiver *receiver) override;
  private:
   int receiveForwarderMessage(MockGatewayNetworkReceiver *receiver);
-  device_address getDeviceAddressFromSockAddrIn(struct sockaddr_in *sockaddr);
-  sockaddr_in getSockAddrInFromDeviceAddress(const device_address *deviceAddress);
 };
 
 #endif //CMQTTSNFORWARDER_MOCKGATEWAYLINUXUDPNETWORKIMPLEMENTATION_H

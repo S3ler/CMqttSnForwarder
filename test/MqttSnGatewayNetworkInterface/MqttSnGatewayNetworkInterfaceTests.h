@@ -27,14 +27,14 @@ class MqttSnGatewayNetworkInterfaceTests : public ::testing::Test {
   void *gatewayNetworkContext = &placeholderContext;
 
   device_address gateway_network_address;
-  device_address mqtt_sn_gateway_network_address;
+  device_address forwader_network_address;
 
   virtual void SetUp() {
     globalGatewayNetworkMockObj = &gatewayNetworkMock;
     device_address gateway_network_address({0, 0, 0, 0, 0, 0});
     device_address mqtt_sn_gateway_network_address({0, 0, 0, 0, 0, 0});
     this->gateway_network_address = gateway_network_address;
-    this->mqtt_sn_gateway_network_address = mqtt_sn_gateway_network_address;
+    this->forwader_network_address = mqtt_sn_gateway_network_address;
   }
   virtual void TearDown() {
     globalGatewayNetworkMockObj = nullptr;

@@ -19,7 +19,7 @@ class MockClientNetworkInterface;
 class MockClient {
  public:
   MockClient(uint16_t identifier,
-             device_address *networkAddress,
+             device_address networkAddress,
              device_address *forwarderAddress,
              MockClientNetworkInterface *mockClientNetworkInterface,
              MockClientNetworkReceiver *receiver);
@@ -40,7 +40,7 @@ class MockClient {
 
   uint16_t getIdentifier();
 
-  device_address *getClientDeviceAddress() const;
+  device_address *getClientDeviceAddress();
 
   const std::atomic<bool> &getDone() const;
 
@@ -50,7 +50,7 @@ class MockClient {
   uint16_t identifier;
   MockClientNetworkReceiver *receiver;
   std::thread thread;
-  device_address *networkAddress;
+  device_address networkAddress;
   std::atomic<bool> stopped{false};
   std::atomic<bool> done{false};
   MockClientNetworkInterface *mockClientNetworkInterface = nullptr;

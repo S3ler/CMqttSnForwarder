@@ -20,7 +20,7 @@ class MockClientNetworkInterface {
 
   virtual int sendToNetwork(const device_address *to, const uint8_t *data, uint16_t dataLength) = 0;
 
-  virtual bool connectNetwork(device_address *forwarderAddress) = 0;
+  virtual bool connectNetwork(device_address *forwarderAddress, device_address *clientAddress) = 0;
 
   virtual void disconnectNetwork() = 0;
 

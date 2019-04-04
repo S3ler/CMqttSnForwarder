@@ -5,7 +5,7 @@
 #include "MockClient.h"
 
 MockClient::MockClient(uint16_t identifier,
-                       device_address *networkAddress,
+                       device_address networkAddress,
                        device_address *forwarderAddress,
                        MockClientNetworkInterface *mockClientNetworkInterface,
                        MockClientNetworkReceiver *receiver) :
@@ -13,7 +13,7 @@ MockClient::MockClient(uint16_t identifier,
     networkAddress(networkAddress),
     forwarderAddress(forwarderAddress),
     mockClientNetworkInterface(mockClientNetworkInterface),
-    receiver(receiver) {}
+     receiver(receiver) {}
 
 void MockClient::loop() {
   done = false;
@@ -31,7 +31,7 @@ bool MockClient::isNetworkConnected() {
 }
 
 bool MockClient::start_loop() {
-  if (!mockClientNetworkInterface->connectNetwork(forwarderAddress)) {
+  if (!mockClientNetworkInterface->connectNetwork(forwarderAddress, &networkAddress)) {
     return false;
   }
   this->thread = std::thread(&MockClient::loop, this);
@@ -68,8 +68,8 @@ const std::atomic<bool> &MockClient::getDone() const {
   return done;
 }
 
-device_address *MockClient::getClientDeviceAddress() const {
-  return networkAddress;
+device_address *MockClient::getClientDeviceAddress() {
+  return &networkAddress;
 }
 device_address MockClient::getForwarderDeviceAddress() const {
   return mockClientNetworkInterface->getForwarderDeviceAddress();

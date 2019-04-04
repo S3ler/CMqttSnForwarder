@@ -55,10 +55,10 @@ std::vector<std::shared_ptr<MockGatewayLinuxTcpNetworkImplementation>> mockGatew
 device_address getDeviceAddressFromMqttSnGatewayTcpNetworkContext(uint16_t identifier, void *context) {
   MqttSnGatewayTcpNetwork *clientTcpNetwork = (MqttSnGatewayTcpNetwork *) context;
   device_address peer_address = {0};
-  if (clientTcpNetwork->my_socket <= 0) {
+  if (clientTcpNetwork->mqtt_sg_gateway_fd <= 0) {
     throw std::bad_exception();
   }
-  getDeviceAddressFromFileDescriptor1(clientTcpNetwork->my_socket, &peer_address);
+  getDeviceAddressFromFileDescriptor1(clientTcpNetwork->mqtt_sg_gateway_fd, &peer_address);
   return peer_address;
 }
 

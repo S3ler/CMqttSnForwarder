@@ -21,7 +21,7 @@ class MockClientLinuxTcpNetworkImplementation : public MockClientNetworkInterfac
 
   int sendToNetwork(const device_address *to, const uint8_t *buf, uint16_t dataLength) override;
 
-  bool connectNetwork(device_address *forwarderAddress) override;
+  bool connectNetwork(device_address *forwarderAddress, device_address *clientAddress) override;
 
   void disconnectNetwork() override;
 

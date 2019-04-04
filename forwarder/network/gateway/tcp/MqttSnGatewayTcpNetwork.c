@@ -19,7 +19,7 @@
 
 int GatewayLinuxTcpInit(struct MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
-  tcpNetwork->my_socket = 0;
+  tcpNetwork->mqtt_sg_gateway_fd = 0;
   n->gateway_receive = GatewayLinuxTcpReceive;
   n->gateway_send = GatewayLinuxTcpSend;
   n->gateway_network_connect = GatewayLinuxTcpConnect;
@@ -30,7 +30,7 @@ int GatewayLinuxTcpInit(struct MqttSnGatewayNetworkInterface *n, void *context) 
 int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 
-  if (networkInterface->mqtt_sn_gateway_network_address == NULL) {
+  if (networkInterface->forwarder_network_address == NULL) {
     // TODO implement searching for gateway
   }
 
@@ -38,14 +38,14 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   char ipAsString[255] = {0};
   sprintf(ipAsString,
           "%d.%d.%d.%d",
-          networkInterface->mqtt_sn_gateway_network_address->bytes[0],
-          networkInterface->mqtt_sn_gateway_network_address->bytes[1],
-          networkInterface->mqtt_sn_gateway_network_address->bytes[2],
-          networkInterface->mqtt_sn_gateway_network_address->bytes[3]);
-  uint16_t port_msb = ((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[4] << 8);
-  uint16_t port_lsb = ((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[5]);
-  uint16_t port = ((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[4] << 8)
-      + ((uint16_t) networkInterface->mqtt_sn_gateway_network_address->bytes[5]);
+          networkInterface->forwarder_network_address->bytes[0],
+          networkInterface->forwarder_network_address->bytes[1],
+          networkInterface->forwarder_network_address->bytes[2],
+          networkInterface->forwarder_network_address->bytes[3]);
+  uint16_t port_msb = ((uint16_t) networkInterface->forwarder_network_address->bytes[4] << 8);
+  uint16_t port_lsb = ((uint16_t) networkInterface->forwarder_network_address->bytes[5]);
+  uint16_t port = ((uint16_t) networkInterface->forwarder_network_address->bytes[4] << 8)
+      + ((uint16_t) networkInterface->forwarder_network_address->bytes[5]);
 
   char *addr = ipAsString;
   if (addr == NULL) {
@@ -82,10 +82,10 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   }
   */
 
-  uint32_t gateway_ip = (((uint32_t) networkInterface->mqtt_sn_gateway_network_address->bytes[0]) << 24)
-      + (((uint32_t) networkInterface->mqtt_sn_gateway_network_address->bytes[1]) << 16)
-      + (((uint32_t) networkInterface->mqtt_sn_gateway_network_address->bytes[2]) << 8)
-      + (((uint32_t) networkInterface->mqtt_sn_gateway_network_address->bytes[3]) << 0);
+  uint32_t gateway_ip = (((uint32_t) networkInterface->gateway_network_address->bytes[0]) << 24)
+      + (((uint32_t) networkInterface->gateway_network_address->bytes[1]) << 16)
+      + (((uint32_t) networkInterface->gateway_network_address->bytes[2]) << 8)
+      + (((uint32_t) networkInterface->gateway_network_address->bytes[3]) << 0);
 
   uint16_t gateway_port = ((uint16_t) networkInterface->gateway_network_address->bytes[4] << 8)
       + ((uint16_t) networkInterface->gateway_network_address->bytes[5]);
@@ -97,9 +97,9 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
 
   int connect_result = 0;
   if (connect_result == 0) {
-    tcpNetwork->my_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (tcpNetwork->my_socket != -1) {
-      connect_result = connect(tcpNetwork->my_socket, (struct sockaddr *) &address, sizeof(address));
+    tcpNetwork->mqtt_sg_gateway_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (tcpNetwork->mqtt_sg_gateway_fd != -1) {
+      connect_result = connect(tcpNetwork->mqtt_sg_gateway_fd, (struct sockaddr *) &address, sizeof(address));
     } else {
       connect_result = -1;
     }
@@ -110,9 +110,9 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
 
 void GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
-  if (tcpNetwork->my_socket != 0) {
-    close(tcpNetwork->my_socket);
-    tcpNetwork->my_socket = 0;
+  if (tcpNetwork->mqtt_sg_gateway_fd != 0) {
+    close(tcpNetwork->mqtt_sg_gateway_fd);
+    tcpNetwork->mqtt_sg_gateway_fd = 0;
   }
 }
 
@@ -145,7 +145,7 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
     return 0;
   }
 
-  if (FD_ISSET(tcpNetwork->my_socket, &readfds) == 0) {
+  if (FD_ISSET(tcpNetwork->mqtt_sg_gateway_fd, &readfds) == 0) {
     return 0;
   }
 
@@ -159,14 +159,14 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   }
   */
   /*
-  setsockopt(tcpNetwork->my_socket, SOL_SOCKET, SO_RCVTIMEO, (char *) &interval, sizeof(struct timeval));
+  setsockopt(tcpNetwork->mqtt_sg_gateway_fd, SOL_SOCKET, SO_RCVTIMEO, (char *) &interval, sizeof(struct timeval));
 
   // TODO exchange len and buffer
   int len = 255;
   uint8_t buffer[255] = {0};
   int bytes = 0;
   while (bytes < len) {
-      int rc = recv(tcpNetwork->my_socket, &buffer[bytes], (size_t) (len - bytes), 0);
+      int rc = recv(tcpNetwork->mqtt_sg_gateway_fd, &buffer[bytes], (size_t) (len - bytes), 0);
       if (rc == -1) {
           if (errno != EAGAIN && errno != EWOULDBLOCK)
               bytes = -1;
@@ -196,7 +196,7 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   // convert IP-Address to device_address
   struct sockaddr_in gatewayAddress;
   int addrlen = sizeof(struct sockaddr_in);
-  getpeername(tcpNetwork->my_socket, (struct sockaddr *) &gatewayAddress, (socklen_t *) &addrlen);
+  getpeername(tcpNetwork->mqtt_sg_gateway_fd, (struct sockaddr *) &gatewayAddress, (socklen_t *) &addrlen);
   unsigned char *ip = (unsigned char *) &gatewayAddress.sin_addr.s_addr;
   receivedMessageData.gatewayAddress.bytes[0] = ip[0];
   receivedMessageData.gatewayAddress.bytes[1] = ip[1];
@@ -227,8 +227,8 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuf
     uint8_t *buffer = gatewaySendMessageData.data;
     uint16_t len = gatewaySendMessageData.data_length;
 
-    setsockopt(tcpNetwork->my_socket, SOL_SOCKET, SO_SNDTIMEO, (char *) &tv, sizeof(struct timeval));
-    ssize_t rc = write(tcpNetwork->my_socket, gatewaySendMessageData.data, gatewaySendMessageData.data_length);
+    setsockopt(tcpNetwork->mqtt_sg_gateway_fd, SOL_SOCKET, SO_SNDTIMEO, (char *) &tv, sizeof(struct timeval));
+    ssize_t rc = write(tcpNetwork->mqtt_sg_gateway_fd, gatewaySendMessageData.data, gatewaySendMessageData.data_length);
 
     if (rc != len) {
       put(sendBuffer, &gatewaySendMessageData);
@@ -244,16 +244,16 @@ void MqttSnGatewaytNetworkInitReadFdSet(MqttSnGatewayTcpNetwork *clientTcpNetwor
   FD_ZERO(readfds);
 
   // add master socket to set
-  FD_SET(clientTcpNetwork->my_socket, readfds);
-  (*max_sd) = clientTcpNetwork->my_socket;
+  FD_SET(clientTcpNetwork->mqtt_sg_gateway_fd, readfds);
+  (*max_sd) = clientTcpNetwork->mqtt_sg_gateway_fd;
 }
 
 int MqttSnGatewayHandleMasterSocket(MqttSnGatewayTcpNetwork *clientTcpNetwork,
                                     MqttSnFixedSizeRingBuffer *receiveBuffer,
                                     fd_set *readfds) {
-  if (FD_ISSET(clientTcpNetwork->my_socket, readfds)) {
+  if (FD_ISSET(clientTcpNetwork->mqtt_sg_gateway_fd, readfds)) {
     // TODO read
-    int sd = clientTcpNetwork->my_socket;
+    int sd = clientTcpNetwork->mqtt_sg_gateway_fd;
     // Check if it was for closing, and also read the incoming message
     char buffer[1024];
     int buffer_length = 1024;
@@ -268,7 +268,7 @@ int MqttSnGatewayHandleMasterSocket(MqttSnGatewayTcpNetwork *clientTcpNetwork,
 
       // Close the socket and mark as 0 in the list for reuse
       close(sd);
-      clientTcpNetwork->my_socket = 0;
+      clientTcpNetwork->mqtt_sg_gateway_fd = 0;
       return -1;
     }
       // Echo back the message that came in
@@ -284,7 +284,7 @@ int MqttSnGatewayHandleMasterSocket(MqttSnGatewayTcpNetwork *clientTcpNetwork,
       // convert IP-Address to device_address
       struct sockaddr_in address;
       int addrlen = sizeof(struct sockaddr_in);
-      getpeername(clientTcpNetwork->my_socket, (struct sockaddr *) &address, (socklen_t *) &addrlen);
+      getpeername(clientTcpNetwork->mqtt_sg_gateway_fd, (struct sockaddr *) &address, (socklen_t *) &addrlen);
       unsigned char *ip = (unsigned char *) &address.sin_addr.s_addr;
       receiveMessageData.address.bytes[0] = ip[0];
       receiveMessageData.address.bytes[1] = ip[1];
@@ -307,7 +307,7 @@ int MqttSnGatewayHandleMasterSocket(MqttSnGatewayTcpNetwork *clientTcpNetwork,
 int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
     MqttSnGatewayTcpNetwork *gatewayTcpNetwork,
     MqttSnFixedSizeRingBuffer *receiveBuffer) {
-  int gateway_fd = gatewayTcpNetwork->my_socket;
+  int gateway_fd = gatewayTcpNetwork->mqtt_sg_gateway_fd;
   uint16_t buffer_length = 1024; // FIXME
   uint8_t buffer[1024]; // FIXME
   //uint16_t buffer_length = CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH; // FIXME
@@ -413,7 +413,7 @@ int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
   */
   /*
 // TODO read
-  int sd = gatewayTcpNetwork->my_socket;
+  int sd = gatewayTcpNetwork->mqtt_sg_gateway_fd;
   // Check if it was for closing, and also read the incoming message
   char buffer[1024];
   int buffer_length = 1024;
@@ -428,7 +428,7 @@ int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
 
     // Close the socket and mark as 0 in the list for reuse
     close(sd);
-    clientTcpNetwork->my_socket = 0;
+    clientTcpNetwork->mqtt_sg_gateway_fd = 0;
     return -1;
   }
     // Echo back the message that came in
@@ -444,7 +444,7 @@ int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
     // convert IP-Address to device_address
     struct sockaddr_in address;
     int addrlen = sizeof(struct sockaddr_in);
-    getpeername(clientTcpNetwork->my_socket, (struct sockaddr *) &address, (socklen_t *) &addrlen);
+    getpeername(clientTcpNetwork->mqtt_sg_gateway_fd, (struct sockaddr *) &address, (socklen_t *) &addrlen);
     unsigned char *ip = (unsigned char *) &address.sin_addr.s_addr;
     receiveMessageData.address.bytes[0] = ip[0];
     receiveMessageData.address.bytes[1] = ip[1];

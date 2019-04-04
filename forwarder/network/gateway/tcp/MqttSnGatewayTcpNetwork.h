@@ -2,8 +2,8 @@
 // Created by bele on 26.01.19.
 //
 
-#ifndef CMQTTSNFORWARDER_MQTTSNTCPNETWORK_H
-#define CMQTTSNFORWARDER_MQTTSNTCPNETWORK_H
+#ifndef CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_H
+#define CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,9 +15,7 @@ extern "C" {
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH 1024
 
 typedef struct MqttSnGatewayTcpNetwork {
-  int my_socket;
-  char *ip;
-  int port;
+  int mqtt_sg_gateway_fd;
   uint8_t gateway_buffer[CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t gateway_buffer_bytes;
 } MqttSnGatewayTcpNetwork;
@@ -50,4 +48,4 @@ int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
 }
 #endif
 
-#endif //CMQTTSNFORWARDER_MQTTSNTCPNETWORK_H
+#endif //CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_H

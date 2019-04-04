@@ -28,7 +28,6 @@ typedef struct MqttSnClientTcpNetwork {
 } MqttSnClientTcpNetwork;
 
 
-
 int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context);
 
 int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context);

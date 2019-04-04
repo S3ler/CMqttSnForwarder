@@ -92,9 +92,9 @@ int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context) {
 }
 
 void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
-  n->status = -1;
+  n->status = -1; // TODO check if -1 setting here is correct
   MqttSnClientTcpNetwork *clientTcpNetwork = (MqttSnClientTcpNetwork *) context;
-  if (clientTcpNetwork->master_socket != 0) {
+  if (clientTcpNetwork->master_socket != -1) {
     close(clientTcpNetwork->master_socket);
     clientTcpNetwork->master_socket = -1;
   }
