@@ -47,9 +47,7 @@ int is_udp_message_received(int socket_fd, uint32_t timeout_ms);
 
 int receive_udp_message(int socket_fd, MqttSnFixedSizeRingBuffer *receiveBuffer, uint16_t max_data_length);
 
-struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *deviceAddress);
 
-device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr);
 
 #ifdef __cplusplus
 }

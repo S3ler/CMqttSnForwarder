@@ -4,6 +4,13 @@
 
 #include "RemoveMqttSnForwardingHeaderTests.h"
 
+TEST_F(RemoveMqttSnForwardingHeaderTests, MinimalNotEncpsulatedMessageGatewayMessageData_ReturnsMinusOne1) {
+  memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
+  gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address) + 2;
+  gatewayMessageData.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address) + 2;
+  gatewayMessageData.data[1] = 0;
+  EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), -1);
+}
 
 TEST_F(RemoveMqttSnForwardingHeaderTests, ZeroDataLengthGatewayMessageData_ReturnsMinusOne) {
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
@@ -68,6 +75,7 @@ TEST_F(RemoveMqttSnForwardingHeaderTests, MinimalGatewayMessageData_ReturnsZero)
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
   gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
   gatewayMessageData.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
+  gatewayMessageData.data[1] = Encapsulated_message;
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), 0);
 }
 

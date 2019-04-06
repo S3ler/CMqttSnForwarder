@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include <sys/select.h>
+#include <network/iphelper/MqttSnIpNetworkHelper.h>
 
 int save_udp_messages_into_receive_buffer(uint8_t *buffer,
                                           ssize_t read_bytes,
@@ -164,6 +165,7 @@ int is_udp_message_received(int socket_fd, uint32_t timeout_ms) {
 
 int receive_udp_message(int socket_fd, MqttSnFixedSizeRingBuffer *receiveBuffer, uint16_t max_data_length) {
   uint8_t buffer[max_data_length];
+  memset(buffer, 0, max_data_length);
   int buffer_length = max_data_length;
   ssize_t read_bytes;
 
@@ -186,35 +188,4 @@ int receive_udp_message(int socket_fd, MqttSnFixedSizeRingBuffer *receiveBuffer,
                                                read_bytes,
                                                received_address,
                                                receiveBuffer);
-}
-
-struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *deviceAddress) {
-  uint16_t port = (((uint16_t) deviceAddress->bytes[4]) << 8)
-      + ((uint16_t) deviceAddress->bytes[5]);
-  sa_family_t family = AF_INET;
-  uint32_t ip = (((uint32_t) deviceAddress->bytes[0]) << 24)
-      + (((uint32_t) deviceAddress->bytes[1]) << 16)
-      + (((uint32_t) deviceAddress->bytes[2]) << 8)
-      + (((uint32_t) deviceAddress->bytes[3]) << 0);
-
-  struct sockaddr_in address;
-  address.sin_family = family;
-  address.sin_port = htons(port);
-  address.sin_addr.s_addr = htonl(ip);
-
-  return address;
-}
-
-device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr) {
-  device_address result = {0};
-  unsigned char *ip = (unsigned char *) &sockaddr->sin_addr.s_addr;
-  result.bytes[0] = ip[0];
-  result.bytes[1] = ip[1];
-  result.bytes[2] = ip[2];
-  result.bytes[3] = ip[3];
-
-  uint16_t port_as_number = (uint16_t) ntohs(sockaddr->sin_port);
-  result.bytes[4] = (uint8_t) (port_as_number >> 8);
-  result.bytes[5] = (uint8_t) (port_as_number >> 0);
-  return result;
 }

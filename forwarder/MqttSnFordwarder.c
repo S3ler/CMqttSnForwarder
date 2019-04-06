@@ -253,6 +253,9 @@ int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData, MqttSnMe
   }
 
   MQTT_SN_FORWARD_ENCAPSULATION *packet = (MQTT_SN_FORWARD_ENCAPSULATION *) gatewayMessageData->data;
+  if (packet->msg_type != Encapsulated_message) {
+    return -1;
+  }
   clientMessageData->address = packet->wireless_node_id;
   clientMessageData->data_length = packet->mqtt_sn_message[0];
   memcpy(clientMessageData->data, packet->mqtt_sn_message, clientMessageData->data_length);

@@ -7,8 +7,10 @@
 #define GATEWAY_NETWORK_MAX_DATA_LEN 255
 #define CLIENT_NETWORK_MAX_DATA_LEN 255
 
+#define Encapsulated_message 0xFE
+
 typedef struct device_address {
-    uint8_t bytes[6];
+    uint8_t bytes[4+2];
 } device_address;
 
 #pragma pack(push, 1)
