@@ -138,6 +138,7 @@ TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests,
         MqttSnMessageData mqttSnMessageDataDataLengthMinimumSize = {0};
         mqttSnMessageDataDataLengthMinimumSize.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
         mqttSnMessageDataDataLengthMinimumSize.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
+        mqttSnMessageDataDataLengthMinimumSize.data[1] = Encapsulated_message;
         memcpy(gatewayMessageData, &mqttSnMessageDataDataLengthMinimumSize, sizeof(MqttSnMessageData));
         return 0;
       };
@@ -162,6 +163,7 @@ TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests,
         MqttSnMessageData mqttSnMessageDataDataLengthMinimumSize = {0};
         mqttSnMessageDataDataLengthMinimumSize.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
         mqttSnMessageDataDataLengthMinimumSize.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
+        mqttSnMessageDataDataLengthMinimumSize.data[1] = Encapsulated_message;
         memcpy(gatewayMessageData, &mqttSnMessageDataDataLengthMinimumSize, sizeof(MqttSnMessageData));
         return 0;
       };
@@ -186,6 +188,7 @@ TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests,
         MqttSnMessageData mqttSnMessageDataDataLengthMinimumSize = {0};
         mqttSnMessageDataDataLengthMinimumSize.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
         mqttSnMessageDataDataLengthMinimumSize.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
+        mqttSnMessageDataDataLengthMinimumSize.data[1] = Encapsulated_message;
         memcpy(gatewayMessageData, &mqttSnMessageDataDataLengthMinimumSize, sizeof(MqttSnMessageData));
         return 0;
       };
@@ -214,6 +217,7 @@ TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests,
         MqttSnMessageData mqttSnMessageDataDataLengthMinimumSize = {0};
         mqttSnMessageDataDataLengthMinimumSize.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
         mqttSnMessageDataDataLengthMinimumSize.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
+        mqttSnMessageDataDataLengthMinimumSize.data[1] = Encapsulated_message;
         memcpy(gatewayMessageData, &mqttSnMessageDataDataLengthMinimumSize, sizeof(MqttSnMessageData));
         return 0;
       };

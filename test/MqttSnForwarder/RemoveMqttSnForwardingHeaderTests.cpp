@@ -52,11 +52,13 @@ TEST_F(RemoveMqttSnForwardingHeaderTests, DataLengthGatewayMessageDataDoesEqualT
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
   gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
   gatewayMessageData.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
+  gatewayMessageData.data[1] = Encapsulated_message;
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), 0);
 
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
   gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address) + 2;
   gatewayMessageData.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address) + 2;
+  gatewayMessageData.data[1] = Encapsulated_message;
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), 0);
 }
 

@@ -92,6 +92,7 @@ class SendBufferedMessagesToClientsTests : public ::testing::Test {
     result.data_length = a + data_length;
     msgDataGenerator(&result.data[a], data_length);
     result.data[0] = static_cast<uint8_t>(result.data_length);     // TODO akutell nur bis zu 255 daten
+    result.data[1] = Encapsulated_message;
     return result;
   }
 
