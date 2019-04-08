@@ -136,7 +136,7 @@ ssize_t send_udp_message(int socket_fd, const device_address *to, const uint8_t 
   return send_bytes;
 }
 
-int is_udp_message_received(int socket_fd, uint32_t timeout_ms) {
+int is_udp_message_received(int socket_fd, int timeout_ms) {
   struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
   if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
     interval.tv_sec = 0;
@@ -148,8 +148,12 @@ int is_udp_message_received(int socket_fd, uint32_t timeout_ms) {
 
   FD_SET(socket_fd, &readfds);
   int max_sd = socket_fd;
-
-  int activity = select(max_sd + 1, &readfds, NULL, NULL, &interval);
+  int activity;
+  if (timeout_ms == -1) {
+    activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
+  }else{
+    activity = select(max_sd + 1, &readfds, NULL, NULL, &interval);
+  }
 
   if ((activity < 0) && (errno != EINTR)) {
     return -1;

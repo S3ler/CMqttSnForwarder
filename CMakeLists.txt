@@ -25,8 +25,10 @@ set(IMPLEMENTATIONL_FILES
         forwarder/global_defines.h
         forwarder/MqttSnGatewayNetworkInterface.c
         forwarder/MqttSnClientNetworkInterface.c
-        )
+        forwarder/network/plugin/plugin_interface.h forwarder/network/plugin/MqttSnGatewayPluginNetwork.h forwarder/network/plugin/MqttSnGatewayPluginNetwork.c)
 include_directories(forwarder)
+
+set(CMQTTSNFORWADER_ERROR_COMPILE_FLAGS -Wall -Wextra -pedantic -Werror -Wno-unused-parameter)
 
 set(MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES
         forwarder/MqttSnFixedSizeRingBuffer.h
@@ -65,37 +67,32 @@ set(UDP_CLIENT_NETWORK_FILES
         forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
 
 add_library(lib-mqtt-sn-forwarder ${IMPLEMENTATIONL_FILES})
+target_link_libraries(lib-mqtt-sn-forwarder dl)
+target_compile_options(lib-mqtt-sn-forwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
 add_library(lib-mqtt-sn-ring-buffer ${MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES})
+target_compile_options(lib-mqtt-sn-ring-buffer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
 add_library(lib-mqtt-sn-gateway-network ${TCP_GATWAY_NETWORK_FILES} ${UDP_GATWAY_NETWORK_FILES})
 target_link_libraries(lib-mqtt-sn-gateway-network lib-mqtt-sn-ring-buffer)
+target_compile_options(lib-mqtt-sn-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
 add_library(lib-mqtt-sn-client-network ${TCP_CLIENT_NETWORK_FILES} ${UDP_CLIENT_NETWORK_FILES}
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.h forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+        forwarder/network/iphelper/MqttSnIpNetworkHelper.h forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
 target_link_libraries(lib-mqtt-sn-client-network lib-mqtt-sn-ring-buffer)
+target_compile_options(lib-mqtt-sn-client-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
 if (NOT BUILD_TESTING)
     message("Bulding as C project")
-
     add_executable(CMqttSnForwarder
             main/main.c
             main/forwarder_config.h
             main/forwarder_config.c
-            main/config.h forwarder/network/iphelper/MqttSnIpNetworkHelper.h forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+            main/config.h forwarder/network/iphelper/MqttSnIpNetworkHelper.h forwarder/network/iphelper/MqttSnIpNetworkHelper.c main/forwarder_starter.h main/forwarder_starter.c)
     target_link_libraries(CMqttSnForwarder
             pthread
             lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
-
-    add_executable(TcpCMqttSnForwarder main/tcpmain.c)
-    target_link_libraries(TcpCMqttSnForwarder
-            pthread
-            lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
-
-    add_executable(UdpCMqttSnForwarder main/udpmain.c)
-    target_link_libraries(UdpCMqttSnForwarder
-            pthread
-            lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    target_compile_options(CMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
     add_executable(TcpCMqttSnForwarderTester tcptestermain.c forwarder/global_defines.h)
     target_link_libraries(TcpCMqttSnForwarderTester lib-mqtt-sn-forwarder pthread)

@@ -76,32 +76,32 @@ Because this depends on many factors no general tests can be implemented.
 | :----------  | :---|
 | ClientNetworkReceive_MinimumBytesSendFromOneClient_MinimumBytesMessageReceivedFromOneClient      | Tests if a minimum size message (message length 1 byte, 1 byte data) from one client is received.  |
 | ClientNetworkReceive_FiveBytesSendFromOneClient_FiveBytesMessageReceivedFromOneClient         | Tests if a five size message (message length 5 byte, 5 byte data) from one client is received. |
-| ClientNetworkReceive_MaximumBytesSendFromOneClient_MaximumBytesMessageReceivedFromOneClient |  Tests if a maximum size message (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) from one client is received. |
+| ClientNetworkReceive_MaximumBytesSendFromOneClient_MaximumBytesMessageReceivedFromOneClient |  Tests if a maximum size message (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) from one client is received. |
 | ClientNetworkReceive_MinimumBytesSendFromTwoClients_MinimumBytesMessageReceivedFromTwoClients      | Tests if a minimum size message (message length 1 byte, 1 byte data) from two clients is received.  |
 | ClientNetworkReceive_FiveBytesSendFromTwoClients_FiveBytesMessageReceivedFromTwoClients         | Tests if a five size message (message length 5 byte, 5 byte data) from two clients is received. |
-| ClientNetworkReceive_MaximumBytesSendFromTwoClients_MaximumBytesMessageReceivedFromTwoClients |  Tests if a maximum size message (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) from two clients is received. |
+| ClientNetworkReceive_MaximumBytesSendFromTwoClients_MaximumBytesMessageReceivedFromTwoClients |  Tests if a maximum size message (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) from two clients is received. |
 | ClientNetworkReceive_MinimumBytesSendFromFiveClients_MinimumBytesMessageReceivedFromFiveClients      | Tests if a minimum size message (message length 1 byte, 1 byte data) from five clients is received.  |
 | ClientNetworkReceive_FiveBytesSendFromFiveClients_FiveBytesMessageReceivedFromFiveClients         | Tests if a five size message (message length 5 byte, 5 byte data) from five clients is received. |
-| ClientNetworkReceive_MaximumBytesSendFromFiveClients_MaximumBytesMessageReceivedFromFiveClients |  Tests if a maximum size message (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) from five clients is received. |
+| ClientNetworkReceive_MaximumBytesSendFromFiveClients_MaximumBytesMessageReceivedFromFiveClients |  Tests if a maximum size message (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) from five clients is received. |
 | ClientNetworkReceive_MinimumBytesSendFromMaximumClients_MinimumBytesMessageReceivedFromMaximumClients      | Tests if a minimum size message (message length 1 byte, 1 byte data) from maximum clients is received.  |
 | ClientNetworkReceive_FiveBytesSendFromMaximumClients_FiveBytesMessageReceivedFromMaximumClients         | Tests if a five size message (message length 5 byte, 5 byte data) from maximum clients is received. |
-| ClientNetworkReceive_MaximumBytesSendFromMaximumClients_MaximumBytesMessageReceivedFromMaximumClients |  Tests if a maximum size message (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) from maximum clients is received. |
+| ClientNetworkReceive_MaximumBytesSendFromMaximumClients_MaximumBytesMessageReceivedFromMaximumClients |  Tests if a maximum size message (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) from maximum clients is received. |
 
 ###### Send Tests (requires Connect Tests to pass)
 | Name     | Description  |
 | :----------  | :---|
 | ClientNetworkReceive_MinimumBytesSendToOneClient_MinimumBytesMessageReceivedByOneClient      | Tests if a minimum size message (message length 1 byte, 1 byte data) is received by one client.  |
 | ClientNetworkReceive_FiveBytesSendToOneClient_FiveBytesMessageReceivedByOneClient         | Tests if a five size message (message length 5 byte, 5 byte data) is received by one client.  |
-| ClientNetworkReceive_MaximumBytesSendToOneClient_MaximumBytesMessageReceivedByOneClient |  Tests if a maximum size message (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) is received by one client.  |
+| ClientNetworkReceive_MaximumBytesSendToOneClient_MaximumBytesMessageReceivedByOneClient |  Tests if a maximum size message (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) is received by one client.  |
 | ClientNetworkReceive_MinimumBytesSendToTwoClients_MinimumBytesMessageReceivedByTwoClients      | Tests if a minimum size message (message length 1 byte, 1 byte data) is received by two clients.  |
 | ClientNetworkReceive_FiveBytesSendToTwoClients_FiveBytesMessageReceivedByTwoClients         | Tests if a five size message (message length 5 byte, 5 byte data) is received by two clients.  |
-| ClientNetworkReceive_MaximumBytesSendToTwoClients_MaximumBytesMessageReceivedByTwoClients |  Tests if a maximum size message (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) is received by two clients.  |
+| ClientNetworkReceive_MaximumBytesSendToTwoClients_MaximumBytesMessageReceivedByTwoClients |  Tests if a maximum size message (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) is received by two clients.  |
 | ClientNetworkReceive_MinimumBytesSendToFiveClients_MinimumBytesMessageReceivedByFiveClients      | Tests if a minimum size message (message length 1 byte, 1 byte data) is received by five clients.  |
 | ClientNetworkReceive_FiveBytesSendToFiveClients_FiveBytesMessageReceivedByFiveClients         | Tests if a five size message (message length 5 byte, 5 byte data) is received by five clients.  |
-| ClientNetworkReceive_MaximumBytesSendToFiveClients_MaximumBytesMessageReceivedByFiveClients |  Tests if a maximum size message (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) is received by five clients.  |
+| ClientNetworkReceive_MaximumBytesSendToFiveClients_MaximumBytesMessageReceivedByFiveClients |  Tests if a maximum size message (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) is received by five clients.  |
 | ClientNetworkReceive_MinimumBytesSendToMaximumClients_MinimumBytesMessageReceivedByMaximumClients      | Tests if a minimum size message (message length 1 byte, 1 byte data) is received by maximum clients.  |
 | ClientNetworkReceive_FiveBytesSendToMaximumClients_FiveBytesMessageReceivedByMaximumClients         | Tests if a five size message (message length 5 byte, 5 byte data) is received by maximum clients.  |
-| ClientNetworkReceive_MaximumBytesSendToMaximumClients_MaximumBytesMessageReceivedByMaximumClients |  Tests if a maximum size message (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) is received by maximum clients.  |
+| ClientNetworkReceive_MaximumBytesSendToMaximumClients_MaximumBytesMessageReceivedByMaximumClients |  Tests if a maximum size message (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) is received by maximum clients.  |
 
 ###### TCP specific Send Tests (requires Connect Tests to pass)
 These tests must pass as a requirement for other TCP network Send Tests and Receive Tests.
@@ -145,7 +145,7 @@ Because this depends on many factors no general tests can be implemented.
 | :----------  | :---|
 | GatewayNetworkReceive_MinimumBytesSend_MinimumBytesMessageReceived      | Tests if a minimum size messages (message length 1 byte, 1 byte data) is received.  |
 | GatewayNetworkReceive_FiveBytesSend_FiveBytesMessageReceived         | Tests if a five size messages (message length 5 byte, 5 byte data) is received. |
-| GatewayNetworkReceive_MaximumBytesSend_MaximumBytesMessageReceived |  Tests if a maximum size messages (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) is received. |
+| GatewayNetworkReceive_MaximumBytesSend_MaximumBytesMessageReceived |  Tests if a maximum size messages (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) is received. |
 
 ###### Send Tests (requires Connect Tests to pass)
 | Name     | Description  |
@@ -153,14 +153,14 @@ Because this depends on many factors no general tests can be implemented.
 | GatewayNetworkSend_ZeroBytesToSend_NoMessageReceived_ReturnsZero     |   Tests the API for returning 0 on active network connection. Tests if empty messages are ignored.  |
 | GatewayNetworkSend_MinimumBytesToSend_MinimumMessageReceived_ReturnsZero  |   Tests the API for returning 0 on active network connection. Tests if a minimum size messages (message length 1 byte, 1 byte data) is send and received.  |
 | GatewayNetworkSend_FiveBytesToSend_FiveByteMessageReceived_ReturnsZero     |   Tests the API for returning 0 on active network connection. Tests if a five size messages (message length 5 byte, 5 byte data) is send and received.  |
-| GatewayNetworkSend_MaximumBytesSend_MaximumByteMessageReceived_ReturnsZero   |   Tests the API for returning 0 on active network connection. Tests if a maximum size messages (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) is send and received.  |
+| GatewayNetworkSend_MaximumBytesSend_MaximumByteMessageReceived_ReturnsZero   |   Tests the API for returning 0 on active network connection. Tests if a maximum size messages (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) is send and received.  |
 
 ###### Receive Tests (requires Connect Tests to pass)
 | Name     | Description  |
 | :----------  | :---|
 | GatewayNetworkReceive_MinimumBytesSend_MinimumBytesMessageReceived      | Tests if a minimum size messages (message length 1 byte, 1 byte data) is received.  |
 | GatewayNetworkReceive_FiveBytesSend_FiveBytesMessageReceived         | Tests if a five size messages (message length 5 byte, 5 byte data) is received. |
-| GatewayNetworkReceive_MaximumBytesSend_MaximumBytesMessageReceived |  Tests if a maximum size messages (message length MAX_MESSAGE_LENGTH byte, MAX_MESSAGE_LENGTH byte data) is received. |
+| GatewayNetworkReceive_MaximumBytesSend_MaximumBytesMessageReceived |  Tests if a maximum size messages (message length CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH byte data) is received. |
 
 ###### Protocol Specific Tests
 

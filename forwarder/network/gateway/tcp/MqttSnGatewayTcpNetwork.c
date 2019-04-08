@@ -117,7 +117,7 @@ void GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) 
 }
 
 int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *receiveBuffer,
-                           uint32_t timeout_ms,
+                           int timeout_ms,
                            void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 
@@ -186,7 +186,7 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   }
   MqttSnMessageData receivedMessageData = {0};
   // receivedMessageData.data = buffer;
-  if (bytes >= MAX_MESSAGE_LENGTH) {
+  if (bytes >= CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {
       // packet is ignored because it is too long
       return 0;
   }
@@ -213,7 +213,7 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   return 0;
 }
 
-int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, uint32_t timeout_ms,
+int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, int timeout_ms,
                         void *context) {
   // TODO: implement later: sendNetwork more messages until timeout runs out
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
@@ -224,13 +224,10 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuf
     tv.tv_sec = 0;  /* 30 Secs Timeout */
     tv.tv_usec = timeout_ms * 1000;  // Not Init'ing this can cause strange errors
 
-    uint8_t *buffer = gatewaySendMessageData.data;
-    uint16_t len = gatewaySendMessageData.data_length;
-
     setsockopt(tcpNetwork->mqtt_sg_gateway_fd, SOL_SOCKET, SO_SNDTIMEO, (char *) &tv, sizeof(struct timeval));
     ssize_t rc = write(tcpNetwork->mqtt_sg_gateway_fd, gatewaySendMessageData.data, gatewaySendMessageData.data_length);
 
-    if (rc != len) {
+    if (rc != gatewaySendMessageData.data_length) {
       put(sendBuffer, &gatewaySendMessageData);
       return -1;
     }
@@ -274,7 +271,7 @@ int MqttSnGatewayHandleMasterSocket(MqttSnGatewayTcpNetwork *clientTcpNetwork,
       // Echo back the message that came in
     else {
       // set the string terminating NULL byte on the end of the data read
-      if (valread > MAX_MESSAGE_LENGTH) {
+      if (valread > CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {
         return 0;
       }
       MqttSnMessageData receiveMessageData = {0};
@@ -434,7 +431,7 @@ int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
     // Echo back the message that came in
   else {
     // set the string terminating NULL byte on the end of the data read
-    if (valread > MAX_MESSAGE_LENGTH) {
+    if (valread > CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {
       return 0;
     }
     MqttSnMessageData receiveMessageData = {0};

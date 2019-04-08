@@ -41,15 +41,15 @@ int openGatewaySocket(int port);
 
 int connectForwarder(char *ip, int port);
 
-int send_fd(int fd, char *buf, int len);
+int send_fd(int fd, uint8_t *buf, int buf_len);
 
-int recv_fd(int fd, char *buf, int buf_len);
+int recv_fd(int fd, uint8_t *buf, int buf_len);
 
 int awaitForwarderConnection(int fd);
 
 int main() {
 
-  int gateway_fd, forwarder_fd, connected_forwarder_fd;
+  int gateway_fd;
   int client_fd;
 
   gateway_fd = openGatewaySocket(GATEWAY_PORT);
@@ -66,7 +66,7 @@ int main() {
   printf("Ready");
   fflush(stdout);
 
-  char buf[MAX_MSG_LEN];
+  uint8_t buf[MAX_MSG_LEN];
   fcntl(0, F_SETFL, fcntl(0, F_GETFL) | O_NONBLOCK);
   while (1) {
     memset(buf, 0, sizeof(buf));
@@ -74,11 +74,11 @@ int main() {
     if (numRead > 0) {
       printf("You said: %s", buf);
 
-      if (strcmp(buf, "exit\n") == 0) {
+      if (strcmp((char*)buf, "exit\n") == 0) {
         break;
       }
       MQTT_SN_PUBLISH publish = {0};
-      MqttSnPublishInit(&publish, buf, strlen(buf));
+      MqttSnPublishInit(&publish, buf, strlen((char*)buf));
 
       struct sockaddr_in to_address;
       to_address.sin_family = AF_INET;
@@ -124,7 +124,7 @@ int main() {
         char recv_ip[INET_ADDRSTRLEN] = {0};
         inet_ntop(AF_INET, &(recv_sockaddr.sin_addr), recv_ip, INET_ADDRSTRLEN);
 
-        MQTT_SN_FORWARD_ENCAPSULATION *encapsulation = (MQTT_SN_FORWARD_ENCAPSULATION *) gateway_recv_buf;
+        //MQTT_SN_FORWARD_ENCAPSULATION *encapsulation = (MQTT_SN_FORWARD_ENCAPSULATION *) gateway_recv_buf;
         printf("Gateway - %s:%d - Length: %d, MsgType(0xFE): %02x, Ctrl: %d, MsgH: %s, Msg: %s \n",
                recv_ip, ntohs(recv_sockaddr.sin_port),
                gateway_recv_buf[0], gateway_recv_buf[1], gateway_recv_buf[3],
@@ -194,8 +194,6 @@ int openGatewaySocket(int port) {
   int opt = true;
   struct sockaddr_in address;
 
-  int addrlen;
-
   // create master socket
   if ((master_socket = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     perror("socket failed");
@@ -227,14 +225,16 @@ int MqttSnPublishInit(MQTT_SN_PUBLISH *publish, uint8_t *data, uint16_t length) 
   publish->length = (uint8_t) (length + PUBLISH_HEADER_LEN);
   publish->msg_type = 0x0C;
   publish->flags = 0;
-  publish->flags = (uint8_t) (publish->flags | 0b01100010);
+  publish->flags = (uint8_t) (publish->flags | 0x62); // 0b01100010
   publish->topic_id = 1;
   publish->msg_id = 0;
   memcpy(publish->data, data, length);
+  return 0;
 }
 
 int printMqttSnPublish(char *from, MQTT_SN_PUBLISH *publish) {
   printf("%s - Publish - Length: %d, TopicId, %d, MsgId: %d, Data: %s", from, publish->length, publish->topic_id,
          publish->msg_id, publish->data);
   fflush(stdout);
+  return 0;
 }

@@ -43,7 +43,7 @@ ssize_t send_udp_message(int socket_fd,const device_address *to,const uint8_t *d
  *
  * @return -1 on error, 1 if message is receive, 0 if no message is received.
  */
-int is_udp_message_received(int socket_fd, uint32_t timeout_ms);
+int is_udp_message_received(int socket_fd, int timeout_ms);
 
 int receive_udp_message(int socket_fd, MqttSnFixedSizeRingBuffer *receiveBuffer, uint16_t max_data_length);
 

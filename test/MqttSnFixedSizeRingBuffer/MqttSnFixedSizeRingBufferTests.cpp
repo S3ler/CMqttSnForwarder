@@ -43,7 +43,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutOneIsEm
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   ASSERT_EQ(put(&ringBuffer, &mqttSnMessageData), 0);
@@ -56,7 +56,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMoreTha
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN; i++) {
@@ -72,7 +72,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENP
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN; i++) {
@@ -92,7 +92,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutOneIn_I
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   EXPECT_EQ(put(&ringBuffer, &mqttSnMessageData), 0);
@@ -103,7 +103,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutTwoIn_I
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   ASSERT_EQ(put(&ringBuffer, &mqttSnMessageData), 0);
@@ -116,7 +116,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutThreeIn
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   ASSERT_EQ(put(&ringBuffer, &mqttSnMessageData), 0);
@@ -130,7 +130,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLEN_
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN - 1; i++) {
@@ -145,7 +145,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMoreTha
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN; i++) {
@@ -159,7 +159,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENP
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN; i++) {
@@ -176,7 +176,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENI
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN; i++) {
@@ -194,7 +194,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENI
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN; i++) {
@@ -213,7 +213,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENP
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN; i++) {
@@ -233,7 +233,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENP
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
 
   MqttSnMessageData mqttSnMessageData = {0};
-  mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+  mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
   generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
 
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN; i++) {
@@ -256,7 +256,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutOnePopO
   for (uint32_t i = 0; i < 1; ++i) {
     MqttSnMessageData mqttSnMessageData = {0};
     generateDeviceAddress(&mqttSnMessageData.address, i);
-    mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+    mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
     generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
     mqttSnMessageDatas.push_back(mqttSnMessageData);
   }
@@ -283,7 +283,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutTwoPopT
   for (uint32_t i = 0; i < 2; ++i) {
     MqttSnMessageData mqttSnMessageData = {0};
     generateDeviceAddress(&mqttSnMessageData.address, i);
-    mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+    mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
     generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
     mqttSnMessageDatas.push_back(mqttSnMessageData);
   }
@@ -310,7 +310,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutThreePo
   for (uint32_t i = 0; i < 3; ++i) {
     MqttSnMessageData mqttSnMessageData = {0};
     generateDeviceAddress(&mqttSnMessageData.address, i);
-    mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+    mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
     generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
     mqttSnMessageDatas.push_back(mqttSnMessageData);
   }
@@ -337,7 +337,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENP
   for (uint32_t i = 0; i < CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN; ++i) {
     MqttSnMessageData mqttSnMessageData = {0};
     generateDeviceAddress(&mqttSnMessageData.address, i);
-    mqttSnMessageData.data_length = MAX_MESSAGE_LENGTH;
+    mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
     generateData(mqttSnMessageData.data, mqttSnMessageData.data_length);
     mqttSnMessageDatas.push_back(mqttSnMessageData);
   }

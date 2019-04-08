@@ -17,7 +17,7 @@ class ComparableMqttSnMessageData {
   ComparableMqttSnMessageData(const MqttSnMessageData mqttSnMessageData) :
       address(mqttSnMessageData.address),
       data_length(mqttSnMessageData.data_length),
-      data(mqttSnMessageData.data, mqttSnMessageData.data + MAX_MESSAGE_LENGTH) {}
+      data(mqttSnMessageData.data, mqttSnMessageData.data + CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {}
 
   bool operator==(const ComparableMqttSnMessageData &rhs) const {
     return memcmp(&address, &rhs.address, sizeof(device_address)) == 0 &&

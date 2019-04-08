@@ -38,7 +38,7 @@ TEST_F(RemoveMqttSnForwardingHeaderTests,
 
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
   gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
-  memset(&gatewayMessageData.data, 0, MAX_MESSAGE_LENGTH);
+  memset(&gatewayMessageData.data, 0, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH);
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), -1);
 
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));

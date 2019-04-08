@@ -1,11 +1,11 @@
 
-#include "config.h"
 
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include "forwarder_config.h"
 
 void forwarder_config_init(forwarder_config *fcfg) {
@@ -14,12 +14,44 @@ void forwarder_config_init(forwarder_config *fcfg) {
 
   fcfg->mqtt_sn_gateway_host = strdup("localhost");
   fcfg->mqtt_sn_gateway_port = 8888;
+  fcfg->gateway_network_protocol = strdup("udp");
   fcfg->gateway_network_bind_port = 9999;
+  fcfg->client_network_protocol = strdup("udp");
   fcfg->client_network_bind_port = 7777;
+
+  fcfg->gateway_network_send_timeout = GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT;
+  fcfg->gateway_network_receive_timeout = GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT;
+
+  fcfg->client_network_send_timeout = CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT;
+  fcfg->client_network_receive_timeout = CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT;
 }
 
 void forwarder_config_cleanup(forwarder_config *fcfg) {
   free(fcfg->mqtt_sn_gateway_host);
+  free(fcfg->gateway_network_protocol);
+  free(fcfg->client_network_protocol);
+}
+
+static int parse_port(char *port_str, int *dst) {
+  char *endprt;
+  long int n = strtol(port_str, &endprt, 10);
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > 65535)) {
+    fprintf(stderr, "Error: Invalid port given: %ld\n", n);
+    return -1;
+  }
+  *dst = n;
+  return 0;
+}
+
+static int parse_timeout(char *timeout_str, int *dst) {
+  char *endprt;
+  long int n = strtol(timeout_str, &endprt, 10);
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > UINT32_MAX)) {
+    fprintf(stderr, "Error: Invalid timeout given: %ld\n", n);
+    return -1;
+  }
+  *dst = n;
+  return 0;
 }
 
 int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]) {
@@ -39,9 +71,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         fprintf(stderr, "Error: %s argument given but no port specified.\n\n", argv[i]);
         return 1;
       } else {
-        fcfg->mqtt_sn_gateway_port = atoi(argv[i + 1]);
-        if (fcfg->mqtt_sn_gateway_port < 1 || fcfg->mqtt_sn_gateway_port > 65535) {
-          fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->mqtt_sn_gateway_port);
+        if (parse_port(argv[i + 1], &fcfg->mqtt_sn_gateway_port)) {
           return 1;
         }
       }
@@ -65,12 +95,19 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         char *tmp = strchr(url, ':');
         if (tmp) {
           *tmp++ = 0;
-          fcfg->mqtt_sn_gateway_port = atoi(tmp);
-          if (fcfg->mqtt_sn_gateway_port < 1 || fcfg->mqtt_sn_gateway_port > 65535) {
-            fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->mqtt_sn_gateway_port);
+          if (parse_port(tmp, &fcfg->mqtt_sn_gateway_port)) {
             return 1;
           }
         }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-gP") || !strcmp(argv[i], "--gateway_network_protocol")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no protocol specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        free(fcfg->gateway_network_protocol);
+        fcfg->gateway_network_protocol = strdup(argv[i + 1]);
       }
       i++;
     } else if (!strcmp(argv[i], "-gA") || !strcmp(argv[i], "--gateway_network_bind_address")) {
@@ -86,9 +123,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         fprintf(stderr, "Error: %s argument given but no port specified.\n\n", argv[i]);
         return 1;
       } else {
-        fcfg->gateway_network_bind_port = atoi(argv[i + 1]);
-        if (fcfg->gateway_network_bind_port < 1 || fcfg->gateway_network_bind_port > 65535) {
-          fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->gateway_network_bind_port);
+        if (parse_port(argv[i + 1], &fcfg->gateway_network_bind_port)) {
           return 1;
         }
       }
@@ -100,16 +135,83 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       } else {
         char *url = argv[i + 1];
 
-        fcfg->gateway_network_bind_address = url;
-        char *tmp = strchr(url, ':');
-        if (tmp) {
-          *tmp++ = 0;
-          fcfg->gateway_network_bind_port = atoi(tmp);
-          if (fcfg->gateway_network_bind_port < 1 || fcfg->gateway_network_bind_port > 65535) {
-            fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->gateway_network_bind_port);
+        char *prot = strtok(url, "://");
+        char *addr = strtok(NULL, "://");
+        char *port = strtok(NULL, ":");
+        char *null_token = strtok(NULL, "://");
+
+        if (prot) {
+          free(fcfg->gateway_network_protocol);
+          fcfg->gateway_network_protocol = strdup(prot);
+        } else {
+          fprintf(stderr, "Error: unsupported URL scheme.\n\n");
+        }
+
+        if (addr) {
+          fcfg->gateway_network_bind_address = strdup(addr);
+        } else {
+          fprintf(stderr, "Error: unsupported URL scheme.\n\n");
+        }
+
+        if (port) {
+          if (parse_port(port, &fcfg->gateway_network_bind_port)) {
             return 1;
           }
         }
+
+        if (null_token) {
+          fprintf(stderr, "Error: unsupported URL scheme.\n\n");
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-gst") || !strcmp(argv[i], "--gateway_send_timeout")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no timeout specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        if (parse_timeout(argv[i + 1], &fcfg->gateway_network_send_timeout)) {
+          return 1;
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-grt") || !strcmp(argv[i], "--gateway_receive_timeout")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no timeout specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        if (parse_timeout(argv[i + 1], &fcfg->gateway_network_receive_timeout)) {
+          return 1;
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-gt") || !strcmp(argv[i], "--gateway_network_timeout")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no timeout specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        if (parse_timeout(argv[i + 1], &fcfg->gateway_network_send_timeout)) {
+          return 1;
+        }
+        if (parse_timeout(argv[i + 1], &fcfg->gateway_network_receive_timeout)) {
+          return 1;
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-gnp") || !strcmp(argv[i], "--gateway_network_plugin")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        fcfg->gateway_network_plugin_path = strdup(argv[i + 1]);
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-cP") || !strcmp(argv[i], "--client_network_protocol")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no protocol specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        free(fcfg->client_network_protocol);
+        fcfg->client_network_protocol = strdup(argv[i + 1]);
       }
       i++;
     } else if (!strcmp(argv[i], "-cA") || !strcmp(argv[i], "--client_network_bind_address")) {
@@ -120,14 +222,45 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         fcfg->client_network_bind_address = strdup(argv[i + 1]);
       }
       i++;
-    } else if (!strcmp(argv[i], "-gp") || !strcmp(argv[i], "--client_network_bind_port")) {
+    } else if (!strcmp(argv[i], "-cp") || !strcmp(argv[i], "--client_network_bind_port")) {
       if (i == argc - 1) {
         fprintf(stderr, "Error: %s argument given but no port specified.\n\n", argv[i]);
         return 1;
       } else {
-        fcfg->client_network_bind_port = atoi(argv[i + 1]);
-        if (fcfg->client_network_bind_port < 1 || fcfg->client_network_bind_port > 65535) {
-          fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->client_network_bind_port);
+        if (parse_port(argv[i + 1], &fcfg->client_network_bind_port)) {
+          return 1;
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-cst") || !strcmp(argv[i], "--client_send_timeout")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no timeout specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        if (parse_timeout(argv[i + 1], &fcfg->client_network_send_timeout)) {
+          return 1;
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-crt") || !strcmp(argv[i], "--client_receive_timeout")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no timeout specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        if (parse_timeout(argv[i + 1], &fcfg->client_network_receive_timeout)) {
+          return 1;
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-ct") || !strcmp(argv[i], "--client_network_timeout")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no timeout specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        if (parse_timeout(argv[i + 1], &fcfg->client_network_send_timeout)) {
+          return 1;
+        }
+        if (parse_timeout(argv[i + 1], &fcfg->client_network_receive_timeout)) {
           return 1;
         }
       }
@@ -139,16 +272,41 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       } else {
         char *url = argv[i + 1];
 
-        fcfg->client_network_bind_address = url;
-        char *tmp = strchr(url, ':');
-        if (tmp) {
-          *tmp++ = 0;
-          fcfg->client_network_bind_port = atoi(tmp);
-          if (fcfg->client_network_bind_port < 1 || fcfg->client_network_bind_port > 65535) {
-            fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->client_network_bind_port);
+        char *prot = strtok(url, "://");
+        char *addr = strtok(NULL, "://");
+        char *port = strtok(NULL, ":");
+        char *null_token = strtok(NULL, "://");
+
+        if (prot) {
+          free(fcfg->client_network_protocol);
+          fcfg->client_network_protocol = strdup(prot);
+        } else {
+          fprintf(stderr, "Error: unsupported URL scheme.\n\n");
+        }
+
+        if (addr) {
+          fcfg->client_network_bind_address = strdup(addr);
+        } else {
+          fprintf(stderr, "Error: unsupported URL scheme.\n\n");
+        }
+
+        if (port) {
+          if (parse_port(port, &fcfg->client_network_bind_port)) {
             return 1;
           }
         }
+
+        if (null_token) {
+          fprintf(stderr, "Error: unsupported URL scheme.\n\n");
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-cnp") || !strcmp(argv[i], "--client_network_plugin")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        fcfg->client_network_plugin_path = strdup(argv[i + 1]);
       }
       i++;
     } else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug")) {
@@ -171,7 +329,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         if (!strcmp(argv[i + 1], "mqttsnv1")) {
           fcfg->protocol_version = MQTT_SN_PROTOCOL_V1;
         } else {
-          fprintf(stderr, "Error: Invalid protocol version argument given.\n\n");
+          fprintf(stderr, "Error: Invalid protocol version given.\n\n");
           return 1;
         }
         i++;
@@ -195,37 +353,79 @@ void print_usage(void) {
   major = 0;
   minor = 0;
   revision = 0;
-  // mosquitto_lib_version(&major, &minor, &revision);
+
   printf("cmqttsnforwarder is a simple mqtt-sn forwarder that will forward udp mqtt-sn messages\n");
   printf("                 from a client network over a gateway network to a mqtt-sn gateway.\n");
   printf("cmqttsnforwarder version %s is %d.%d.%d.\n\n", VERSION, major, minor, revision);
   printf("Usage: cmqttsnforwarder {[[-h mqtt_sn_gateway_host] [-p mqtt_sn_gateway_port]] | -L URL}\n");
-  printf("                        {[[-gA gateway_network_bind_address] [-gp gateway_network_bind_port]] | -gL URL}\n");
-  printf("                        {[[-cA client_network_bind_address] [-cp client_network_bind_port]] | -cL URL}\n");
-  printf("                        [-c config_file]\n");
-  printf("                        [-v] [--quiet]\n");
-
+  printf("                        {[[-gP gateway_network_protocol] [-gA gateway_network_bind_address]"
+         " [-gp gateway_network_bind_port]] | -gL URL}\n");
+  printf("                        {[[-cP client_network_protocol] [-cA client_network_bind_address]"
+         " [-cp client_network_bind_port]] | -cL URL}\n");
+  printf("                        {[[-gst gateway_send_timeout] [-grt gateway_receive_timeout]]"
+         " | --gt gateway_network_timeout}\n");
+  printf("                        {[[-cst client_send_timeout] [-crt client_receive_timeout]]"
+         " | --ct client_network_timeout}\n");
+  printf("                        [-gnp gateway_network_plugin]\n");
+  printf("                        [-cnp client_network_plugin]\n");
+  // TODO: printf("                        [-c config_file]\n");
+  // TODO: printf("                        [-v] [--quiet]\n");
   printf("       cmqttsnforwarder --help\n\n");
+
   printf(" -h : mqtt-sn gateway host to connect to. Defaults to localhost.\n");
   printf(" -p : mqtt-sn gateway network port to connect to. Defaults to 8888 for plain MQTT-SN.\n");
   printf(" -L : specify hostname, port as a URL in the form:\n");
   printf("      mqtt-sn(s)://host[:port]\n");
+  printf("      mqtt-sn(s) uses the same protocol as the gateway network.\n");
 
+  printf(" -gP : specify the protocol of the gateway network to use.\n");
+  printf("       Can be udp, tcp. Defaults to udp.\n");
   printf(" -gA : bind the gateway network to the outgoing socket to this host/ip address.\n");
   printf("       Use to control which interface the network communicates over.\n");
   printf(" -gp : listening on the specific gateway network port. Defaults to 9999.\n");
   printf(" -gL : specify outgoing socket, port as a URL in the form: address[:port]\n");
 
+  printf(" -cP : specify the protocol of the client network to use.\n");
+  printf("       Can be udp, tcp. Defaults to udp.\n");
   printf(" -cA : bind the client network to the outgoing socket to this host/ip address.\n");
   printf("       Use to control which interface the network communicates over.\n");
   printf(" -cp : listening on the specific client network port. Defaults to 7777.\n");
   printf(" -cL : specify outgoing socket, port as a URL in the form: address[:port]\n");
 
-  printf(" -c : specify the forwarder config file.\n");
+  printf(" -gst : specify the gateway network send timeout in ms.\n");
+  printf("        Can be 0 to return immediately or -1 to wait indefinitely for a message. Defaults to 1000 ms.\n");
+  printf(" -grt : specify the gateway network receive timeout in ms.\n");
+  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
+  printf(" -gt  : specify the gateway network send and receive timeout in ms. Defaults to 1000 ms.\n");
+  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
+
+  printf(" -cst : specify the client network send timeout in ms.\n");
+  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
+  printf(" -crt : specify the client network receive timeout in ms.\n");
+  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
+  printf(" -ct  : specify the client network send and receive timeout in ms. Defaults to 1000 ms.\n");
+  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
+
+  // TODO: printf(" -c : specify the forwarder config file.\n");
   printf(" -V : specify the version of the MQTT-SN protocol to use.\n");
   printf("      Can be mqttsnv1. Defaults to mqttsnv1.\n");
-  printf(" -v : verbose mode - enable all logging types.\n");
-  printf(" --quiet : don't print error messages.\n");
+
+  printf(" -gnp : path to the gateway network plugin.\n");
+  printf("       The gateway network protocol must match the short protocol name gained from the plugin.\n");
+  printf("       A gateway bind address is saved to a device address and given to the gateway network plugin."
+         " Too long bytes are dropped\n");
+  printf("       A port overwrites the two last bytes of the gateway network bind address. "
+         "You can set gateway port to -1 if you want to overwrite this behaviour\n");
+  printf(" -cnp : absolute path to the client network plugin.\n");
+  printf("       The client network protocol must match the short protocol name gained from the plugin.\n");
+  printf("       A client bind address is saved to a device address and given to the client network plugin."
+         " Too long bytes are dropped\n");
+  printf("       A port overwrites the two last bytes of the client network bind address. "
+         "You can set the client port to -1 if you want to overwrite this behaviour\n");
+
+  // TODO: printf(" -v : verbose mode - enable all logging types.\n");
+  // TODO: printf(" --quiet : don't print error messages.\n");
+
   printf(" --help : display this message.\n");
 
   printf("\nSee http://./ for more information.\n\n");

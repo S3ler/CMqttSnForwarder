@@ -44,7 +44,6 @@ int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context) {
 
   int master_socket;
   struct sockaddr_in address;
-
   int addrlen = sizeof(struct sockaddr_in);
 
   // create master socket
@@ -69,7 +68,7 @@ int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context) {
   address.sin_port = htons(clientTcpNetwork->port);
 
   // bind the socket to the localhost clientTcpNetwork->port
-  if (bind(master_socket, (struct sockaddr *) &address, sizeof(address)) < 0) {
+  if (bind(master_socket, (struct sockaddr *) &address, addrlen) < 0) {
     perror("bind failed");
     return -1;
     exit(EXIT_FAILURE);

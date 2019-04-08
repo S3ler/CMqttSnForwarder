@@ -17,8 +17,8 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
   }
 
   uint16_t message_length_steps =
-      static_cast<uint16_t>((MAX_MESSAGE_LENGTH - min_message_length) / message_length_step_count);
-  uint16_t max_message_length = MAX_MESSAGE_LENGTH;
+      static_cast<uint16_t>((CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH - min_message_length) / message_length_step_count);
+  uint16_t max_message_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
 
   uint16_t min_gateway_count = 1;
   uint16_t max_gateway_count = 2;

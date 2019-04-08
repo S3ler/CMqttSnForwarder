@@ -9,23 +9,9 @@
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
 
-int MqttSnForwarderStart(MqttSnForwarder *mqttSnForwarder,
-                         void *clientNetworkContext,
-                         void *gatewayNetworkContext) {
-
-  if (MqttSnForwarderInit(mqttSnForwarder, clientNetworkContext, gatewayNetworkContext) != 0) {
-    MqttSnForwarderDeinit(mqttSnForwarder);
-    return -1;
-  }
-
-  while (MqttSnForwarderLoop(mqttSnForwarder) == 0) {}
-
-  MqttSnForwarderDeinit(mqttSnForwarder);
-
-  return 0;
-}
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder, void *clientNetworkContext, void *gatewayNetworkContext) {
+
   mqttSnForwarder->clientNetworkContext = clientNetworkContext;
   MqttSnFixedSizeRingBufferInit(&mqttSnForwarder->clientNetworkReceiveBuffer);
   MqttSnFixedSizeRingBufferInit(&mqttSnForwarder->clientNetworkSendBuffer);
@@ -58,18 +44,9 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
   if (forwarder->clientNetwork.client_network_receive(
       &forwarder->clientNetwork,
       &forwarder->clientNetworkReceiveBuffer,
-      CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT,
+      forwarder->clientNetworkReceiveTimeout,
       forwarder->clientNetworkContext) != 0) {
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
-  }
-  // TODO when gatewayNetwork.status == -1 then clientNetwork shall functions shall return -1
-  // TODO test this in gatewaynetworktests
-  if (forwarder->gatewayNetwork.gateway_receive(
-      &forwarder->gatewayNetwork,
-      &forwarder->gatewayNetworkReceiveBuffer,
-      GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT,
-      forwarder->gatewayNetworkContext) != 0) {
-    GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
 
   {
@@ -81,6 +58,26 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
     }
   }
 
+  // TODO when gatewayNetwork.status == -1 then clientNetwork shall functions shall return -1
+  // TODO test this in gatewaynetworktests
+  if (forwarder->gatewayNetwork.gateway_send(
+      &forwarder->gatewayNetwork,
+      &forwarder->gatewayNetworkSendBuffer,
+      forwarder->gatewayNetworkSendTimeout,
+      forwarder->gatewayNetworkContext) != 0) {
+    ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
+  }
+
+  // TODO when gatewayNetwork.status == -1 then clientNetwork shall functions shall return -1
+  // TODO test this in gatewaynetworktests
+  if (forwarder->gatewayNetwork.gateway_receive(
+      &forwarder->gatewayNetwork,
+      &forwarder->gatewayNetworkReceiveBuffer,
+      forwarder->gatewayNetworkReceiveTimeout,
+      forwarder->gatewayNetworkContext) != 0) {
+    GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
+  }
+
   {
     MqttSnMessageData gatewayMessageData = {0};
     MqttSnMessageData clientMessageData = {0};
@@ -89,21 +86,13 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
       GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
     }
   }
-  // TODO when gatewayNetwork.status == -1 then clientNetwork shall functions shall return -1
-  // TODO test this in gatewaynetworktests
-  if (forwarder->gatewayNetwork.gateway_send(
-      &forwarder->gatewayNetwork,
-      &forwarder->gatewayNetworkSendBuffer,
-      GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT,
-      forwarder->gatewayNetworkContext) != 0) {
-    ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
-  }
+
   // TODO when clientNetwork.status == -1 then clientNetwork shall functions shall return -1
   // TODO test this in clientnetworktests
   if (forwarder->clientNetwork.client_network_send(
       &forwarder->clientNetwork,
       &forwarder->clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      forwarder->clientNetworkSendTimeout,
       forwarder->clientNetworkContext) != 0) {
     GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
@@ -161,7 +150,7 @@ void sendBufferedMessagesToClients(MqttSnForwarder *forwarder) {
     if (forwarder->clientNetwork.client_network_send(
         &forwarder->clientNetwork,
         &forwarder->clientNetworkSendBuffer,
-        CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+        forwarder->clientNetworkSendTimeout,
         forwarder->clientNetworkContext) != 0) {
       break;
     }
@@ -190,7 +179,7 @@ void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder) {
     if (forwarder->gatewayNetwork.gateway_send(
         &forwarder->gatewayNetwork,
         &forwarder->gatewayNetworkSendBuffer,
-        GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT,
+        forwarder->gatewayNetworkSendTimeout,
         forwarder->gatewayNetworkContext) != 0) {
       break;
     }

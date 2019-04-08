@@ -15,11 +15,13 @@ extern "C" {
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
 
+  /*
 #define CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT 1000
-#define CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT 5000
+#define CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT 1000
 
 #define GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT 1000
 #define GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT 1000
+*/
 
 typedef struct MqttSnForwarder {
   MqttSnClientNetworkInterface clientNetwork;
@@ -28,6 +30,10 @@ typedef struct MqttSnForwarder {
   MqttSnFixedSizeRingBuffer clientNetworkSendBuffer;
   MqttSnFixedSizeRingBuffer gatewayNetworkReceiveBuffer;
   MqttSnFixedSizeRingBuffer gatewayNetworkSendBuffer;
+  int clientNetworkSendTimeout;
+  int clientNetworkReceiveTimeout;
+  int gatewayNetworkSendTimeout;
+  int gatewayNetworkReceiveTimeout;
   void *clientNetworkContext;
   void *gatewayNetworkContext;
 } MqttSnForwarder;
@@ -35,10 +41,6 @@ typedef struct MqttSnForwarder {
 void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder);
 
 void sendBufferedMessagesToClients(MqttSnForwarder *forwarder);
-
-int MqttSnForwarderStart(MqttSnForwarder *mqttSnForwarder,
-                         void *clientNetworkContext,
-                         void *gatewayNetworkContext);
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         void *clientNetworkContext,

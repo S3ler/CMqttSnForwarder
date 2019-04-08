@@ -15,14 +15,14 @@ extern "C" {
 
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN 100
 
-#ifndef MAX_MESSAGE_LENGTH
-#define MAX_MESSAGE_LENGTH 1024
+#ifndef CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH
+#define CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH 1024
 #endif
 
 typedef struct MqttSnMessageData_{
   device_address address;
   uint16_t data_length;
-  uint8_t data[MAX_MESSAGE_LENGTH];
+  uint8_t data[CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH];
 } MqttSnMessageData;
 
 typedef struct MqttSnFixedSizeRingBuffer_{

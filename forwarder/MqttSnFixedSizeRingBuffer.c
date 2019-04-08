@@ -38,7 +38,7 @@ int put(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
 }
 
 int pop(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
-  int next;
+  uint32_t next;
 
   if (queue->item_count == 0) {
     return -1;

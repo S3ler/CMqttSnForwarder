@@ -10,7 +10,7 @@ TEST_F(MqttSnForwarderLoopTests,
   EXPECT_CALL(gatewayNetworkMock, gateway_network_receive(
       &mqttSnForwarder.gatewayNetwork,
       &mqttSnForwarder.gatewayNetworkReceiveBuffer,
-      GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT,
+      mqttSnForwarder.gatewayNetworkReceiveTimeout,
       gatewayNetworkContext))
       .Times(1)
       .WillOnce(Return(0));
@@ -18,7 +18,7 @@ TEST_F(MqttSnForwarderLoopTests,
   EXPECT_CALL(clientNetworkMock, client_network_receive(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkReceiveBuffer,
-      CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT,
+      mqttSnForwarder.clientNetworkReceiveTimeout,
       clientNetworkContext))
       .Times(1)
       .WillOnce(Return(0));
@@ -29,7 +29,7 @@ TEST_F(MqttSnForwarderLoopTests,
   EXPECT_CALL(gatewayNetworkMock, gateway_network_send(
       &mqttSnForwarder.gatewayNetwork,
       &mqttSnForwarder.gatewayNetworkSendBuffer,
-      GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT,
+      mqttSnForwarder.gatewayNetworkSendTimeout,
       gatewayNetworkContext))
       .Times(1)
       .WillOnce(Return(0));
@@ -37,7 +37,7 @@ TEST_F(MqttSnForwarderLoopTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      mqttSnForwarder.clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(1)
       .WillOnce(Return(0));

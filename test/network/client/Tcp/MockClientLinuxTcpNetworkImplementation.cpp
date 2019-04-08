@@ -140,8 +140,8 @@ int MockClientLinuxTcpNetworkImplementation::loopNetwork(MockClientNetworkReceiv
   }
   if (FD_ISSET(forwarder_socket_fd, &readfds)) {
     int sd = forwarder_socket_fd;
-    uint8_t buffer[MAX_MESSAGE_LENGTH];
-    int buffer_length = MAX_MESSAGE_LENGTH;
+    uint8_t buffer[CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH];
+    int buffer_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
     int valread;
     if ((valread = read(sd, buffer, buffer_length)) <= 0) {
       return -1;

@@ -107,6 +107,7 @@ device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr)
 int add_port_to_device_address(uint32_t port, device_address *dst) {
   dst->bytes[sizeof(device_address) - 2] = (port >> 8) & 0xFF;
   dst->bytes[sizeof(device_address) - 1] = (port >> 0) & 0xFF;
+  return 0;
 }
 
 uint32_t get_port_from_device_address(device_address *src) {

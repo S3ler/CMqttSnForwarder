@@ -39,9 +39,9 @@ int openGatewaySocket(int port);
 
 int connectForwarder(char *ip, int port);
 
-int send_fd(int fd, char *buf, int len);
+int send_fd(int fd, uint8_t *buf, int buf_len);
 
-int recv_fd(int fd, char *buf, int buf_len);
+int recv_fd(int fd, uint8_t *buf, int buf_len);
 
 int awaitForwarderConnection(int fd);
 
@@ -71,10 +71,9 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-
   printf("Ready");
   fflush(stdout);
-  char buf[MAX_MSG_LEN];
+  uint8_t buf[MAX_MSG_LEN];
   fcntl(0, F_SETFL, fcntl(0, F_GETFL) | O_NONBLOCK);
   while (1) {
     memset(buf, 0, sizeof(buf));
@@ -82,11 +81,11 @@ int main() {
     if (numRead > 0) {
       printf("You said: %s", buf);
 
-      if (strcmp(buf, "exit\n") == 0) {
+      if (strcmp((char *) buf, "exit\n") == 0) {
         break;
       }
       MQTT_SN_PUBLISH publish = {0};
-      MqttSnPublishInit(&publish, buf, strlen(buf));
+      MqttSnPublishInit(&publish, buf, strlen((char *) buf));
       uint8_t b[255];
       memcpy(b, &publish, publish.length);
       if (send_fd(forwarder_fd, (uint8_t *) &publish, publish.length) != publish.length) {
@@ -98,7 +97,7 @@ int main() {
 
     { // FAKE MQTT-SN Gateway ping-pong
       if (is_fd_set(connected_forwarder_fd)) {
-        char gateway_rec_buf[MAX_MSG_LEN + FORWARDER_HEADER_LEN + sizeof(device_address)] = {0};
+        uint8_t  gateway_rec_buf[MAX_MSG_LEN + FORWARDER_HEADER_LEN + sizeof(device_address)] = {0};
         int gateway_rec_buf_len = recv_fd(connected_forwarder_fd, gateway_rec_buf,
                                           MAX_MSG_LEN + FORWARDER_HEADER_LEN + sizeof(device_address));
         if (gateway_rec_buf_len < 0) {
@@ -106,7 +105,7 @@ int main() {
           exit(EXIT_FAILURE);
         }
         if (gateway_rec_buf_len > 0) {
-          MQTT_SN_FORWARD_ENCAPSULATION *encapsulation = (MQTT_SN_FORWARD_ENCAPSULATION *) gateway_rec_buf;
+          // MQTT_SN_FORWARD_ENCAPSULATION *encapsulation = (MQTT_SN_FORWARD_ENCAPSULATION *) gateway_rec_buf;
           printf("Gateway - Length: %d, MsgType(0xFE): %02x, Ctrl: %d, MsgH: %s, Msg: %s \n",
                  gateway_rec_buf[0], gateway_rec_buf[1], gateway_rec_buf[3],
                  &gateway_rec_buf[3 + sizeof(device_address)],
@@ -123,7 +122,7 @@ int main() {
 
     { // FAKE MQTT-SN Client receive
       if (is_fd_set(forwarder_fd)) {
-        char forwarder_rec_buf[MAX_MSG_LEN] = {0};
+        uint8_t forwarder_rec_buf[MAX_MSG_LEN] = {0};
         int forwarder_rec_buf_len = recv_fd(forwarder_fd, forwarder_rec_buf, MAX_MSG_LEN);
         if (forwarder_rec_buf_len < 0) {
           perror("MqttSnForwarder socket recv");
@@ -191,7 +190,7 @@ int awaitForwarderConnection(int fd) {
   return new_socket;
 }
 
-int send_fd(int fd, char *buf, int buf_len) {
+int send_fd(int fd, uint8_t *buf, int buf_len) {
   int timeout_ms = 100;
   struct timeval tv;
   tv.tv_sec = 0;  /* 30 Secs Timeout */
@@ -210,7 +209,7 @@ int send_fd(int fd, char *buf, int buf_len) {
   return rc;
 }
 
-int recv_fd(int fd, char *buf, int buf_len) {
+int recv_fd(int fd, uint8_t *buf, int buf_len) {
   int timeout_ms = 100;
   struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
   if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
@@ -300,8 +299,6 @@ int openGatewaySocket(int port) {
   int opt = true;
   struct sockaddr_in address;
 
-  int addrlen;
-
   // create master socket
   if ((master_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
     perror("socket failed");
@@ -340,14 +337,16 @@ int MqttSnPublishInit(MQTT_SN_PUBLISH *publish, uint8_t *data, uint16_t length) 
   publish->length = (uint8_t) (length + PUBLISH_HEADER_LEN);
   publish->msg_type = 0x0C;
   publish->flags = 0;
-  publish->flags = (uint8_t) (publish->flags | 0b01100010);
+  publish->flags = (uint8_t) (publish->flags | 0x62); // 0b01100010
   publish->topic_id = 1;
   publish->msg_id = 0;
   memcpy(publish->data, data, length);
+  return 0;
 }
 
 int printMqttSnPublish(char *from, MQTT_SN_PUBLISH *publish) {
   printf("%s - Publish - Length: %d, TopicId, %d, MsgId: %d, Data: %s", from, publish->length, publish->topic_id,
          publish->msg_id, publish->data);
   fflush(stdout);
+  return 0;
 }
