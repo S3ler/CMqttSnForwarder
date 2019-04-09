@@ -68,12 +68,24 @@ int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
     return 0;
   }
 
-  if (receive_udp_message(clientUdpNetwork->master_socket,
-                          receiveBuffer,
-                          CMQTTSNFORWARDER_MQTTSNCLIENTUDPNETWORK_MAX_DATA_LENGTH) != 0) {
+  int rc = receive_udp_message(clientUdpNetwork->master_socket,
+                               receiveBuffer,
+                               CMQTTSNFORWARDER_MQTTSNCLIENTUDPNETWORK_MAX_DATA_LENGTH);
+  if (rc < 0) {
     return -1;
   }
-
+#ifdef WITH_LOGGING
+  if (rc > 0) {
+    if (n->logger) {
+      const MqttSnMessageData *msg = back(receiveBuffer);
+      log_client_message(n->logger,
+                          n->logger->log_level,
+                          &msg->address,
+                          msg->data,
+                          msg->data_length);
+    }
+  }
+#endif
   return 0;
 }
 

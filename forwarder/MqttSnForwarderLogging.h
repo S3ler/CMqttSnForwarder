@@ -96,15 +96,21 @@ int log_forwarder_terminated(const MqttSnLogger *logger,
 // LOG_LEVEL_DEFAULT
 //int log_config(int level, forwarder_config *fcfg);
 
-
-
 // 1554750679: client message from 127.0.0.1.24.11 to 127.0.0.1.24.11 ( length255, bytes(5, 3, 2 , 1)).
 // LOG_LEVEL_DEBUG
-int log_client_message(int level, const device_address *address, const uint8_t *data, uint16_t data_len);
+int log_client_message(const MqttSnLogger *logger,
+                       int level,
+                       const device_address *address,
+                       const uint8_t *data,
+                       uint16_t data_len);
 
 // 1554750679: gateway message from 127.0.0.1.24.11 to 127.0.0.1.24.11 ( length255, bytes(5, 3, 2 , 1)).
 // LOG_LEVEL_DEBUG
-int log_gateway_message(int level, const device_address *address, const uint8_t *data, uint16_t data_len);
+int log_gateway_message(const MqttSnLogger *logger,
+                        int level,
+                        const device_address *address,
+                        const uint8_t *data,
+                        uint16_t data_len);
 
 // logs any valid mqtt-sn message from the client network
 // LOG_LEVEL_DEFAULT

@@ -60,6 +60,20 @@ int pop(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
   return 0;
 }
 
-int isEmpty(MqttSnFixedSizeRingBuffer *queue) {
+int isEmpty(const MqttSnFixedSizeRingBuffer *queue) {
   return queue->item_count == 0;
+}
+
+const MqttSnMessageData *back(const MqttSnFixedSizeRingBuffer *queue) {
+  if(isEmpty(queue)){
+    return NULL;
+  }
+  return &queue->items[queue->tail];
+}
+
+const MqttSnMessageData *front(const MqttSnFixedSizeRingBuffer *queue) {
+  if(isEmpty(queue)){
+    return NULL;
+  }
+  return &queue->items[queue->head];
 }

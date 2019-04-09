@@ -19,18 +19,18 @@ extern "C" {
 #define CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH 1024
 #endif
 
-typedef struct MqttSnMessageData_{
+typedef struct MqttSnMessageData_ {
   device_address address;
   uint16_t data_length;
   uint8_t data[CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH];
 } MqttSnMessageData;
 
-typedef struct MqttSnFixedSizeRingBuffer_{
-    uint32_t head;
-    uint32_t tail;
-    uint32_t maxlen;
-    uint32_t item_count;
-    MqttSnMessageData items[CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN];
+typedef struct MqttSnFixedSizeRingBuffer_ {
+  uint32_t head;
+  uint32_t tail;
+  uint32_t maxlen;
+  uint32_t item_count;
+  MqttSnMessageData items[CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN];
 } MqttSnFixedSizeRingBuffer;
 
 void MqttSnFixedSizeRingBufferInit(MqttSnFixedSizeRingBuffer *queue);
@@ -39,7 +39,10 @@ int put(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData);
 
 int pop(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData);
 
-int isEmpty(MqttSnFixedSizeRingBuffer *queue);
+const MqttSnMessageData *front(const MqttSnFixedSizeRingBuffer *queue);
+const MqttSnMessageData *back(const MqttSnFixedSizeRingBuffer *queue);
+
+int isEmpty(const MqttSnFixedSizeRingBuffer *queue);
 
 #ifdef __cplusplus
 }

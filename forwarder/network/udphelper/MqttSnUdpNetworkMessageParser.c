@@ -35,7 +35,7 @@ int save_udp_messages_into_receive_buffer(uint8_t *buffer,
                                     read_bytes,
                                     gateway_address,
                                     receiveBuffer) == 0) {
-    return 0;
+    return 1;
   }
   return 0;
 }
@@ -79,8 +79,7 @@ int save_complete_new_udp_message(uint8_t *data,
   if (data_length != get_udp_message_length(data)) {
     return -1;
   }
-  save_udp_message_into_receive_buffer(data, (uint16_t) data_length, address, receiveBuffer);
-  return 0;
+  return save_udp_message_into_receive_buffer(data, (uint16_t) data_length, address, receiveBuffer);
 }
 
 int save_udp_message_into_receive_buffer(uint8_t *data,
@@ -151,7 +150,7 @@ int is_udp_message_received(int socket_fd, int timeout_ms) {
   int activity;
   if (timeout_ms == -1) {
     activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
-  }else{
+  } else {
     activity = select(max_sd + 1, &readfds, NULL, NULL, &interval);
   }
 

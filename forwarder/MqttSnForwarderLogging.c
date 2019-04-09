@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <logging/linux/stdout/StdoutLogging.h>
 
+bool log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length);
 int log_uint8(const MqttSnLogger *logger, uint8_t n) {
   const char *uint8_max_str = "255";
   int uint8_max_str_length = strlen(uint8_max_str);
@@ -142,4 +143,60 @@ int log_flush(const MqttSnLogger *logger) {
 
 int log_str(const MqttSnLogger *logger, const char *str) {
   return logger->log_str(str);
+}
+int log_gateway_message(const MqttSnLogger *logger,
+                        int level,
+                        const device_address *address,
+                        const uint8_t *data,
+                        uint16_t data_len) {
+  if (level < LOG_LEVEL_DEBUG) {
+    return 0;
+  }
+  const char *gateway_msg_to = ": gateway message to ";
+  const char *length = " (length";
+  const char *bytes = ", bytes( ";
+  const char *bytes_end = ")).";
+
+  return (log_current_time(logger) ||
+      log_str(logger, gateway_msg_to) ||
+      log_device_address(logger, address) ||
+      log_str(logger, length) ||
+      log_uint32(logger, data_len) ||
+      log_str(logger, bytes) ||
+      log_uint8_array(logger, data, data_len) ||
+      log_str(logger, bytes_end) ||
+      log_flush(logger) != 0);
+}
+int log_client_message(const MqttSnLogger *logger,
+                       int level,
+                       const device_address *address,
+                       const uint8_t *data,
+                       uint16_t data_len) {
+  if (level < LOG_LEVEL_DEBUG) {
+    return 0;
+  }
+  const char *client_msg_to = ": client message to ";
+  const char *length = " (length";
+  const char *bytes = ", bytes( ";
+  const char *bytes_end = ")).";
+
+  return (log_current_time(logger) ||
+      log_str(logger, client_msg_to) ||
+      log_device_address(logger, address) ||
+      log_str(logger, length) ||
+      log_uint32(logger, data_len) ||
+      log_str(logger, bytes) ||
+      log_uint8_array(logger, data, data_len) ||
+      log_str(logger, bytes_end) ||
+      log_flush(logger) != 0);
+}
+bool log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length) {
+  const char *comma = ", ";
+  for (uint16_t i = 0; i < data_length; ++i) {
+    log_uint8(logger, data[i]);
+    if (i + 1 < data_length) {
+      log_str(logger, comma);
+    }
+  }
+  return 0;
 }

@@ -34,7 +34,7 @@ int pop(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
   return iterator->second->pop(queue, messageData);
 }
 
-int isEmpty(MqttSnFixedSizeRingBuffer *queue) {
+int isEmpty(const MqttSnFixedSizeRingBuffer *queue) {
   auto iterator = globalMqttSnFixedSizeRingBufferMockMap->find(queue);
   if (iterator == globalMqttSnFixedSizeRingBufferMockMap->end()) {
     return globalMqttSnFixedSizeRingBufferMock->isEmpty(queue);
