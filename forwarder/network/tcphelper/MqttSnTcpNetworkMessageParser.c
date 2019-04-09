@@ -7,7 +7,7 @@
 #include "MqttSnTcpNetworkMessageParser.h"
 #include "../../../main/forwarder_config.h"
 
-int log_new_tcp_connection(int level, const device_address *address) {
+int log_new_tcp_connection(const MqttSnLogger *logger, int level, const device_address *address) {
   if (level <= LOG_LEVEL_QUIET) {
     return 0;
   }
@@ -16,16 +16,16 @@ int log_new_tcp_connection(int level, const device_address *address) {
   const char *dot = ".";
   uint32_t port = get_port_from_device_address(address);
 
-  return (log_current_time() ||
-      log_str(new_client) ||
-      log_device_address(address) ||
-      log_str(on_port) ||
-      log_uint32(port) ||
-      log_str(dot) ||
-      log_flush() != 0);
+  return (log_current_time(logger) ||
+      logger->log_str(new_client) ||
+      log_device_address(logger, address) ||
+      logger->log_str(on_port) ||
+      log_uint32(logger, port) ||
+      logger->log_str(dot) ||
+      log_flush(logger) != 0);
 }
 
-int log_close_tcp_connection(int level, const device_address *address) {
+int log_close_tcp_connection(const MqttSnLogger *logger, int level, const device_address *address) {
   if (level <= LOG_LEVEL_QUIET) {
     return 0;
   }
@@ -34,15 +34,14 @@ int log_close_tcp_connection(int level, const device_address *address) {
   const char *dot = ".";
   uint32_t port = get_port_from_device_address(address);
 
-  return (log_current_time() ||
-      log_str(close_client) ||
-      log_device_address(address) ||
-      log_str(on_port) ||
-      log_uint32(port) ||
-      log_str(dot) ||
-      log_flush() != 0);
+  return (log_current_time(logger) ||
+      log_str(logger, close_client) ||
+      log_device_address(logger, address) ||
+      log_str(logger, on_port) ||
+      log_uint32(logger, port) ||
+      log_str(logger, dot) ||
+      log_flush(logger) != 0);
 }
-
 
 int save_messages_into_receive_buffer(uint8_t *buffer,
                                       ssize_t read_bytes,

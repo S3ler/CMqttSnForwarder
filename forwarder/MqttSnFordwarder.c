@@ -9,8 +9,12 @@
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
 
-
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder, void *clientNetworkContext, void *gatewayNetworkContext) {
+
+  if (MqttSnLoggerInit(&mqttSnForwarder->logger) != 0) {
+    MqttSnLoggerDeinit(&mqttSnForwarder->logger);
+    return -1;
+  }
 
   mqttSnForwarder->clientNetworkContext = clientNetworkContext;
   MqttSnFixedSizeRingBufferInit(&mqttSnForwarder->clientNetworkReceiveBuffer);
@@ -33,9 +37,14 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder, void *clientNetworkCon
   return 0;
 }
 
+/**
+ * disconncts the gateway and client network
+ * @param forwarder
+ */
 void MqttSnForwarderDeinit(MqttSnForwarder *forwarder) {
   GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
+
 }
 
 int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {

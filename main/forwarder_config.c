@@ -10,10 +10,11 @@
 
 void forwarder_config_init(forwarder_config *fcfg) {
   memset(fcfg, 0, sizeof(*fcfg));
-  fcfg->version = strdup("a0");
-  fcfg->major = 0;
-  fcfg->minor = 1;
-  fcfg->revision = 0;
+  fcfg->version = strdup(VERSION);
+  fcfg->major = MAJOR;
+  fcfg->minor = MINOR;
+  fcfg->tweak = TWEAK;
+  fcfg->build_date = strdup(CMAKE_BUILD_TIMESTAMP);
 
   fcfg->log_lvl = LOG_LEVEL_DEFAULT;
 
@@ -35,6 +36,7 @@ void forwarder_config_init(forwarder_config *fcfg) {
 
 void forwarder_config_cleanup(forwarder_config *fcfg) {
   free(fcfg->version);
+  free(fcfg->build_date);
   free(fcfg->mqtt_sn_gateway_host);
   free(fcfg->gateway_network_protocol);
   free(fcfg->client_network_protocol);
@@ -356,15 +358,9 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 }
 
 void print_usage(void) {
-  char *VERSION = "0";
-  int major, minor, revision;
-  major = 0;
-  minor = 0;
-  revision = 0;
-
   printf("cmqttsnforwarder is a simple mqtt-sn forwarder that will forward udp mqtt-sn messages\n");
   printf("                 from a client network over a gateway network to a mqtt-sn gateway.\n");
-  printf("cmqttsnforwarder version %s is %d.%d.%d.\n\n", VERSION, major, minor, revision);
+  printf("cmqttsnforwarder version %s is %d.%d.%d (build date %s).\n\n", VERSION, MAJOR, MINOR, TWEAK, CMAKE_BUILD_TIMESTAMP);
   printf("Usage: cmqttsnforwarder {[[-h mqtt_sn_gateway_host] [-p mqtt_sn_gateway_port]] | -L URL}\n");
   printf("                        {[[-gP gateway_network_protocol] [-gA gateway_network_bind_address]"
          " [-gp gateway_network_bind_port]] | -gL URL}\n");

@@ -39,8 +39,6 @@ int main(int argc, char *argv[]) {
   forwarder_config_cleanup(&fcfg);
   if (rc) {
     fprintf(stderr, "\nUse 'cmqttsnforwarder --help' to see usage.\n");
-  } else {
-    printf("MqttSnForwarder finished\n");
   }
   return rc;
 }

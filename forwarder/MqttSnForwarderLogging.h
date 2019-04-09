@@ -5,69 +5,88 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNFORWARDERLOGGING_H
 #define CMQTTSNFORWARDER_MQTTSNFORWARDERLOGGING_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <global_defines.h>
-#include "forwarder_config.h"
-enum log_err_t {
-  LOG_ERR_SUCCESS = 0,
-  MOSQ_ERR_NOMEM = 1,
-  MOSQ_ERR_INVAL = 2,
-  MOSQ_ERR_NOT_SUPPORTED = 3
-};
+#include "../main/forwarder_config.h"
 
-int log_flush();
-int log_str(const char *str);
+typedef struct MqttSnLogger_ {
+  int (*log_init)(struct MqttSnLogger_ *logger);
+  void (*log_deinit)(struct MqttSnLogger_ *logger);
+  int (*log_flush)(const struct MqttSnLogger_ *logger);
+  int (*log_str)(const char *str);
+} MqttSnLogger;
 
-int log_int8(int8_t n);
-int log_int16(int16_t n);
-int log_int32(int32_t n);
-int log_int64(int64_t n);
+int MqttSnLoggerInit(MqttSnLogger *logger);
+void MqttSnLoggerDeinit(MqttSnLogger *logger);
 
-int log_uint8(uint8_t n);
-int log_uint16(uint16_t n);
-int log_uint32(uint32_t n);
-int log_uint64(uint64_t n);
-int log_uint64(uint64_t n);
+int log_flush(const MqttSnLogger *logger);
+int log_str(const MqttSnLogger *logger, const char *str);
 
-int log_uintmax(uintmax_t n);
-int log_key_int8_value(const char *key, int8_t v);
+int log_int8(MqttSnLogger *logger, int8_t n);
+int log_int16(MqttSnLogger *logger, int16_t n);
+int log_int32(MqttSnLogger *logger, int32_t n);
+int log_int64(MqttSnLogger *logger, int64_t n);
+
+int log_uint8(const MqttSnLogger *logger, uint8_t n);
+int log_uint16(MqttSnLogger *logger, uint16_t n);
+int log_uint32(const MqttSnLogger *logger, uint32_t n);
+int log_uint64(MqttSnLogger *logger, uint64_t n);
+int log_uint64(MqttSnLogger *logger, uint64_t n);
+
+int log_uintmax(const MqttSnLogger *logger, uintmax_t n);
+int log_key_int8_value(MqttSnLogger *logger, const char *key, int8_t v);
 
 int get_timestamp(uint64_t *t);
-int log_current_time();
+int log_current_time(const MqttSnLogger *logger);
 
-int log_device_address(const device_address *address);
+int log_device_address(const MqttSnLogger *logger, const device_address *address);
 
-int log_gateway_id(uint8_t gwId);
+int log_gateway_id(MqttSnLogger *logger, uint8_t gwId);
 
-int log_gateway_add(uint8_t gwAdd);
+int log_gateway_add(MqttSnLogger *logger, uint8_t gwAdd);
 
-int log_message_id(uint32_t msgId);
+int log_message_id(MqttSnLogger *logger, uint32_t msgId);
 
-int log_clean_flag(uint8_t clean);
+int log_clean_flag(MqttSnLogger *logger, uint8_t clean);
 
-int log_duration(uint32_t duration);
+int log_duration(MqttSnLogger *logger, uint32_t duration);
 
-int log_protocol_id(uint8_t protocolId);
+int log_protocol_id(MqttSnLogger *logger, uint8_t protocolId);
 
-int log_will_flag(uint8_t will);
+int log_will_flag(MqttSnLogger *logger, uint8_t will);
 
-int log_return_code(uint8_t returnCode);
+int log_return_code(MqttSnLogger *logger, uint8_t returnCode);
 
-int log_topic_id(uint32_t topicId);
+int log_topic_id(MqttSnLogger *logger, uint32_t topicId);
 
-int log_topic_name(const char *topicName);
+int log_topic_name(MqttSnLogger *logger, const char *topicName);
 
-int log_topic_id_type(uint8_t topicIdType);
+int log_topic_id_type(MqttSnLogger *logger, uint8_t topicIdType);
 
-int log_retain_flag(uint8_t retainFlag);
+int log_retain_flag(MqttSnLogger *logger, uint8_t retainFlag);
 
-int log_data_byte_counter(uint32_t dataByteCount);
+int log_data_byte_counter(MqttSnLogger *logger, uint32_t dataByteCount);
 
 // 1554750672: cmqttsnforwarder version 1.4.15 (build date 1553632477) starting
 // { "t":1554750672, "name":"cmqttsnforwarder", "version":"1.4.15", "builddate":1553632477, "action":"starting"}
-int log_forwarder_started(int level, const char *VERSION, int major, int minor, int revision);
+int log_forwarder_started(const MqttSnLogger *logger,
+                          int level,
+                          const char *version,
+                          int major,
+                          int minor,
+                          int tweak,
+                          const char *build_date);
 
 // 1554750672: cmqttsnforwarder version 1.4.15 terminated
-int log_forwarder_terminated(int level, const char *VERSION, uint32_t major, uint32_t minor, uintmax_t revision);
+int log_forwarder_terminated(const MqttSnLogger *logger,
+                             int level,
+                             const char *version,
+                             uint32_t major,
+                             uint32_t minor,
+                             uintmax_t tweak);
 
 // 1554750672: Using default config.
 // 1554750672: Opening ipv4 listen socket on port 8888 [34, 11].
@@ -197,5 +216,13 @@ int log_client_unsubscribe_message(int level, device_address address);
 // (m)essageId [0 - 65535]
 // LOG_LEVEL_VERBOSE
 int log_gateway_unsuback_message(int level, device_address address);
+
+#ifdef WITH_DEBUG_LOGGING
+
+#endif // WITH_DEBUG_LOGGING
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //CMQTTSNFORWARDER_MQTTSNFORWARDERLOGGING_H

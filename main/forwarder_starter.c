@@ -13,6 +13,7 @@
 #include <network/client/udp/MqttSnClientUdpNetwork.h>
 #include <network/client/tcp/MqttSnClientTcpNetwork.h>
 #include <errno.h>
+#include <logging/linux/stdout/StdoutLogging.h>
 
 int convert_string_to_device_address(const char *string, device_address *address) {
   char *cp_string = strdup(string);
@@ -290,11 +291,39 @@ static void sig_handler(int _) {
   keep_running = 0;
 }
 
-void *inc_c(void *mqttSnForwarder_ptr) {
-  MqttSnForwarder *mqttSnForwarder = (MqttSnForwarder *) mqttSnForwarder_ptr;
+void *inc_c(void *mqttSnForwarderFcfgPtr_ptr) {
+  MqttSnForwarder_fcfg_ptr *mqttSnForwarderFcfgPtr = (MqttSnForwarder_fcfg_ptr *) mqttSnForwarderFcfgPtr_ptr;
+  MqttSnForwarder *mqttSnForwarder = mqttSnForwarderFcfgPtr->mqttSnForwarder_ptr;
+  const forwarder_config *fcfg = mqttSnForwarderFcfgPtr->fcfg_ptr;
+
+#ifdef WITH_LOGGING
+  if (log_forwarder_started(&mqttSnForwarder->logger,
+                            fcfg->log_lvl,
+                            fcfg->version,
+                            fcfg->major,
+                            fcfg->minor,
+                            fcfg->tweak,
+                            fcfg->build_date)) {
+    return (void *) EXIT_FAILURE;
+  }
+#endif
+
   while ((MqttSnForwarderLoop(mqttSnForwarder) == 0) & keep_running) {}
   MqttSnForwarderDeinit(mqttSnForwarder);
-  return NULL;
+
+#ifdef WITH_LOGGING
+  if (log_forwarder_terminated(&mqttSnForwarder->logger,
+                               fcfg->log_lvl,
+                               fcfg->version,
+                               fcfg->major,
+                               fcfg->minor,
+                               fcfg->tweak)) {
+    return (void *) EXIT_FAILURE;
+  }
+#endif
+  MqttSnLoggerDeinit(&mqttSnForwarder->logger);
+
+  return (void *) EXIT_SUCCESS;
 }
 
 int start_forwarder(const forwarder_config *fcfg,
@@ -341,26 +370,21 @@ int start_forwarder(const forwarder_config *fcfg,
     MqttSnForwarderDeinit(mqttSnForwarder);
     return EXIT_FAILURE;
   }
+
   signal(SIGINT, sig_handler);
   pthread_t mqttSnForwarder_thread;
-  if (pthread_create(&mqttSnForwarder_thread, NULL, inc_c, mqttSnForwarder)) {
+  MqttSnForwarder_fcfg_ptr mqttSnForwarderFcfgPtr = {.mqttSnForwarder_ptr = mqttSnForwarder, .fcfg_ptr = fcfg};
+  if (pthread_create(&mqttSnForwarder_thread, NULL, inc_c, &mqttSnForwarderFcfgPtr)) {
     fprintf(stderr, "Error creating thread\n");
     return EXIT_FAILURE;
   }
 
-  if (log_forwarder_started(fcfg->log_lvl, fcfg->version, fcfg->major, fcfg->minor, fcfg->revision)) {
-    return EXIT_FAILURE;
-  }
-
-  if (pthread_join(mqttSnForwarder_thread, NULL)) {
+  int rc;
+  if (pthread_join(mqttSnForwarder_thread, (void *) &rc)) {
     fprintf(stderr, "Error joining thread\n");
     return EXIT_FAILURE;
   }
 
-  if (log_forwarder_terminated(fcfg->log_lvl, fcfg->version, fcfg->major, fcfg->minor, fcfg->revision)) {
-    return EXIT_FAILURE;
-  }
-
-  return EXIT_SUCCESS;
+  return rc;
 }
 // TODO check every value here again...

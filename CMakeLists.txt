@@ -5,6 +5,16 @@ if (BUILD_TESTING)
     project(CMqttSnForwarder C CXX)
 else ()
     project(CMqttSnForwarder C)
+    set(VERSION a1)
+    set(MAJOR 0)
+    set(MINOR 0)
+    set(TWEAK 10)
+    string(TIMESTAMP CMAKE_BUILD_TIMESTAMP "%d-%m-%Y %H:%M:%S")
+    add_definitions(-DVERSION=\"${VERSION}\"
+            -DMAJOR=${MAJOR}
+            -DMINOR=${MINOR}
+            -DTWEAK=${TWEAK}
+            -DCMAKE_BUILD_TIMESTAMP=\"${CMAKE_BUILD_TIMESTAMP}\")
 endif (BUILD_TESTING)
 
 if (DEFINED CMAKE_CXX_COMPILER_ENV_VAR)
@@ -12,9 +22,15 @@ if (DEFINED CMAKE_CXX_COMPILER_ENV_VAR)
 endif ()
 if (DEFINED CMAKE_C_COMPILER_ENV_VAR AND NOT DEFINED CMAKE_CXX_COMPILER_ENV_VAR)
     set(CMAKE_C_STANDARD 99)
+    option(WITH_DEBUG_LOGGING "Include DEBUG_LOGGING support?" ON)
 endif ()
 if (NOT DEFINED CMAKE_C_STANDARD AND NOT DEFINED CMAKE_CXX_STANDARD)
     message(FATAL_ERROR "Neither C nor C++ project")
+endif ()
+
+option(WITH_LOGGING "Include LOGGING support?" ON)
+if (WITH_LOGGING)
+    add_definitions(-DWITH_LOGGING)
 endif ()
 
 set(IMPLEMENTATIONL_FILES
@@ -25,7 +41,11 @@ set(IMPLEMENTATIONL_FILES
         forwarder/global_defines.h
         forwarder/MqttSnGatewayNetworkInterface.c
         forwarder/MqttSnClientNetworkInterface.c
-        forwarder/network/plugin/plugin_interface.h forwarder/network/plugin/MqttSnGatewayPluginNetwork.h forwarder/network/plugin/MqttSnGatewayPluginNetwork.c main/MqttSnForwarderLogging.h main/MqttSnForwarderLogging.c)
+        forwarder/network/plugin/plugin_interface.h
+        forwarder/network/plugin/MqttSnGatewayPluginNetwork.h
+        forwarder/network/plugin/MqttSnGatewayPluginNetwork.c
+        forwarder/MqttSnForwarderLogging.h
+        forwarder/MqttSnForwarderLogging.c)
 include_directories(forwarder)
 
 set(CMQTTSNFORWADER_ERROR_COMPILE_FLAGS -Wall -Wextra -pedantic -Werror -Wno-unused-parameter)
@@ -66,15 +86,22 @@ set(UDP_CLIENT_NETWORK_FILES
         forwarder/network/iphelper/MqttSnIpNetworkHelper.h
         forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
 
+set(STDOUT_LOGGING_FILES
+        forwarder/logging/linux/stdout/StdoutLogging.c
+        forwarder/logging/linux/stdout/StdoutLogging.h)
+
 add_library(lib-mqtt-sn-forwarder ${IMPLEMENTATIONL_FILES})
 target_link_libraries(lib-mqtt-sn-forwarder dl)
 target_compile_options(lib-mqtt-sn-forwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+
+add_library(lib-mqtt-sn-logging ${STDOUT_LOGGING_FILES})
+target_compile_options(lib-mqtt-sn-logging PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
 add_library(lib-mqtt-sn-ring-buffer ${MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES})
 target_compile_options(lib-mqtt-sn-ring-buffer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
 add_library(lib-mqtt-sn-gateway-network ${TCP_GATWAY_NETWORK_FILES} ${UDP_GATWAY_NETWORK_FILES})
-target_link_libraries(lib-mqtt-sn-gateway-network lib-mqtt-sn-ring-buffer)
+target_link_libraries(lib-mqtt-sn-gateway-network lib-mqtt-sn-ring-buffer lib-mqtt-sn-logging)
 target_compile_options(lib-mqtt-sn-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
 add_library(lib-mqtt-sn-client-network ${TCP_CLIENT_NETWORK_FILES} ${UDP_CLIENT_NETWORK_FILES}
@@ -86,9 +113,10 @@ if (NOT BUILD_TESTING)
     message("Bulding as C project")
     add_executable(CMqttSnForwarder
             main/main.c
+            main/forwarder_starter.h
+            main/forwarder_starter.c
             main/forwarder_config.h
-            main/forwarder_config.c
-            main/config.h forwarder/network/iphelper/MqttSnIpNetworkHelper.h forwarder/network/iphelper/MqttSnIpNetworkHelper.c main/forwarder_starter.h main/forwarder_starter.c)
+            main/forwarder_config.c)
     target_link_libraries(CMqttSnForwarder
             pthread
             lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)

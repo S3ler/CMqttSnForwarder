@@ -15,6 +15,22 @@ void print_usage(void);
 #define GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT 1000
 #define GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT 1000
 
+#ifndef VERSION
+#define VERSION "N/D"
+#endif
+#ifndef MAJOR
+#define MAJOR 0
+#endif
+#ifndef MINOR
+#define MINOR 0
+#endif
+#ifndef TWEAK
+#define TWEAK 0
+#endif
+#ifndef CMAKE_BUILD_TIMESTAMP
+#define CMAKE_BUILD_TIMESTAMP "N/D"
+#endif
+
 enum log_level_t {
   LOG_LEVEL_QUIET = 0,
   LOG_LEVEL_DEFAULT = 1,
@@ -23,10 +39,11 @@ enum log_level_t {
 };
 
 typedef struct forwarder_config_ {
-  char* version;
+  char *version;
   int major;
   int minor;
-  uint64_t revision;
+  uint64_t tweak;
+  char* build_date;
   // mqtt-sn gateway
   char *mqtt_sn_gateway_host;
   int mqtt_sn_gateway_port;

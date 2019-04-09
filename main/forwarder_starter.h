@@ -12,6 +12,10 @@
 #include <stdlib.h>
 #include <network/plugin/plugin_interface.h>
 
+typedef struct MqttSnForwarder_fcfg_ptr_ {
+  MqttSnForwarder *mqttSnForwarder_ptr;
+  const forwarder_config *fcfg_ptr;
+} MqttSnForwarder_fcfg_ptr;
 
 int convert_string_to_device_address(const char *string, device_address *address);
 
