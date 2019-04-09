@@ -5,10 +5,56 @@
 #include <netdb.h>
 #include <stdio.h>
 #include "MqttSnIpNetworkHelper.h"
+#include "../../../main/forwarder_config.h"
 #include <string.h>
 #include <arpa/inet.h>
 #include <assert.h>
 #include <netinet/in.h>
+
+
+int log_open_socket(int level, const char *protocol, const device_address *address) {
+  if (level <= LOG_LEVEL_QUIET) {
+    return 0;
+  }
+
+  const char *opening = ": Opening ";
+  const char *listen_socket = " listen socket ";
+  const char *on_port = " on port ";
+  const char *dot = ".";
+  uint32_t port = get_port_from_device_address(address);
+
+  return (log_current_time() ||
+      log_str(opening) ||
+      log_str(protocol) ||
+      log_str(listen_socket) ||
+      log_device_address(address) ||
+      log_str(on_port) ||
+      log_uint32(port) ||
+      log_str(dot) ||
+      log_flush() != 0);
+}
+
+int log_close_socket(int level, const char *protocol, const device_address *address) {
+  if (level <= LOG_LEVEL_QUIET) {
+    return 0;
+  }
+
+  const char *close = ": Close ";
+  const char *listen_socket = " listen socket ";
+  const char *on_port = " on port ";
+  const char *dot = ".";
+  uint32_t port = get_port_from_device_address(address);
+
+  return (log_current_time() ||
+      log_str(close) ||
+      log_str(protocol) ||
+      log_str(listen_socket) ||
+      log_device_address(address) ||
+      log_str(on_port) ||
+      log_uint32(port) ||
+      log_str(dot) ||
+      log_flush() != 0);
+}
 
 int get_device_address_from_hostname(const char *hostname, device_address *dst) {
   memset(dst, 0, sizeof(device_address));
