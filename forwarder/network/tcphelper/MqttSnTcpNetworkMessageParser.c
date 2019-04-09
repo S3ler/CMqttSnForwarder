@@ -4,6 +4,7 @@
 
 #include <string.h>
 #include <network/iphelper/MqttSnIpNetworkHelper.h>
+#include <MqttSnMessageParser.h>
 #include "MqttSnTcpNetworkMessageParser.h"
 #include "../../../main/forwarder_config.h"
 
@@ -69,8 +70,8 @@ int save_messages_into_receive_buffer(uint8_t *buffer,
     }
     return -1;
   }
-  if (isThreeBytesHeader(client_buffer, *client_buffer_bytes) &&
-      !isCompleteThreeBytesHeader(client_buffer, *client_buffer_bytes)) {
+  if (isThreeBytesTcpHeader(client_buffer, *client_buffer_bytes) &&
+      !isCompleteThreeBytesTcpHeader(client_buffer, *client_buffer_bytes)) {
     if (*client_buffer_bytes == 1) {
       if (read_bytes == 1) {
         // copy and increase - then we are done
@@ -122,7 +123,7 @@ int save_messages_into_receive_buffer(uint8_t *buffer,
   return -1;
 }
 
-uint16_t get_message_length(uint8_t *data) {
+uint16_t get_tcp_message_length(uint8_t *data) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
   if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01) {
@@ -136,7 +137,7 @@ uint16_t get_message_length(uint8_t *data) {
   return oneOctetLengthField->length;
 }
 
-int isCompleteThreeBytesHeader(uint8_t *data, ssize_t data_length) {
+int isCompleteThreeBytesTcpHeader(uint8_t *data, ssize_t data_length) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
   if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01 && data_length > 2) {
@@ -145,7 +146,7 @@ int isCompleteThreeBytesHeader(uint8_t *data, ssize_t data_length) {
   return 0;
 }
 
-int isThreeBytesHeader(uint8_t *data, ssize_t data_length) {
+int isThreeBytesTcpHeader(uint8_t *data, ssize_t data_length) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
   if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01) {
@@ -172,7 +173,7 @@ int save_complete_new_message(uint8_t *data,
                               uint8_t *client_buffer,
                               uint16_t *client_buffer_bytes,
                               MqttSnFixedSizeRingBuffer *receiveBuffer) {
-  if (data_length != get_message_length(data)) {
+  if (data_length != get_tcp_message_length(data)) {
     return -1;
   }
   save_message_into_receive_buffer(data, (uint16_t) data_length, address, receiveBuffer);
@@ -187,12 +188,12 @@ int save_incomplete_new_message(uint8_t *data,
                                 uint8_t *client_buffer,
                                 uint16_t *client_buffer_bytes,
                                 MqttSnFixedSizeRingBuffer *receiveBuffer) {
-  if (isThreeBytesHeader(data, data_length)) {
-    if (isCompleteThreeBytesHeader(data, data_length) && (data_length >= get_message_length(data))) {
+  if (isThreeBytesTcpHeader(data, data_length)) {
+    if (isCompleteThreeBytesTcpHeader(data, data_length) && (data_length >= get_tcp_message_length(data))) {
       return -1;
     }
   } else {
-    if (data_length >= get_message_length(data)) {
+    if (data_length >= get_tcp_message_length(data)) {
       return -1;
     }
   }
@@ -208,13 +209,13 @@ int save_multiple_complete_new_messages(uint8_t *data,
                                         uint8_t *client_buffer,
                                         uint16_t *client_buffer_bytes,
                                         MqttSnFixedSizeRingBuffer *receiveBuffer) {
-  if (data_length < get_message_length(data)) {
+  if (data_length < get_tcp_message_length(data)) {
     return -1;
   }
   ssize_t read_bytes = 0;
-  uint16_t message_length = get_message_length(data);
+  uint16_t message_length = get_tcp_message_length(data);
   for (; data_length >= read_bytes + message_length;
-         read_bytes += message_length, message_length = get_message_length(data)) {
+         read_bytes += message_length, message_length = get_tcp_message_length(data)) {
     if (save_complete_new_message(data + read_bytes,
                                   message_length,
                                   address,
@@ -248,7 +249,7 @@ int save_completed_message(uint8_t *data,
                            uint8_t *client_buffer,
                            uint16_t *client_buffer_bytes,
                            MqttSnFixedSizeRingBuffer *receiveBuffer) {
-  if (*client_buffer_bytes + data_length != get_message_length(client_buffer)) {
+  if (*client_buffer_bytes + data_length != get_tcp_message_length(client_buffer)) {
     return -1;
   }
   memcpy(client_buffer + *client_buffer_bytes, data, (size_t) data_length);
@@ -265,7 +266,7 @@ int save_incomplete_message(uint8_t *data,
                             uint8_t *client_buffer,
                             uint16_t *client_buffer_bytes,
                             MqttSnFixedSizeRingBuffer *receiveBuffer) {
-  if (*client_buffer_bytes + data_length >= get_message_length(client_buffer)) {
+  if (*client_buffer_bytes + data_length >= get_tcp_message_length(client_buffer)) {
     return -1;
   }
   memcpy(client_buffer + *client_buffer_bytes, data, (size_t) data_length);
@@ -279,13 +280,13 @@ int save_multiple_messages(uint8_t *data,
                            uint8_t *client_buffer,
                            uint16_t *client_buffer_bytes,
                            MqttSnFixedSizeRingBuffer *receiveBuffer) {
-  if (*client_buffer_bytes + data_length < get_message_length(client_buffer)) {
+  if (*client_buffer_bytes + data_length < get_tcp_message_length(client_buffer)) {
     return -1;
   }
-  uint16_t completed_message_bytes = get_message_length(client_buffer) - *client_buffer_bytes;
+  uint16_t completed_message_bytes = get_tcp_message_length(client_buffer) - *client_buffer_bytes;
 
   if (save_completed_message(data,
-                             get_message_length(client_buffer) - *client_buffer_bytes,
+                             get_tcp_message_length(client_buffer) - *client_buffer_bytes,
                              address,
                              client_buffer,
                              client_buffer_bytes,

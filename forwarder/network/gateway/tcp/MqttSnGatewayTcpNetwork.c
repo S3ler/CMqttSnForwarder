@@ -356,8 +356,8 @@ int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
     }
     return -1;
   }
-  if (isThreeBytesHeader(gatewayTcpNetwork->gateway_buffer, gatewayTcpNetwork->gateway_buffer_bytes) &&
-      !isCompleteThreeBytesHeader(gatewayTcpNetwork->gateway_buffer, gatewayTcpNetwork->gateway_buffer_bytes)) {
+  if (isThreeBytesTcpHeader(gatewayTcpNetwork->gateway_buffer, gatewayTcpNetwork->gateway_buffer_bytes) &&
+      !isCompleteThreeBytesTcpHeader(gatewayTcpNetwork->gateway_buffer, gatewayTcpNetwork->gateway_buffer_bytes)) {
     if (gatewayTcpNetwork->gateway_buffer_bytes == 1) {
       if (read_bytes == 1) {
         // copy and increase - then we are done

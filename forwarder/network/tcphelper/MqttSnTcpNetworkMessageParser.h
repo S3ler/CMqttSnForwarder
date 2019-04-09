@@ -35,11 +35,11 @@ int save_messages_into_receive_buffer(uint8_t *data,
                                       uint16_t *client_buffer_bytes,
                                       MqttSnFixedSizeRingBuffer *receiveBuffer);
 
-uint16_t get_message_length(uint8_t *data);
+uint16_t get_tcp_message_length(uint8_t *data);
 
-int isCompleteThreeBytesHeader(uint8_t *data, ssize_t data_length);
+int isCompleteThreeBytesTcpHeader(uint8_t *data, ssize_t data_length);
 
-int isThreeBytesHeader(uint8_t *data, ssize_t data_length);
+int isThreeBytesTcpHeader(uint8_t *data, ssize_t data_length);
 
 int save_message_into_receive_buffer(uint8_t *data,
                                      uint16_t data_length,

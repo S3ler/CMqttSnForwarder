@@ -26,55 +26,57 @@ void MqttSnLoggerDeinit(MqttSnLogger *logger);
 int log_flush(const MqttSnLogger *logger);
 int log_str(const MqttSnLogger *logger, const char *str);
 
-int log_int8(MqttSnLogger *logger, int8_t n);
-int log_int16(MqttSnLogger *logger, int16_t n);
-int log_int32(MqttSnLogger *logger, int32_t n);
-int log_int64(MqttSnLogger *logger, int64_t n);
+int log_int8(const MqttSnLogger *logger, int8_t n);
+int log_int16(const MqttSnLogger *logger, int16_t n);
+int log_int32(const MqttSnLogger *logger, int32_t n);
+int log_int64(const MqttSnLogger *logger, int64_t n);
 
 int log_uint8(const MqttSnLogger *logger, uint8_t n);
-int log_uint16(MqttSnLogger *logger, uint16_t n);
+int log_uint16(const MqttSnLogger *logger, uint16_t n);
 int log_uint32(const MqttSnLogger *logger, uint32_t n);
-int log_uint64(MqttSnLogger *logger, uint64_t n);
-int log_uint64(MqttSnLogger *logger, uint64_t n);
+int log_uint64(const MqttSnLogger *logger, uint64_t n);
+int log_uintmax(const MqttSnLogger *logger, uintmax_t n);
 
 int log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length);
 
-int log_uintmax(const MqttSnLogger *logger, uintmax_t n);
-int log_key_int8_value(MqttSnLogger *logger, const char *key, int8_t v);
+int log_key_int8_value(MqttSnLogger *logger, const char *key, int8_t val);
 
 int get_timestamp(uint64_t *t);
+
 int log_current_time(const MqttSnLogger *logger);
 
 int log_device_address(const MqttSnLogger *logger, const device_address *address);
 
-int log_gateway_id(MqttSnLogger *logger, uint8_t gwId);
+int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags);
 
-int log_gateway_add(MqttSnLogger *logger, uint8_t gwAdd);
+int log_gateway_id(const MqttSnLogger *logger, uint8_t gwId);
 
-int log_message_id(MqttSnLogger *logger, uint32_t msgId);
+int log_gateway_add(const MqttSnLogger *logger, uint8_t gwAdd);
 
-int log_clean_flag(MqttSnLogger *logger, uint8_t clean);
+int log_message_id(const MqttSnLogger *logger, uint16_t msgId);
 
-int log_duration(MqttSnLogger *logger, uint32_t duration);
+int log_clean_flag(const MqttSnLogger *logger, uint8_t clean);
 
-int log_protocol_id(MqttSnLogger *logger, uint8_t protocolId);
+int log_duration(const MqttSnLogger *logger, uint16_t duration);
 
-int log_will_flag(MqttSnLogger *logger, uint8_t will);
+int log_protocol_id(const MqttSnLogger *logger, uint8_t protocolId);
 
-int log_return_code(MqttSnLogger *logger, uint8_t returnCode);
+int log_will_flag(const MqttSnLogger *logger, uint8_t will);
 
-int log_topic_id(MqttSnLogger *logger, uint32_t topicId);
+int log_return_code(const MqttSnLogger *logger, uint8_t returnCode);
 
-int log_topic_name(MqttSnLogger *logger, const char *topicName);
+int log_topic_id(const MqttSnLogger *logger, uint16_t topicId);
 
-int log_topic_id_type(MqttSnLogger *logger, uint8_t topicIdType);
+int log_topic_name(const MqttSnLogger *logger, const char *topicName);
 
-int log_retain_flag(MqttSnLogger *logger, uint8_t retainFlag);
+int log_topic_id_type(const MqttSnLogger *logger, uint8_t topicIdType);
 
-int log_data_byte_counter(MqttSnLogger *logger, uint32_t dataByteCount);
+int log_retain_flag(const MqttSnLogger *logger, uint8_t retainFlag);
 
-// 1554750672: cmqttsnforwarder version 1.4.15 (build date 1553632477) starting
-// { "t":1554750672, "name":"cmqttsnforwarder", "version":"1.4.15", "builddate":1553632477, "action":"starting"}
+int log_data_byte_counter(const MqttSnLogger *logger, uint32_t dataByteCount);
+
+int log_qos(const MqttSnLogger *logger, int8_t qos);
+
 int log_forwarder_started(const MqttSnLogger *logger,
                           int level,
                           const char *version,
@@ -83,7 +85,6 @@ int log_forwarder_started(const MqttSnLogger *logger,
                           int tweak,
                           const char *build_date);
 
-// 1554750672: cmqttsnforwarder version 1.4.15 terminated
 int log_forwarder_terminated(const MqttSnLogger *logger,
                              int level,
                              const char *version,
@@ -98,16 +99,12 @@ int log_forwarder_terminated(const MqttSnLogger *logger,
 // LOG_LEVEL_DEFAULT
 //int log_config(int level, forwarder_config *fcfg);
 
-// 1554750679: client message from 127.0.0.1.24.11 to 127.0.0.1.24.11 ( length255, bytes(5, 3, 2 , 1)).
-// LOG_LEVEL_DEBUG
 int log_client_message(const MqttSnLogger *logger,
                        int level,
                        const device_address *address,
                        const uint8_t *data,
                        uint16_t data_len);
 
-// 1554750679: gateway message from 127.0.0.1.24.11 to 127.0.0.1.24.11 ( length255, bytes(5, 3, 2 , 1)).
-// LOG_LEVEL_DEBUG
 int log_gateway_message(const MqttSnLogger *logger,
                         int level,
                         const device_address *address,
@@ -116,11 +113,80 @@ int log_gateway_message(const MqttSnLogger *logger,
 
 // logs any valid mqtt-sn message from the client network
 // LOG_LEVEL_DEFAULT
-int log_client_mqtt_sn_message(int level, const device_address *address, const uint8_t *data, uint16_t data_len);
+int log_client_mqtt_sn_message(const MqttSnLogger *logger,
+                               int level,
+                               const device_address *address,
+                               const uint8_t *data,
+                               uint16_t data_len);
 
 // logs any valid mqtt-sn message from the gateway network
 // LOG_LEVEL_DEFAULT
-int log_gateway_mqtt_sn_message(int level, const device_address *address, const uint8_t *data, uint16_t data_len);
+int log_gateway_mqtt_sn_message(const MqttSnLogger *logger,
+                                int level,
+                                const device_address *address,
+                                const uint8_t *data,
+                                uint16_t data_len);
+
+// 1554750679: CONNECT from 127.0.0.1 as SomeDude210607853 (m1, c1, d60, p1, w0).
+// device_address, clientId {char [0 - 24]}
+// (m)essageId [0 - 65535], (c)lean [1|0], (d)uration [0 - 65535], (p)rotocolId [1], (w)ill [1|0]
+// LOG_LEVEL_DEFAULT
+int log_client_connect_message(const MqttSnLogger *logger,
+                               int level,
+                               const device_address *address,
+                               const uint8_t *data,
+                               uint16_t data_len);
+
+// 1554750679: CONNACK to 127.0.0.1 (rc0).
+// device_address
+// (r)eturnCode [0 - 255]
+// LOG_LEVEL_DEFAULT
+int log_gateway_connack_message(const MqttSnLogger *logger,
+                                int level,
+                                const device_address *address,
+                                const uint8_t *data,
+                                uint16_t data_len);
+
+// 1554750679: PUBLISH from 127.0.0.1 (m4, d0, q-1, r0, t0, t2, ... (20 bytes)).
+// device_address
+// (m)essageId [0 - 65535], (d)up [1|0], (q)os [-1|0|1|2], (r)etain [0|1] ,(t)opicIdType [0|1|2], (t)opicId [0-65535], dataByteCount {bytes [0 - 65535-2-2-1-1]}
+// LOG_LEVEL_VERBOSE
+int log_client_publish_message(const MqttSnLogger *logger,
+                               int level,
+                               const device_address *address,
+                               const uint8_t *data,
+                               uint16_t data_len);
+
+// 1554750679: PUBLISH to 127.0.0.1 (m4, d0, q-1, r0, t0, t2, ... (20 bytes)).
+// device_address
+// (m)essageId [0 - 65535], (d)up [1|0], (q)os [-1|0|1|2], (r)etain [0|1] ,(t)opicIdType [0|1|2], (t)opicId [0-65535], dataByteCount {bytes [0 - 65535-2-2-1-1]}
+// LOG_LEVEL_VERBOSE
+int log_gateway_publish_message(const MqttSnLogger *logger,
+                                int level,
+                                const device_address *address,
+                                const uint8_t *data,
+                                uint16_t data_len);
+
+// 1554750679: DISCONNECT from 127.0.0.1.
+// 1554750679: DISCONNECT from 127.0.0.1 (d600).
+// device_address
+// (d)uration [0 - 65535]
+// LOG_LEVEL_DEFAULT
+int log_client_disconnect_message(const MqttSnLogger *logger,
+                                  int level,
+                                  const device_address *address,
+                                  const uint8_t *data,
+                                  uint16_t data_len);
+
+// 1554750679: DISCONNECT to 127.0.0.1.
+// device_address
+// LOG_LEVEL_DEFAULT
+int log_gateway_disconnect_message(const MqttSnLogger *logger,
+                                   int level,
+                                   const device_address *address,
+                                   const uint8_t *data,
+                                   uint16_t data_len);
+
 
 // 1554750679: ADVERTISE to 255.255.255.255.34.11 (gw1, d600).
 // device_address
@@ -146,30 +212,6 @@ int log_client_gwinfo_message(int level, device_address address);
 // LOG_LEVEL_VERBOSE
 int log_gateway_gwinfo_message(int level, device_address address);
 
-// 1554750679: CONNECT from 127.0.0.1 as SomeDude210607853 (m1, c1, d60, p1, w0).
-// device_address, clientId {char [0 - 24]}
-// (m)essageId [0 - 65535], (c)lean [1|0], (d)uration [0 - 65535], (p)rotocolId [1], (w)ill [1|0]
-// LOG_LEVEL_DEFAULT
-int log_client_connect_message(int level, device_address address);
-
-// 1554750679: CONNECT to 127.0.0.1 (rc0).
-// device_address
-// (r)eturnCode [0 - 255]
-// LOG_LEVEL_DEFAULT
-int log_gateway_connak_message(int level, device_address address);
-
-// 1554750679: DISCONNECT from 127.0.0.1.
-// 1554750679: DISCONNECT from 127.0.0.1 (d600).
-// device_address
-// (d)uration [0 - 65535]
-// LOG_LEVEL_DEFAULT
-int log_client_disconnect_message(int level, device_address address);
-
-// 1554750679: DISCONNECT to 127.0.0.1.
-// device_address
-// LOG_LEVEL_DEFAULT
-int log_gateway_disconnect_message(int level, device_address address);
-
 // 1554750679: REGISTER from 127.0.0.1 (m1, t0, 'some/topic/name').
 // device_address
 // LOG_LEVEL_VERBOSE
@@ -194,18 +236,6 @@ int log_client_subscribe_message(int level, device_address address);
 // (m)essageId [0 - 65535], (q)os [-1|0|1|2], (t)opicId [0-65535], (r)eturnCode [0 - 255]
 // LOG_LEVEL_VERBOSE
 int log_gateway_suback_message(int level, device_address address);
-
-// 1554750679: PUBLISH from 127.0.0.1 (m4, d0, q-1, r0, t0, t2, ... (20 bytes)).
-// device_address
-// (m)essageId [0 - 65535], (d)up [1|0], (q)os [-1|0|1|2], (r)etain [0|1] ,(t)opicIdType [0|1|2], (t)opicId [0-65535], dataByteCount {bytes [0 - 65535-2-2-1-1]}
-// LOG_LEVEL_VERBOSE
-int log_client_publish_message(int level, device_address address);
-
-// 1554750679: PUBLISH to 127.0.0.1 (m4, d0, q-1, r0, t0, t2, ... (20 bytes)).
-// device_address
-// (m)essageId [0 - 65535], (d)up [1|0], (q)os [-1|0|1|2], (r)etain [0|1] ,(t)opicIdType [0|1|2], (t)opicId [0-65535], dataByteCount {bytes [0 - 65535-2-2-1-1]}
-// LOG_LEVEL_VERBOSE
-int log_gateway_publish_message(int level, device_address address);
 
 // 1554750679: PUBACK from 127.0.0.1 (m4, t2, r0).
 // device_address

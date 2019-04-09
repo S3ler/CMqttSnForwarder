@@ -8,6 +8,7 @@
 #include "MqttSnForwarder.h"
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
+#include "MqttSnMessageParser.h"
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder, void *clientNetworkContext, void *gatewayNetworkContext) {
 
@@ -208,9 +209,21 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
   if (pop(&forwarder->gatewayNetworkReceiveBuffer, gatewayMessageData) != 0) {
     return 0;
   }
+
   if (RemoveMqttSnForwardingHeader(gatewayMessageData, clientMessageData) != 0) {
     return 0;
   }
+
+#ifdef WITH_LOGGING
+  if (log_gateway_mqtt_sn_message(&forwarder->logger,
+                                 forwarder->logger.log_level,
+                                 &clientMessageData->address,
+                                 clientMessageData->data,
+                                 clientMessageData->data_length)) {
+    return -1;
+  }
+#endif
+
   if (put(&forwarder->clientNetworkSendBuffer, clientMessageData) != 0) {
     // we do our best to not drop message due to RAM loss
     put(&forwarder->gatewayNetworkReceiveBuffer, gatewayMessageData);
@@ -227,6 +240,17 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
   if (pop(&forwarder->clientNetworkReceiveBuffer, clientMessageData) != 0) {
     return 0;
   }
+
+#ifdef WITH_LOGGING
+  if (log_client_mqtt_sn_message(&forwarder->logger,
+                                 forwarder->logger.log_level,
+                                 &clientMessageData->address,
+                                 clientMessageData->data,
+                                 clientMessageData->data_length)) {
+    return -1;
+  }
+#endif
+
   if (AddMqttSnForwardingHeader(clientMessageData, gatewayMessageData) != 0) {
     return 0;
   }

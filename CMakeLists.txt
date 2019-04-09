@@ -45,7 +45,7 @@ set(IMPLEMENTATIONL_FILES
         forwarder/network/plugin/MqttSnGatewayPluginNetwork.h
         forwarder/network/plugin/MqttSnGatewayPluginNetwork.c
         forwarder/MqttSnForwarderLogging.h
-        forwarder/MqttSnForwarderLogging.c)
+        forwarder/MqttSnForwarderLogging.c forwarder/MqttSnMessageParser.h forwarder/MqttSnMessageParser.c)
 include_directories(forwarder)
 
 set(CMQTTSNFORWADER_ERROR_COMPILE_FLAGS -Wall -Wextra -pedantic -Werror -Wno-unused-parameter)

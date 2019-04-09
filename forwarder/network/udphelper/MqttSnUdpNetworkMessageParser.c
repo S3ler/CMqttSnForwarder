@@ -16,6 +16,7 @@
 #include <arpa/inet.h>
 #include <sys/select.h>
 #include <network/iphelper/MqttSnIpNetworkHelper.h>
+#include <MqttSnMessageParser.h>
 
 int save_udp_messages_into_receive_buffer(uint8_t *buffer,
                                           ssize_t read_bytes,

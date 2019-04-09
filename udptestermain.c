@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <arpa/inet.h>
+#include <MqttSnMessageParser.h>
 #include "forwarder/global_defines.h"
 
 #define FORWARDER_IP "127.0.0.1"
@@ -223,11 +224,11 @@ int openGatewaySocket(int port) {
 
 int MqttSnPublishInit(MQTT_SN_PUBLISH *publish, uint8_t *data, uint16_t length) {
   publish->length = (uint8_t) (length + PUBLISH_HEADER_LEN);
-  publish->msg_type = 0x0C;
+  publish->msg_type = PUBLISH;
   publish->flags = 0;
   publish->flags = (uint8_t) (publish->flags | 0x62); // 0b01100010
-  publish->topic_id = 1;
-  publish->msg_id = 0;
+  publish->topic_id = htons(5);
+  publish->msg_id = htons(10);
   memcpy(publish->data, data, length);
   return 0;
 }
