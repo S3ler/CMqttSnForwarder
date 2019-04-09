@@ -17,6 +17,7 @@ typedef struct MqttSnLogger_ {
   void (*log_deinit)(struct MqttSnLogger_ *logger);
   int (*log_flush)(const struct MqttSnLogger_ *logger);
   int (*log_str)(const char *str);
+  int log_level;
 } MqttSnLogger;
 
 int MqttSnLoggerInit(MqttSnLogger *logger);

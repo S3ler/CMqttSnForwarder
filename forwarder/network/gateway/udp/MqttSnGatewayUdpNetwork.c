@@ -15,6 +15,7 @@
 #include <memory.h>
 #include "MqttSnGatewayUdpNetwork.h"
 #include <network/udphelper/MqttSnUdpNetworkMessageParser.h>
+#include <network/iphelper/MqttSnIpNetworkHelper.h>
 #include "../../../MqttSnFixedSizeRingBuffer.h"
 
 int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
@@ -33,15 +34,21 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   if (networkInterface->forwarder_network_address == NULL) {
     // TODO implement searching for gateway
   }
-
-  uint16_t port = (((uint16_t) networkInterface->forwarder_network_address->bytes[4]) << 8)
-      + ((uint16_t) networkInterface->forwarder_network_address->bytes[5]);
+  uint16_t port = get_port_from_device_address(networkInterface->forwarder_network_address);
 
   udpNetwork->my_socket = initialize_udp_socket(port);
 
   if (udpNetwork->my_socket == -1) {
     return -1;
   }
+#ifdef WITH_LOGGING
+  if (networkInterface->logger) {
+    log_open_socket(networkInterface->logger,
+                    networkInterface->logger->log_level,
+                    "udp",
+                    networkInterface->forwarder_network_address);
+  }
+#endif
   return 0;
 }
 
@@ -50,6 +57,14 @@ void GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) 
   if (udpNetwork->my_socket != 0) {
     close(udpNetwork->my_socket);
     udpNetwork->my_socket = 0;
+#ifdef WITH_LOGGING
+    if (n->logger) {
+      log_close_socket(n->logger,
+                       n->logger->log_level,
+                       "udp",
+                       n->forwarder_network_address);
+    }
+#endif
   }
 }
 

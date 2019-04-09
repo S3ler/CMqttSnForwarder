@@ -60,7 +60,9 @@ set(TCP_GATWAY_NETWORK_FILES
         forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.c
         forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.h
         forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-        forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+        forwarder/network/iphelper/MqttSnIpNetworkHelper.c
+        forwarder/MqttSnForwarderLogging.h
+        forwarder/MqttSnForwarderLogging.c)
 
 set(UDP_GATWAY_NETWORK_FILES
         forwarder/network/gateway/udp/MqttSnGatewayUdpNetwork.h
@@ -68,7 +70,9 @@ set(UDP_GATWAY_NETWORK_FILES
         forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.h
         forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.c
         forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-        forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+        forwarder/network/iphelper/MqttSnIpNetworkHelper.c
+        forwarder/MqttSnForwarderLogging.h
+        forwarder/MqttSnForwarderLogging.c)
 
 set(TCP_CLIENT_NETWORK_FILES
         forwarder/network/client/tcp/MqttSnClientTcpNetwork.h
@@ -76,7 +80,9 @@ set(TCP_CLIENT_NETWORK_FILES
         forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.c
         forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.h
         forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-        forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+        forwarder/network/iphelper/MqttSnIpNetworkHelper.c
+        forwarder/MqttSnForwarderLogging.h
+        forwarder/MqttSnForwarderLogging.c)
 
 set(UDP_CLIENT_NETWORK_FILES
         forwarder/network/client/udp/MqttSnClientUdpNetwork.c
@@ -84,7 +90,9 @@ set(UDP_CLIENT_NETWORK_FILES
         forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.h
         forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.c
         forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-        forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+        forwarder/network/iphelper/MqttSnIpNetworkHelper.c
+        forwarder/MqttSnForwarderLogging.h
+        forwarder/MqttSnForwarderLogging.c)
 
 set(STDOUT_LOGGING_FILES
         forwarder/logging/linux/stdout/StdoutLogging.c

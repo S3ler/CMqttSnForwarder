@@ -31,6 +31,10 @@ void print_usage(void);
 #define CMAKE_BUILD_TIMESTAMP "N/D"
 #endif
 
+#ifndef WITH_LOGGING
+#define WITH_LOGGING
+#endif
+
 enum log_level_t {
   LOG_LEVEL_QUIET = 0,
   LOG_LEVEL_DEFAULT = 1,
@@ -43,7 +47,7 @@ typedef struct forwarder_config_ {
   int major;
   int minor;
   uint64_t tweak;
-  char* build_date;
+  char *build_date;
   // mqtt-sn gateway
   char *mqtt_sn_gateway_host;
   int mqtt_sn_gateway_port;

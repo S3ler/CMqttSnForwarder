@@ -2,6 +2,7 @@
 
 #include "MqttSnClientUdpNetwork.h"
 #include <network/udphelper/MqttSnUdpNetworkMessageParser.h>
+#include <network/iphelper/MqttSnIpNetworkHelper.h>
 
 int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *clientUdpNetwork = (MqttSnClientUdpNetwork *) context;
@@ -18,14 +19,21 @@ int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context) {
 int ClientLinuxUdpConnect(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *clientUdpNetwork = (MqttSnClientUdpNetwork *) context;
 
-  uint16_t port = (((uint16_t) n->client_network_address->bytes[4]) << 8)
-      + ((uint16_t) n->client_network_address->bytes[5]);
+  uint16_t port = get_port_from_device_address(n->client_network_address);
 
   clientUdpNetwork->master_socket = initialize_udp_socket(port);
 
   if (clientUdpNetwork->master_socket == -1) {
     return -1;
   }
+#ifdef WITH_LOGGING
+  if (n->logger) {
+    log_open_socket(n->logger,
+                    n->logger->log_level,
+                    "udp",
+                    n->client_network_address);
+  }
+#endif
   return 0;
 }
 
@@ -34,6 +42,14 @@ void ClientLinuxUdpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
   if (clientUdpNetwork->master_socket != -1) {
     close(clientUdpNetwork->master_socket);
     clientUdpNetwork->master_socket = -1;
+#ifdef WITH_LOGGING
+    if (n->logger) {
+      log_close_socket(n->logger,
+                       n->logger->log_level,
+                       "udp",
+                       n->client_network_address);
+    }
+#endif
   }
 }
 

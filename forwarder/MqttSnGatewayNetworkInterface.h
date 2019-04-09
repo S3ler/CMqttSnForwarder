@@ -11,6 +11,7 @@ extern "C" {
 
 #include <stdint.h>
 #include "MqttSnFixedSizeRingBuffer.h"
+#include "MqttSnForwarderLogging.h"
 
 typedef struct MqttSnGatewayNetworkInterface {
 
@@ -29,6 +30,10 @@ typedef struct MqttSnGatewayNetworkInterface {
   device_address *gateway_network_address;
 
   device_address *forwarder_network_address;
+
+#ifdef WITH_LOGGING
+  MqttSnLogger* logger;
+#endif
 
 } MqttSnGatewayNetworkInterface;
 

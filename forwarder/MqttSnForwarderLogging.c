@@ -79,7 +79,7 @@ int log_forwarder_started(const MqttSnLogger *logger,
   const char *is = " is ";
   const char *dot = ".";
   const char *build_date_str = " (build date ";
-  const char *action = ") starting.";
+  const char *action = ") started.";
 
   return (log_current_time(logger) ||
       log_str(logger, name_version) ||
@@ -127,6 +127,8 @@ int MqttSnLoggerInit(MqttSnLogger *logger) {
   logger->log_deinit = stdout_log_deinit;
   logger->log_flush = stdout_log_flush;
   logger->log_str = stdout_log_str;
+  // TODO exchange with fcfg->log_level
+  logger->log_level = LOG_LEVEL_DEFAULT;
   return logger->log_init(logger);
 }
 

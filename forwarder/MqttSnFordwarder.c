@@ -11,10 +11,14 @@
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder, void *clientNetworkContext, void *gatewayNetworkContext) {
 
+#ifdef WITH_LOGGING
   if (MqttSnLoggerInit(&mqttSnForwarder->logger) != 0) {
     MqttSnLoggerDeinit(&mqttSnForwarder->logger);
     return -1;
   }
+  mqttSnForwarder->gatewayNetwork.logger = &mqttSnForwarder->logger;
+  mqttSnForwarder->clientNetwork.logger = &mqttSnForwarder->logger;
+#endif
 
   mqttSnForwarder->clientNetworkContext = clientNetworkContext;
   MqttSnFixedSizeRingBufferInit(&mqttSnForwarder->clientNetworkReceiveBuffer);

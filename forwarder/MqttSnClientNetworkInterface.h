@@ -11,7 +11,7 @@ extern "C" {
 
 #include <stdint.h>
 #include "MqttSnFixedSizeRingBuffer.h"
-
+#include "MqttSnForwarderLogging.h"
 /**
  * MqttSnClientNetworkInterface provides an interface for to glue different kind of network implementations to the
  * MqttSnForwarder.
@@ -37,6 +37,10 @@ typedef struct MqttSnClientNetworkInterface {
   void (*client_network_disconnect)(struct MqttSnClientNetworkInterface *, void *context);
 
   device_address *client_network_address;
+
+#ifdef WITH_LOGGING
+  MqttSnLogger *logger;
+#endif
 
 } MqttSnClientNetworkInterface;
 
