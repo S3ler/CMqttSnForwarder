@@ -37,6 +37,8 @@ int log_uint32(const MqttSnLogger *logger, uint32_t n);
 int log_uint64(MqttSnLogger *logger, uint64_t n);
 int log_uint64(MqttSnLogger *logger, uint64_t n);
 
+int log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length);
+
 int log_uintmax(const MqttSnLogger *logger, uintmax_t n);
 int log_key_int8_value(MqttSnLogger *logger, const char *key, int8_t v);
 

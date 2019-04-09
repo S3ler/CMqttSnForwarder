@@ -8,7 +8,6 @@
 #include <stdint.h>
 #include <logging/linux/stdout/StdoutLogging.h>
 
-bool log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length);
 int log_uint8(const MqttSnLogger *logger, uint8_t n) {
   const char *uint8_max_str = "255";
   int uint8_max_str_length = strlen(uint8_max_str);
@@ -190,12 +189,17 @@ int log_client_message(const MqttSnLogger *logger,
       log_str(logger, bytes_end) ||
       log_flush(logger) != 0);
 }
-bool log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length) {
+
+int log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length) {
   const char *comma = ", ";
   for (uint16_t i = 0; i < data_length; ++i) {
-    log_uint8(logger, data[i]);
+    if(log_uint8(logger, data[i])){
+      return -1;
+    }
     if (i + 1 < data_length) {
-      log_str(logger, comma);
+      if(log_str(logger, comma)){
+        return -1;
+      }
     }
   }
   return 0;
