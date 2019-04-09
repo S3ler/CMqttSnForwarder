@@ -2,6 +2,7 @@
 // Created by SomeDude on 07.04.2019.
 //
 #include "forwarder_starter.h"
+#include "MqttSnForwarderLogging.h"
 #include <stdlib.h>
 #include <network/plugin/plugin_interface.h>
 #include <network/plugin/MqttSnGatewayPluginNetwork.h>
@@ -346,10 +347,20 @@ int start_forwarder(const forwarder_config *fcfg,
     fprintf(stderr, "Error creating thread\n");
     return EXIT_FAILURE;
   }
+
+  if (log_forwarder_started(fcfg->log_lvl, fcfg->version, fcfg->major, fcfg->minor, fcfg->revision)) {
+    return EXIT_FAILURE;
+  }
+
   if (pthread_join(mqttSnForwarder_thread, NULL)) {
     fprintf(stderr, "Error joining thread\n");
     return EXIT_FAILURE;
   }
+
+  if (log_forwarder_terminated(fcfg->log_lvl, fcfg->version, fcfg->major, fcfg->minor, fcfg->revision)) {
+    return EXIT_FAILURE;
+  }
+
   return EXIT_SUCCESS;
 }
 // TODO check every value here again...

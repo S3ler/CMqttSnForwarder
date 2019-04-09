@@ -10,6 +10,13 @@
 
 void forwarder_config_init(forwarder_config *fcfg) {
   memset(fcfg, 0, sizeof(*fcfg));
+  fcfg->version = strdup("a0");
+  fcfg->major = 0;
+  fcfg->minor = 1;
+  fcfg->revision = 0;
+
+  fcfg->log_lvl = LOG_LEVEL_DEFAULT;
+
   fcfg->protocol_version = MQTT_SN_PROTOCOL_V1;
 
   fcfg->mqtt_sn_gateway_host = strdup("localhost");
@@ -27,6 +34,7 @@ void forwarder_config_init(forwarder_config *fcfg) {
 }
 
 void forwarder_config_cleanup(forwarder_config *fcfg) {
+  free(fcfg->version);
   free(fcfg->mqtt_sn_gateway_host);
   free(fcfg->gateway_network_protocol);
   free(fcfg->client_network_protocol);
@@ -425,6 +433,7 @@ void print_usage(void) {
 
   // TODO: printf(" -v : verbose mode - enable all logging types.\n");
   // TODO: printf(" --quiet : don't print error messages.\n");
+  // TODO  printf(" --json : produce json valid log message
 
   printf(" --help : display this message.\n");
 

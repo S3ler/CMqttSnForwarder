@@ -18,4 +18,6 @@ int get_device_address_from_addrinfo(struct addrinfo *ai_addr, device_address *d
 
 int add_port_to_device_address(uint32_t port, device_address *dst);
 
+uint32_t get_port_from_device_address(const device_address *src);
+
 #endif //CMQTTSNFORWARDER_MQTTSNIPNETWORKHELPER_H

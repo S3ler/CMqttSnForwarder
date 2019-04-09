@@ -110,7 +110,7 @@ int add_port_to_device_address(uint32_t port, device_address *dst) {
   return 0;
 }
 
-uint32_t get_port_from_device_address(device_address *src) {
+uint32_t get_port_from_device_address(const device_address *src) {
   return (((uint32_t) src->bytes[sizeof(device_address) - 2]) << 8)
       + (((uint32_t) src->bytes[sizeof(device_address) - 1]) << 0);
 }

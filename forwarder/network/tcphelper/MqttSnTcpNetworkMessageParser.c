@@ -3,7 +3,53 @@
 //
 
 #include <string.h>
+#include <network/iphelper/MqttSnIpNetworkHelper.h>
 #include "MqttSnTcpNetworkMessageParser.h"
+#include "../../../main/forwarder_config.h"
+
+// 1554750679: New client connection from 127.0.0.1 on port 1883 [34, 11].
+// device_address, port [0 - 65535]
+// LOG_LEVEL_DEFAULT
+int log_new_tcp_connection(int level, const device_address *address) {
+  if (level <= LOG_LEVEL_QUIET) {
+    return 0;
+  }
+  const char *new_client = ": New client connection from ";
+  const char *on_port = " on port ";
+  const char *dot = ".";
+  uint32_t port = get_port_from_device_address(address);
+
+  return (log_current_time() ||
+      log_str(new_client) ||
+      log_device_address(address) ||
+      log_str(on_port) ||
+      log_uint32(port) ||
+      log_str(dot) ||
+      log_flush() != 0);
+}
+
+// 1554750679: Closed client connection from 127.0.0.1 on port 1883 [34, 11].
+// 1554750679: Client 127.0.0.1 on port 1883 [34, 11] disconnected.
+// device_address, port [0 - 65535]
+// LOG_LEVEL_DEFAULT
+int log_close_tcp_connection(int level, const device_address *address) {
+  if (level <= LOG_LEVEL_QUIET) {
+    return 0;
+  }
+  const char *close_client = ": Closed client connection from ";
+  const char *on_port = " on port ";
+  const char *dot = ".";
+  uint32_t port = get_port_from_device_address(address);
+
+  return (log_current_time() ||
+      log_str(close_client) ||
+      log_device_address(address) ||
+      log_str(on_port) ||
+      log_uint32(port) ||
+      log_str(dot) ||
+      log_flush() != 0);
+
+}
 
 int save_messages_into_receive_buffer(uint8_t *buffer,
                                       ssize_t read_bytes,
