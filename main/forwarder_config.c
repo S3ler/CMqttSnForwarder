@@ -415,7 +415,7 @@ void print_usage(void) {
   printf("       Use to control which interface the network communicates over.\n");
   printf(" -cp : listening on the specific client network port. Defaults to 7777.\n");
   printf(" -cL : specify outgoing socket, port as a URL in the form: address[:port]\n");
-  // TODO timeouts testen (sollte implementiert sein)
+
   printf(" -gst : specify the gateway network send timeout in ms.\n");
   printf("       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
   printf(" -grt : specify the gateway network receive timeout in ms.\n");
@@ -446,10 +446,11 @@ void print_usage(void) {
          "You can set the client port to -1 if you want to overwrite this behaviour\n");
 #if defined(WITH_LOGGING)
   printf(" -q : specify quiet logging. Don't print any log messages.\n");
-  printf(" -d : specify default logging. Print PUBLISH, CONNECT, CONNACK, DISCONNECT messages.\n");
-  printf(" -v : specify verbose logging. Print all MQTT-SN messages.\n");
+  printf(" -d : specify default logging. Print network status changes, and the mqtt-sn messages: "
+         "PUBLISH, CONNECT, CONNACK, DISCONNECT.\n");
+  printf(" -v : specify verbose logging. Print all default logging and all MQTT-SN messages.\n");
 #if defined(WITH_DEBUG_LOGGING)
-  printf(" -db : specify debug logging. Print all MQTT-SN messages including payload and internal information.\n");
+  printf(" -db : specify debug logging. Print all mqtt-sn messages including payload and internal information.\n");
 #endif
   // TODO  printf(" --json : produce json valid log message
 #endif

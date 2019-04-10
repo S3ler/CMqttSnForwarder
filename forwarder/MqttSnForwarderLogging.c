@@ -146,11 +146,13 @@ int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level) {
   logger->log_flush = stdout_log_flush;
   logger->log_str = stdout_log_str;
   logger->log_level = log_level;
+  logger->status = 0;
   return logger->log_init(logger);
 }
 
 void MqttSnLoggerDeinit(MqttSnLogger *logger) {
   logger->log_deinit(logger);
+  logger->status = -1;
 }
 
 int log_flush(const MqttSnLogger *logger) {
@@ -160,11 +162,11 @@ int log_flush(const MqttSnLogger *logger) {
 int log_str(const MqttSnLogger *logger, const char *str) {
   return logger->log_str(str);
 }
-int log_gateway_message(const MqttSnLogger *logger,
-                        int level,
-                        const device_address *address,
-                        const uint8_t *data,
-                        uint16_t data_len) {
+int log_rec_gateway_message(const MqttSnLogger *logger,
+                            int level,
+                            const device_address *address,
+                            const uint8_t *data,
+                            uint16_t data_len) {
   if (level < LOG_LEVEL_DEBUG) {
     return 0;
   }
@@ -183,21 +185,21 @@ int log_gateway_message(const MqttSnLogger *logger,
       log_str(logger, bytes_end) ||
       log_flush(logger) != 0);
 }
-int log_client_message(const MqttSnLogger *logger,
-                       int level,
-                       const device_address *address,
-                       const uint8_t *data,
-                       uint16_t data_len) {
+int log_rec_client_message(const MqttSnLogger *logger,
+                           int level,
+                           const device_address *address,
+                           const uint8_t *data,
+                           uint16_t data_len) {
   if (level < LOG_LEVEL_DEBUG) {
     return 0;
   }
-  const char *client_msg_to = ": client message to ";
+  const char *rec_client_msg_from = ": received client message from ";
   const char *length = " (length";
   const char *bytes = ", bytes( ";
   const char *bytes_end = ")).";
 
   return (log_current_time(logger) ||
-      log_str(logger, client_msg_to) ||
+      log_str(logger, rec_client_msg_from) ||
       log_device_address(logger, address) ||
       log_str(logger, length) ||
       log_uint32(logger, data_len) ||
@@ -654,8 +656,6 @@ int log_network_disconnect(const MqttSnLogger *logger,
       log_flush(logger) != 0);
 }
 
-
-
 int log_protocol_mismatch(const MqttSnLogger *logger, int level, const char *expected, const char *actual) {
   if (level <= LOG_LEVEL_QUIET) {
     return 0;
@@ -690,12 +690,14 @@ int log_protocol_mismatch(const MqttSnLogger *logger, int level, const char *exp
   return 0;
 }
 
-
 int log_too_long_message(const MqttSnLogger *logger,
                          int level,
                          const device_address *address,
                          const uint8_t *data,
                          uint16_t data_len) {
+  if (logger == NULL) {
+    return 0;
+  }
   if (level <= LOG_LEVEL_QUIET) {
     return 0;
   }
@@ -718,4 +720,52 @@ int log_incomplete_message(const MqttSnLogger *logger,
     return -1;
   }
   return 0;
+}
+int log_send_client_message(const MqttSnLogger *logger,
+                            int level,
+                            const device_address *address,
+                            const uint8_t *data,
+                            uint16_t data_len) {
+  if (level < LOG_LEVEL_DEBUG) {
+    return 0;
+  }
+  const char *send_client_msg_to = ": send client message to ";
+  const char *length = " (length";
+  const char *bytes = ", bytes( ";
+  const char *bytes_end = ")).";
+
+  return (log_current_time(logger) ||
+      log_str(logger, send_client_msg_to) ||
+      log_device_address(logger, address) ||
+      log_str(logger, length) ||
+      log_uint32(logger, data_len) ||
+      log_str(logger, bytes) ||
+      log_uint8_array(logger, data, data_len) ||
+      log_str(logger, bytes_end) ||
+      log_flush(logger) != 0);
+}
+
+
+int log_send_gateway_message(const MqttSnLogger *logger,
+                             int level,
+                             const device_address *address,
+                             const uint8_t *data,
+                             uint16_t data_len) {
+  if (level < LOG_LEVEL_DEBUG) {
+    return 0;
+  }
+  const char *gateway_msg_to = ": send gateway message to ";
+  const char *length = " (length";
+  const char *bytes = ", bytes( ";
+  const char *bytes_end = ")).";
+
+  return (log_current_time(logger) ||
+      log_str(logger, gateway_msg_to) ||
+      log_device_address(logger, address) ||
+      log_str(logger, length) ||
+      log_uint32(logger, data_len) ||
+      log_str(logger, bytes) ||
+      log_uint8_array(logger, data, data_len) ||
+      log_str(logger, bytes_end) ||
+      log_flush(logger) != 0);
 }

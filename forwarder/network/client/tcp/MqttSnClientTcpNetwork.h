@@ -35,10 +35,10 @@ int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context);
 void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context);
 
 int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          uint32_t timeout_ms,
+                          int timeout_ms,
                           void *context);
 
-int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, uint32_t timeout_ms,
+int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, int timeout_ms,
                        void *context);
 
 void MqttSnClientNetworkInitReadFdSet(const MqttSnClientTcpNetwork *clientTcpNetwork, int *max_sd, fd_set *readfds);

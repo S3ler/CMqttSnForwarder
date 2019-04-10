@@ -43,7 +43,7 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   if (udpNetwork->my_socket == -1) {
     return -1;
   }
-#ifdef WITH_DEBUG_LOGGING
+#ifdef WITH_LOGGING
   if (networkInterface->logger) {
     log_open_socket(networkInterface->logger,
                     networkInterface->logger->log_level,
@@ -94,11 +94,11 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   if (rc > 0) {
     if (n->logger) {
       const MqttSnMessageData *msg = back(receiveBuffer);
-      log_gateway_message(n->logger,
-                          n->logger->log_level,
-                          &msg->address,
-                          msg->data,
-                          msg->data_length);
+      log_rec_gateway_message(n->logger,
+                              n->logger->log_level,
+                              &msg->address,
+                              msg->data,
+                              msg->data_length);
     }
   }
 #endif
@@ -114,7 +114,13 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuf
   if (pop(sendBuffer, &gatewaySendMessageData) != 0) {
     return 0;
   }
-
+#ifdef WITH_DEBUG_LOGGING
+  log_send_gateway_message(n->logger,
+                           n->logger->log_level,
+                           &gatewaySendMessageData.address,
+                           gatewaySendMessageData.data,
+                           gatewaySendMessageData.data_length);
+#endif
   ssize_t send_bytes = send_udp_message(udpNetwork->my_socket,
                                         n->gateway_network_address,
                                         gatewaySendMessageData.data,
@@ -126,6 +132,12 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuf
   if (send_bytes != gatewaySendMessageData.data_length) {
     // TODO check if a udp buffer can return different values and why
     put(sendBuffer, &gatewaySendMessageData);
+#ifdef WITH_DEBUG_LOGGING
+    log_incomplete_message(n->logger, n->logger->log_level,
+                           &gatewaySendMessageData.address,
+                           gatewaySendMessageData.data,
+                           gatewaySendMessageData.data_length);
+#endif
     return -1;
   }
 

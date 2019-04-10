@@ -22,12 +22,12 @@ typedef struct MqttSnClientNetworkInterface {
 
   int (*client_network_receive)(struct MqttSnClientNetworkInterface *,
                                 MqttSnFixedSizeRingBuffer *,
-                                uint32_t,
+                                int,
                                 void *context);
 
   int (*client_network_send)(struct MqttSnClientNetworkInterface *,
                              MqttSnFixedSizeRingBuffer *,
-                             uint32_t,
+                             int,
                              void *context);
 
   int (*client_network_init)(struct MqttSnClientNetworkInterface *, void *context);

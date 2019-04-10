@@ -4,10 +4,172 @@
 
 #include <dlfcn.h>
 #include <network/plugin/MqttSnPluginLogger.h>
+#include <string.h>
 #include "MqttSnClientPluginNetwork.h"
 
 int ClientLinuxPluginInit(MqttSnClientNetworkInterface *n, void *context) {
-  return 0;
+  MqttSnClientPluginContext *pluginClientNetwork = (MqttSnClientPluginContext *) context;
+  pluginClientNetwork->dl_handle = NULL;
+  pluginClientNetwork->plugin_context = NULL;
+
+  n->client_network_init = ClientLinuxPluginInit;
+  n->client_network_receive = ClientLinuxPluginReceive;
+  n->client_network_send = ClientLinuxPluginSend;
+  n->client_network_connect = ClientLinuxPluginConnect;
+  n->client_network_disconnect = ClientLinuxPluginDisconnect;
+
+  char *error = NULL;
+
+  pluginClientNetwork->dl_handle = dlopen(pluginClientNetwork->plugin_cfg->plugin_path, RTLD_NOW);
+  if (!pluginClientNetwork->dl_handle) {
+#ifdef WITH_LOGGING
+    error = dlerror();
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+  dlerror();
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+  pluginClientNetwork->plugin_get_short_network_protocol_name =
+      (const char *(*)())
+          dlsym(pluginClientNetwork->dl_handle, "client_plugin_get_short_network_protocol_name");
+#pragma GCC diagnostic pop
+  error = dlerror();
+  if (error != NULL) {
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+  pluginClientNetwork->plugin_get_maximum_message_length =
+      (uint16_t (*)())
+          dlsym(pluginClientNetwork->dl_handle, "client_plugin_get_maximum_message_length");
+#pragma GCC diagnostic pop
+  error = dlerror();
+  if (error != NULL) {
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+  pluginClientNetwork->plugin_network_init =
+      (int (*)(const client_plugin_config *cfg, void *plugin_context))
+          dlsym(pluginClientNetwork->dl_handle, "client_plugin_network_init");
+#pragma GCC diagnostic pop
+  error = dlerror();
+  if (error != NULL) {
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+  pluginClientNetwork->plugin_network_deinit =
+      (int (*)(const client_plugin_config *cfg, void *plugin_context))
+          dlsym(pluginClientNetwork->dl_handle, "client_plugin_network_deinit");
+#pragma GCC diagnostic pop
+  error = dlerror();
+  if (error != NULL) {
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+  pluginClientNetwork->plugin_network_connect =
+      (int (*)(const client_plugin_config *cfg, void *plugin_context))
+          dlsym(pluginClientNetwork->dl_handle, "client_plugin_network_connect");
+#pragma GCC diagnostic pop
+  error = dlerror();
+  if (error != NULL) {
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+  pluginClientNetwork->plugin_network_disconnect =
+      (void (*)(const client_plugin_config *cfg, void *plugin_context))
+          dlsym(pluginClientNetwork->dl_handle, "client_plugin_network_disconnect");
+#pragma GCC diagnostic pop
+  error = dlerror();
+  if (error != NULL) {
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+  pluginClientNetwork->plugin_network_send =
+      (int (*)(const client_plugin_message *send_message,
+               int timeout_ms,
+               const client_plugin_config *cfg,
+               void *plugin_context))
+          dlsym(pluginClientNetwork->dl_handle, "client_plugin_network_send");
+#pragma GCC diagnostic pop
+  error = dlerror();
+  if (error != NULL) {
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+  pluginClientNetwork->plugin_network_receive =
+      (int (*)(client_plugin_message *rec_message,
+               int timeout_ms,
+               const client_plugin_config *cfg,
+               void *plugin_context))
+          dlsym(pluginClientNetwork->dl_handle, "client_plugin_network_receive");
+#pragma GCC diagnostic pop
+  error = dlerror();
+  if (error != NULL) {
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+
+  if (strcmp(pluginClientNetwork->plugin_cfg->protocol, pluginClientNetwork->plugin_get_short_network_protocol_name())
+      != 0) {
+#ifdef WITH_LOGGING
+    log_protocol_mismatch(n->logger,
+                          n->logger->log_level,
+                          pluginClientNetwork->plugin_cfg->protocol,
+                          pluginClientNetwork->plugin_get_short_network_protocol_name());
+#endif
+    return -1;
+  }
+  if (pluginClientNetwork->plugin_cfg->forwarder_maximum_message_length
+      <= pluginClientNetwork->plugin_get_maximum_message_length()) {
+#ifdef WITH_LOGGING
+    log_max_msg_length_mismatch(n->logger,
+                                n->logger->log_level,
+                                pluginClientNetwork->plugin_cfg->forwarder_maximum_message_length,
+                                pluginClientNetwork->plugin_get_maximum_message_length());
+#endif
+    return -1;
+  }
+  return pluginClientNetwork->plugin_network_init(pluginClientNetwork->plugin_cfg,
+                                                  pluginClientNetwork->plugin_context);
 }
 int ClientLinuxPluginConnect(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientPluginContext *pluginClientNetwork = (MqttSnClientPluginContext *) context;
@@ -59,30 +221,43 @@ int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
                           void *context) {
   MqttSnClientPluginContext *pluginClientNetwork = (MqttSnClientPluginContext *) context;
 
-  MqttSnMessageData gatewaySendMessageData = {0};
-  if (pop(sendBuffer, &gatewaySendMessageData) != 0) {
+  MqttSnMessageData clientSendMessageData = {0};
+  if (pop(sendBuffer, &clientSendMessageData) != 0) {
     return 0;
   }
-  if (pluginClientNetwork->plugin_get_maximum_message_length() <= gatewaySendMessageData.data_length) {
+  if (pluginClientNetwork->plugin_get_maximum_message_length() <= clientSendMessageData.data_length) {
     // too long messages for the protocol are ignored by the standard
 #ifdef WITH_DEBUG_LOGGING
     if (log_too_long_message(n->logger, n->logger->log_level,
-                             &gatewaySendMessageData.address,
-                             gatewaySendMessageData.data,
-                             gatewaySendMessageData.data_length)) {
+                             &clientSendMessageData.address,
+                             clientSendMessageData.data,
+                             clientSendMessageData.data_length)) {
       return -1;
     }
 #endif
     return 0;
   }
 
+#ifdef WITH_DEBUG_LOGGING
+  if (n->logger) {
+    if (log_send_client_message(n->logger,
+                                n->logger->log_level,
+                                &clientSendMessageData.address,
+                                clientSendMessageData.data,
+                                clientSendMessageData.data_length)) {
+      return -1;
+    }
+  }
+#endif
+
   client_plugin_device_address dest = {
-      .bytes = gatewaySendMessageData.address.bytes,
+      .bytes = clientSendMessageData.address.bytes,
       .length = sizeof(device_address)};
   const client_plugin_message message = {
       .address = dest,
-      .data = gatewaySendMessageData.data,
-      .data_length = gatewaySendMessageData.data_length};
+      .data = clientSendMessageData.data,
+      .data_length = clientSendMessageData.data_length};
+
   int send_bytes = pluginClientNetwork->plugin_network_send(
       &message,
       timeout_ms,
@@ -92,15 +267,13 @@ int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
   if (send_bytes == -1) {
     return -1;
   }
-  if (send_bytes != gatewaySendMessageData.data_length) {
-    put(sendBuffer, &gatewaySendMessageData);
+  if (send_bytes != clientSendMessageData.data_length) {
+    put(sendBuffer, &clientSendMessageData);
 #ifdef WITH_DEBUG_LOGGING
-    if (log_incomplete_message(n->logger, n->logger->log_level,
-                               &gatewaySendMessageData.address,
-                               gatewaySendMessageData.data,
-                               gatewaySendMessageData.data_length)) {
-      return -1;
-    }
+    log_incomplete_message(n->logger, n->logger->log_level,
+                           &clientSendMessageData.address,
+                           clientSendMessageData.data,
+                           clientSendMessageData.data_length);
 #endif
     return -1;
   }
@@ -139,11 +312,11 @@ int ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
   if (n->logger) {
     const MqttSnMessageData *msg = back(receiveBuffer);
-    log_gateway_message(n->logger,
-                        n->logger->log_level,
-                        &msg->address,
-                        msg->data,
-                        msg->data_length);
+    log_rec_client_message(n->logger,
+                           n->logger->log_level,
+                           &msg->address,
+                           msg->data,
+                           msg->data_length);
   }
 #endif
 

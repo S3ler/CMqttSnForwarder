@@ -14,6 +14,7 @@
 #include <network/client/tcp/MqttSnClientTcpNetwork.h>
 #include <errno.h>
 #include <logging/linux/stdout/StdoutLogging.h>
+#include <network/client/plugin/MqttSnClientPluginNetwork.h>
 
 int convert_string_to_device_address(const char *string, device_address *address) {
   char *cp_string = strdup(string);
@@ -49,7 +50,6 @@ int start_gateway_plugin(const forwarder_config *fcfg,
                          MqttSnForwarder *mqttSnForwarder,
                          void *gatewayNetworkContext,
                          void *clientNetworkContext) {
-  // TODO teste plugin (irgendwie)
 
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
@@ -103,7 +103,6 @@ int start_gateway_plugin(const forwarder_config *fcfg,
       .forwarder_maximum_message_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH};
 
   MqttSnGatewayPluginContext gatewayPluginContext = {
-      .plugin_path = fcfg->gateway_network_plugin_path,
       .dl_handle = NULL,
       .plugin_network_init = NULL,
       .plugin_network_disconnect = NULL,
@@ -113,6 +112,17 @@ int start_gateway_plugin(const forwarder_config *fcfg,
       .plugin_context = NULL,
       .plugin_cfg = &plugin_cfg
   };
+
+#ifdef WITH_LOGGING
+  // logger only for ClientNetworkInit
+  MqttSnLogger logger = {0};
+  if (MqttSnLoggerInit(&logger, fcfg->log_lvl) != 0) {
+    MqttSnLoggerDeinit(&logger);
+    return -1;
+  }
+  mqttSnForwarder->gatewayNetwork.logger = &logger;
+#endif
+
   if (GatewayNetworkInit(&mqttSnForwarder->gatewayNetwork,
                          &mqttSnGatewayNetworkAddress,
                          &forwarderGatewayNetworkAddress,
@@ -219,12 +229,66 @@ int start_client_plugin(const forwarder_config *fcfg,
                         void *gatewayNetworkContext,
                         void *clientNetworkContext) {
 
-  fprintf(stderr, "Client network plugin is notimplemented yet.\n");
-  return EXIT_FAILURE;
+  device_address forwarderClientNetworkAddress = {0};
 
-  // TODO teste plugin (irgendwie)
-  // TODO implement me
-  // return start_forwarder(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
+  if (fcfg->client_network_bind_address != NULL) {
+    if (convert_string_to_device_address(fcfg->client_network_bind_address, &forwarderClientNetworkAddress)) {
+      if (get_device_address_from_hostname(fcfg->client_network_bind_address, &forwarderClientNetworkAddress)) {
+        fprintf(stderr, "Cannot resolve %s.\n", fcfg->client_network_bind_address);
+        return EXIT_FAILURE;
+      }
+    }
+  }
+
+  if (fcfg->client_network_bind_port < 1 || fcfg->client_network_bind_port > 65535) {
+    fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->client_network_bind_port);
+    return EXIT_FAILURE;
+  }
+  add_port_to_device_address(fcfg->client_network_bind_port, &forwarderClientNetworkAddress);
+
+  const client_plugin_device_address pluginMqttSnForwarderNetworkAddress = {
+      .bytes = forwarderClientNetworkAddress.bytes,
+      .length = sizeof(device_address)};
+
+  client_plugin_config plugin_cfg = {
+      .plugin_path = fcfg->client_network_plugin_path,
+      .protocol = fcfg->client_network_protocol,
+      .forwarder_client_network_address = &pluginMqttSnForwarderNetworkAddress,
+      .client_plugin_device_address_length = CMQTTSNFORWARDER_DEVICE_ADDRESS_LENGTH,
+      .forwarder_maximum_message_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH};
+
+  MqttSnClientPluginContext clientPluginContext = {
+      .dl_handle = NULL,
+      .plugin_network_init = NULL,
+      .plugin_network_disconnect = NULL,
+      .plugin_network_connect = NULL,
+      .plugin_network_receive = NULL,
+      .plugin_network_send = NULL,
+      .plugin_context = NULL,
+      .plugin_cfg = &plugin_cfg
+  };
+
+#ifdef WITH_LOGGING
+  // logger only for ClientNetworkInit
+  MqttSnLogger logger = {0};
+  if (MqttSnLoggerInit(&logger, fcfg->log_lvl) != 0) {
+    MqttSnLoggerDeinit(&logger);
+    return -1;
+  }
+  mqttSnForwarder->clientNetwork.logger = &logger;
+#endif
+
+  if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
+                        &forwarderClientNetworkAddress,
+                        &clientPluginContext,
+                        ClientLinuxPluginInit)) {
+    fprintf(stderr, "Error init client network\n");
+    return EXIT_FAILURE;
+  }
+  clientNetworkContext = &clientPluginContext;
+
+  return start_forwarder(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
+
 }
 
 int start_client_tcp(const forwarder_config *fcfg,
@@ -298,18 +362,6 @@ void *inc_c(void *mqttSnForwarderFcfgPtr_ptr) {
   MqttSnForwarder *mqttSnForwarder = mqttSnForwarderFcfgPtr->mqttSnForwarder_ptr;
   const forwarder_config *fcfg = mqttSnForwarderFcfgPtr->fcfg_ptr;
 
-#ifdef WITH_LOGGING
-  if (log_forwarder_started(&mqttSnForwarder->logger,
-                            fcfg->log_lvl,
-                            fcfg->version,
-                            fcfg->major,
-                            fcfg->minor,
-                            fcfg->tweak,
-                            fcfg->build_date)) {
-    return (void *) EXIT_FAILURE;
-  }
-#endif
-
   while ((MqttSnForwarderLoop(mqttSnForwarder) == 0) & keep_running) {}
   MqttSnForwarderDeinit(mqttSnForwarder);
 
@@ -361,6 +413,24 @@ int start_forwarder(const forwarder_config *fcfg,
     fprintf(stderr, "Error init gateway network no protocol or plugin\n");
     return EXIT_FAILURE;
   }
+
+#ifdef WITH_LOGGING
+  // logger only for ClientNetworkInit
+  MqttSnLogger logger = {0};
+  if (MqttSnLoggerInit(&logger, fcfg->log_lvl) != 0) {
+    MqttSnLoggerDeinit(&logger);
+    return -1;
+  }
+  if (log_forwarder_started(&logger,
+                            fcfg->log_lvl,
+                            fcfg->version,
+                            fcfg->major,
+                            fcfg->minor,
+                            fcfg->tweak,
+                            fcfg->build_date)) {
+    return EXIT_FAILURE;
+  }
+#endif
 
   mqttSnForwarder->clientNetworkSendTimeout = fcfg->client_network_send_timeout;
   mqttSnForwarder->clientNetworkReceiveTimeout = fcfg->client_network_receive_timeout;

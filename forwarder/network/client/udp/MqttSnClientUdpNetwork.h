@@ -23,10 +23,10 @@ int ClientLinuxUdpConnect(MqttSnClientNetworkInterface *n, void *context);
 void ClientLinuxUdpDisconnect(MqttSnClientNetworkInterface *n, void *context);
 
 int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          uint32_t timeout_ms,
+                          int timeout_ms,
                           void *context);
 
-int ClientLinuxUdpSend(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, uint32_t timeout_ms,
+int ClientLinuxUdpSend(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, int timeout_ms,
                        void *context);
 
 #ifdef __cplusplus

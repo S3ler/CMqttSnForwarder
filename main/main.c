@@ -37,8 +37,6 @@ int main(int argc, char *argv[]) {
   void *clientNetworkContext = NULL;
   rc = start_forwarder(&fcfg, &mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
   forwarder_config_cleanup(&fcfg);
-  if (rc) {
-    fprintf(stderr, "\nUse 'cmqttsnforwarder --help' to see usage.\n");
-  }
+
   return rc;
 }

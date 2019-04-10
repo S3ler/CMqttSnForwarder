@@ -14,7 +14,6 @@ extern "C" {
 #include <MqttSnClientNetworkInterface.h>
 
 typedef struct MqttSnClientPluginContext_ {
-  char *plugin_path;
   void *dl_handle;
   int (*plugin_network_init)(const client_plugin_config *cfg, void *plugin_context);
   int (*plugin_network_deinit)(const client_plugin_config *cfg, void *plugin_context);
@@ -41,11 +40,14 @@ int ClientLinuxPluginConnect(MqttSnClientNetworkInterface *n, void *context);
 
 void ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context);
 
-int ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *receiveBuffer,
+int ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n,
+                             MqttSnFixedSizeRingBuffer *receiveBuffer,
                              int timeout_ms,
                              void *context);
 
-int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, int timeout_ms,
+int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
+                          MqttSnFixedSizeRingBuffer *sendBuffer,
+                          int timeout_ms,
                           void *context);
 
 #ifdef __cplusplus

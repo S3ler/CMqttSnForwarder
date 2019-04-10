@@ -57,7 +57,7 @@ void ClientLinuxUdpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
 
 int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
                           MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          uint32_t timeout_ms,
+                          int timeout_ms,
                           void *context) {
   MqttSnClientUdpNetwork *clientUdpNetwork = (MqttSnClientUdpNetwork *) context;
 
@@ -80,11 +80,11 @@ int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
   if (rc > 0) {
     if (n->logger) {
       const MqttSnMessageData *msg = back(receiveBuffer);
-      log_client_message(n->logger,
-                         n->logger->log_level,
-                         &msg->address,
-                         msg->data,
-                         msg->data_length);
+      log_rec_client_message(n->logger,
+                             n->logger->log_level,
+                             &msg->address,
+                             msg->data,
+                             msg->data_length);
     }
   }
 #endif
@@ -93,26 +93,44 @@ int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
 
 int ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
                        MqttSnFixedSizeRingBuffer *sendBuffer,
-                       uint32_t timeout_ms,
+                       int timeout_ms,
                        void *context) {
   MqttSnClientUdpNetwork *clientUdpNetwork = (MqttSnClientUdpNetwork *) context;
-  MqttSnMessageData gatewaySendMessageData = {0};
+  MqttSnMessageData clientSendMessageData = {0};
 
-  if (pop(sendBuffer, &gatewaySendMessageData) != 0) {
+  if (pop(sendBuffer, &clientSendMessageData) != 0) {
     return 0;
   }
 
+#ifdef WITH_DEBUG_LOGGING
+  if (n->logger) {
+    if (log_send_client_message(n->logger,
+                                n->logger->log_level,
+                                &clientSendMessageData.address,
+                                clientSendMessageData.data,
+                                clientSendMessageData.data_length)) {
+      return -1;
+    }
+  }
+#endif
+
   ssize_t send_bytes = send_udp_message(clientUdpNetwork->master_socket,
-                                        &gatewaySendMessageData.address,
-                                        gatewaySendMessageData.data,
-                                        gatewaySendMessageData.data_length);
+                                        &clientSendMessageData.address,
+                                        clientSendMessageData.data,
+                                        clientSendMessageData.data_length);
 
   if (send_bytes == -1) {
     return -1;
   }
-  if (send_bytes != gatewaySendMessageData.data_length) {
+  if (send_bytes != clientSendMessageData.data_length) {
     // TODO check if a udp buffer can return different values and why
-    put(sendBuffer, &gatewaySendMessageData);
+    put(sendBuffer, &clientSendMessageData);
+#ifdef WITH_DEBUG_LOGGING
+    log_incomplete_message(n->logger, n->logger->log_level,
+                           &clientSendMessageData.address,
+                           clientSendMessageData.data,
+                           clientSendMessageData.data_length);
+#endif
     return -1;
   }
 

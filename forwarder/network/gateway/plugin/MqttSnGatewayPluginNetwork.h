@@ -13,7 +13,6 @@ extern "C" {
 #include "gateway_plugin_interface.h"
 
 typedef struct MqttSnGatewayPluginContext_ {
-  char *plugin_path;
   void *dl_handle;
   int (*plugin_network_init)(const gateway_plugin_config *cfg, void *plugin_context);
   int (*plugin_network_deinit)(const gateway_plugin_config *cfg, void *plugin_context);

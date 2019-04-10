@@ -63,6 +63,11 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
       &forwarder->clientNetworkReceiveBuffer,
       forwarder->clientNetworkReceiveTimeout,
       forwarder->clientNetworkContext) != 0) {
+    if (forwarder->logger.status) {
+      // TODO handle_broken_logger
+      // remove from subcomponents
+      // send all messages
+    }
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
 
