@@ -278,9 +278,22 @@ int log_gateway_mqtt_sn_message(const MqttSnLogger *logger,
                                 int level,
                                 const device_address *address,
                                 const uint8_t *data,
-                                uint16_t data_len) {
+                                uint16_t data_len,
+                                const char *description) {
   if (level <= LOG_LEVEL_QUIET) {
     return 0;
+  }
+  const char *d = ": ";
+  if (log_current_time(logger)) {
+    return -1;
+  }
+  if (log_str(logger, d)) {
+    return -1;
+  }
+  if (description) {
+    if (log_str(logger, description)) {
+      return -1;
+    }
   }
 
   MQTT_SN_MESSAGE_TYPE mqtt_sn_message_type = get_mqtt_sn_message_type(data);
@@ -371,18 +384,18 @@ int log_gateway_connack_message(const MqttSnLogger *logger,
   MqttSnMessageConnack *c = (MqttSnMessageConnack *) h.payload;
   uint8_t return_code = c->returnCode;
 
-  const char *connack_to = ": CONNACK to ";
+  const char *connack_to = "CONNACK to ";
   const char *open_braked = " ( ";
   const char *close_braked = ").";
   // 1554750679: CONNACK to 127.0.0.1 (rc0).
 
-  return (log_current_time(logger) ||
+  return (
       log_str(logger, connack_to) ||
-      log_device_address(logger, address) ||
-      log_str(logger, open_braked) ||
-      log_return_code(logger, return_code) ||
-      log_str(logger, close_braked) ||
-      log_flush(logger) != 0);
+          log_device_address(logger, address) ||
+          log_str(logger, open_braked) ||
+          log_return_code(logger, return_code) ||
+          log_str(logger, close_braked) ||
+          log_flush(logger) != 0);
 }
 
 int log_client_publish_message(const MqttSnLogger *logger,
@@ -439,7 +452,7 @@ int log_gateway_publish_message(const MqttSnLogger *logger,
         log_flush(logger) != 0);
   }
 
-  const char *publish_from = ": gateway PUBLISH from ";
+  const char *publish_from = "gateway PUBLISH from ";
   const char *open_braked = " ( ";
   const char *comma = ", ";
   const char *dots = "... (";
@@ -451,20 +464,20 @@ int log_gateway_publish_message(const MqttSnLogger *logger,
   uint8_t flags = ((MqttSnMessagePublish *) h.payload)->flags;
   uint16_t msg_bytes = h.length;
 
-  return (log_current_time(logger) ||
+  return (
       log_str(logger, publish_from) ||
-      log_device_address(logger, address) ||
-      log_str(logger, open_braked) ||
-      log_message_id(logger, msg_id) ||
-      log_str(logger, comma) ||
-      log_topic_id(logger, topic_id) ||
-      log_str(logger, comma) ||
-      log_mqtt_sn_flags(logger, flags) ||
-      log_str(logger, comma) ||
-      log_str(logger, dots) ||
-      log_uint16(logger, msg_bytes) ||
-      log_str(logger, bytes_close_braked) ||
-      log_flush(logger) != 0);
+          log_device_address(logger, address) ||
+          log_str(logger, open_braked) ||
+          log_message_id(logger, msg_id) ||
+          log_str(logger, comma) ||
+          log_topic_id(logger, topic_id) ||
+          log_str(logger, comma) ||
+          log_mqtt_sn_flags(logger, flags) ||
+          log_str(logger, comma) ||
+          log_str(logger, dots) ||
+          log_uint16(logger, msg_bytes) ||
+          log_str(logger, bytes_close_braked) ||
+          log_flush(logger) != 0);
 }
 
 int log_duration(const MqttSnLogger *logger, uint16_t duration) {
@@ -567,7 +580,7 @@ int log_gateway_disconnect_message(const MqttSnLogger *logger,
         log_flush(logger) != 0);
   }
 
-  const char *disconnect_from = ": gateway DISCONNECT from ";
+  const char *disconnect_from = "gateway DISCONNECT from ";
   const char *open_braked = " (";
   const char *close_braked = " ).";
 
@@ -581,14 +594,63 @@ int log_gateway_disconnect_message(const MqttSnLogger *logger,
     MqttSnMessageDisconnect *p = (MqttSnMessageDisconnect *) h.payload;
     uint16_t duration = ntohs(p->duration);
 
-    return (log_current_time(logger) ||
+    return (
         log_str(logger, disconnect_from) ||
-        log_device_address(logger, address) ||
-        log_str(logger, open_braked) ||
-        log_duration(logger, duration) ||
-        log_str(logger, close_braked) ||
-        log_flush(logger) != 0);
+            log_device_address(logger, address) ||
+            log_str(logger, open_braked) ||
+            log_duration(logger, duration) ||
+            log_str(logger, close_braked) ||
+            log_flush(logger) != 0);
   }
   return 0;
 }
 
+int log_network_connect(const MqttSnLogger *logger,
+                        int level,
+                        const char *protocol,
+                        const char *network_name,
+                        const device_address *address) {
+  if (level <= LOG_LEVEL_QUIET) {
+    return 0;
+  }
+
+  const char *connect = ": Connect ";
+  const char *space = " ";
+  const char *network_as = " network connect as  ";
+  const char *dot = ".";
+
+  return (log_current_time(logger) ||
+      log_str(logger, connect) ||
+      log_str(logger, protocol) ||
+      log_str(logger, space) ||
+      log_str(logger, network_name) ||
+      log_str(logger, network_as) ||
+      log_device_address(logger, address) ||
+      log_str(logger, dot) ||
+      log_flush(logger) != 0);
+}
+
+int log_network_disconnect(const MqttSnLogger *logger,
+                           int level,
+                           const char *protocol,
+                           const char *network_name,
+                           const device_address *address) {
+  if (level <= LOG_LEVEL_QUIET) {
+    return 0;
+  }
+
+  const char *connect = ": Disconnect ";
+  const char *space = " ";
+  const char *network_as = " network connect as  ";
+  const char *dot = ".";
+
+  return (log_current_time(logger) ||
+      log_str(logger, connect) ||
+      log_str(logger, protocol) ||
+      log_str(logger, space) ||
+      log_str(logger, network_name) ||
+      log_str(logger, network_as) ||
+      log_device_address(logger, address) ||
+      log_str(logger, dot) ||
+      log_flush(logger) != 0);
+}

@@ -13,6 +13,7 @@ extern "C" {
 
 typedef struct MqttSnClientUdpNetwork {
   int master_socket;
+  char protocol[4];
 } MqttSnClientUdpNetwork;
 
 int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context);

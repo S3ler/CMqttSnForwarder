@@ -216,10 +216,11 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
 
 #ifdef WITH_LOGGING
   if (log_gateway_mqtt_sn_message(&forwarder->logger,
-                                 forwarder->logger.log_level,
-                                 &clientMessageData->address,
-                                 clientMessageData->data,
-                                 clientMessageData->data_length)) {
+                                  forwarder->logger.log_level,
+                                  &clientMessageData->address,
+                                  clientMessageData->data,
+                                  clientMessageData->data_length,
+                                  NULL)) {
     return -1;
   }
 #endif

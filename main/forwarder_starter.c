@@ -85,20 +85,20 @@ int start_gateway_plugin(const forwarder_config *fcfg,
     add_port_to_device_address(fcfg->gateway_network_bind_port, &mqttSnGatewayNetworkAddress);
   }
 
-  const plugin_device_address pluginMqttSnGatewayNetworkAddress = {
+  const gateway_plugin_device_address pluginMqttSnGatewayNetworkAddress = {
       .bytes = mqttSnGatewayNetworkAddress.bytes,
       .length = sizeof(device_address)};
 
-  const plugin_device_address pluginForwarderGatewayNetworkAddress = {
+  const gateway_plugin_device_address pluginForwarderGatewayNetworkAddress = {
       .bytes = forwarderGatewayNetworkAddress.bytes,
       .length = sizeof(device_address)};
 
-  plugin_config plugin_cfg = {
+  gateway_plugin_config plugin_cfg = {
       .plugin_path = fcfg->gateway_network_plugin_path,
       .protocol = fcfg->gateway_network_protocol,
       .mqtt_sn_gateway_network_address = &pluginMqttSnGatewayNetworkAddress,
       .forwarder_gateway_network_address = &pluginForwarderGatewayNetworkAddress,
-      .forwarder_device_address_length = CMQTTSNFORWARDER_DEVICE_ADDRESS_LENGTH,
+      .gateway_plugin_device_address_length = CMQTTSNFORWARDER_DEVICE_ADDRESS_LENGTH,
       .forwarder_maximum_message_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH};
 
   MqttSnGatewayPluginContext gatewayPluginContext = {

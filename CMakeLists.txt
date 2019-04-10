@@ -28,9 +28,19 @@ if (NOT DEFINED CMAKE_C_STANDARD AND NOT DEFINED CMAKE_CXX_STANDARD)
     message(FATAL_ERROR "Neither C nor C++ project")
 endif ()
 
-option(WITH_LOGGING "Include LOGGING support?" ON)
+option(WITH_LOGGING "Include LOGGING support?" OFF)
 if (WITH_LOGGING)
     add_definitions(-DWITH_LOGGING)
+    option(WITH_DEBUG_LOGGING "Include LOGGING support?" ON)
+    if (WITH_LOGGING)
+        add_definitions(-DWITH_DEBUG_LOGGING)
+    endif ()
+endif ()
+
+option(WITH_PLUGIN "Include LOGGING support?" OFF)
+if (WITH_PLUGIN)
+    add_definitions(-DWITH_PLUGIN)
+    # TODO
 endif ()
 
 set(IMPLEMENTATIONL_FILES
@@ -45,7 +55,7 @@ set(IMPLEMENTATIONL_FILES
         forwarder/network/plugin/MqttSnGatewayPluginNetwork.h
         forwarder/network/plugin/MqttSnGatewayPluginNetwork.c
         forwarder/MqttSnForwarderLogging.h
-        forwarder/MqttSnForwarderLogging.c forwarder/MqttSnMessageParser.h forwarder/MqttSnMessageParser.c)
+        forwarder/MqttSnForwarderLogging.c forwarder/MqttSnMessageParser.h forwarder/MqttSnMessageParser.c forwarder/network/client/plugin/client_network_plugin_interface.h forwarder/network/plugin/MqttSnPluginLogger.h forwarder/network/plugin/MqttSnPluginLogger.c forwarder/network/client/plugin/MqttSnClientPluginNetwork.h forwarder/network/client/plugin/MqttSnClientPluginNetwork.c)
 include_directories(forwarder)
 
 set(CMQTTSNFORWADER_ERROR_COMPILE_FLAGS -Wall -Wextra -pedantic -Werror -Wno-unused-parameter)

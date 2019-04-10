@@ -17,6 +17,7 @@ typedef struct MqttSnGatewayUdpNetwork {
   int my_socket;
   char *ip;
   int port;
+  char protocol[4];
 } MqttSnGatewayUdpNetwork;
 
 int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context);

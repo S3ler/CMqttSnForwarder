@@ -11,25 +11,25 @@ extern "C" {
 
 #include "../../MqttSnGatewayNetworkInterface.h"
 
-typedef struct plugin_device_address_ {
+typedef struct gateway_plugin_device_address_ {
   const uint8_t length;
   const uint8_t *bytes;
-} plugin_device_address;
+} gateway_plugin_device_address;
 
-typedef struct plugin_config_ {
+typedef struct gateway_plugin_config_ {
   const char *plugin_path;
   const char *protocol;
   uint16_t forwarder_maximum_message_length;
-  uint8_t forwarder_device_address_length;
-  const plugin_device_address *mqtt_sn_gateway_network_address;
-  const plugin_device_address *forwarder_gateway_network_address;
-} plugin_config;
+  uint8_t gateway_plugin_device_address_length;
+  const gateway_plugin_device_address *mqtt_sn_gateway_network_address;
+  const gateway_plugin_device_address *forwarder_gateway_network_address;
+} gateway_plugin_config;
 
-typedef struct plugin_message_ {
-  plugin_device_address address;
+typedef struct gateway_plugin_message_ {
+  gateway_plugin_device_address address;
   uint8_t *data;
   uint16_t data_length;
-} plugin_message;
+} gateway_plugin_message;
 
 // TODO rewrite doku
 /**
@@ -40,26 +40,36 @@ typedef struct plugin_message_ {
  * initialize the plugin_context here
  * @return -1 on error or when the protocol does not match else 0
  */
-int plugin_network_init(const plugin_config *cfg, void *plugin_context);
+int gateway_plugin_network_init(const gateway_plugin_config *cfg, void *plugin_context);
+
+/**
+ * initialize the network - use the protocol to check if the protocol matches you
+ * match the protocol
+ * initialize resources
+ * the protocol is set by the -gP or -gL command line argument and passed to the plugin_config.
+ * initialize the plugin_context here
+ * @return -1 on error or when the protocol does not match else 0
+ */
+int gateway_plugin_network_deinit(const gateway_plugin_config *cfg, void *plugin_context);
 
 /**
  *
  * @return the short name of the protocol supported by the plugin e.g. udp or tcp. It is used to match the command line protocol argument with the plugin
  */
-const char *plugin_get_short_network_protocol_name();
+const char *gateway_plugin_get_short_network_protocol_name();
 
 /**
  *
  * @return the maximum count of bytes the plugin can send and receive.
  */
-uint16_t plugin_get_maximum_message_length();
+uint16_t gateway_plugin_get_maximum_message_length();
 
 /**
  * free resources
  * there will be no later call
  * free the plugin_context information here
  */
-void plugin_network_disconnect(const plugin_config *cfg, void *plugin_context);
+void gateway_plugin_network_disconnect(const gateway_plugin_config *cfg, void *plugin_context);
 
 /**
  * Connect to the network - use the mqtt_gateway_network_address and the forwarder_network_address inside the plugin_config.
@@ -69,7 +79,7 @@ void plugin_network_disconnect(const plugin_config *cfg, void *plugin_context);
  * @param plugin_context
  * @return -1 on error
  */
-int plugin_network_connect(const plugin_config *cfg, void *plugin_context);
+int gateway_plugin_network_connect(const gateway_plugin_config *cfg, void *plugin_context);
 
 /**
  * receives data from the network to the target
@@ -79,12 +89,12 @@ int plugin_network_connect(const plugin_config *cfg, void *plugin_context);
  * @param receiveBuffer
  * @param timeout_ms
  * @param context
- * @return -1 on error, 0 if a message was received, 1 if no message was received
+ * @return -1 on error, 1 if a message was received, 0 if no message was received
  */
-int plugin_network_receive(plugin_message *rec_message,
-                           int timeout_ms,
-                           const plugin_config *cfg,
-                           void *plugin_context);
+int gateway_plugin_network_receive(gateway_plugin_message *rec_message,
+                                   int timeout_ms,
+                                   const gateway_plugin_config *cfg,
+                                   void *plugin_context);
 
 /**
  * Is used for two scenarios: Sends data over the gateway network to the mqt-sn gateway.
@@ -97,10 +107,10 @@ int plugin_network_receive(plugin_message *rec_message,
  * @param plugin_context plugin context for plugin specific information to be passed between the plugin functions
  * @return -1 on error, else the number of send bytes, if the number of send bytes does not match plugin_message.data_length the packet will be resend later.
  */
-int plugin_network_send(const plugin_message *send_message,
-                        int timeout_ms,
-                        const plugin_config *cfg,
-                        void *plugin_context);
+int gateway_plugin_network_send(const gateway_plugin_message *send_message,
+                                int timeout_ms,
+                                const gateway_plugin_config *cfg,
+                                void *plugin_context);
 
 #ifdef __cplusplus
 }

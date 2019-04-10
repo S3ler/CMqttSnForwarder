@@ -92,6 +92,18 @@ int log_forwarder_terminated(const MqttSnLogger *logger,
                              uint32_t minor,
                              uintmax_t tweak);
 
+int log_network_connect(const MqttSnLogger *logger,
+                        int level,
+                        const char *protocol,
+                        const char *network_name,
+                        const device_address *address);
+
+int log_network_disconnect(const MqttSnLogger *logger,
+                           int level,
+                           const char *protocol,
+                           const char *network_name,
+                           const device_address *address);
+
 // 1554750672: Using default config.
 // 1554750672: Opening ipv4 listen socket on port 8888 [34, 11].
 // 1554750672: Opening ipv6 listen socket on port 8888 [34, 11].
@@ -125,7 +137,8 @@ int log_gateway_mqtt_sn_message(const MqttSnLogger *logger,
                                 int level,
                                 const device_address *address,
                                 const uint8_t *data,
-                                uint16_t data_len);
+                                uint16_t data_len,
+                                const char *description);
 
 // 1554750679: CONNECT from 127.0.0.1 as SomeDude210607853 (m1, c1, d60, p1, w0).
 // device_address, clientId {char [0 - 24]}

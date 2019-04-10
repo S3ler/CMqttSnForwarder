@@ -17,7 +17,7 @@ int log_open_socket(const MqttSnLogger *logger, int level, const char *protocol,
   }
 
   const char *opening = ": Opening ";
-  const char *listen_socket = " listen socket ";
+  const char *listen_socket = " socket ";
   const char *on_port = " on port ";
   const char *dot = ".";
   uint32_t port = get_port_from_device_address(address);
@@ -39,7 +39,7 @@ int log_close_socket(const MqttSnLogger *logger, int level, const char *protocol
   }
 
   const char *close = ": Close ";
-  const char *listen_socket = " listen socket ";
+  const char *listen_socket = " socket ";
   const char *on_port = " on port ";
   const char *dot = ".";
   uint32_t port = get_port_from_device_address(address);

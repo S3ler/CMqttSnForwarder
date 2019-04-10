@@ -3,7 +3,8 @@
 //
 
 #include "MqttSnGatewayPluginNetwork.h"
-#include <assert.h>
+#include "MqttSnPluginLogger.h"
+
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,7 +23,9 @@ int GatewayLinuxPluginInit(MqttSnGatewayNetworkInterface *n, void *context) {
 
   pluginGatewayNetwork->dl_handle = dlopen(pluginGatewayNetwork->plugin_path, RTLD_NOW);
   if (!pluginGatewayNetwork->dl_handle) {
-    fprintf(stderr, "%s\n", dlerror());
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, dlerror());
+#endif
     return -1;
   }
   dlerror();
@@ -30,60 +33,90 @@ int GatewayLinuxPluginInit(MqttSnGatewayNetworkInterface *n, void *context) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginGatewayNetwork->plugin_network_init =
-      (int (*)(const plugin_config *cfg, void *plugin_context))
-          dlsym(pluginGatewayNetwork->dl_handle, "plugin_network_init");
+      (int (*)(const gateway_plugin_config *cfg, void *plugin_context))
+          dlsym(pluginGatewayNetwork->dl_handle, "gateway_plugin_network_init");
 #pragma GCC diagnostic pop
   char *error = dlerror();
   if (error != NULL) {
-    fprintf(stderr, "%s\n", error);
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    return -1;
+  }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+  pluginGatewayNetwork->plugin_network_deinit =
+      (int (*)(const gateway_plugin_config *cfg, void *plugin_context))
+          dlsym(pluginGatewayNetwork->dl_handle, "gateway_plugin_network_deinit");
+#pragma GCC diagnostic pop
+  error = dlerror();
+  if (error != NULL) {
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
     return -1;
   }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginGatewayNetwork->plugin_network_disconnect =
-      (void (*)(const plugin_config *cfg, void *plugin_context))
-          dlsym(pluginGatewayNetwork->dl_handle, "plugin_network_disconnect");
+      (void (*)(const gateway_plugin_config *cfg, void *plugin_context))
+          dlsym(pluginGatewayNetwork->dl_handle, "gateway_plugin_network_disconnect");
 #pragma GCC diagnostic pop
   error = dlerror();
   if (error != NULL) {
-    fprintf(stderr, "%s\n", error);
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
     return -1;
   }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginGatewayNetwork->plugin_network_connect =
-      (int (*)(const plugin_config *cfg, void *plugin_context))
-          dlsym(pluginGatewayNetwork->dl_handle, "plugin_network_connect");
+      (int (*)(const gateway_plugin_config *cfg, void *plugin_context))
+          dlsym(pluginGatewayNetwork->dl_handle, "gateway_plugin_network_connect");
 #pragma GCC diagnostic pop
   error = dlerror();
   if (error != NULL) {
-    fprintf(stderr, "%s\n", error);
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
     return -1;
   }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginGatewayNetwork->plugin_network_send =
-      (int (*)(const plugin_message *send_message, int timeout_ms, const plugin_config *cfg, void *plugin_context))
-          dlsym(pluginGatewayNetwork->dl_handle, "plugin_network_send");
+      (int (*)(const gateway_plugin_message *send_message,
+               int timeout_ms,
+               const gateway_plugin_config *cfg,
+               void *plugin_context))
+          dlsym(pluginGatewayNetwork->dl_handle, "gateway_plugin_network_send");
 #pragma GCC diagnostic pop
   error = dlerror();
   if (error != NULL) {
-    fprintf(stderr, "%s\n", error);
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
     return -1;
   }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginGatewayNetwork->plugin_network_receive =
-      (int (*)(plugin_message *rec_message, int timeout_ms, const plugin_config *cfg, void *plugin_context))
-          dlsym(pluginGatewayNetwork->dl_handle, "plugin_network_receive");
+      (int (*)(gateway_plugin_message *rec_message,
+               int timeout_ms,
+               const gateway_plugin_config *cfg,
+               void *plugin_context))
+          dlsym(pluginGatewayNetwork->dl_handle, "gateway_plugin_network_receive");
 #pragma GCC diagnostic pop
   error = dlerror();
   if (error != NULL) {
-    fprintf(stderr, "%s\n", error);
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
     return -1;
   }
 
@@ -91,11 +124,13 @@ int GatewayLinuxPluginInit(MqttSnGatewayNetworkInterface *n, void *context) {
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginGatewayNetwork->plugin_get_short_network_protocol_name =
       (const char *(*)())
-          dlsym(pluginGatewayNetwork->dl_handle, "plugin_get_short_network_protocol_name");
+          dlsym(pluginGatewayNetwork->dl_handle, "gateway_plugin_get_short_network_protocol_name");
 #pragma GCC diagnostic pop
   error = dlerror();
   if (error != NULL) {
-    fprintf(stderr, "%s\n", error);
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
     return -1;
   }
 
@@ -103,22 +138,34 @@ int GatewayLinuxPluginInit(MqttSnGatewayNetworkInterface *n, void *context) {
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginGatewayNetwork->plugin_get_maximum_message_length =
       (uint16_t (*)())
-          dlsym(pluginGatewayNetwork->dl_handle, "plugin_get_maximum_message_length");
+          dlsym(pluginGatewayNetwork->dl_handle, "gateway_plugin_get_maximum_message_length");
 #pragma GCC diagnostic pop
   error = dlerror();
   if (error != NULL) {
-    fprintf(stderr, "%s\n", error);
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
     return -1;
   }
 
   if (strcmp(pluginGatewayNetwork->plugin_cfg->protocol, pluginGatewayNetwork->plugin_get_short_network_protocol_name())
       != 0) {
-    fprintf(stderr, "gateway plugin protocol does not match gateway network protocol\n");
+#ifdef WITH_LOGGING
+    log_protocol_mismatch(n->logger,
+                          n->logger->log_level,
+                          pluginGatewayNetwork->plugin_cfg->protocol,
+                          pluginGatewayNetwork->plugin_get_short_network_protocol_name());
+#endif
     return -1;
   }
   if (pluginGatewayNetwork->plugin_cfg->forwarder_maximum_message_length
       <= pluginGatewayNetwork->plugin_get_maximum_message_length()) {
-    fprintf(stderr, "maximum plugin message length is greater than forwarder maximum message length\n");
+#ifdef WITH_LOGGING
+    log_max_msg_length_mismatch(n->logger,
+                                n->logger->log_level,
+                                pluginGatewayNetwork->plugin_cfg->forwarder_maximum_message_length,
+                                pluginGatewayNetwork->plugin_get_maximum_message_length());
+#endif
     return -1;
   }
   return pluginGatewayNetwork->plugin_network_init(pluginGatewayNetwork->plugin_cfg,
@@ -132,15 +179,43 @@ void GatewayLinuxPluginDisconnect(MqttSnGatewayNetworkInterface *n, void *contex
                                                   pluginGatewayNetwork->plugin_context);
   char *error = dlerror();
   if (error != NULL) {
-    fprintf(stderr, "%s\n", error);
+#ifdef WITH_LOGGING
+    log_dlerror(n->logger, n->logger->log_level, error);
+#endif
   }
-  dlclose(pluginGatewayNetwork->dl_handle);
+#ifdef WITH_LOGGING
+  if (n->logger) {
+    log_network_disconnect(n->logger,
+                           n->logger->log_level,
+                           pluginGatewayNetwork->plugin_get_short_network_protocol_name(), NULL,
+                           n->gateway_network_address);
+  }
+#endif
+  if (dlclose(pluginGatewayNetwork->dl_handle)) {
+    error = dlerror();
+    if (error != NULL) {
+#ifdef WITH_LOGGING
+      log_dlerror(n->logger, n->logger->log_level, error);
+#endif
+    }
+  }
 }
 
 int GatewayLinuxPluginConnect(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayPluginContext *pluginGatewayNetwork = (MqttSnGatewayPluginContext *) context;
-  return pluginGatewayNetwork->plugin_network_connect(pluginGatewayNetwork->plugin_cfg,
-                                                      pluginGatewayNetwork->plugin_context);
+  if (pluginGatewayNetwork->plugin_network_connect(pluginGatewayNetwork->plugin_cfg,
+                                                   pluginGatewayNetwork->plugin_context)) {
+    return -1;
+  }
+#ifdef WITH_LOGGING
+  if (n->logger) {
+    log_network_connect(n->logger,
+                        n->logger->log_level,
+                        pluginGatewayNetwork->plugin_get_short_network_protocol_name(), NULL,
+                        n->gateway_network_address);
+  }
+#endif
+  return 0;
 }
 
 int GatewayLinuxPluginSend(MqttSnGatewayNetworkInterface *n,
@@ -155,14 +230,21 @@ int GatewayLinuxPluginSend(MqttSnGatewayNetworkInterface *n,
   }
   if (pluginGatewayNetwork->plugin_get_maximum_message_length() <= gatewaySendMessageData.data_length) {
     // too long messages for the protocol are ignored by the standard
-    // TODO log it
+#ifdef WITH_DEBUG_LOGGING
+    if (log_too_long_message(n->logger, n->logger->log_level,
+                             &gatewaySendMessageData.address,
+                             gatewaySendMessageData.data,
+                             gatewaySendMessageData.data_length)) {
+      return -1;
+    }
+#endif
     return 0;
   }
 
-  plugin_device_address dest = {
+  gateway_plugin_device_address dest = {
       .bytes = gatewaySendMessageData.address.bytes,
       .length = sizeof(device_address)};
-  const plugin_message message = {
+  const gateway_plugin_message message = {
       .address = dest,
       .data = gatewaySendMessageData.data,
       .data_length = gatewaySendMessageData.data_length};
@@ -177,6 +259,14 @@ int GatewayLinuxPluginSend(MqttSnGatewayNetworkInterface *n,
   }
   if (send_bytes != gatewaySendMessageData.data_length) {
     put(sendBuffer, &gatewaySendMessageData);
+#ifdef WITH_DEBUG_LOGGING
+    if (log_incomplete_message(n->logger, n->logger->log_level,
+                               &gatewaySendMessageData.address,
+                               gatewaySendMessageData.data,
+                               gatewaySendMessageData.data_length)) {
+      return -1;
+    }
+#endif
     return -1;
   }
 
@@ -191,10 +281,10 @@ int GatewayLinuxPluginReceive(MqttSnGatewayNetworkInterface *n,
 
   MqttSnMessageData receiveMessageData = {0};
 
-  plugin_device_address rec_address = {
+  gateway_plugin_device_address rec_address = {
       .length = sizeof(device_address),
       .bytes = receiveMessageData.address.bytes};
-  plugin_message rec_message = {
+  gateway_plugin_message rec_message = {
       .address = rec_address,
       .data_length = 0,
       .data = receiveMessageData.data};
@@ -203,14 +293,25 @@ int GatewayLinuxPluginReceive(MqttSnGatewayNetworkInterface *n,
                                                         timeout_ms,
                                                         pluginGatewayNetwork->plugin_cfg,
                                                         pluginGatewayNetwork->plugin_context);
-  if (rc == -1) {
+  if (rc < -1) {
     return -1;
   }
-  if (rc == 1) {
+  if (rc == 0) {
     // no message received
     return 0;
   }
-
   put(receiveBuffer, &receiveMessageData);
+
+#ifdef WITH_DEBUG_LOGGING
+  if (n->logger) {
+    const MqttSnMessageData *msg = back(receiveBuffer);
+    log_gateway_message(n->logger,
+                        n->logger->log_level,
+                        &msg->address,
+                        msg->data,
+                        msg->data_length);
+  }
+#endif
+
   return 0;
 }
