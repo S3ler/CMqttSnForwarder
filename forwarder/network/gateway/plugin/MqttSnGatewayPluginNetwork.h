@@ -9,8 +9,8 @@
 extern "C" {
 #endif
 
-#include "../../MqttSnGatewayNetworkInterface.h"
-#include "plugin_interface.h"
+#include "MqttSnGatewayNetworkInterface.h"
+#include "gateway_plugin_interface.h"
 
 typedef struct MqttSnGatewayPluginContext_ {
   char *plugin_path;

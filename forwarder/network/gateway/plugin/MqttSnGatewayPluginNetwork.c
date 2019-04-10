@@ -3,7 +3,7 @@
 //
 
 #include "MqttSnGatewayPluginNetwork.h"
-#include "MqttSnPluginLogger.h"
+#include "network/plugin/MqttSnPluginLogger.h"
 
 #include <dlfcn.h>
 #include <stdio.h>

@@ -51,9 +51,9 @@ set(IMPLEMENTATIONL_FILES
         forwarder/global_defines.h
         forwarder/MqttSnGatewayNetworkInterface.c
         forwarder/MqttSnClientNetworkInterface.c
-        forwarder/network/plugin/plugin_interface.h
-        forwarder/network/plugin/MqttSnGatewayPluginNetwork.h
-        forwarder/network/plugin/MqttSnGatewayPluginNetwork.c
+        forwarder/network/gateway/plugin/gateway_plugin_interface.h
+        forwarder/network/gateway/plugin/MqttSnGatewayPluginNetwork.h
+        forwarder/network/gateway/plugin/MqttSnGatewayPluginNetwork.c
         forwarder/MqttSnForwarderLogging.h
         forwarder/MqttSnForwarderLogging.c forwarder/MqttSnMessageParser.h forwarder/MqttSnMessageParser.c forwarder/network/client/plugin/client_network_plugin_interface.h forwarder/network/plugin/MqttSnPluginLogger.h forwarder/network/plugin/MqttSnPluginLogger.c forwarder/network/client/plugin/MqttSnClientPluginNetwork.h forwarder/network/client/plugin/MqttSnClientPluginNetwork.c)
 include_directories(forwarder)

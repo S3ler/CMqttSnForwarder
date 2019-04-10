@@ -4,8 +4,8 @@
 #include "forwarder_starter.h"
 #include "MqttSnForwarderLogging.h"
 #include <stdlib.h>
-#include <network/plugin/plugin_interface.h>
-#include <network/plugin/MqttSnGatewayPluginNetwork.h>
+#include <network/gateway/plugin/gateway_plugin_interface.h>
+#include <network/gateway/plugin/MqttSnGatewayPluginNetwork.h>
 #include <string.h>
 #include <network/gateway/tcp/MqttSnGatewayTcpNetwork.h>
 #include <network/iphelper/MqttSnIpNetworkHelper.h>
@@ -49,6 +49,7 @@ int start_gateway_plugin(const forwarder_config *fcfg,
                          MqttSnForwarder *mqttSnForwarder,
                          void *gatewayNetworkContext,
                          void *clientNetworkContext) {
+  // TODO teste plugin (irgendwie)
 
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
@@ -221,7 +222,8 @@ int start_client_plugin(const forwarder_config *fcfg,
   fprintf(stderr, "Client network plugin is notimplemented yet.\n");
   return EXIT_FAILURE;
 
-  // TODO
+  // TODO teste plugin (irgendwie)
+  // TODO implement me
   // return start_forwarder(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
 
@@ -365,7 +367,7 @@ int start_forwarder(const forwarder_config *fcfg,
   mqttSnForwarder->gatewayNetworkSendTimeout = fcfg->gateway_network_send_timeout;
   mqttSnForwarder->gatewayNetworkReceiveTimeout = fcfg->gateway_network_receive_timeout;
 
-  if (MqttSnForwarderInit(mqttSnForwarder, clientNetworkContext, gatewayNetworkContext) != 0) {
+  if (MqttSnForwarderInit(mqttSnForwarder, fcfg->log_lvl, clientNetworkContext, gatewayNetworkContext) != 0) {
     fprintf(stderr, "Error init mqtt-sn forwarder\n");
     MqttSnForwarderDeinit(mqttSnForwarder);
     return EXIT_FAILURE;

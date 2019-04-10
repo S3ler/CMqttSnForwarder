@@ -319,18 +319,6 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         fcfg->client_network_plugin_path = strdup(argv[i + 1]);
       }
       i++;
-    } else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug")) {
-      fcfg->debug = 1;
-    } else if (!strcmp(argv[i], "--help")) {
-      return 2;
-    } else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
-      if (i == argc - 1) {
-        fprintf(stderr, "Error: %s argument given but no host specified.\n\n", argv[i]);
-        return 1;
-      } else {
-        fcfg->mqtt_sn_gateway_host = strdup(argv[i + 1]);
-      }
-      i++;
     } else if (!strcmp(argv[i], "-V") || !strcmp(argv[i], "--protocol-version")) {
       if (i == argc - 1) {
         fprintf(stderr, "Error: %s argument given but no version specified.\n\n", argv[i]);
@@ -344,10 +332,31 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         }
         i++;
       }
-    } else if (!strcmp(argv[i], "--quiet")) {
-      fcfg->quiet = 1;
+    }
+#if defined(WITH_LOGGING)
+    else if (!strcmp(argv[i], "-q") || !strcmp(argv[i], "--quiet")) {
+      fcfg->log_lvl = LOG_LEVEL_QUIET;
+    } else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--default")) {
+      fcfg->log_lvl = LOG_LEVEL_DEFAULT;
     } else if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--verbose")) {
-      fcfg->verbose = 1;
+      fcfg->log_lvl = LOG_LEVEL_VERBOSE;
+    }
+#if defined(WITH_DEBUG_LOGGING)
+    else if (!strcmp(argv[i], "-db") || !strcmp(argv[i], "--debug")) {
+      fcfg->log_lvl = LOG_LEVEL_DEBUG;
+    }
+#endif
+#endif
+    else if (!strcmp(argv[i], "--help")) {
+      return 2;
+    } else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no host specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        fcfg->mqtt_sn_gateway_host = strdup(argv[i + 1]);
+      }
+      i++;
     } else {
       fprintf(stderr, "Error: Unknown option '%s'.\n", argv[i]);
       return 1;
@@ -358,9 +367,14 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 }
 
 void print_usage(void) {
-  printf("cmqttsnforwarder is a simple mqtt-sn forwarder that will forward udp mqtt-sn messages\n");
+  printf("cmqttsnforwarder is a simple mqtt-sn forwarder that will forward mqtt-sn messages\n");
   printf("                 from a client network over a gateway network to a mqtt-sn gateway.\n");
-  printf("cmqttsnforwarder version %s is %d.%d.%d (build date %s).\n\n", VERSION, MAJOR, MINOR, TWEAK, CMAKE_BUILD_TIMESTAMP);
+  printf("cmqttsnforwarder version %s is %d.%d.%d (build date %s).\n\n",
+         VERSION,
+         MAJOR,
+         MINOR,
+         TWEAK,
+         CMAKE_BUILD_TIMESTAMP);
   printf("Usage: cmqttsnforwarder {[[-h mqtt_sn_gateway_host] [-p mqtt_sn_gateway_port]] | -L URL}\n");
   printf("                        {[[-gP gateway_network_protocol] [-gA gateway_network_bind_address]"
          " [-gp gateway_network_bind_port]] | -gL URL}\n");
@@ -372,8 +386,14 @@ void print_usage(void) {
          " | --ct client_network_timeout}\n");
   printf("                        [-gnp gateway_network_plugin]\n");
   printf("                        [-cnp client_network_plugin]\n");
+#if defined(WITH_LOGGING)
+#if defined(WITH_DEBUG_LOGGING)
+  printf("                        [[-q quiet] | [-d default] | [-v verbose] | [-db debug]]\n");
+#else
+  printf("                        [[-q quiet] | [-d default] | [-v verbose]]\n");
+#endif
+#endif
   // TODO: printf("                        [-c config_file]\n");
-  // TODO: printf("                        [-v] [--quiet]\n");
   printf("       cmqttsnforwarder --help\n\n");
 
   printf(" -h : mqtt-sn gateway host to connect to. Defaults to localhost.\n");
@@ -395,22 +415,20 @@ void print_usage(void) {
   printf("       Use to control which interface the network communicates over.\n");
   printf(" -cp : listening on the specific client network port. Defaults to 7777.\n");
   printf(" -cL : specify outgoing socket, port as a URL in the form: address[:port]\n");
-
+  // TODO timeouts testen (sollte implementiert sein)
   printf(" -gst : specify the gateway network send timeout in ms.\n");
-  printf("        Can be 0 to return immediately or -1 to wait indefinitely for a message. Defaults to 1000 ms.\n");
+  printf("       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
   printf(" -grt : specify the gateway network receive timeout in ms.\n");
-  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
+  printf("       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
   printf(" -gt  : specify the gateway network send and receive timeout in ms. Defaults to 1000 ms.\n");
-  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
-
+  printf("       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
   printf(" -cst : specify the client network send timeout in ms.\n");
-  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
+  printf("       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
   printf(" -crt : specify the client network receive timeout in ms.\n");
-  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
+  printf("       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
   printf(" -ct  : specify the client network send and receive timeout in ms. Defaults to 1000 ms.\n");
-  // TODO: printf("       Can be 0 to returns immediately and -1 to wait indefinitely for a message . Defaults to 1000 ms.\n");
+  printf("       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
 
-  // TODO: printf(" -c : specify the forwarder config file.\n");
   printf(" -V : specify the version of the MQTT-SN protocol to use.\n");
   printf("      Can be mqttsnv1. Defaults to mqttsnv1.\n");
 
@@ -426,12 +444,17 @@ void print_usage(void) {
          " Too long bytes are dropped\n");
   printf("       A port overwrites the two last bytes of the client network bind address. "
          "You can set the client port to -1 if you want to overwrite this behaviour\n");
-
-  // TODO: printf(" -v : verbose mode - enable all logging types.\n");
-  // TODO: printf(" --quiet : don't print error messages.\n");
+#if defined(WITH_LOGGING)
+  printf(" -q : specify quiet logging. Don't print any log messages.\n");
+  printf(" -d : specify default logging. Print PUBLISH, CONNECT, CONNACK, DISCONNECT messages.\n");
+  printf(" -v : specify verbose logging. Print all MQTT-SN messages.\n");
+#if defined(WITH_DEBUG_LOGGING)
+  printf(" -db : specify debug logging. Print all MQTT-SN messages including payload and internal information.\n");
+#endif
   // TODO  printf(" --json : produce json valid log message
-
+#endif
+  // TODO: printf(" -c : specify the forwarder config file.\n");
   printf(" --help : display this message.\n");
 
-  printf("\nSee http://./ for more information.\n\n");
+  // TODO: printf("\nSee http://./ for more information.\n\n");
 }

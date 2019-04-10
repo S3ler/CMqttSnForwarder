@@ -123,7 +123,7 @@ class MqttSnForwarderLoopTests : public ::testing::Test {
     EXPECT_CALL(gatewayNetworkSendBuffer, isEmpty(_))
         .WillRepeatedly(Return(1));
 
-    ASSERT_EQ(MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext), 0);
+    ASSERT_EQ(MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext), 0);
 
     ON_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
         .WillByDefault(Return(1));

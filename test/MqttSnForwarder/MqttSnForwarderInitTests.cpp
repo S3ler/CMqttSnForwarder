@@ -5,7 +5,7 @@
 #include "MqttSnForwarderInitTests.h"
 
 TEST_F(MqttSnForwarderInitTests, ClientNetworkContextIsSet) {
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 
   EXPECT_EQ(mqttSnForwarder.clientNetworkContext, clientNetworkContext);
 }
@@ -14,18 +14,18 @@ TEST_F(MqttSnForwarderInitTests, ClientNetworkReceiveBufferInitIsCalled) {
   EXPECT_CALL(clientNetworkReceiveBuffer, MqttSnFixedSizeRingBufferInit(&mqttSnForwarder.clientNetworkReceiveBuffer))
       .Times(1);
 
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 }
 
 TEST_F(MqttSnForwarderInitTests, ClientNetworkSendBufferInitIsCalled) {
   EXPECT_CALL(clientNetworkSendBuffer, MqttSnFixedSizeRingBufferInit(&mqttSnForwarder.clientNetworkSendBuffer))
       .Times(1);
 
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 }
 
 TEST_F(MqttSnForwarderInitTests, GatewayNetworkContextIsSet) {
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 
   EXPECT_EQ(mqttSnForwarder.gatewayNetworkContext, gatewayNetworkContext);
 }
@@ -33,14 +33,14 @@ TEST_F(MqttSnForwarderInitTests, GatewayNetworkReceiveBufferInitIsCalled) {
   EXPECT_CALL(gatewayNetworkReceiveBuffer, MqttSnFixedSizeRingBufferInit(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(1);
 
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 }
 
 TEST_F(MqttSnForwarderInitTests, GatewayNetworkSendBufferInitIsCalled) {
   EXPECT_CALL(gatewayNetworkSendBuffer, MqttSnFixedSizeRingBufferInit(&mqttSnForwarder.gatewayNetworkSendBuffer))
       .Times(1);
 
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 }
 
 TEST_F(MqttSnForwarderInitTests, ClientNetworkConnectedIsCalled) {
@@ -48,7 +48,7 @@ TEST_F(MqttSnForwarderInitTests, ClientNetworkConnectedIsCalled) {
       .Times(1)
       .WillOnce(Return(0));
 
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 }
 
 TEST_F(MqttSnForwarderInitTests, ClientNetworkConnectFailed_MqttSnForwarderDeinitialized) {
@@ -61,7 +61,7 @@ TEST_F(MqttSnForwarderInitTests, ClientNetworkConnectFailed_MqttSnForwarderDeini
   EXPECT_CALL(clientNetworkMock, client_network_disconnect(&mqttSnForwarder.clientNetwork, clientNetworkContext))
       .Times(1);
 
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 }
 
 TEST_F(MqttSnForwarderInitTests, ClientNetworkConnectFailedAndMqttSnForwarderDeinitialized_ReturnsMinusOne) {
@@ -69,7 +69,7 @@ TEST_F(MqttSnForwarderInitTests, ClientNetworkConnectFailedAndMqttSnForwarderDei
       .Times(1)
       .WillOnce(Return(-1));
 
-  EXPECT_EQ(MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext), -1);
+  EXPECT_EQ(MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext), -1);
 }
 
 TEST_F(MqttSnForwarderInitTests, GatewayNetworkConnectedIsCalled) {
@@ -77,7 +77,7 @@ TEST_F(MqttSnForwarderInitTests, GatewayNetworkConnectedIsCalled) {
       .Times(1)
       .WillOnce(Return(0));
 
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 }
 
 TEST_F(MqttSnForwarderInitTests, GatewayNetworkConnectFailed_MqttSnForwarderDeinitialized) {
@@ -90,7 +90,7 @@ TEST_F(MqttSnForwarderInitTests, GatewayNetworkConnectFailed_MqttSnForwarderDein
   EXPECT_CALL(clientNetworkMock, client_network_disconnect(&mqttSnForwarder.clientNetwork, clientNetworkContext))
       .Times(1);
 
-  MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 }
 
 TEST_F(MqttSnForwarderInitTests, GatewayNetworkConnectFailedAndMqttSnForwarderDeinitialized_ReturnsMinusOne) {
@@ -103,7 +103,7 @@ TEST_F(MqttSnForwarderInitTests, GatewayNetworkConnectFailedAndMqttSnForwarderDe
   EXPECT_CALL(clientNetworkMock, client_network_disconnect(&mqttSnForwarder.clientNetwork, clientNetworkContext))
       .Times(1);
 
-  EXPECT_EQ(MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext), -1);
+  EXPECT_EQ(MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext), -1);
 }
 
 TEST_F(MqttSnForwarderInitTests, ContextsAndBuffersInitializedAndNetworksConnected_ReturnsZero) {
@@ -124,7 +124,7 @@ TEST_F(MqttSnForwarderInitTests, ContextsAndBuffersInitializedAndNetworksConnect
       .Times(1)
       .WillOnce(Return(0));
 
-  int returnValue = MqttSnForwarderInit(&mqttSnForwarder, clientNetworkContext, gatewayNetworkContext);
+  int returnValue = MqttSnForwarderInit(&mqttSnForwarder, LOG_LEVEL_QUIET, clientNetworkContext, gatewayNetworkContext);
 
   ASSERT_EQ(mqttSnForwarder.gatewayNetworkContext, gatewayNetworkContext);
   ASSERT_EQ(mqttSnForwarder.clientNetworkContext, clientNetworkContext);

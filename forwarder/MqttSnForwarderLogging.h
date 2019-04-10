@@ -12,6 +12,13 @@ extern "C" {
 #include <global_defines.h>
 #include "../main/forwarder_config.h"
 
+typedef enum {
+  LOG_LEVEL_QUIET = 0,
+  LOG_LEVEL_DEFAULT = 1,
+  LOG_LEVEL_VERBOSE = 2,
+  LOG_LEVEL_DEBUG = 3
+} log_level_t;
+
 typedef struct MqttSnLogger_ {
   int (*log_init)(struct MqttSnLogger_ *logger);
   void (*log_deinit)(struct MqttSnLogger_ *logger);
@@ -20,7 +27,7 @@ typedef struct MqttSnLogger_ {
   int log_level;
 } MqttSnLogger;
 
-int MqttSnLoggerInit(MqttSnLogger *logger);
+int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level);
 void MqttSnLoggerDeinit(MqttSnLogger *logger);
 
 int log_flush(const MqttSnLogger *logger);
@@ -200,7 +207,6 @@ int log_gateway_disconnect_message(const MqttSnLogger *logger,
                                    const uint8_t *data,
                                    uint16_t data_len);
 
-
 // 1554750679: ADVERTISE to 255.255.255.255.34.11 (gw1, d600).
 // device_address
 // (gw) gatewayId [0-255], (d)uration [0-65535]
@@ -268,6 +274,19 @@ int log_client_unsubscribe_message(int level, device_address address);
 // (m)essageId [0 - 65535]
 // LOG_LEVEL_VERBOSE
 int log_gateway_unsuback_message(int level, device_address address);
+
+int log_protocol_mismatch(const MqttSnLogger *logger, int level, const char *expected, const char *actual);
+
+int log_too_long_message(const MqttSnLogger *logger,
+                         int level,
+                         const device_address *address,
+                         const uint8_t *data,
+                         uint16_t data_len);
+int log_incomplete_message(const MqttSnLogger *logger,
+                           int level,
+                           const device_address *address,
+                           const uint8_t *data,
+                           uint16_t data_len);
 
 #ifdef WITH_DEBUG_LOGGING
 

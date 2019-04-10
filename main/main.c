@@ -10,8 +10,8 @@
 #include <MqttSnForwarder.h>
 #include <network/gateway/udp/MqttSnGatewayUdpNetwork.h>
 #include <network/iphelper/MqttSnIpNetworkHelper.h>
-#include <network/plugin/plugin_interface.h>
-#include <network/plugin/MqttSnGatewayPluginNetwork.h>
+#include <network/gateway/plugin/gateway_plugin_interface.h>
+#include <network/gateway/plugin/MqttSnGatewayPluginNetwork.h>
 #include <network/gateway/tcp/MqttSnGatewayTcpNetwork.h>
 #include <network/client/tcp/MqttSnClientTcpNetwork.h>
 #include "forwarder_config.h"

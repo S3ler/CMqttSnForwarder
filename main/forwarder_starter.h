@@ -10,7 +10,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <stdlib.h>
-#include <network/plugin/plugin_interface.h>
+#include <network/gateway/plugin/gateway_plugin_interface.h>
 
 typedef struct MqttSnForwarder_fcfg_ptr_ {
   MqttSnForwarder *mqttSnForwarder_ptr;

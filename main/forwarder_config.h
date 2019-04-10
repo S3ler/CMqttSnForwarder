@@ -31,23 +31,16 @@ void print_usage(void);
 #define CMAKE_BUILD_TIMESTAMP "N/D"
 #endif
 
-#ifndef WITH_LOGGING
-#define WITH_LOGGING
-#endif
-
-enum log_level_t {
-  LOG_LEVEL_QUIET = 0,
-  LOG_LEVEL_DEFAULT = 1,
-  LOG_LEVEL_VERBOSE = 2,
-  LOG_LEVEL_DEBUG = 3
-};
-
 typedef struct forwarder_config_ {
   char *version;
   int major;
   int minor;
   uint64_t tweak;
   char *build_date;
+
+  int protocol_version;
+  int log_lvl;
+
   // mqtt-sn gateway
   char *mqtt_sn_gateway_host;
   int mqtt_sn_gateway_port;
@@ -62,19 +55,12 @@ typedef struct forwarder_config_ {
   int client_network_bind_port;
   char *client_network_plugin_path;
 
-  int protocol_version;
-
-  // logging config
-  int verbose;
-  int debug;
-  int quiet;
 
   int gateway_network_send_timeout;
   int gateway_network_receive_timeout;
   int client_network_send_timeout;
   int client_network_receive_timeout;
 
-  enum log_level_t log_lvl;
 } forwarder_config;
 
 void forwarder_config_init(forwarder_config *fcfg);

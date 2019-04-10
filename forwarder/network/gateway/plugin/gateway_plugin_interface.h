@@ -2,14 +2,14 @@
 // Created by SomeDude on 07.04.2019.
 //
 
-#ifndef CMQTTSNFORWARDER_PLUGIN_INTERFACE_H
-#define CMQTTSNFORWARDER_PLUGIN_INTERFACE_H
+#ifndef CMQTTSNFORWARDER_GATEWAY_PLUGIN_INTERFACE_H
+#define CMQTTSNFORWARDER_GATEWAY_PLUGIN_INTERFACE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "../../MqttSnGatewayNetworkInterface.h"
+#include "MqttSnGatewayNetworkInterface.h"
 
 typedef struct gateway_plugin_device_address_ {
   const uint8_t length;
@@ -116,4 +116,4 @@ int gateway_plugin_network_send(const gateway_plugin_message *send_message,
 }
 #endif
 
-#endif //CMQTTSNFORWARDER_PLUGIN_INTERFACE_H
+#endif //CMQTTSNFORWARDER_GATEWAY_PLUGIN_INTERFACE_H

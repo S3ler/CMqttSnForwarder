@@ -140,13 +140,12 @@ int log_forwarder_terminated(const MqttSnLogger *logger,
       log_str(logger, action) ||
       log_flush(logger) != 0);
 }
-int MqttSnLoggerInit(MqttSnLogger *logger) {
+int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level) {
   logger->log_init = stdout_log_init;
   logger->log_deinit = stdout_log_deinit;
   logger->log_flush = stdout_log_flush;
   logger->log_str = stdout_log_str;
-  // TODO exchange with fcfg->log_level
-  logger->log_level = LOG_LEVEL_DEFAULT;
+  logger->log_level = log_level;
   return logger->log_init(logger);
 }
 
@@ -653,4 +652,70 @@ int log_network_disconnect(const MqttSnLogger *logger,
       log_device_address(logger, address) ||
       log_str(logger, dot) ||
       log_flush(logger) != 0);
+}
+
+
+
+int log_protocol_mismatch(const MqttSnLogger *logger, int level, const char *expected, const char *actual) {
+  if (level <= LOG_LEVEL_QUIET) {
+    return 0;
+  }
+
+  const char *mismatch = ": plugin protocol mismatch - expected: ";
+  const char *actual_str = " actual: ";
+  const char *dot = ".";
+
+  if (log_current_time(logger)) {
+    return -1;
+  }
+  if (log_str(logger, mismatch)) {
+    return -1;
+  }
+  if (log_str(logger, expected)) {
+    return -1;
+  }
+  if (log_str(logger, actual_str)) {
+    return -1;
+  }
+  if (log_str(logger, actual)) {
+    return -1;
+  }
+  if (log_str(logger, dot)) {
+    return -1;
+  }
+  if (log_flush(logger)) {
+    return -1;
+  }
+
+  return 0;
+}
+
+
+int log_too_long_message(const MqttSnLogger *logger,
+                         int level,
+                         const device_address *address,
+                         const uint8_t *data,
+                         uint16_t data_len) {
+  if (level <= LOG_LEVEL_QUIET) {
+    return 0;
+  }
+  const char *description = "dropping too long message: ";
+  if (log_gateway_mqtt_sn_message(logger, level, address, data, data_len, description)) {
+    return -1;
+  }
+  return 0;
+}
+int log_incomplete_message(const MqttSnLogger *logger,
+                           int level,
+                           const device_address *address,
+                           const uint8_t *data,
+                           uint16_t data_len) {
+  if (level <= LOG_LEVEL_QUIET) {
+    return 0;
+  }
+  const char *description = "could not send message completely - try again later: ";
+  if (log_gateway_mqtt_sn_message(logger, level, address, data, data_len, description)) {
+    return -1;
+  }
+  return 0;
 }
