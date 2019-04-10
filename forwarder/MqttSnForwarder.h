@@ -9,7 +9,6 @@
 extern "C" {
 #endif
 
-
 #include <stdint.h>
 #include "MqttSnGatewayNetworkInterface.h"
 #include "MqttSnFixedSizeRingBuffer.h"
@@ -35,9 +34,12 @@ typedef struct MqttSnForwarder {
   int clientNetworkReceiveTimeout;
   int gatewayNetworkSendTimeout;
   int gatewayNetworkReceiveTimeout;
-  MqttSnLogger logger;
+
   void *clientNetworkContext;
   void *gatewayNetworkContext;
+#ifdef WITH_LOGGING
+  MqttSnLogger logger;
+#endif
 } MqttSnForwarder;
 
 void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder);

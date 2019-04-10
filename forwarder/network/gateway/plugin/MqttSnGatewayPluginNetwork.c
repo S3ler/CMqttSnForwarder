@@ -16,8 +16,8 @@ int GatewayLinuxPluginInit(MqttSnGatewayNetworkInterface *n, void *context) {
   pluginGatewayNetwork->plugin_context = NULL;
 
   n->gateway_network_init = GatewayLinuxPluginInit;
-  n->gateway_receive = GatewayLinuxPluginReceive;
-  n->gateway_send = GatewayLinuxPluginSend;
+  n->gateway_network_receive = GatewayLinuxPluginReceive;
+  n->gateway_network_send = GatewayLinuxPluginSend;
   n->gateway_network_connect = GatewayLinuxPluginConnect;
   n->gateway_network_disconnect = GatewayLinuxPluginDisconnect;
 
@@ -244,11 +244,12 @@ int GatewayLinuxPluginSend(MqttSnGatewayNetworkInterface *n,
     return 0;
   }
 #ifdef WITH_DEBUG_LOGGING
-      log_send_gateway_message(n->logger,
-                             n->logger->log_level,
-                             &gatewaySendMessageData.address,
-                             gatewaySendMessageData.data,
-                             gatewaySendMessageData.data_length);
+  log_send_gateway_message(n->logger,
+                           n->logger->log_level,
+                           &gatewaySendMessageData.address,
+                           n->gateway_network_address,
+                           gatewaySendMessageData.data,
+                           gatewaySendMessageData.data_length);
 #endif
   gateway_plugin_device_address dest = {
       .bytes = gatewaySendMessageData.address.bytes,
@@ -316,7 +317,7 @@ int GatewayLinuxPluginReceive(MqttSnGatewayNetworkInterface *n,
     const MqttSnMessageData *msg = back(receiveBuffer);
     log_rec_gateway_message(n->logger,
                             n->logger->log_level,
-                            &msg->address,
+                            n->gateway_network_address,
                             msg->data,
                             msg->data_length);
   }

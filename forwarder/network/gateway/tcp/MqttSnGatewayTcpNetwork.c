@@ -20,8 +20,8 @@
 int GatewayLinuxTcpInit(struct MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
   tcpNetwork->mqtt_sg_gateway_fd = 0;
-  n->gateway_receive = GatewayLinuxTcpReceive;
-  n->gateway_send = GatewayLinuxTcpSend;
+  n->gateway_network_receive = GatewayLinuxTcpReceive;
+  n->gateway_network_send = GatewayLinuxTcpSend;
   n->gateway_network_connect = GatewayLinuxTcpConnect;
   n->gateway_network_disconnect = GatewayLinuxTcpDisconnect;
   return 0;

@@ -56,6 +56,10 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
 #define MQTT_SN_FLAG_CLEAN_SESSION_SHIFT  2
 #define MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT  0
 
+#define MQTT_SN_HEADER_OFFSET_LENGTH(indicator) (indicator ? 4 : 2)
+
+#define MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(i) ((i ? 4 : 2) + 1 + sizeof(device_address))
+
 #pragma pack(push, 1)
 typedef struct MQTT_SN_FORWARD_ENCAPSULATION {
   uint8_t length;
@@ -65,6 +69,14 @@ typedef struct MQTT_SN_FORWARD_ENCAPSULATION {
   uint8_t mqtt_sn_message[GATEWAY_NETWORK_MAX_DATA_LEN - FORWARDER_HEADER_LEN - sizeof(device_address)];
 
 } MQTT_SN_FORWARD_ENCAPSULATION;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnEncapsulatedMessage_ {
+  uint8_t crtl;
+  device_address wireless_node_id;
+  uint8_t mqtt_sn_message;
+} MqttSnEncapsulatedMessage;
 #pragma pack(pop)
 
 #pragma pack(push)
@@ -78,7 +90,7 @@ typedef struct MqttSnMessageHeaderOneOctetLengthField {
 #pragma pack(push)
 #pragma pack(1)
 typedef struct MqttSnMessageHeaderThreeOctetsLengthField {
-  uint8_t three_octets_length_field_indicator;
+  uint8_t indicator;
   uint8_t msb_length;
   uint8_t lsb_length;
   uint8_t msg_type;
@@ -87,12 +99,12 @@ typedef struct MqttSnMessageHeaderThreeOctetsLengthField {
 
 #pragma pack(push)
 #pragma pack(1)
-typedef struct MqttSnHeader_ {
+typedef struct ParsedMqttSnHeader_ {
   uint8_t indicator;
   uint16_t length;
   MQTT_SN_MESSAGE_TYPE msg_type;
   void *payload;
-} MqttSnHeader;
+} ParsedMqttSnHeader;
 #pragma pack(pop)
 
 #pragma pack(push)
@@ -129,15 +141,17 @@ typedef struct MqttSnMessageDisconnect_ {
 } MqttSnMessageDisconnect;
 #pragma pack(pop)
 
-int parse_header(MqttSnHeader *h, const uint8_t *data, uint16_t data_len);
+int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
-int parse_publish(MqttSnHeader *h, const uint8_t *data, uint16_t data_len);
+int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
-int parse_connect(MqttSnHeader *h, const uint8_t *data, uint16_t data_len);
+int parse_publish(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
-int parse_connack(MqttSnHeader *h, const uint8_t *data, uint16_t data_len);
+int parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
-int parse_disconnect(MqttSnHeader *h, const uint8_t *data, uint16_t data_len);
+int parse_connack(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
+
+int parse_disconnect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
 uint16_t get_message_length(const uint8_t *data);
 

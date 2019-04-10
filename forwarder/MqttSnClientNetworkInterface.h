@@ -38,6 +38,8 @@ typedef struct MqttSnClientNetworkInterface {
 
   device_address *client_network_address;
 
+  device_address *mqtt_sn_gateway_address;
+
 #ifdef WITH_LOGGING
   MqttSnLogger *logger;
 #endif
@@ -56,10 +58,19 @@ typedef struct MqttSnClientNetworkInterface {
  * The client_network_init function is called within this function.
  * @return -1 in case of an error, 0 otherwise.
  */
-int ClientNetworkInit(MqttSnClientNetworkInterface *,
+int ClientNetworkInit(MqttSnClientNetworkInterface *n,
+                      device_address *mqtt_sn_gateway_device_address,
                       device_address *client_network_address,
                       void *context,
                       int (*client_network_init)(MqttSnClientNetworkInterface *, void *));
+
+/**
+ * De-initialize local data structures, close open connections and free resources here.
+ * Is called after either client or gateway network returned -1 from any other method.
+ *
+ * @param context is the given client network context during ClientNetworkInit().
+ */
+void ClientNetworkDisconnect(MqttSnClientNetworkInterface *, void *context);
 
 /**
  * Connect to the network. E.g. in TCP open a socket for incoming connections, in UDP you can open a socket for incoming
@@ -71,14 +82,15 @@ int ClientNetworkInit(MqttSnClientNetworkInterface *,
  */
 int ClientNetworkConnect(MqttSnClientNetworkInterface *, void *context);
 
-/**
- * De-initialize local data structures, close open connections and free resources here.
- * Is called after either client or gateway network returned -1 from any other method.
- *
- * @param context is the given client network context during ClientNetworkInit().
- */
-void ClientNetworkDisconnect(MqttSnClientNetworkInterface *, void *context);
+int ClientNetworkSend(MqttSnClientNetworkInterface *n,
+                      MqttSnFixedSizeRingBuffer *sendBuffer,
+                      int timeout_ms,
+                      void *context);
 
+int ClientNetworkReceive(MqttSnClientNetworkInterface *n,
+                      MqttSnFixedSizeRingBuffer *receiveBuffer,
+                      int timeout_ms,
+                      void *context);
 #ifdef __cplusplus
 }
 #endif

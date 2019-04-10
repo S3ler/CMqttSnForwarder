@@ -17,9 +17,9 @@ typedef struct MqttSnGatewayNetworkInterface {
 
   int status;
 
-  int (*gateway_receive)(struct MqttSnGatewayNetworkInterface *, MqttSnFixedSizeRingBuffer *, int, void *context);
+  int (*gateway_network_receive)(struct MqttSnGatewayNetworkInterface *, MqttSnFixedSizeRingBuffer *, int, void *context);
 
-  int (*gateway_send)(struct MqttSnGatewayNetworkInterface *, MqttSnFixedSizeRingBuffer *, int, void *context);
+  int (*gateway_network_send)(struct MqttSnGatewayNetworkInterface *, MqttSnFixedSizeRingBuffer *, int, void *context);
 
   int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface *, void *context);
 
@@ -32,7 +32,7 @@ typedef struct MqttSnGatewayNetworkInterface {
   device_address *forwarder_network_address;
 
 #ifdef WITH_LOGGING
-  MqttSnLogger* logger;
+  MqttSnLogger *logger;
 #endif
 
 } MqttSnGatewayNetworkInterface;
@@ -46,6 +46,16 @@ int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
 int GatewayNetworkConnect(MqttSnGatewayNetworkInterface *, void *context);
 
 void GatewayNetworkDisconnect(MqttSnGatewayNetworkInterface *, void *context);
+
+int GatewayNetworkSend(struct MqttSnGatewayNetworkInterface *n,
+                       MqttSnFixedSizeRingBuffer *sendBuffer,
+                       int timeout_ms,
+                       void *context);
+
+int GatewayNetworkReceive(struct MqttSnGatewayNetworkInterface *n,
+                          MqttSnFixedSizeRingBuffer *receiveBuffer,
+                          int timeout_ms,
+                          void *context);
 
 #ifdef __cplusplus
 }

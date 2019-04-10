@@ -83,7 +83,7 @@ class MqttSnClientNetworkInterfaceMessageDefragmentationTests :
     //MqttSnFixedSizeRingBufferInit(&receiveBuffer);
     //MqttSnFixedSizeRingBufferInit(&sendBuffer);
 
-    ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
+    ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL,
                                 &p.forwarderAddress,
                                 p.clientNetworkContext,
                                 p.clientNetworkInit), 0);

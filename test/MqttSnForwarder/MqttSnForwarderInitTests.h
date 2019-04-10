@@ -90,8 +90,8 @@ class MqttSnForwarderInitTests : public ::testing::Test {
         .WillOnce(Invoke(local_client_network_init));
 
     auto local_gateway_network_init = [](MqttSnGatewayNetworkInterface *n, void *context) -> int {
-      n->gateway_receive = mock_gateway_network_receive;
-      n->gateway_send = mock_gateway_network_send;
+      n->gateway_network_receive = mock_gateway_network_receive;
+      n->gateway_network_send = mock_gateway_network_send;
       n->gateway_network_init = mock_gateway_network_init;
       n->gateway_network_connect = mock_gateway_network_connect;
       n->gateway_network_disconnect = mock_gateway_network_disconnect;
@@ -102,7 +102,7 @@ class MqttSnForwarderInitTests : public ::testing::Test {
         .Times(1)
         .WillOnce(Invoke(local_gateway_network_init));
 
-    ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork,
+    ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork, NULL,
                                 &client_network_address,
                                 clientNetworkContext,
                                 mock_client_network_init), 0);

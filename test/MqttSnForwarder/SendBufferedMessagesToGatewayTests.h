@@ -65,7 +65,7 @@ class SendBufferedMessagesToGatewayTests : public testing::Test {
 
     globalGatewayNetworkMockObj = &gatewayNetworkMock;
 
-    mqttSnForwarder.gatewayNetwork.gateway_send = mock_gateway_network_send;
+    mqttSnForwarder.gatewayNetwork.gateway_network_send = mock_gateway_network_send;
     mqttSnForwarder.gatewayNetworkContext = gatewayNetworkContext;
 
     ON_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))

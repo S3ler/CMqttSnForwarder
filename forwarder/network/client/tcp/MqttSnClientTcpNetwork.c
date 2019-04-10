@@ -357,7 +357,7 @@ int MqttSnClientHandleMasterSocket(MqttSnClientTcpNetwork *clientTcpNetwork, fd_
       return -1;
     }
 
-    // inform user of the socket number - used in gateway_send and client_network_receive commands
+    // inform user of the socket number - used in gateway_network_send and client_network_receive commands
     printf("New connection, socket fd is %d, ip is: %s, port: %d\n",
            new_socket, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
 

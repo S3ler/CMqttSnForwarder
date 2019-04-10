@@ -95,7 +95,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     //MqttSnFixedSizeRingBufferInit(&receiveBuffer);
     //MqttSnFixedSizeRingBufferInit(&sendBuffer);
 
-    ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
+    ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL,
                                 &forwarderAddress,
                                 p.clientNetworkContext,
                                 p.clientNetworkInit), 0);

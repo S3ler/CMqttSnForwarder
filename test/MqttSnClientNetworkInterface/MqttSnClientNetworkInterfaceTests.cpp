@@ -17,7 +17,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
       .Times(1)
       .WillOnce(Return(0));
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   EXPECT_EQ(mqttSnClientNetworkInterface.status, 0);
 }
@@ -31,7 +31,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
       .Times(1)
       .WillOnce(Return(0));
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL,
                               &client_network_address,
                               context,
                               mock_client_network_init), 0);
@@ -48,7 +48,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
       .Times(1)
       .WillOnce(Return(0));
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL,
                               &client_network_address,
                               context,
                               mock_client_network_init), 0);
@@ -65,7 +65,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
       .Times(1)
       .WillOnce(Return(0));
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 }
 
 TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_AfterInitSucess_ReturnsZero) {
@@ -77,7 +77,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
       .Times(1)
       .WillOnce(Return(0));
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 }
 
 TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_AfterInitFails_ReturnsMinusOne) {
@@ -89,7 +89,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
       .Times(1)
       .WillOnce(Return(-1));
 
-  EXPECT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), -1);
+  EXPECT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), -1);
 }
 
 TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_AfterInitFails_StatusIsMinusOne) {
@@ -101,7 +101,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
       .Times(1)
       .WillOnce(Return(-1));
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), -1);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), -1);
 
   EXPECT_EQ(mqttSnClientNetworkInterface.status, -1);
 }
@@ -116,7 +116,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   EXPECT_EQ(mqttSnClientNetworkInterface.client_network_init, mock_client_network_init);
 }
@@ -131,7 +131,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   EXPECT_EQ(mqttSnClientNetworkInterface.client_network_connect, mock_client_network_connect);
 }
@@ -146,7 +146,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   EXPECT_EQ(mqttSnClientNetworkInterface.client_network_disconnect, mock_client_network_disconnect);
 }
@@ -161,7 +161,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   EXPECT_EQ(mqttSnClientNetworkInterface.client_network_receive, mock_client_network_receive);
 }
@@ -176,7 +176,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   EXPECT_EQ(mqttSnClientNetworkInterface.client_network_send, mock_client_network_send);
 }
@@ -191,7 +191,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   ASSERT_EQ(mqttSnClientNetworkInterface.client_network_connect, mock_client_network_connect);
 
@@ -213,7 +213,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   ASSERT_EQ(mqttSnClientNetworkInterface.client_network_connect, mock_client_network_connect);
 
@@ -234,7 +234,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   ASSERT_EQ(mqttSnClientNetworkInterface.client_network_connect, mock_client_network_connect);
 
@@ -257,7 +257,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   ASSERT_EQ(mqttSnClientNetworkInterface.client_network_connect, mock_client_network_connect);
 
@@ -279,7 +279,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   ASSERT_EQ(mqttSnClientNetworkInterface.client_network_connect, mock_client_network_connect);
 
@@ -378,7 +378,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   EXPECT_CALL(clientNetworkMock, client_network_disconnect(&mqttSnClientNetworkInterface, context))
       .Times(1);
@@ -397,7 +397,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
   EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnClientNetworkInterface, context))
       .Times(1);
 
-  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, &address, context, mock_client_network_init), 0);
+  ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface, NULL, &address, context, mock_client_network_init), 0);
 
   EXPECT_CALL(clientNetworkMock, client_network_disconnect(&mqttSnClientNetworkInterface, context))
       .Times(1);

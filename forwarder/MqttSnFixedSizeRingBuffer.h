@@ -43,6 +43,7 @@ const MqttSnMessageData *front(const MqttSnFixedSizeRingBuffer *queue);
 const MqttSnMessageData *back(const MqttSnFixedSizeRingBuffer *queue);
 
 int isEmpty(const MqttSnFixedSizeRingBuffer *queue);
+int isFull(const MqttSnFixedSizeRingBuffer *queue);
 
 #ifdef __cplusplus
 }

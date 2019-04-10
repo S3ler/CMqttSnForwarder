@@ -77,3 +77,6 @@ const MqttSnMessageData *front(const MqttSnFixedSizeRingBuffer *queue) {
   }
   return &queue->items[queue->head];
 }
+int isFull(const MqttSnFixedSizeRingBuffer *queue) {
+  return queue->item_count == queue->maxlen;
+}

@@ -184,7 +184,7 @@ int awaitForwarderConnection(int fd) {
     exit(EXIT_FAILURE);
   }
 
-  // inform user of the socket number - used in gateway_send and client_receive commands
+  // inform user of the socket number - used in gateway_network_send and client_receive commands
   printf("Forwarder conmected, socket fd is %d, ip is: %s, port: %d\n",
          new_socket, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
 

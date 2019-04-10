@@ -25,3 +25,10 @@ int stdout_log_str(const char *str) {
   }
   return 0;
 }
+
+int stdout_log_char(char c) {
+  if (fputc(c, stdout) == EOF) {
+    return -1;
+  }
+  return 0;
+}

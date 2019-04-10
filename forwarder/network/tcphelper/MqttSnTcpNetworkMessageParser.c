@@ -126,7 +126,7 @@ int save_messages_into_receive_buffer(uint8_t *buffer,
 uint16_t get_tcp_message_length(uint8_t *data) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
-  if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01) {
+  if (threeOctetsLengthField->indicator == 0x01) {
     uint16_t length = 0;
     length += (((uint16_t) threeOctetsLengthField->msb_length) << 8);
     length += (((uint16_t) threeOctetsLengthField->lsb_length) << 0);
@@ -140,7 +140,7 @@ uint16_t get_tcp_message_length(uint8_t *data) {
 int isCompleteThreeBytesTcpHeader(uint8_t *data, ssize_t data_length) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
-  if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01 && data_length > 2) {
+  if (threeOctetsLengthField->indicator == 0x01 && data_length > 2) {
     return 1;
   }
   return 0;
@@ -149,7 +149,7 @@ int isCompleteThreeBytesTcpHeader(uint8_t *data, ssize_t data_length) {
 int isThreeBytesTcpHeader(uint8_t *data, ssize_t data_length) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
-  if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01) {
+  if (threeOctetsLengthField->indicator == 0x01) {
     return 1;
   }
   return 0;

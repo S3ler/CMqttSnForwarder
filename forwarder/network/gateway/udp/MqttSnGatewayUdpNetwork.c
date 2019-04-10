@@ -23,8 +23,8 @@ int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   memset(udpNetwork, 0, sizeof(MqttSnGatewayUdpNetwork));
   udpNetwork->my_socket = -1;
   strcpy(udpNetwork->protocol, "udp");
-  n->gateway_receive = GatewayLinuxUdpReceive;
-  n->gateway_send = GatewayLinuxUdpSend;
+  n->gateway_network_receive = GatewayLinuxUdpReceive;
+  n->gateway_network_send = GatewayLinuxUdpSend;
   n->gateway_network_connect = GatewayLinuxUdpConnect;
   n->gateway_network_disconnect = GatewayLinuxUdpDisconnect;
   return 0;
@@ -96,7 +96,7 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
       const MqttSnMessageData *msg = back(receiveBuffer);
       log_rec_gateway_message(n->logger,
                               n->logger->log_level,
-                              &msg->address,
+                              n->gateway_network_address,
                               msg->data,
                               msg->data_length);
     }
@@ -118,6 +118,7 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuf
   log_send_gateway_message(n->logger,
                            n->logger->log_level,
                            &gatewaySendMessageData.address,
+                           n->gateway_network_address,
                            gatewaySendMessageData.data,
                            gatewaySendMessageData.data_length);
 #endif

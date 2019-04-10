@@ -203,7 +203,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
                                gatewayNetworkContext,
                                mock_gateway_network_init), 0);
 
-  EXPECT_EQ(mqttSnGatewayNetworkInterface.gateway_receive, mock_gateway_network_receive);
+  EXPECT_EQ(mqttSnGatewayNetworkInterface.gateway_network_receive, mock_gateway_network_receive);
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
@@ -221,7 +221,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
                                gatewayNetworkContext,
                                mock_gateway_network_init), 0);
 
-  EXPECT_EQ(mqttSnGatewayNetworkInterface.gateway_send, mock_gateway_network_send);
+  EXPECT_EQ(mqttSnGatewayNetworkInterface.gateway_network_send, mock_gateway_network_send);
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,

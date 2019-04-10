@@ -8,7 +8,7 @@
 uint16_t get_message_length(const uint8_t *data) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
-  if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01) {
+  if (threeOctetsLengthField->indicator == 0x01) {
     uint16_t length = 0;
     length += (((uint16_t) threeOctetsLengthField->msb_length) << 8);
     length += (((uint16_t) threeOctetsLengthField->lsb_length) << 0);
@@ -35,7 +35,7 @@ MQTT_SN_MESSAGE_TYPE get_mqtt_sn_message_type(const uint8_t *data) {
 int is_valid_three_bytes_header(const uint8_t *data, ssize_t data_length) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
-  if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01 && data_length > 2) {
+  if (threeOctetsLengthField->indicator == 0x01 && data_length > 2) {
     return 1;
   }
   return 0;
@@ -43,23 +43,29 @@ int is_valid_three_bytes_header(const uint8_t *data, ssize_t data_length) {
 uint8_t is_three_bytes_header(const uint8_t *data) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
-  if (threeOctetsLengthField->three_octets_length_field_indicator == 0x01) {
+  if (threeOctetsLengthField->indicator == 0x01) {
     return 1;
   }
   return 0;
 }
 
-int parse_header(MqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
+int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
+  if (data_len < 2) {
+    return -1;
+  }
   if (!is_valid_three_bytes_header(data, data_len) && is_three_bytes_header(data)) {
+    return -1;
+  }
+  h->length = get_message_length(data);
+  if (h->length != data_len) {
     return -1;
   }
   h->indicator = is_three_bytes_header(data);
   h->msg_type = get_mqtt_sn_message_type(data);
-  h->length = get_message_length(data);
   return 0;
 }
 
-int parse_publish(MqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
+int parse_publish(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   if (parse_header(h, data, data_len)) {
     return -1;
   }
@@ -68,7 +74,7 @@ int parse_publish(MqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   return 0;
 }
 
-int parse_connect(MqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
+int parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   if (parse_header(h, data, data_len)) {
     return -1;
   }
@@ -76,7 +82,7 @@ int parse_connect(MqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   h->payload = (MqttSnMessageConnect *) (data + offset);
   return 0;
 }
-int parse_connack(MqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
+int parse_connack(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   if (parse_header(h, data, data_len)) {
     return -1;
   }
@@ -85,11 +91,26 @@ int parse_connack(MqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   return 0;
 }
 
-int parse_disconnect(MqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
+int parse_disconnect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   if (parse_header(h, data, data_len)) {
     return -1;
   }
   int offset = (h->indicator ? 4 : 2);
   h->payload = (MqttSnMessageDisconnect *) (data + offset);
+  return 0;
+}
+
+int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
+  if (parse_header(h, data, data_len)) {
+    return -1;
+  }
+  if (h->msg_type != Encapsulated_message) {
+    return -1;
+  }
+  int offset = (h->indicator ? 4 : 2);
+  if (h->length < (offset + 1 + sizeof(device_address))) {// 1 = Ctrl
+    return -1;
+  }
+  h->payload = (MqttSnEncapsulatedMessage *) (data + offset);
   return 0;
 }

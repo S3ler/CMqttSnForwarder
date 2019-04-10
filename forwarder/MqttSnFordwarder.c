@@ -5,6 +5,7 @@
 #include <memory.h>
 #include <stdio.h>
 #include <signal.h>
+#include <netinet/in.h>
 #include "MqttSnForwarder.h"
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
@@ -33,14 +34,38 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
   MqttSnFixedSizeRingBufferInit(&mqttSnForwarder->gatewayNetworkSendBuffer);
 
   if (ClientNetworkConnect(&mqttSnForwarder->clientNetwork, mqttSnForwarder->clientNetworkContext) != 0) {
+#ifdef WITH_LOGGING
+    log_network_connect_fail(&mqttSnForwarder->logger,
+                             "client",
+                             mqttSnForwarder->clientNetwork.client_network_address,
+                             NULL);
+#endif
     MqttSnForwarderDeinit(mqttSnForwarder);
     return -1;
   }
+#ifdef WITH_LOGGING
+  if (mqttSnForwarder->logger.status) {
+    MqttSnForwarderDeinit(mqttSnForwarder);
+    return -1;
+  }
+#endif
 
   if (GatewayNetworkConnect(&mqttSnForwarder->gatewayNetwork, mqttSnForwarder->gatewayNetworkContext) != 0) {
+#ifdef WITH_LOGGING
+    log_network_connect_fail(&mqttSnForwarder->logger,
+                             "gateway",
+                             mqttSnForwarder->gatewayNetwork.forwarder_network_address,
+                             mqttSnForwarder->gatewayNetwork.gateway_network_address);
+#endif
     MqttSnForwarderDeinit(mqttSnForwarder);
     return -1;
   }
+#ifdef WITH_LOGGING
+  if (mqttSnForwarder->logger.status) {
+    MqttSnForwarderDeinit(mqttSnForwarder);
+    return -1;
+  }
+#endif
 
   return 0;
 }
@@ -52,25 +77,20 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
 void MqttSnForwarderDeinit(MqttSnForwarder *forwarder) {
   GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
+#ifdef WITH_LOGGING
+  forwarder->logger.log_deinit(&forwarder->logger);
+#endif
 
 }
 
 int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
-  // TODO when clientNetwork.status == -1 then clientNetwork shall functions shall return -1
-  // TODO test this in clientnetworktests
-  if (forwarder->clientNetwork.client_network_receive(
-      &forwarder->clientNetwork,
-      &forwarder->clientNetworkReceiveBuffer,
-      forwarder->clientNetworkReceiveTimeout,
-      forwarder->clientNetworkContext) != 0) {
-    if (forwarder->logger.status) {
-      // TODO handle_broken_logger
-      // remove from subcomponents
-      // send all messages
-    }
+
+  if (ClientNetworkReceive(&forwarder->clientNetwork,
+                           &forwarder->clientNetworkReceiveBuffer,
+                           forwarder->clientNetworkReceiveTimeout,
+                           forwarder->clientNetworkContext)) {
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
-
   {
     MqttSnMessageData clientMessageData = {0};
     MqttSnMessageData gatewayMessageData = {0};
@@ -80,23 +100,17 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
     }
   }
 
-  // TODO when gatewayNetwork.status == -1 then clientNetwork shall functions shall return -1
-  // TODO test this in gatewaynetworktests
-  if (forwarder->gatewayNetwork.gateway_send(
-      &forwarder->gatewayNetwork,
-      &forwarder->gatewayNetworkSendBuffer,
-      forwarder->gatewayNetworkSendTimeout,
-      forwarder->gatewayNetworkContext) != 0) {
-    ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
+  if (GatewayNetworkSend(&forwarder->gatewayNetwork,
+                         &forwarder->gatewayNetworkSendBuffer,
+                         forwarder->gatewayNetworkSendTimeout,
+                         forwarder->gatewayNetworkContext)) {
+    GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
 
-  // TODO when gatewayNetwork.status == -1 then clientNetwork shall functions shall return -1
-  // TODO test this in gatewaynetworktests
-  if (forwarder->gatewayNetwork.gateway_receive(
-      &forwarder->gatewayNetwork,
-      &forwarder->gatewayNetworkReceiveBuffer,
-      forwarder->gatewayNetworkReceiveTimeout,
-      forwarder->gatewayNetworkContext) != 0) {
+  if (GatewayNetworkReceive(&forwarder->gatewayNetwork,
+                            &forwarder->gatewayNetworkReceiveBuffer,
+                            forwarder->gatewayNetworkReceiveTimeout,
+                            forwarder->gatewayNetworkContext)) {
     GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
 
@@ -111,12 +125,11 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
 
   // TODO when clientNetwork.status == -1 then clientNetwork shall functions shall return -1
   // TODO test this in clientnetworktests
-  if (forwarder->clientNetwork.client_network_send(
-      &forwarder->clientNetwork,
-      &forwarder->clientNetworkSendBuffer,
-      forwarder->clientNetworkSendTimeout,
-      forwarder->clientNetworkContext) != 0) {
-    GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
+  if (ClientNetworkSend(&forwarder->clientNetwork,
+                        &forwarder->clientNetworkSendBuffer,
+                        forwarder->clientNetworkSendTimeout,
+                        forwarder->clientNetworkContext)) {
+    ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
 
   if (forwarder->clientNetwork.status <= 0) {
@@ -151,17 +164,6 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
 void sendBufferedMessagesToClients(MqttSnForwarder *forwarder) {
   while (!isEmpty(&forwarder->gatewayNetworkReceiveBuffer) |
       !isEmpty(&forwarder->clientNetworkSendBuffer)) {
-    /*
-    if (forwarder->clientNetwork.client_network_receive(
-        &forwarder->clientNetwork,
-        &forwarder->clientNetworkReceiveBuffer,
-        CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT,
-        forwarder->clientNetworkContext) != 0) {
-      break;
-    }
-     */
-
-
     {
       MqttSnMessageData gatewayMessageData = {0};
       MqttSnMessageData clientMessageData = {0};
@@ -181,15 +183,6 @@ void sendBufferedMessagesToClients(MqttSnForwarder *forwarder) {
 void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder) {
   while (!isEmpty(&forwarder->clientNetworkReceiveBuffer) |
       !isEmpty(&forwarder->gatewayNetworkSendBuffer)) {
-    /*
-    if (forwarder->gatewayNetwork.gateway_receive(
-        &forwarder->gatewayNetwork,
-        &forwarder->gatewayNetworkReceiveBuffer,
-        GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT,
-        forwarder->gatewayNetworkContext) != 0) {
-      break;
-    }
-    */
     {
       MqttSnMessageData gatewayMessageData = {0};
       MqttSnMessageData clientMessageData = {0};
@@ -198,7 +191,7 @@ void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder) {
       }
     }
 
-    if (forwarder->gatewayNetwork.gateway_send(
+    if (forwarder->gatewayNetwork.gateway_network_send(
         &forwarder->gatewayNetwork,
         &forwarder->gatewayNetworkSendBuffer,
         forwarder->gatewayNetworkSendTimeout,
@@ -213,6 +206,10 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
                                               MqttSnMessageData *clientMessageData) {
   memset(gatewayMessageData, 0, sizeof(MqttSnMessageData));
   memset(clientMessageData, 0, sizeof(MqttSnMessageData));
+
+  if (isFull(&forwarder->clientNetworkSendBuffer)) {
+    return 0;
+  }
 
   if (pop(&forwarder->gatewayNetworkReceiveBuffer, gatewayMessageData) != 0) {
     return 0;
@@ -246,18 +243,20 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
   memset(clientMessageData, 0, sizeof(MqttSnMessageData));
   memset(gatewayMessageData, 0, sizeof(MqttSnMessageData));
 
+  if (isFull(&forwarder->gatewayNetworkSendBuffer)) {
+    return 0;
+  }
+
   if (pop(&forwarder->clientNetworkReceiveBuffer, clientMessageData) != 0) {
     return 0;
   }
 
 #ifdef WITH_LOGGING
-  if (log_client_mqtt_sn_message(&forwarder->logger,
-                                 forwarder->logger.log_level,
-                                 &clientMessageData->address,
-                                 clientMessageData->data,
-                                 clientMessageData->data_length)) {
-    return -1;
-  }
+  log_client_mqtt_sn_message(&forwarder->logger,
+                             forwarder->logger.log_level,
+                             &clientMessageData->address,
+                             clientMessageData->data,
+                             clientMessageData->data_length);
 #endif
 
   if (AddMqttSnForwardingHeader(clientMessageData, gatewayMessageData) != 0) {
@@ -271,63 +270,73 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
 }
 
 int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData, MqttSnMessageData *clientMessageData) {
-  if (gatewayMessageData->data_length == 0) {
-    return -1;
-  }
-  if (gatewayMessageData->data_length > CLIENT_NETWORK_MAX_DATA_LEN) {
-    return -1;
-  }
-  if (gatewayMessageData->data_length < FORWARDER_HEADER_LEN + sizeof(device_address)) {
-    return -1;
-  }
-  // TODO: empty MQTT-SN messages are not accepted, at least the header byte count must be equal
-  // TODO: at the moment the maximum data_length supported is 255
-  // TODO: no validation if the MQTT-SN Encapsulation Message really contains a MQTT-SN Message
-  if (gatewayMessageData->data_length != gatewayMessageData->data[0]) {
+
+  ParsedMqttSnHeader gatewayMessageHeader = {0};
+  if (parse_encapsulation(&gatewayMessageHeader, gatewayMessageData->data, gatewayMessageData->data_length)) {
+    // not valid enough
     return -1;
   }
 
-  MQTT_SN_FORWARD_ENCAPSULATION *packet = (MQTT_SN_FORWARD_ENCAPSULATION *) gatewayMessageData->data;
-  if (packet->msg_type != Encapsulated_message) {
+  MqttSnEncapsulatedMessage *encapsulatedMessage = (MqttSnEncapsulatedMessage *) gatewayMessageHeader.payload;
+  ParsedMqttSnHeader encapsulatedMessageHeader = {0};
+  if (parse_header(&encapsulatedMessageHeader,
+                   gatewayMessageData->data
+                       + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator),
+                   gatewayMessageHeader.length
+                       - MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator))) {
+    // not valid header in encapsulated message
     return -1;
   }
-  clientMessageData->address = packet->wireless_node_id;
-  clientMessageData->data_length = packet->mqtt_sn_message[0];
-  memcpy(clientMessageData->data, packet->mqtt_sn_message, clientMessageData->data_length);
-  // clientMessageData->data = packet->mqtt_sn_message;
+  if (encapsulatedMessageHeader.length > CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {
+    return -1;
+  }
+  memcpy(&clientMessageData->address, &encapsulatedMessage->wireless_node_id, sizeof(device_address));
+  clientMessageData->data_length = encapsulatedMessageHeader.length;
 
-  // TODO rework the data adding part
-  // TODO: alternative validation of MQTT-SN header
-
+  memcpy(clientMessageData->data,
+         gatewayMessageData->data + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator),
+         encapsulatedMessageHeader.length);
   return 0;
 }
-
 int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessageData *gatewayMessageData) {
-  // empty messages are also converted?
-  if (clientMessageData->data_length == 0) {
+
+  ParsedMqttSnHeader clientMessageHeader = {0};
+  if (parse_header(&clientMessageHeader, clientMessageData->data, clientMessageData->data_length)) {
+    // not valid enough
     return -1;
   }
-  if (clientMessageData->data_length
-      > GATEWAY_NETWORK_MAX_DATA_LEN - (FORWARDER_HEADER_LEN + sizeof(device_address))) {
+
+  if (clientMessageHeader.length + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator)
+      > CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {
     return -1;
   }
+  gatewayMessageData->data_length =
+      clientMessageHeader.length + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator);
+  gatewayMessageData->address = clientMessageData->address;
 
-  // create encapsulation message
-  MQTT_SN_FORWARD_ENCAPSULATION packet = {0};
-  packet.length = clientMessageData->data_length + FORWARDER_HEADER_LEN + sizeof(device_address);
-  packet.msg_type = 0xFE;
-  packet.crtl = 0x0; // TODO implement detection of broadcast
-  packet.wireless_node_id = clientMessageData->address;
-  // TODO check if this works
-  memcpy(packet.mqtt_sn_message, clientMessageData->data, clientMessageData->data_length);
-  // packet.mqtt_sn_message = clientMessageData->data;
+  if (clientMessageHeader.indicator) {
+    MqttSnMessageHeaderThreeOctetsLengthField
+        *headerThreeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) gatewayMessageData->data;
 
-  // TODO rework the data adding part
-  memcpy(gatewayMessageData, clientMessageData, sizeof(MqttSnMessageData));
-  gatewayMessageData->data_length = packet.length;
-  memcpy(gatewayMessageData->data, &packet, sizeof(MQTT_SN_FORWARD_ENCAPSULATION));
+    headerThreeOctetsLengthField->indicator = clientMessageHeader.indicator;
+    // TODO start rewrite with htons()
+    uint16_t htons_length = htons(gatewayMessageData->data_length);
+    memcpy(&headerThreeOctetsLengthField->msb_length, &htons_length, 2);
+    // TODO end rewrite with htons()
+    headerThreeOctetsLengthField->msg_type = Encapsulated_message;
+  } else {
+    MqttSnMessageHeaderOneOctetLengthField
+        *headerThreeOctetsLengthField = (MqttSnMessageHeaderOneOctetLengthField *) gatewayMessageData->data;
+    headerThreeOctetsLengthField->length = gatewayMessageData->data_length;
+    headerThreeOctetsLengthField->msg_type = Encapsulated_message;
+  }
 
-  // TODO: alternative validation of MQTT-SN header
+  MqttSnEncapsulatedMessage *encapsulatedMessage = (MqttSnEncapsulatedMessage *) &gatewayMessageData->data[2];
+  encapsulatedMessage->crtl = 5;
+  memcpy(&encapsulatedMessage->wireless_node_id, &clientMessageData->address, sizeof(device_address));
 
+  memcpy(&gatewayMessageData->data[MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator)],
+         clientMessageData->data,
+         clientMessageHeader.length);
   return 0;
 }

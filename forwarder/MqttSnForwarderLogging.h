@@ -24,14 +24,18 @@ typedef struct MqttSnLogger_ {
   void (*log_deinit)(struct MqttSnLogger_ *logger);
   int (*log_flush)(const struct MqttSnLogger_ *logger);
   int (*log_str)(const char *str);
+  int (*log_char)(char c);
   int log_level;
   int status;
 } MqttSnLogger;
 
 int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level);
 void MqttSnLoggerDeinit(MqttSnLogger *logger);
+int is_logger_broken(const MqttSnLogger *logger);
+int shall_not_be_logged(const MqttSnLogger *logger, int max_level);
 
 int log_flush(const MqttSnLogger *logger);
+int log_char(const MqttSnLogger *logger, char c);
 int log_str(const MqttSnLogger *logger, const char *str);
 
 int log_int8(const MqttSnLogger *logger, int8_t n);
@@ -52,6 +56,8 @@ int log_key_int8_value(MqttSnLogger *logger, const char *key, int8_t val);
 int get_timestamp(uint64_t *t);
 
 int log_current_time(const MqttSnLogger *logger);
+
+int log_msg_start(const MqttSnLogger *logger);
 
 int log_device_address(const MqttSnLogger *logger, const device_address *address);
 
@@ -106,6 +112,11 @@ int log_network_connect(const MqttSnLogger *logger,
                         const char *network_name,
                         const device_address *address);
 
+int log_network_connect_fail(const MqttSnLogger *logger,
+                             const char *network_name,
+                             const device_address *as,
+                             const device_address *to);
+
 int log_network_disconnect(const MqttSnLogger *logger,
                            int level,
                            const char *protocol,
@@ -118,31 +129,34 @@ int log_network_disconnect(const MqttSnLogger *logger,
 // TODO print out full config
 // LOG_LEVEL_DEFAULT
 //int log_config(int level, forwarder_config *fcfg);
-
+#ifdef WITH_DEBUG_LOGGING
 int log_rec_client_message(const MqttSnLogger *logger,
                            int level,
-                           const device_address *address,
+                           const device_address *from,
+                           const device_address *to,
                            const uint8_t *data,
                            uint16_t data_len);
 
 int log_rec_gateway_message(const MqttSnLogger *logger,
                             int level,
-                            const device_address *address,
+                            const device_address *from,
                             const uint8_t *data,
                             uint16_t data_len);
 
 int log_send_client_message(const MqttSnLogger *logger,
                             int level,
-                            const device_address *address,
+                            const device_address *from,
+                            const device_address *dst,
                             const uint8_t *data,
                             uint16_t data_len);
 
 int log_send_gateway_message(const MqttSnLogger *logger,
                              int level,
-                             const device_address *address,
+                             const device_address *from,
+                             const device_address *dst,
                              const uint8_t *data,
                              uint16_t data_len);
-
+#endif
 // logs any valid mqtt-sn message from the client network
 // LOG_LEVEL_DEFAULT
 int log_client_mqtt_sn_message(const MqttSnLogger *logger,

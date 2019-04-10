@@ -83,6 +83,7 @@ int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
       log_rec_client_message(n->logger,
                              n->logger->log_level,
                              &msg->address,
+                             n->mqtt_sn_gateway_address,
                              msg->data,
                              msg->data_length);
     }
@@ -106,6 +107,7 @@ int ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
   if (n->logger) {
     if (log_send_client_message(n->logger,
                                 n->logger->log_level,
+                                n->mqtt_sn_gateway_address,
                                 &clientSendMessageData.address,
                                 clientSendMessageData.data,
                                 clientSendMessageData.data_length)) {

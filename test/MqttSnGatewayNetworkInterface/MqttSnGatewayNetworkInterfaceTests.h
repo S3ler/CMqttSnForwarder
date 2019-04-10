@@ -41,8 +41,8 @@ class MqttSnGatewayNetworkInterfaceTests : public ::testing::Test {
   }
 
   static int fakeGatewayNetworkInitFunction(struct MqttSnGatewayNetworkInterface *n, void *context) {
-    n->gateway_receive = mock_gateway_network_receive;
-    n->gateway_send = mock_gateway_network_send;
+    n->gateway_network_receive = mock_gateway_network_receive;
+    n->gateway_network_send = mock_gateway_network_send;
     n->gateway_network_init = mock_gateway_network_init;
     n->gateway_network_connect = mock_gateway_network_connect;
     n->gateway_network_disconnect = mock_gateway_network_disconnect;

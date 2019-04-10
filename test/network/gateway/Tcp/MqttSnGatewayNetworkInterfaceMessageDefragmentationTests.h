@@ -127,8 +127,8 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
                                    p.gateway_network_init), 0);
     }
     ASSERT_EQ(GatewayNetworkConnect(&mqttSnGatewayNetworkInterface, p.gatewayNetworkContext), 0);
-    ASSERT_TRUE(gatewayNetworkForwarderLooper.startNetworkLoop(mqttSnGatewayNetworkInterface.gateway_receive,
-                                                               mqttSnGatewayNetworkInterface.gateway_send,
+    ASSERT_TRUE(gatewayNetworkForwarderLooper.startNetworkLoop(mqttSnGatewayNetworkInterface.gateway_network_receive,
+                                                               mqttSnGatewayNetworkInterface.gateway_network_send,
                                                                &mqttSnGatewayNetworkInterface,
                                                                &receiveBuffer,
                                                                &sendBuffer,

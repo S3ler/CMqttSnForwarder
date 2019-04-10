@@ -19,7 +19,7 @@
 int convert_string_to_device_address(const char *string, device_address *address) {
   char *cp_string = strdup(string);
   char *token = strtok(cp_string, ".");
-  int i = 0;
+  size_t i = 0;
   int rc = 0;
   while (token != NULL) {
     char *end_prt;
@@ -38,12 +38,43 @@ int convert_string_to_device_address(const char *string, device_address *address
       break;
     }
     // address->bytes[i++] = atoi(token);
+    if (i + 1 > sizeof(device_address)) {
+      // given string address is too long
+      rc = -1;
+      break;
+    }
     address->bytes[i++] = n;
     token = strtok(NULL, ".");
   }
 
   free(cp_string);
   return rc;
+}
+
+int convert_hostname_port_to_device_address(const char *hostname,
+                                            int port,
+                                            device_address *address,
+                                            const char *address_name) {
+  if (hostname == NULL) {
+    memset(address, 0, sizeof(device_address));
+  } else {
+    if (convert_string_to_device_address(hostname, address)) {
+      if (get_device_address_from_hostname(hostname, address)) {
+        fprintf(stderr, "Cannot convert or resolve %s to %s network address.\n",
+                hostname, address_name);
+        return EXIT_FAILURE;
+      }
+    }
+  }
+
+  if (port < -1 || port > 65535) {
+    fprintf(stderr, "Error: Invalid port given: %d\n", port);
+    return EXIT_FAILURE;
+  }
+  if (port > -1) {
+    add_port_to_device_address(port, address);
+  }
+  return EXIT_SUCCESS;
 }
 
 int start_gateway_plugin(const forwarder_config *fcfg,
@@ -54,36 +85,17 @@ int start_gateway_plugin(const forwarder_config *fcfg,
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
 
-  if (convert_string_to_device_address(fcfg->mqtt_sn_gateway_host, &mqttSnGatewayNetworkAddress)) {
-    if (get_device_address_from_hostname(fcfg->mqtt_sn_gateway_host, &mqttSnGatewayNetworkAddress)) {
-      fprintf(stderr, "Cannot convert or resolve %s to mqtt-sn gateway address.\n",
-              fcfg->mqtt_sn_gateway_host);
-      return EXIT_FAILURE;
-    }
-  }
-  if (fcfg->mqtt_sn_gateway_port < 0 && fcfg->mqtt_sn_gateway_port != -1) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->mqtt_sn_gateway_port);
+  if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
+                                              fcfg->mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
     return EXIT_FAILURE;
   }
-  if (fcfg->mqtt_sn_gateway_port > -1) {
-    add_port_to_device_address(fcfg->mqtt_sn_gateway_port, &mqttSnGatewayNetworkAddress);
-  }
-
-  if (fcfg->gateway_network_bind_address != NULL) {
-    if (convert_string_to_device_address(fcfg->gateway_network_bind_address, &forwarderGatewayNetworkAddress)) {
-      if (get_device_address_from_hostname(fcfg->gateway_network_bind_address, &forwarderGatewayNetworkAddress)) {
-        fprintf(stderr, "Cannot convert or resolve %s to gateway network address.\n",
-                fcfg->gateway_network_bind_address);
-        return EXIT_FAILURE;
-      }
-    }
-  }
-  if (fcfg->gateway_network_bind_port < 0 && fcfg->gateway_network_bind_port != -1) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->gateway_network_bind_port);
+  if (convert_hostname_port_to_device_address(fcfg->gateway_network_bind_address,
+                                              fcfg->gateway_network_bind_port,
+                                              &forwarderGatewayNetworkAddress,
+                                              "gateway")) {
     return EXIT_FAILURE;
-  }
-  if (fcfg->gateway_network_bind_port > -1) {
-    add_port_to_device_address(fcfg->gateway_network_bind_port, &mqttSnGatewayNetworkAddress);
   }
 
   const gateway_plugin_device_address pluginMqttSnGatewayNetworkAddress = {
@@ -145,27 +157,18 @@ int start_gateway_tcp(const forwarder_config *fcfg,
   device_address forwarderGatewayNetworkAddress = {0};
   MqttSnGatewayTcpNetwork tcpGatewayNetworkContext = {0};
 
-  if (get_device_address_from_hostname(fcfg->mqtt_sn_gateway_host, &mqttSnGatewayNetworkAddress)) {
-    fprintf(stderr, "Cannot resolve %s.\n", fcfg->mqtt_sn_gateway_host);
+  if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
+                                              fcfg->mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
     return EXIT_FAILURE;
   }
-  if (fcfg->mqtt_sn_gateway_port < 1 || fcfg->mqtt_sn_gateway_port > 65535) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->mqtt_sn_gateway_port);
+  if (convert_hostname_port_to_device_address(fcfg->gateway_network_bind_address,
+                                              fcfg->gateway_network_bind_port,
+                                              &forwarderGatewayNetworkAddress,
+                                              "gateway")) {
     return EXIT_FAILURE;
   }
-  add_port_to_device_address(fcfg->mqtt_sn_gateway_port, &mqttSnGatewayNetworkAddress);
-
-  if (fcfg->gateway_network_bind_address != NULL) {
-    if (get_device_address_from_hostname(fcfg->gateway_network_bind_address, &forwarderGatewayNetworkAddress)) {
-      fprintf(stderr, "Cannot resolve %s.\n", fcfg->gateway_network_bind_address);
-      return EXIT_FAILURE;
-    }
-  }
-  if (fcfg->gateway_network_bind_port < 1 || fcfg->gateway_network_bind_port > 65535) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->gateway_network_bind_port);
-    return EXIT_FAILURE;
-  }
-  add_port_to_device_address(fcfg->gateway_network_bind_port, &forwarderGatewayNetworkAddress);
 
   if (GatewayNetworkInit(&mqttSnForwarder->gatewayNetwork,
                          &mqttSnGatewayNetworkAddress,
@@ -189,27 +192,18 @@ int start_gateway_udp(const forwarder_config *fcfg,
   device_address forwarderGatewayNetworkAddress = {0};
   MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
 
-  if (get_device_address_from_hostname(fcfg->mqtt_sn_gateway_host, &mqttSnGatewayNetworkAddress)) {
-    fprintf(stderr, "Cannot resolve %s.\n", fcfg->mqtt_sn_gateway_host);
+  if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
+                                              fcfg->mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
     return EXIT_FAILURE;
   }
-  if (fcfg->mqtt_sn_gateway_port < 1 || fcfg->mqtt_sn_gateway_port > 65535) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->mqtt_sn_gateway_port);
+  if (convert_hostname_port_to_device_address(fcfg->gateway_network_bind_address,
+                                              fcfg->gateway_network_bind_port,
+                                              &forwarderGatewayNetworkAddress,
+                                              "gateway")) {
     return EXIT_FAILURE;
   }
-  add_port_to_device_address(fcfg->mqtt_sn_gateway_port, &mqttSnGatewayNetworkAddress);
-
-  if (fcfg->gateway_network_bind_address != NULL) {
-    if (get_device_address_from_hostname(fcfg->gateway_network_bind_address, &forwarderGatewayNetworkAddress)) {
-      fprintf(stderr, "Cannot resolve %s.\n", fcfg->gateway_network_bind_address);
-      return EXIT_FAILURE;
-    }
-  }
-  if (fcfg->gateway_network_bind_port < 1 || fcfg->gateway_network_bind_port > 65535) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->gateway_network_bind_port);
-    return EXIT_FAILURE;
-  }
-  add_port_to_device_address(fcfg->gateway_network_bind_port, &forwarderGatewayNetworkAddress);
 
   if (GatewayNetworkInit(&mqttSnForwarder->gatewayNetwork,
                          &mqttSnGatewayNetworkAddress,
@@ -229,22 +223,22 @@ int start_client_plugin(const forwarder_config *fcfg,
                         void *gatewayNetworkContext,
                         void *clientNetworkContext) {
 
+  device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderClientNetworkAddress = {0};
 
-  if (fcfg->client_network_bind_address != NULL) {
-    if (convert_string_to_device_address(fcfg->client_network_bind_address, &forwarderClientNetworkAddress)) {
-      if (get_device_address_from_hostname(fcfg->client_network_bind_address, &forwarderClientNetworkAddress)) {
-        fprintf(stderr, "Cannot resolve %s.\n", fcfg->client_network_bind_address);
-        return EXIT_FAILURE;
-      }
-    }
-  }
-
-  if (fcfg->client_network_bind_port < 1 || fcfg->client_network_bind_port > 65535) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->client_network_bind_port);
+  if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
+                                              fcfg->mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
     return EXIT_FAILURE;
   }
-  add_port_to_device_address(fcfg->client_network_bind_port, &forwarderClientNetworkAddress);
+
+  if (convert_hostname_port_to_device_address(fcfg->client_network_bind_address,
+                                              fcfg->client_network_bind_port,
+                                              &forwarderClientNetworkAddress,
+                                              "client")) {
+    return EXIT_FAILURE;
+  }
 
   const client_plugin_device_address pluginMqttSnForwarderNetworkAddress = {
       .bytes = forwarderClientNetworkAddress.bytes,
@@ -279,6 +273,7 @@ int start_client_plugin(const forwarder_config *fcfg,
 #endif
 
   if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
+                        &mqttSnGatewayNetworkAddress,
                         &forwarderClientNetworkAddress,
                         &clientPluginContext,
                         ClientLinuxPluginInit)) {
@@ -296,22 +291,26 @@ int start_client_tcp(const forwarder_config *fcfg,
                      void *gatewayNetworkContext,
                      void *clientNetworkContext) {
 
+  device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderClientNetworkAddress = {0};
   MqttSnClientTcpNetwork tcpClientNetworkContext = {0};
 
-  if (fcfg->client_network_bind_address != NULL) {
-    if (get_device_address_from_hostname(fcfg->client_network_bind_address, &forwarderClientNetworkAddress)) {
-      fprintf(stderr, "Cannot resolve %s.\n", fcfg->client_network_bind_address);
-      return EXIT_FAILURE;
-    }
-  }
-  if (fcfg->client_network_bind_port < 1 || fcfg->client_network_bind_port > 65535) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", fcfg->client_network_bind_port);
+  if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
+                                              fcfg->mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
     return EXIT_FAILURE;
   }
-  add_port_to_device_address(fcfg->client_network_bind_port, &forwarderClientNetworkAddress);
+
+  if (convert_hostname_port_to_device_address(fcfg->client_network_bind_address,
+                                              fcfg->client_network_bind_port,
+                                              &forwarderClientNetworkAddress,
+                                              "client")) {
+    return EXIT_FAILURE;
+  }
 
   if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
+                        &mqttSnGatewayNetworkAddress,
                         &forwarderClientNetworkAddress,
                         &tcpClientNetworkContext,
                         ClientLinuxTcpInit)) {
@@ -328,17 +327,25 @@ int start_client_udp(const forwarder_config *fcfg,
                      void *clientNetworkContext) {
 
   device_address forwarderClientNetworkAddress = {0};
+  device_address mqttSnGatewayNetworkAddress = {0};
   MqttSnClientUdpNetwork udpClientNetworkContext = {0};
 
-  if (fcfg->client_network_bind_address != NULL) {
-    if (get_device_address_from_hostname(fcfg->client_network_bind_address, &forwarderClientNetworkAddress)) {
-      fprintf(stderr, "Cannot resolve %s.\n", fcfg->client_network_bind_address);
-      return EXIT_FAILURE;
-    }
+  if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
+                                              fcfg->mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
+    return EXIT_FAILURE;
   }
-  add_port_to_device_address(fcfg->client_network_bind_port, &forwarderClientNetworkAddress);
+
+  if (convert_hostname_port_to_device_address(fcfg->client_network_bind_address,
+                                              fcfg->client_network_bind_port,
+                                              &forwarderClientNetworkAddress,
+                                              "client")) {
+    return EXIT_FAILURE;
+  }
 
   if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
+                        &mqttSnGatewayNetworkAddress,
                         &forwarderClientNetworkAddress,
                         &udpClientNetworkContext,
                         ClientLinuxUdpInit)) {
