@@ -30,6 +30,9 @@ void print_usage(void);
 #ifndef CMAKE_BUILD_TIMESTAMP
 #define CMAKE_BUILD_TIMESTAMP "N/D"
 #endif
+#ifndef MANUAL_WEBSITE
+#define MANUAL_WEBSITE "N/D"
+#endif
 
 typedef struct forwarder_config_ {
   char *version;
@@ -48,13 +51,17 @@ typedef struct forwarder_config_ {
   char *gateway_network_protocol;
   char *gateway_network_bind_address;
   int gateway_network_bind_port;
+#ifdef WITH_PLUGIN
   char *gateway_network_plugin_path;
+#endif
+
   // client network config
   char *client_network_protocol;
   char *client_network_bind_address;
   int client_network_bind_port;
+#ifdef WITH_PLUGIN
   char *client_network_plugin_path;
-
+#endif
 
   int gateway_network_send_timeout;
   int gateway_network_receive_timeout;

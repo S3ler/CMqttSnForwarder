@@ -8,6 +8,7 @@
 #include "MqttSnTcpNetworkMessageParser.h"
 #include "../../../main/forwarder_config.h"
 
+#ifdef WITH_LOGGING
 int log_new_tcp_connection(const MqttSnLogger *logger, int level, const device_address *address) {
   if (level <= LOG_LEVEL_QUIET) {
     return 0;
@@ -43,6 +44,7 @@ int log_close_tcp_connection(const MqttSnLogger *logger, int level, const device
       log_str(logger, dot) ||
       log_flush(logger) != 0);
 }
+#endif //WITH_LOGGING
 
 int save_messages_into_receive_buffer(uint8_t *buffer,
                                       ssize_t read_bytes,

@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <netinet/in.h>
 
+#ifdef WITH_LOGGING
 int log_open_socket(const MqttSnLogger *logger, int level, const char *protocol, const device_address *address) {
   if (level <= LOG_LEVEL_QUIET) {
     return 0;
@@ -55,6 +56,7 @@ int log_close_socket(const MqttSnLogger *logger, int level, const char *protocol
       log_flush(logger) != 0);
 
 }
+#endif //WITH_LOGGING
 
 int get_device_address_from_hostname(const char *hostname, device_address *dst) {
   memset(dst, 0, sizeof(device_address));

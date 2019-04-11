@@ -1,4 +1,7 @@
 Featurelist:
+  // TODO  printf(" --json : produce json valid log message
+  // TODO: printf(" -c : specify the forwarder config file.\n");
+
 plugin for logging
 code coverage reports
 test für forwarder core fixen

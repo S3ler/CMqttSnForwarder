@@ -77,6 +77,7 @@ int convert_hostname_port_to_device_address(const char *hostname,
   return EXIT_SUCCESS;
 }
 
+#ifdef WITH_PLUGIN
 int start_gateway_plugin(const forwarder_config *fcfg,
                          MqttSnForwarder *mqttSnForwarder,
                          void *gatewayNetworkContext,
@@ -147,7 +148,9 @@ int start_gateway_plugin(const forwarder_config *fcfg,
 
   return start_forwarder(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
+#endif
 
+#ifdef WITH_LINUX_GATEWAY_NETWORK_TCP
 int start_gateway_tcp(const forwarder_config *fcfg,
                       MqttSnForwarder *mqttSnForwarder,
                       void *gatewayNetworkContext,
@@ -182,7 +185,9 @@ int start_gateway_tcp(const forwarder_config *fcfg,
 
   return start_forwarder(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
+#endif
 
+#ifdef WITH_LINUX_GATEWAY_NETWORK_UDP
 int start_gateway_udp(const forwarder_config *fcfg,
                       MqttSnForwarder *mqttSnForwarder,
                       void *gatewayNetworkContext,
@@ -217,7 +222,9 @@ int start_gateway_udp(const forwarder_config *fcfg,
 
   return start_forwarder(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
+#endif
 
+#ifdef WITH_PLUGIN
 int start_client_plugin(const forwarder_config *fcfg,
                         MqttSnForwarder *mqttSnForwarder,
                         void *gatewayNetworkContext,
@@ -285,7 +292,9 @@ int start_client_plugin(const forwarder_config *fcfg,
   return start_forwarder(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 
 }
+#endif
 
+#ifdef WITH_LINUX_CLIENT_NETWORK_TCP
 int start_client_tcp(const forwarder_config *fcfg,
                      MqttSnForwarder *mqttSnForwarder,
                      void *gatewayNetworkContext,
@@ -321,6 +330,9 @@ int start_client_tcp(const forwarder_config *fcfg,
 
   return start_forwarder(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
+#endif
+
+#ifdef WITH_LINUX_CLIENT_NETWORK_UDP
 int start_client_udp(const forwarder_config *fcfg,
                      MqttSnForwarder *mqttSnForwarder,
                      void *gatewayNetworkContext,
@@ -356,6 +368,7 @@ int start_client_udp(const forwarder_config *fcfg,
 
   return start_forwarder(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
+#endif
 
 static volatile sig_atomic_t keep_running = 1;
 
@@ -367,12 +380,11 @@ static void sig_handler(int _) {
 void *inc_c(void *mqttSnForwarderFcfgPtr_ptr) {
   MqttSnForwarder_fcfg_ptr *mqttSnForwarderFcfgPtr = (MqttSnForwarder_fcfg_ptr *) mqttSnForwarderFcfgPtr_ptr;
   MqttSnForwarder *mqttSnForwarder = mqttSnForwarderFcfgPtr->mqttSnForwarder_ptr;
-  const forwarder_config *fcfg = mqttSnForwarderFcfgPtr->fcfg_ptr;
 
   while ((MqttSnForwarderLoop(mqttSnForwarder) == 0) & keep_running) {}
-  MqttSnForwarderDeinit(mqttSnForwarder);
 
 #ifdef WITH_LOGGING
+  const forwarder_config *fcfg = mqttSnForwarderFcfgPtr->fcfg_ptr;
   if (log_forwarder_terminated(&mqttSnForwarder->logger,
                                fcfg->log_lvl,
                                fcfg->version,
@@ -382,8 +394,8 @@ void *inc_c(void *mqttSnForwarderFcfgPtr_ptr) {
     return (void *) EXIT_FAILURE;
   }
 #endif
-  MqttSnLoggerDeinit(&mqttSnForwarder->logger);
 
+  MqttSnForwarderDeinit(mqttSnForwarder);
   return (void *) EXIT_SUCCESS;
 }
 
@@ -394,30 +406,43 @@ int start_forwarder(const forwarder_config *fcfg,
 
   if ((gatewayNetworkContext == NULL && clientNetworkContext != NULL)
       || (gatewayNetworkContext == NULL && clientNetworkContext == NULL)) {
+
+#ifdef WITH_PLUGIN
     if (fcfg->gateway_network_plugin_path != NULL) {
       return start_gateway_plugin(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
+#endif
+#ifdef WITH_LINUX_GATEWAY_NETWORK_UDP
     if (!strncasecmp(fcfg->gateway_network_protocol, "udp", 3)) {
       return start_gateway_udp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
+#endif
+#ifdef WITH_LINUX_GATEWAY_NETWORK_TCP
     if (!strncasecmp(fcfg->gateway_network_protocol, "tcp", 3)) {
       return start_gateway_tcp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
-    fprintf(stderr, "Error init gateway network no protocol or plugin\n");
+#endif
+    fprintf(stderr, "Error init gateway network unknown protocol: %s\n", fcfg->client_network_protocol);
     return EXIT_FAILURE;
   }
 
   if (gatewayNetworkContext != NULL && clientNetworkContext == NULL) {
+#ifdef WITH_PLUGIN
     if (fcfg->client_network_plugin_path != NULL) {
       return start_client_plugin(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
+#endif
+#ifdef WITH_LINUX_CLIENT_NETWORK_UDP
     if (!strncasecmp(fcfg->client_network_protocol, "udp", 3)) {
       return start_client_udp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
+#endif
+#ifdef WITH_LINUX_CLIENT_NETWORK_TCP
     if (!strncasecmp(fcfg->client_network_protocol, "tcp", 3)) {
       return start_client_tcp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
-    fprintf(stderr, "Error init gateway network no protocol or plugin\n");
+#endif
+    fprintf(stderr, "Error init client network unknown protocol: %s\n", fcfg->client_network_protocol);
     return EXIT_FAILURE;
   }
 
@@ -445,7 +470,6 @@ int start_forwarder(const forwarder_config *fcfg,
   mqttSnForwarder->gatewayNetworkReceiveTimeout = fcfg->gateway_network_receive_timeout;
 
   if (MqttSnForwarderInit(mqttSnForwarder, fcfg->log_lvl, clientNetworkContext, gatewayNetworkContext) != 0) {
-    fprintf(stderr, "Error init mqtt-sn forwarder\n");
     MqttSnForwarderDeinit(mqttSnForwarder);
     return EXIT_FAILURE;
   }
@@ -466,4 +490,3 @@ int start_forwarder(const forwarder_config *fcfg,
 
   return rc;
 }
-// TODO check every value here again...

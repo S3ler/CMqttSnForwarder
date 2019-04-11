@@ -207,15 +207,19 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         }
       }
       i++;
-    } else if (!strcmp(argv[i], "-gnp") || !strcmp(argv[i], "--gateway_network_plugin")) {
-      if (i == argc - 1) {
-        fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
-        return 1;
-      } else {
-        fcfg->gateway_network_plugin_path = strdup(argv[i + 1]);
+    }
+#ifdef WITH_PLUGIN
+      else if (!strcmp(argv[i], "-gnp") || !strcmp(argv[i], "--gateway_network_plugin")) {
+        if (i == argc - 1) {
+          fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
+          return 1;
+        } else {
+          fcfg->gateway_network_plugin_path = strdup(argv[i + 1]);
+        }
+        i++;
       }
-      i++;
-    } else if (!strcmp(argv[i], "-cP") || !strcmp(argv[i], "--client_network_protocol")) {
+#endif
+    else if (!strcmp(argv[i], "-cP") || !strcmp(argv[i], "--client_network_protocol")) {
       if (i == argc - 1) {
         fprintf(stderr, "Error: %s argument given but no protocol specified.\n\n", argv[i]);
         return 1;
@@ -311,15 +315,19 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         }
       }
       i++;
-    } else if (!strcmp(argv[i], "-cnp") || !strcmp(argv[i], "--client_network_plugin")) {
-      if (i == argc - 1) {
-        fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
-        return 1;
-      } else {
-        fcfg->client_network_plugin_path = strdup(argv[i + 1]);
+    }
+#ifdef WITH_PLUGIN
+      else if (!strcmp(argv[i], "-cnp") || !strcmp(argv[i], "--client_network_plugin")) {
+        if (i == argc - 1) {
+          fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
+          return 1;
+        } else {
+          fcfg->client_network_plugin_path = strdup(argv[i + 1]);
+        }
+        i++;
       }
-      i++;
-    } else if (!strcmp(argv[i], "-V") || !strcmp(argv[i], "--protocol-version")) {
+#endif
+    else if (!strcmp(argv[i], "-V") || !strcmp(argv[i], "--protocol-version")) {
       if (i == argc - 1) {
         fprintf(stderr, "Error: %s argument given but no version specified.\n\n", argv[i]);
         return 1;
@@ -384,8 +392,10 @@ void print_usage(void) {
          " | --gt gateway_network_timeout}\n");
   printf("                        {[[-cst client_send_timeout] [-crt client_receive_timeout]]"
          " | --ct client_network_timeout}\n");
+#ifdef WITH_PLUGIN
   printf("                        [-gnp gateway_network_plugin]\n");
   printf("                        [-cnp client_network_plugin]\n");
+#endif
 #if defined(WITH_LOGGING)
 #if defined(WITH_DEBUG_LOGGING)
   printf("                        [[-q quiet] | [-d default] | [-v verbose] | [-db debug]]\n");
@@ -431,19 +441,18 @@ void print_usage(void) {
 
   printf(" -V : specify the version of the MQTT-SN protocol to use.\n");
   printf("      Can be mqttsnv1. Defaults to mqttsnv1.\n");
-
+#ifdef WITH_PLUGIN
   printf(" -gnp : path to the gateway network plugin.\n");
   printf("       The gateway network protocol must match the short protocol name gained from the plugin.\n");
-  printf("       A gateway bind address is saved to a device address and given to the gateway network plugin."
-         " Too long bytes are dropped\n");
+  printf("       A gateway bind address is saved to a device address and given to the gateway network plugin.\n");
   printf("       A port overwrites the two last bytes of the gateway network bind address. "
          "You can set gateway port to -1 if you want to overwrite this behaviour\n");
   printf(" -cnp : absolute path to the client network plugin.\n");
   printf("       The client network protocol must match the short protocol name gained from the plugin.\n");
-  printf("       A client bind address is saved to a device address and given to the client network plugin."
-         " Too long bytes are dropped\n");
-  printf("       A port overwrites the two last bytes of the client network bind address. "
-         "You can set the client port to -1 if you want to overwrite this behaviour\n");
+  printf("       A client bind address is saved to a device address and given to the gateway network plugin.\n");
+  printf("       A client port overwrites the two last bytes of the gateway network bind address. "
+         "You can set gateway port to -1 if you want to overwrite this behaviour\n");
+#endif
 #if defined(WITH_LOGGING)
   printf(" -q : specify quiet logging. Don't print any log messages.\n");
   printf(" -d : specify default logging. Print network status changes, and the mqtt-sn messages: "
@@ -452,10 +461,7 @@ void print_usage(void) {
 #if defined(WITH_DEBUG_LOGGING)
   printf(" -db : specify debug logging. Print all mqtt-sn messages including payload and internal information.\n");
 #endif
-  // TODO  printf(" --json : produce json valid log message
 #endif
-  // TODO: printf(" -c : specify the forwarder config file.\n");
   printf(" --help : display this message.\n");
-
-  // TODO: printf("\nSee http://./ for more information.\n\n");
+  printf("\nSee %s for more information.\n\n", MANUAL_WEBSITE);
 }

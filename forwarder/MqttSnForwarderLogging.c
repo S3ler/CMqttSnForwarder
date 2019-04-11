@@ -619,7 +619,7 @@ int log_network_connect_fail(const MqttSnLogger *logger,
   }
   const char *connect = " Connect to ";
   const char *network_as = " network as ";
-  const char *failed_dot = "failed.";
+  const char *failed_dot = " failed.";
   if (log_msg_start(logger)) {
     return -1;
   }
