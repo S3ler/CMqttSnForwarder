@@ -9,12 +9,6 @@
 #include <unistd.h>
 #include "global_defines.h"
 
-#define FORWARDER_HEADER_LEN 3
-
-#define GATEWAY_NETWORK_MAX_DATA_LEN 255
-#define CLIENT_NETWORK_MAX_DATA_LEN 255
-
-//#define Encapsulated_message 0xFE
 typedef enum MQTT_SN_MESSAGE_TYPE_ {
   RESERVED_INVALID = -1,
   ADVERTISE = 0x00,
@@ -38,7 +32,7 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
   RESERVED_19 = 0x19,
   RESERVED_1E = 0x1E,
   RESERVED_FD = 0xFD,
-  Encapsulated_message = 0xFE,
+  ENCAPSULATED_MESSAGE = 0xFE,
   RESERVED_FF = 0xFF,
 } MQTT_SN_MESSAGE_TYPE;
 

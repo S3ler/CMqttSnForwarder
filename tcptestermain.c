@@ -20,6 +20,8 @@
 //#define FORWARDER_HEADER_LEN 3
 #define PUBLISH_HEADER_LEN 7
 
+#define FORWARDER_HEADER_LEN 3
+
 #pragma pack(push, 1)
 typedef struct MQTT_SN_PUBLISH {
   uint8_t length;

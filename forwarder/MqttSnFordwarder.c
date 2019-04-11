@@ -317,12 +317,12 @@ int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessag
         *headerThreeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) gatewayMessageData->data;
     headerThreeOctetsLengthField->indicator = clientMessageHeader.indicator;
     headerThreeOctetsLengthField->length = htons(gatewayMessageData->data_length);
-    headerThreeOctetsLengthField->msg_type = Encapsulated_message;
+    headerThreeOctetsLengthField->msg_type = ENCAPSULATED_MESSAGE;
   } else {
     MqttSnMessageHeaderOneOctetLengthField
         *headerThreeOctetsLengthField = (MqttSnMessageHeaderOneOctetLengthField *) gatewayMessageData->data;
     headerThreeOctetsLengthField->length = gatewayMessageData->data_length;
-    headerThreeOctetsLengthField->msg_type = Encapsulated_message;
+    headerThreeOctetsLengthField->msg_type = ENCAPSULATED_MESSAGE;
   }
 
   MqttSnEncapsulatedMessage *encapsulatedMessage = (MqttSnEncapsulatedMessage *) (gatewayMessageData->data

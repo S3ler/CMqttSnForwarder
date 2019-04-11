@@ -71,7 +71,7 @@ int parse_message(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const ui
     return -1;
   }
   int payload_offset = MQTT_SN_HEADER_OFFSET_LENGTH(h->indicator);
-  if (h->msg_type == Encapsulated_message) {
+  if (h->msg_type == ENCAPSULATED_MESSAGE) {
     if (h->length < (payload_offset + MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE + sizeof(device_address))) {
       return -1;
     }
@@ -97,5 +97,5 @@ int parse_disconnect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_l
 }
 
 int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
-  return parse_message(h, Encapsulated_message, data, data_len);
+  return parse_message(h, ENCAPSULATED_MESSAGE, data, data_len);
 }
