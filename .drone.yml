@@ -605,19 +605,6 @@ steps:
       - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
       - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
 
-  - name: RelWithDebInfo
-    image: gcc7cmake:3.14.0
-    when:
-      status: [ success ]
-    depends_on: [ PrepareReports ]
-    volumes:
-      - name: reports
-        path: /var/local/drone/reports
-    commands:
-      - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
-
   - name: MinSizeRel
     image: gcc7cmake:3.14.0
     when:
