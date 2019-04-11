@@ -7,11 +7,12 @@
 #include "MqttSnMessageParser.h"
 #include <string.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <logging/linux/stdout/StdoutLogging.h>
 #include <netinet/in.h>
 
 int log_int8(const MqttSnLogger *logger, int8_t n) {
-  const char *int8_max_str = "255";
+  const char *int8_max_str = "-128";
   int int8_max_str_length = strlen(int8_max_str);
   char n_str[int8_max_str_length + 1];
   snprintf((char *) &n_str, int8_max_str_length + 1, "%d", n);
