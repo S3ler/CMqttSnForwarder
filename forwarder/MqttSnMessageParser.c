@@ -70,7 +70,7 @@ int parse_message(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const ui
   if (h->msg_type != msg_type) {
     return -1;
   }
-  int payload_offset = (h->indicator ? 4 : 2);
+  int payload_offset = MQTT_SN_HEADER_OFFSET_LENGTH(h->indicator);
   if (h->msg_type == Encapsulated_message) {
     if (h->length < (payload_offset + MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE + sizeof(device_address))) {
       return -1;
@@ -81,51 +81,21 @@ int parse_message(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const ui
 }
 
 int parse_publish(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
-  if (parse_header(h, data, data_len)) {
-    return -1;
-  }
-  int offset = (h->indicator ? 4 : 2);
-  h->payload = (MqttSnMessageConnect *) (data + offset);
-  return 0;
+  return parse_message(h, PUBLISH, data, data_len);
 }
 
 int parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
-  if (parse_header(h, data, data_len)) {
-    return -1;
-  }
-  int offset = (h->indicator ? 4 : 2);
-  h->payload = (MqttSnMessageConnect *) (data + offset);
-  return 0;
+  return parse_message(h, CONNECT, data, data_len);
 }
+
 int parse_connack(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
-  if (parse_header(h, data, data_len)) {
-    return -1;
-  }
-  int offset = (h->indicator ? 4 : 2);
-  h->payload = (MqttSnMessageConnack *) (data + offset);
-  return 0;
+  return parse_message(h, CONNACK, data, data_len);
 }
 
 int parse_disconnect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
-  if (parse_header(h, data, data_len)) {
-    return -1;
-  }
-  int offset = (h->indicator ? 4 : 2);
-  h->payload = (MqttSnMessageDisconnect *) (data + offset);
-  return 0;
+  return parse_message(h, DISCONNECT, data, data_len);
 }
 
 int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
-  if (parse_header(h, data, data_len)) {
-    return -1;
-  }
-  if (h->msg_type != Encapsulated_message) {
-    return -1;
-  }
-  int offset = (h->indicator ? 4 : 2);
-  if (h->length < (offset + 1 + sizeof(device_address))) {// 1 == Ctrl
-    return -1;
-  }
-  h->payload = (MqttSnEncapsulatedMessage *) (data + offset);
-  return 0;
+  return parse_message(h, Encapsulated_message, data, data_len);
 }
