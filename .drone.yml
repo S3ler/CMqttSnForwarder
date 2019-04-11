@@ -62,7 +62,6 @@ steps:
       status: [ success ]
     depends_on: [ PrepareReports ]
     commands:
-      - ls -l
       - cp lcovrc /etc/lcovrc
       - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G "CodeBlocks - Unix Makefiles" 2>&1 | tee cmake_report
       - cmake --build . --target MqttSnClientNetworkInterfaceUnitTests -- -j $(nproc) &&
@@ -323,7 +322,6 @@ steps:
       status: [ success ]
     depends_on: [ PrepareReports ]
     commands:
-      - ls -l
       - cp lcovrc /etc/lcovrc
       - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G "CodeBlocks - Unix Makefiles" 2>&1 | tee cmake_report
       - cmake --build . --target MqttSnClientNetworkInterfaceUnitTests -- -j $(nproc) &&
@@ -555,7 +553,7 @@ steps:
         DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/drone_report
 
 
-  - name: Build
+  - name: Debug
     image: gcc7cmake:3.14.0
     when:
       status: [ success ]
@@ -567,6 +565,99 @@ steps:
       - cmake -DCMAKE_BUILD_TYPE=MinSizeRel 2>&1 | tee cmake_report
       - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
       - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+
+  - name: Debug
+    image: gcc7cmake:3.14.0
+    when:
+      status: [ success ]
+    depends_on: [ PrepareReports ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cmake -DCMAKE_BUILD_TYPE=MinSizeRel 2>&1 | tee cmake_report
+      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+
+  - name: Debug
+    image: gcc7cmake:3.14.0
+    when:
+      status: [ success ]
+    depends_on: [ PrepareReports ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cmake -DCMAKE_BUILD_TYPE=MinSizeRel 2>&1 | tee cmake_report
+      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+
+  - name: Release
+    image: gcc7cmake:3.14.0
+    when:
+      status: [ success ]
+    depends_on: [ PrepareReports ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cmake -DCMAKE_BUILD_TYPE=Release 2>&1 | tee cmake_report
+      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+
+  - name: RelWithDebInfo
+    image: gcc7cmake:3.14.0
+    when:
+      status: [ success ]
+    depends_on: [ PrepareReports ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo 2>&1 | tee cmake_report
+      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+
+  - name: RelWithDebInfo
+    image: gcc7cmake:3.14.0
+    when:
+      status: [ success ]
+    depends_on: [ PrepareReports ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo 2>&1 | tee cmake_report
+      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+
+  - name: MinSizeRel
+    image: gcc7cmake:3.14.0
+    when:
+      status: [ success ]
+    depends_on: [ PrepareReports ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cmake -DCMAKE_BUILD_TYPE=MinSizeRel 2>&1 | tee cmake_report
+      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+
+
+  - name: Default
+    image: gcc7cmake:3.14.0
+    when:
+      status: [ success ]
+    depends_on: [ PrepareReports ]
+    volumes:
+      - name: reports
+        path: /var/local/drone/reports
+    commands:
+      - cmake -DCMAKE_BUILD_TYPE= 2>&1 | tee cmake_report
+      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+
 
   - name: GatherBuildReports
     image: ubuntu
