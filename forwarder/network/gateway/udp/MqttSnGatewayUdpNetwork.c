@@ -94,11 +94,11 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   if (rc > 0) {
     if (n->logger) {
       const MqttSnMessageData *msg = back(receiveBuffer);
-      log_rec_gateway_message(n->logger,
-                              n->logger->log_level,
-                              n->gateway_network_address,
-                              msg->data,
-                              msg->data_length);
+      log_db_rec_gateway_message(n->logger,
+                                 n->logger->log_level,
+                                 n->gateway_network_address,
+                                 msg->data,
+                                 msg->data_length);
     }
   }
 #endif
@@ -115,12 +115,12 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuf
     return 0;
   }
 #ifdef WITH_DEBUG_LOGGING
-  log_send_gateway_message(n->logger,
-                           n->logger->log_level,
-                           &gatewaySendMessageData.address,
-                           n->gateway_network_address,
-                           gatewaySendMessageData.data,
-                           gatewaySendMessageData.data_length);
+  log_db_send_gateway_message(n->logger,
+                              n->logger->log_level,
+                              &gatewaySendMessageData.address,
+                              n->gateway_network_address,
+                              gatewaySendMessageData.data,
+                              gatewaySendMessageData.data_length);
 #endif
   ssize_t send_bytes = send_udp_message(udpNetwork->my_socket,
                                         n->gateway_network_address,

@@ -2,6 +2,7 @@
 // Created by SomeDude on 10.04.2019.
 //
 
+#include <logging/MqttSnForwarderLoggingBasic.h>
 #include "MqttSnPluginLogger.h"
 
 int log_dlerror(const MqttSnLogger *logger, int level, const char *error) {

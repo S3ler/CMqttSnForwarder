@@ -41,13 +41,21 @@ if (WITH_LOGGING)
         message("Building with DEBUG_LOGGING support")
         add_definitions(-DWITH_DEBUG_LOGGING)
     endif ()
-    set(LOGGING_FILES
+    set(CORE_LOGGING_FILES
             forwarder/MqttSnForwarderLogging.h
-            forwarder/MqttSnForwarderLogging.c)
+            forwarder/MqttSnForwarderLogging.c
+            forwarder/logging/MqttSnForwarderLoggingBasic.c
+            forwarder/logging/MqttSnForwarderLoggingBasic.h
+            forwarder/logging/MqttSnForwarderLoggingMessages.c
+            forwarder/logging/MqttSnForwarderLoggingMessages.h)
     set(STDOUT_LOGGING_FILES
             forwarder/logging/linux/stdout/StdoutLogging.c
             forwarder/logging/linux/stdout/StdoutLogging.h)
-    set(LOGGING_FILES ${LOGGING_FILES} ${STDOUT_LOGGING_FILES})
+    #option(WITH_MQTT_SN_MESSAGE_LOGGING "Include MQTT_SN_MESSAGE_LOGGING support?" ON)
+    #if (WITH_MQTT_SN_MESSAGE_LOGGING)
+    #    set(MQTT_SN_LOGGING_FILES )
+    #endif ()
+    set(LOGGING_FILES ${CORE_LOGGING_FILES} ${MQTT_SN_LOGGING_FILES} ${STDOUT_LOGGING_FILES})
 
     add_library(lib-mqtt-sn-logging ${LOGGING_FILES})
     target_compile_options(lib-mqtt-sn-logging PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
@@ -65,6 +73,7 @@ if (WITH_PLUGIN)
             forwarder/network/gateway/plugin/MqttSnGatewayPluginNetwork.c
             forwarder/network/client/plugin/MqttSnClientPluginNetwork.h
             forwarder/network/client/plugin/MqttSnClientPluginNetwork.c)
+
     if (WITH_LOGGING)
         set(PLUGIN_FILES ${PLUGIN_FILES}
                 forwarder/network/plugin/MqttSnPluginLogger.h
@@ -98,7 +107,6 @@ if (WITH_LINUX_TCP)
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${TCP_CLIENT_NETWORK_FILES})
 
 endif ()
-
 
 
 option(WITH_LINUX_UDP "Include LINUX_UDP support?" ON)
@@ -159,16 +167,6 @@ add_library(lib-mqtt-sn-forwarder ${FORWARDER_FILES})
 target_compile_options(lib-mqtt-sn-forwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 if (WITH_PLUGIN)
     target_link_libraries(lib-mqtt-sn-forwarder dl)
-endif ()
-
-
-
-
-
-
-
-if (WITH_LOGGING)
-
 endif ()
 
 if (NOT BUILD_TESTING)

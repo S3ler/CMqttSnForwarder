@@ -403,7 +403,6 @@ void print_usage(void) {
   printf("                        [[-q quiet] | [-d default] | [-v verbose]]\n");
 #endif
 #endif
-  // TODO: printf("                        [-c config_file]\n");
   printf("       cmqttsnforwarder --help\n\n");
 
   printf(" -h : mqtt-sn gateway host to connect to. Defaults to localhost.\n");

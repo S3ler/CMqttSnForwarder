@@ -5,6 +5,7 @@
 #include <string.h>
 #include <network/iphelper/MqttSnIpNetworkHelper.h>
 #include <MqttSnMessageParser.h>
+#include <logging/MqttSnForwarderLoggingBasic.h>
 #include "MqttSnTcpNetworkMessageParser.h"
 #include "../../../main/forwarder_config.h"
 

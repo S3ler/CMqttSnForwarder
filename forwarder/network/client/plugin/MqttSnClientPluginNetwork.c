@@ -4,6 +4,7 @@
 
 #include <dlfcn.h>
 #include <network/plugin/MqttSnPluginLogger.h>
+#include <MqttSnForwarderLogging.h>
 #include <string.h>
 #include "MqttSnClientPluginNetwork.h"
 
@@ -240,12 +241,12 @@ int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
 
 #ifdef WITH_DEBUG_LOGGING
   if (n->logger) {
-    if (log_send_client_message(n->logger,
-                                n->logger->log_level,
-                                n->mqtt_sn_gateway_address,
-                                &clientSendMessageData.address,
-                                clientSendMessageData.data,
-                                clientSendMessageData.data_length)) {
+    if (log_db_send_client_message(n->logger,
+                                   n->logger->log_level,
+                                   n->mqtt_sn_gateway_address,
+                                   &clientSendMessageData.address,
+                                   clientSendMessageData.data,
+                                   clientSendMessageData.data_length)) {
       return -1;
     }
   }
@@ -313,12 +314,12 @@ int ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
   if (n->logger) {
     const MqttSnMessageData *msg = back(receiveBuffer);
-    log_rec_client_message(n->logger,
-                           n->logger->log_level,
-                           &msg->address,
-                           n->mqtt_sn_gateway_address,
-                           msg->data,
-                           msg->data_length);
+    log_db_rec_client_message(n->logger,
+                              n->logger->log_level,
+                              &msg->address,
+                              n->mqtt_sn_gateway_address,
+                              msg->data,
+                              msg->data_length);
   }
 #endif
 

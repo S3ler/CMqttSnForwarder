@@ -10,6 +10,7 @@
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
 #include "MqttSnMessageParser.h"
+#include "logging/MqttSnForwarderLoggingMessages.h"
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         log_level_t log_level,
@@ -254,7 +255,7 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
                              forwarder->logger.log_level,
                              &clientMessageData->address,
                              clientMessageData->data,
-                             clientMessageData->data_length);
+                             clientMessageData->data_length, NULL);
 #endif
 
   if (AddMqttSnForwardingHeader(clientMessageData, gatewayMessageData) != 0) {

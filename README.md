@@ -1,4 +1,5 @@
 Featurelist:
+  // TODO: printf("                        [-c config_file]\n");
   // TODO  printf(" --json : produce json valid log message
   // TODO: printf(" -c : specify the forwarder config file.\n");
 
@@ -308,3 +309,114 @@ monitoring
             lib-mqtt-sn-client-mock-network
             gtest gtest_main gmock gmock_main pthread
             lib-mqtt-sn-gateway-network lib-mqtt-sn-forwarder lib-mqtt-sn-client-network)
+
+
+////////////////////////////////////
+
+
+int log_gateway_connack_message(const MqttSnLogger *logger,
+                                int level,
+                                const device_address *address,
+                                const uint8_t *data,
+                                uint16_t data_len) {
+  ParsedMqttSnHeader h = {0};
+  if (parse_connack(&h, data, data_len)) {
+    // TODO decide what to do
+    return (log_current_time(logger) ||
+        log_str(logger, "Invalid Message.") ||
+        log_flush(logger) != 0);
+  }
+  MqttSnMessageConnack *c = (MqttSnMessageConnack *) h.payload;
+  uint8_t return_code = c->returnCode;
+
+  const char *connack_to = "CONNACK to ";
+  const char *open_braked = " ( ";
+  const char *close_braked = ").";
+  // 1554750679: CONNACK to 127.0.0.1 (rc0).
+
+  return (
+      log_str(logger, connack_to) ||
+          log_device_address(logger, address) ||
+          log_str(logger, open_braked) ||
+          log_return_code(logger, return_code) ||
+          log_str(logger, close_braked) ||
+          log_flush(logger) != 0);
+}
+
+
+int log_gateway_publish_message(const MqttSnLogger *logger,
+                                int level,
+                                const device_address *address,
+                                const uint8_t *data,
+                                uint16_t data_len) {
+  ParsedMqttSnHeader h = {0};
+  if (parse_publish(&h, data, data_len)) {
+    return 0;
+  }
+
+  const char *publish_to = "gateway PUBLISH to ";
+  const char *open_braked = " ( ";
+  const char *comma = ", ";
+  const char *dots = "... (";
+  const char *bytes_close_braked = " bytes)).";
+
+  MqttSnMessagePublish *p = (MqttSnMessagePublish *) h.payload;
+  uint16_t msg_id = ntohs(p->msgId);
+  uint16_t topic_id = ntohs(((MqttSnMessagePublish *) h.payload)->topicId);
+  uint8_t flags = ((MqttSnMessagePublish *) h.payload)->flags;
+  uint16_t msg_bytes = h.length;
+
+  return (
+      log_str(logger, publish_to) ||
+          log_device_address(logger, address) ||
+          log_str(logger, open_braked) ||
+          log_message_id(logger, msg_id) ||
+          log_str(logger, comma) ||
+          log_topic_id(logger, topic_id) ||
+          log_str(logger, comma) ||
+          log_mqtt_sn_flags(logger, flags) ||
+          log_str(logger, comma) ||
+          log_str(logger, dots) ||
+          log_uint16(logger, msg_bytes) ||
+          log_str(logger, bytes_close_braked) ||
+          log_flush(logger) != 0);
+}
+
+
+int log_gateway_disconnect_message(const MqttSnLogger *logger,
+                                   int level,
+                                   const device_address *address,
+                                   const uint8_t *data,
+                                   uint16_t data_len) {
+  ParsedMqttSnHeader h = {0};
+  if (parse_disconnect(&h, data, data_len)) {
+    // TODO decide what to do
+    return (log_current_time(logger) ||
+        log_str(logger, "Invalid Message.") ||
+        log_flush(logger) != 0);
+  }
+
+  const char *disconnect_from = "gateway DISCONNECT from ";
+  const char *open_braked = " (";
+  const char *close_braked = " ).";
+
+  if (h.length == 2) {
+    return (log_current_time(logger) ||
+        log_str(logger, disconnect_from) ||
+        log_device_address(logger, address) ||
+        log_flush(logger) != 0);
+  }
+  if (h.length == 4) {
+    MqttSnMessageDisconnect *p = (MqttSnMessageDisconnect *) h.payload;
+    uint16_t duration = ntohs(p->duration);
+
+    return (
+        log_str(logger, disconnect_from) ||
+            log_device_address(logger, address) ||
+            log_str(logger, open_braked) ||
+            log_duration(logger, duration) ||
+            log_str(logger, close_braked) ||
+            log_flush(logger) != 0);
+  }
+  return 0;
+}

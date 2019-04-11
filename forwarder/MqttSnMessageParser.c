@@ -33,7 +33,9 @@ MQTT_SN_MESSAGE_TYPE get_mqtt_sn_message_type(const uint8_t *data) {
 int is_valid_three_bytes_header(const uint8_t *data, ssize_t data_length) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
-  if (threeOctetsLengthField->indicator == 0x01 && data_length > 2) {
+  if (threeOctetsLengthField->indicator == 0x01
+      && data_length > 2
+      && ntohs(threeOctetsLengthField->length) == data_length) {
     return 1;
   }
   return 0;
@@ -51,7 +53,7 @@ int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) 
   if (data_len < 2) {
     return -1;
   }
-  if (!is_valid_three_bytes_header(data, data_len) && is_three_bytes_header(data)) {
+  if (is_three_bytes_header(data) && !is_valid_three_bytes_header(data, data_len)) {
     return -1;
   }
   h->length = get_message_length(data);
@@ -67,12 +69,18 @@ int parse_message(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const ui
   if (parse_header(h, data, data_len)) {
     return -1;
   }
-  if (h->msg_type != msg_type) {
-    return -1;
+  if (msg_type != ANY_MESSAGE_TYPE) {
+    if (h->msg_type != msg_type) {
+      return -1;
+    }
   }
   int payload_offset = MQTT_SN_HEADER_OFFSET_LENGTH(h->indicator);
   if (h->msg_type == ENCAPSULATED_MESSAGE) {
-    if (h->length < (payload_offset + MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE + sizeof(device_address))) {
+    ParsedMqttSnHeader encapsulated_header = {0};
+    if (parse_message(&encapsulated_header,
+                      ANY_MESSAGE_TYPE,
+                      data + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(h->indicator),
+                      data_len - MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(h->indicator))) {
       return -1;
     }
   }

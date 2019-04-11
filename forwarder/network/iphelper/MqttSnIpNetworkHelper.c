@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 #include <assert.h>
 #include <netinet/in.h>
+#include <logging/MqttSnForwarderLoggingBasic.h>
 
 #ifdef WITH_LOGGING
 int log_open_socket(const MqttSnLogger *logger, int level, const char *protocol, const device_address *address) {

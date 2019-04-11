@@ -10,6 +10,7 @@
 #include "global_defines.h"
 
 typedef enum MQTT_SN_MESSAGE_TYPE_ {
+  ANY_MESSAGE_TYPE = -2,
   RESERVED_INVALID = -1,
   ADVERTISE = 0x00,
   SEARCHGW = 0x01,
@@ -17,10 +18,17 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
   RESERVED_03 = 0x03,
   CONNECT = 0x04,
   CONNACK = 0x05,
+  WILLTOPICREQ = 0x06,
+  WILLTOPIC = 0x07,
+  WILLMSGREQ = 0x08,
+  WILLMSG = 0x09,
   REGISTER = 0x0A,
   REGACK = 0x0B,
   PUBLISH = 0x0C,
   PUBACK = 0x0D,
+  PUBCOMP = 0x0E,
+  PUBREC = 0x0F,
+  PUBREL = 0x10,
   RESERVED_11 = 0x11,
   SUBSCRIBE = 0x12,
   SUBACK = 0x13,
@@ -30,6 +38,10 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
   PINGRESP = 0x17,
   DISCONNECT = 0x18,
   RESERVED_19 = 0x19,
+  WILLTOPICUPD = 0x1A,
+  WILLTOPICRESP = 0x1B,
+  WILLMSGUPD = 0x1C,
+  WILLMSGRESP = 0x1D,
   RESERVED_1E = 0x1E,
   RESERVED_FD = 0xFD,
   ENCAPSULATED_MESSAGE = 0xFE,
@@ -50,13 +62,19 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
 #define MQTT_SN_FLAG_CLEAN_SESSION_SHIFT  2
 #define MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT  0
 
-#define MQTT_SN_HEADER_OFFSET_LENGTH(indicator) (indicator ? 4 : 2)
-#define MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE 1
-#define MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(indicator) (\
-                                                                MQTT_SN_HEADER_OFFSET_LENGTH(indicator) \
-                                                                + MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE \
-                                                                + sizeof(device_address) \
-                                                                )
+#define MQTT_SN_DUP_FLAG(flags)       ((flags & MQTT_SN_FLAG_DUP) >> MQTT_SN_FLAG_DUP_SHIFT)
+#define MQTT_SN_QOS_FLAG(flags)       ((flags & MQTT_SN_FLAG_QOS) >> MQTT_SN_FLAG_QOS_SHIFT)
+#define MQTT_SN_RETAIN_FLAG(flags)    ((flags & MQTT_SN_FLAG_RETAIN) >> MQTT_SN_FLAG_RETAIN_SHIFT) == 2 ? \
+                                      -1 : ((flags & MQTT_SN_FLAG_RETAIN) >> MQTT_SN_FLAG_RETAIN_SHIFT)
+#define MQTT_SN_WILL_FLAG(flags)      ((flags & MQTT_SN_FLAG_WILL) >> MQTT_SN_FLAG_WILL_SHIFT)
+#define MQTT_SN_CLEAN_SESSION(flags)  ((flags & MQTT_SN_FLAG_CLEAN_SESSION) >> MQTT_SN_FLAG_CLEAN_SESSION_SHIFT)
+#define MQTT_SN_TOPIC_ID_TYPE(flags)  ((flags & MQTT_SN_FLAG_TOPIC_ID_TYPE) >> MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT);
+
+#define MQTT_SN_HEADER_OFFSET_LENGTH(indicator)                 (indicator ? 4 : 2)
+#define MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE_LENGTH          1
+#define MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(indicator)  (MQTT_SN_HEADER_OFFSET_LENGTH(indicator) \
+                                                                 + MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE_LENGTH \
+                                                                 + sizeof(device_address))
 
 #pragma pack(push, 1)
 typedef struct MqttSnEncapsulatedMessage_ {
