@@ -57,19 +57,12 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
 #define MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT  0
 
 #define MQTT_SN_HEADER_OFFSET_LENGTH(indicator) (indicator ? 4 : 2)
-
-#define MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(i) ((i ? 4 : 2) + 1 + sizeof(device_address))
-
-#pragma pack(push, 1)
-typedef struct MQTT_SN_FORWARD_ENCAPSULATION {
-  uint8_t length;
-  uint8_t msg_type;
-  uint8_t crtl;
-  device_address wireless_node_id;
-  uint8_t mqtt_sn_message[GATEWAY_NETWORK_MAX_DATA_LEN - FORWARDER_HEADER_LEN - sizeof(device_address)];
-
-} MQTT_SN_FORWARD_ENCAPSULATION;
-#pragma pack(pop)
+#define MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE 1
+#define MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(indicator) (\
+                                                                MQTT_SN_HEADER_OFFSET_LENGTH(indicator) \
+                                                                + MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE \
+                                                                + sizeof(device_address) \
+                                                                )
 
 #pragma pack(push, 1)
 typedef struct MqttSnEncapsulatedMessage_ {
@@ -87,18 +80,15 @@ typedef struct MqttSnMessageHeaderOneOctetLengthField {
 } MqttSnMessageHeaderOneOctetLengthField;
 #pragma pack(pop)
 
-#pragma pack(push)
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct MqttSnMessageHeaderThreeOctetsLengthField {
   uint8_t indicator;
-  uint8_t msb_length;
-  uint8_t lsb_length;
+  uint16_t length;
   uint8_t msg_type;
 } MqttSnMessageHeaderThreeOctetsLengthField;
 #pragma pack(pop)
 
-#pragma pack(push)
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct ParsedMqttSnHeader_ {
   uint8_t indicator;
   uint16_t length;
@@ -107,8 +97,7 @@ typedef struct ParsedMqttSnHeader_ {
 } ParsedMqttSnHeader;
 #pragma pack(pop)
 
-#pragma pack(push)
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct MqttSnMessagePublish_ {
   uint8_t flags;
   uint16_t topicId;
@@ -117,8 +106,7 @@ typedef struct MqttSnMessagePublish_ {
 } MqttSnMessagePublish;
 #pragma pack(pop)
 
-#pragma pack(push)
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct MqttSnMessageConnect_ {
   uint8_t flags;
   uint8_t protocolId;
@@ -127,23 +115,23 @@ typedef struct MqttSnMessageConnect_ {
 } MqttSnMessageConnect;
 #pragma pack(pop)
 
-#pragma pack(push)
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct MqttSnMessageConnack_ {
   uint8_t returnCode;
 } MqttSnMessageConnack;
 #pragma pack(pop)
 
-#pragma pack(push)
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct MqttSnMessageDisconnect_ {
   uint16_t duration;
 } MqttSnMessageDisconnect;
 #pragma pack(pop)
 
-int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
-
 int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
+
+int parse_message(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const uint8_t *data, uint16_t data_len);
+
+int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
 int parse_publish(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 

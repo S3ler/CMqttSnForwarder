@@ -28,7 +28,7 @@ if (NOT DEFINED CMAKE_C_STANDARD AND NOT DEFINED CMAKE_CXX_STANDARD)
     message(FATAL_ERROR "Neither C nor C++ project")
 endif ()
 
-option(WITH_LOGGING "Include LOGGING support?" OFF)
+option(WITH_LOGGING "Include LOGGING support?" ON)
 if (WITH_LOGGING)
     add_definitions(-DWITH_LOGGING)
     option(WITH_DEBUG_LOGGING "Include LOGGING support?" ON)
@@ -37,7 +37,7 @@ if (WITH_LOGGING)
     endif ()
 endif ()
 
-option(WITH_PLUGIN "Include LOGGING support?" OFF)
+option(WITH_PLUGIN "Include LOGGING support?" ON)
 if (WITH_PLUGIN)
     add_definitions(-DWITH_PLUGIN)
     # TODO

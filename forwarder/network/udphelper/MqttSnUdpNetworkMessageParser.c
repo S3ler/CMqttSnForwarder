@@ -42,17 +42,7 @@ int save_udp_messages_into_receive_buffer(uint8_t *buffer,
 }
 
 uint16_t get_udp_message_length(uint8_t *data) {
-  MqttSnMessageHeaderThreeOctetsLengthField
-      *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
-  if (threeOctetsLengthField->indicator == 0x01) {
-    uint16_t length = 0;
-    length += (((uint16_t) threeOctetsLengthField->msb_length) << 8);
-    length += (((uint16_t) threeOctetsLengthField->lsb_length) << 0);
-    return length;
-  }
-  MqttSnMessageHeaderOneOctetLengthField
-      *oneOctetLengthField = (MqttSnMessageHeaderOneOctetLengthField *) data;
-  return oneOctetLengthField->length;
+  return get_message_length((data));
 }
 
 int isCompleteThreeBytesUdpHeader(uint8_t *data, ssize_t data_length) {

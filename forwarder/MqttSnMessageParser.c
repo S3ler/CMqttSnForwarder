@@ -4,15 +4,13 @@
 
 #include "MqttSnMessageParser.h"
 #include <string.h>
+#include <netinet/in.h>
 
 uint16_t get_message_length(const uint8_t *data) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
   if (threeOctetsLengthField->indicator == 0x01) {
-    uint16_t length = 0;
-    length += (((uint16_t) threeOctetsLengthField->msb_length) << 8);
-    length += (((uint16_t) threeOctetsLengthField->lsb_length) << 0);
-    return length;
+    return ntohs(threeOctetsLengthField->length);
   }
   MqttSnMessageHeaderOneOctetLengthField
       *oneOctetLengthField = (MqttSnMessageHeaderOneOctetLengthField *) data;
@@ -65,6 +63,23 @@ int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) 
   return 0;
 }
 
+int parse_message(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const uint8_t *data, uint16_t data_len) {
+  if (parse_header(h, data, data_len)) {
+    return -1;
+  }
+  if (h->msg_type != msg_type) {
+    return -1;
+  }
+  int payload_offset = (h->indicator ? 4 : 2);
+  if (h->msg_type == Encapsulated_message) {
+    if (h->length < (payload_offset + MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE + sizeof(device_address))) {
+      return -1;
+    }
+  }
+  h->payload = (MqttSnEncapsulatedMessage *) (data + payload_offset);
+  return 0;
+}
+
 int parse_publish(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   if (parse_header(h, data, data_len)) {
     return -1;
@@ -108,7 +123,7 @@ int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t dat
     return -1;
   }
   int offset = (h->indicator ? 4 : 2);
-  if (h->length < (offset + 1 + sizeof(device_address))) {// 1 = Ctrl
+  if (h->length < (offset + 1 + sizeof(device_address))) {// 1 == Ctrl
     return -1;
   }
   h->payload = (MqttSnEncapsulatedMessage *) (data + offset);

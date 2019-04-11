@@ -123,8 +123,6 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
     }
   }
 
-  // TODO when clientNetwork.status == -1 then clientNetwork shall functions shall return -1
-  // TODO test this in clientnetworktests
   if (ClientNetworkSend(&forwarder->clientNetwork,
                         &forwarder->clientNetworkSendBuffer,
                         forwarder->clientNetworkSendTimeout,
@@ -310,19 +308,15 @@ int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessag
       > CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {
     return -1;
   }
-  gatewayMessageData->data_length =
-      clientMessageHeader.length + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator);
+  gatewayMessageData->data_length = clientMessageHeader.length
+      + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator);
   gatewayMessageData->address = clientMessageData->address;
 
   if (clientMessageHeader.indicator) {
     MqttSnMessageHeaderThreeOctetsLengthField
         *headerThreeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) gatewayMessageData->data;
-
     headerThreeOctetsLengthField->indicator = clientMessageHeader.indicator;
-    // TODO start rewrite with htons()
-    uint16_t htons_length = htons(gatewayMessageData->data_length);
-    memcpy(&headerThreeOctetsLengthField->msb_length, &htons_length, 2);
-    // TODO end rewrite with htons()
+    headerThreeOctetsLengthField->length = htons(gatewayMessageData->data_length);
     headerThreeOctetsLengthField->msg_type = Encapsulated_message;
   } else {
     MqttSnMessageHeaderOneOctetLengthField
@@ -331,7 +325,8 @@ int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessag
     headerThreeOctetsLengthField->msg_type = Encapsulated_message;
   }
 
-  MqttSnEncapsulatedMessage *encapsulatedMessage = (MqttSnEncapsulatedMessage *) &gatewayMessageData->data[2];
+  MqttSnEncapsulatedMessage *encapsulatedMessage = (MqttSnEncapsulatedMessage *) (gatewayMessageData->data
+      + MQTT_SN_HEADER_OFFSET_LENGTH(clientMessageHeader.indicator));
   encapsulatedMessage->crtl = 5;
   memcpy(&encapsulatedMessage->wireless_node_id, &clientMessageData->address, sizeof(device_address));
 
