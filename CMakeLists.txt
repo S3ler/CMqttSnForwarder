@@ -30,7 +30,8 @@ if (NOT DEFINED CMAKE_C_STANDARD AND NOT DEFINED CMAKE_CXX_STANDARD)
     message(FATAL_ERROR "Neither C nor C++ project")
 endif ()
 
-set(CMQTTSNFORWADER_ERROR_COMPILE_FLAGS -Wall -Wextra -pedantic -Werror -Wno-unused-parameter)
+set(CMQTTSNFORWADER_ERROR_COMPILE_FLAGS -Wall -Wextra -pedantic -Werror
+        -Wno-unused-parameter -Wno-missing-field-initializers)
 
 option(WITH_LOGGING "Include LOGGING support?" ON)
 if (WITH_LOGGING)
@@ -455,7 +456,7 @@ else ()
     add_executable(MqttSnFixedSizeRingBufferUnitTests
             test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.cpp
             test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.h
-            test/MqttSnFixedSizeRingBuffer/ComparableMqttSnMessageData.h)
+            test/MqttSnFixedSizeRingBuffer/CompareableMqttSnMessageData.h test/MqttSnFixedSizeRingBuffer/CompareableMqttSnDeviceAddress.h)
     target_link_libraries(MqttSnFixedSizeRingBufferUnitTests
             gtest gtest_main gmock gmock_main lib-mqtt-sn-ring-buffer)
 
@@ -501,10 +502,10 @@ else ()
                 DEPENDENCIES "MqttSnFixedSizeRingBufferUnitTests"
                 EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFordwarder.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnClientNetworkInterface.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnGatewayNetworkInterface.*')
 
-        SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "MqttSnForwarderIntegrationTests_coverage"
-                EXECUTABLE "MqttSnForwarderIntegrationTests"
-                DEPENDENCIES "MqttSnForwarderIntegrationTests"
-                EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFixedSizeRingBuffer.*')
+        #SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "MqttSnForwarderIntegrationTests_coverage"
+        #        EXECUTABLE "MqttSnForwarderIntegrationTests"
+        #        DEPENDENCIES "MqttSnForwarderIntegrationTests"
+        #        EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFixedSizeRingBuffer.*')
 
         #SETUP_TARGET_FOR_COVERAGE_GCOVR_XML(NAME "MqttSnForwarderIntegrationTests_coverage"
         #        EXECUTABLE "MqttSnForwarderIntegrationTests"

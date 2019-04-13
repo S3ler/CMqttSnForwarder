@@ -5,8 +5,6 @@
 #include <memory.h>
 #include "MqttSnFixedSizeRingBuffer.h"
 
-// source: https://embedjournal.com/implementing-circular-buffer-embedded-c/
-
 void MqttSnFixedSizeRingBufferInit(MqttSnFixedSizeRingBuffer *queue) {
   queue->head = 0;
   queue->tail = 0;
@@ -23,7 +21,7 @@ int put(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
     next = 0;
   }
 
-  if (queue->item_count == queue->maxlen) {
+  if (isFull(queue)) {
     return -1;
   }
   /*
@@ -40,7 +38,7 @@ int put(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
 int pop(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
   uint32_t next;
 
-  if (queue->item_count == 0) {
+  if (isEmpty(queue)) {
     return -1;
   }
   /*

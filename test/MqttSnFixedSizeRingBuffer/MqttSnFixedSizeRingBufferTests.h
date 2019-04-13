@@ -7,18 +7,24 @@
 
 #include <gtest/gtest.h>
 #include "../../forwarder/MqttSnFixedSizeRingBuffer.h"
-#include "ComparableMqttSnMessageData.h"
+#include "CompareableMqttSnMessageData.h"
 
 class MqttSnFixedSizeRingBufferTests : public ::testing::Test {
- public:
+ protected:
+  void SetUp() override {
+    MqttSnFixedSizeRingBufferInit(&ringBuffer);
+  }
 
-  void generateData(uint8_t *data, uint16_t data_length) {
+  void TearDown() override {}
+
+  MqttSnFixedSizeRingBuffer ringBuffer;
+
+  static void generateData(uint8_t *data, uint16_t data_length) {
     for (uint16_t i = 0; i < data_length; ++i) {
       data[i] = static_cast<uint8_t>(i % UINT8_MAX);
     }
   }
-
-  void generateDeviceAddress(device_address *address, uint32_t address_number) {
+  static void generateDeviceAddressFromUint32(device_address *address, uint32_t address_number) {
     int16_t shift = 3;
     for (uint8_t i = 0; i < sizeof(device_address); ++i, shift = (static_cast<int16_t>(3 - i))) {
       if (shift >= 0) {
@@ -28,7 +34,6 @@ class MqttSnFixedSizeRingBufferTests : public ::testing::Test {
       }
     }
   }
-
 };
 
 #endif //CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFERTESTS_H
