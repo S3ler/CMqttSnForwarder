@@ -56,7 +56,7 @@ int log_flush(const MqttSnLogger *logger) {
 }
 
 int log_char(const MqttSnLogger *logger, char c) {
-  if (logger->status <= 0) {
+  if (logger->status < 0) {
     return -1;
   }
   return logger->log_char(c);

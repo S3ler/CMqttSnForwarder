@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include "global_defines.h"
 
+/*
 typedef enum MQTT_SN_MESSAGE_TYPE_ {
   ANY_MESSAGE_TYPE = -2,
   RESERVED_INVALID = -1,
@@ -47,6 +48,56 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
   ENCAPSULATED_MESSAGE = 0xFE,
   RESERVED_FF = 0xFF,
 } MQTT_SN_MESSAGE_TYPE;
+*/
+
+#define FOREACH_MQTT_SN_MESSAGE_TYPE(MESSAGE_TPYE) \
+        MESSAGE_TPYE(ANY_MESSAGE_TYPE , -2)   \
+        MESSAGE_TPYE(RESERVED_INVALID , -1)   \
+        MESSAGE_TPYE(ADVERTISE , 0x00)   \
+        MESSAGE_TPYE(SEARCHGW , 0x01)   \
+        MESSAGE_TPYE(GWINFO , 0x02)   \
+        MESSAGE_TPYE(RESERVED_03 , 0x03)   \
+        MESSAGE_TPYE(CONNECT , 0x04)   \
+        MESSAGE_TPYE(CONNACK , 0x05)   \
+        MESSAGE_TPYE(WILLTOPICREQ , 0x06)   \
+        MESSAGE_TPYE(WILLTOPIC , 0x07)   \
+        MESSAGE_TPYE(WILLMSGREQ , 0x08)   \
+        MESSAGE_TPYE(WILLMSG , 0x09)   \
+        MESSAGE_TPYE(REGISTER , 0x0A)   \
+        MESSAGE_TPYE(REGACK , 0x0B)   \
+        MESSAGE_TPYE(PUBLISH , 0x0C)   \
+        MESSAGE_TPYE(PUBACK , 0x0D)   \
+        MESSAGE_TPYE(PUBCOMP , 0x0E)   \
+        MESSAGE_TPYE(PUBREC , 0x0F)   \
+        MESSAGE_TPYE(PUBREL , 0x10)   \
+        MESSAGE_TPYE(RESERVED_11 , 0x11)   \
+        MESSAGE_TPYE(SUBSCRIBE , 0x12)   \
+        MESSAGE_TPYE(SUBACK , 0x13)   \
+        MESSAGE_TPYE(UNSUBSCRIBE , 0x14)   \
+        MESSAGE_TPYE(UNSUBACK , 0x15)   \
+        MESSAGE_TPYE(PINGREQ , 0x16)   \
+        MESSAGE_TPYE(PINGRESP , 0x17)   \
+        MESSAGE_TPYE(DISCONNECT , 0x18)   \
+        MESSAGE_TPYE(RESERVED_19 , 0x19)   \
+        MESSAGE_TPYE(WILLTOPICUPD , 0x1A)   \
+        MESSAGE_TPYE(WILLTOPICRESP , 0x1B)   \
+        MESSAGE_TPYE(WILLMSGUPD , 0x1C)   \
+        MESSAGE_TPYE(WILLMSGRESP , 0x1D)   \
+        MESSAGE_TPYE(RESERVED_1E , 0x1E)   \
+        MESSAGE_TPYE(RESERVED_FD , 0xFD)   \
+        MESSAGE_TPYE(ENCAPSULATED_MESSAGE , 0xFE)   \
+        MESSAGE_TPYE(RESERVED_FF , 0xFF)   \
+
+
+#define GENERATE_MQTT_SN_MESSAGE_TYPE_ENUM(MESSAGE_TYPE, MESSAGE_CODE) MESSAGE_TYPE = MESSAGE_CODE,
+#define GENERATE_MQTT_SN_MESSAGE_TYPE_STRING(STRING, NUMBER) #STRING,
+
+typedef enum MQTT_SN_MESSAGE_TYPE_ {
+  FOREACH_MQTT_SN_MESSAGE_TYPE(GENERATE_MQTT_SN_MESSAGE_TYPE_ENUM)
+} MQTT_SN_MESSAGE_TYPE;
+
+#define MQTT_SN_MESSAGE_TYPE_RESERVED(type) (type == RESERVED_03 || type == RESERVED_11 || type == RESERVED_19 \
+                                            || (type >= RESERVED_1E && type <= RESERVED_FD) || type == RESERVED_FF)
 
 #define MQTT_SN_FLAG_DUP            0x80 // 0b1000 0000
 #define MQTT_SN_FLAG_QOS            0x60 // 0b0110 0000
@@ -68,20 +119,36 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
                                       -1 : ((flags & MQTT_SN_FLAG_RETAIN) >> MQTT_SN_FLAG_RETAIN_SHIFT)
 #define MQTT_SN_WILL_FLAG(flags)      ((flags & MQTT_SN_FLAG_WILL) >> MQTT_SN_FLAG_WILL_SHIFT)
 #define MQTT_SN_CLEAN_SESSION(flags)  ((flags & MQTT_SN_FLAG_CLEAN_SESSION) >> MQTT_SN_FLAG_CLEAN_SESSION_SHIFT)
-#define MQTT_SN_TOPIC_ID_TYPE(flags)  ((flags & MQTT_SN_FLAG_TOPIC_ID_TYPE) >> MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT);
+#define MQTT_SN_TOPIC_ID_TYPE(flags)  ((flags & MQTT_SN_FLAG_TOPIC_ID_TYPE) >> MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT)
 
 #define MQTT_SN_HEADER_OFFSET_LENGTH(indicator)                 (indicator ? 4 : 2)
 #define MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE_LENGTH          1
 #define MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(indicator)  (MQTT_SN_HEADER_OFFSET_LENGTH(indicator) \
                                                                  + MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE_LENGTH \
                                                                  + sizeof(device_address))
+#define MQTT_SN_PINGREQ_MESSAGE_HEADER_LENGTH 2
+#define MQTT_SN_GWINFO_MESSAGE_HEADER_LENGTH 3
+#define MQTT_SN_MAX_CLIENT_ID_STRING_LENGTH 23 // without null terminator
+#define MQTT_SN_MAX_CLIENT_ID_LENGTH 24 // including null terminator
 
 #pragma pack(push, 1)
-typedef struct MqttSnEncapsulatedMessage_ {
-  uint8_t crtl;
-  device_address wireless_node_id;
-  uint8_t mqtt_sn_message;
-} MqttSnEncapsulatedMessage;
+typedef struct MqttSnAdvertise_ {
+  uint8_t gwId;
+  uint16_t duration;
+} MqttSnAdvertise;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnSearchGw_ {
+  uint8_t radius;
+} MqttSnSearchGw;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnGwInfo_ {
+  uint8_t gwId;
+  device_address gwAdd;
+} MqttSnGwInfo;
 #pragma pack(pop)
 
 #pragma pack(push)
@@ -119,11 +186,56 @@ typedef struct MqttSnMessagePublish_ {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
+typedef struct MqttSnMessagePuback_ {
+  uint16_t topicId;
+  uint16_t msgId;
+  uint8_t returnCode;
+} MqttSnMessagePuback;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnMessageSubcribe_ {
+  uint8_t flags;
+  uint16_t msgId;
+  union {
+    const char *topicName;
+    uint16_t topicId;
+  } topicNameOrTopicId;
+} MqttSnMessageSubcribe;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnMessageSuback_ {
+  uint8_t flags;
+  uint16_t topicId;
+  uint16_t msgId;
+  uint8_t returnCode;
+} MqttSnMessageSuback;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnMessageUnsubscribe_ {
+  uint8_t flags;
+  uint16_t msgId;
+  union {
+    const char *topicName;
+    uint16_t topicId;
+  } topicNameOrTopicId;
+} MqttSnMessageUnsubscribe;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnMessageUnsuback_ {
+  uint16_t msgId;
+} MqttSnMessageUnsuback;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
 typedef struct MqttSnMessageConnect_ {
   uint8_t flags;
   uint8_t protocolId;
   uint16_t duration;
-  char clientId[24];
+  char clientId[MQTT_SN_MAX_CLIENT_ID_LENGTH];
 } MqttSnMessageConnect;
 #pragma pack(pop)
 
@@ -134,9 +246,39 @@ typedef struct MqttSnMessageConnack_ {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
+typedef struct MqttSnMessageRegister_ {
+  uint16_t topicId;
+  uint16_t msgId;
+  const char *topicName;
+} MqttSnMessageRegister;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnMessageRegack_ {
+  uint16_t topicId;
+  uint16_t msgId;
+  uint8_t returnCode;
+} MqttSnMessageRegack;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnMessagePingReq_ {
+  char clientId[MQTT_SN_MAX_CLIENT_ID_LENGTH];
+} MqttSnMessagePingReq;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
 typedef struct MqttSnMessageDisconnect_ {
   uint16_t duration;
 } MqttSnMessageDisconnect;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnEncapsulatedMessage_ {
+  uint8_t crtl;
+  device_address wireless_node_id;
+  void* mqtt_sn_message;
+} MqttSnEncapsulatedMessage;
 #pragma pack(pop)
 
 int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);

@@ -12,15 +12,23 @@ extern "C" {
 #include "MqttSnForwarderLogging.h"
 #include "MqttSnForwarderLoggingBasic.h"
 
+typedef enum MQTT_SN_FORWARDER_NETWORK_ {
+  NETWORK_INVALID = -1,
+  GATEWAY = 0,
+  CLIENT = 1
+} MQTT_SN_FORWARDER_NETWORK;
+
 int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags);
 
 int log_gateway_id(const MqttSnLogger *logger, uint8_t gwId);
 
-int log_gateway_add(const MqttSnLogger *logger, uint8_t gwAdd);
+int log_radius(const MqttSnLogger *logger, uint8_t radius);
 
 int log_message_id(const MqttSnLogger *logger, uint16_t msgId);
 
-int log_clean_flag(const MqttSnLogger *logger, uint8_t clean);
+int log_dup_flag(const MqttSnLogger *logger, uint8_t dup);
+
+int log_clean_flag(const MqttSnLogger *logger, uint8_t clean_session);
 
 int log_duration(const MqttSnLogger *logger, uint16_t duration);
 
@@ -34,14 +42,20 @@ int log_topic_id(const MqttSnLogger *logger, uint16_t topicId);
 
 int log_topic_name(const MqttSnLogger *logger, const char *topicName);
 
-int log_topic_id_type(const MqttSnLogger *logger, uint8_t topicIdType);
+int log_topic_id_type_flag(const MqttSnLogger *logger, uint8_t topicIdType);
 
-int log_retain_flag(const MqttSnLogger *logger, uint8_t retainFlag);
+int log_retain_flag(const MqttSnLogger *logger, uint8_t retain);
 
-int log_data_byte_counter(const MqttSnLogger *logger, uint32_t dataByteCount);
+int log_qos_flag(const MqttSnLogger *logger, int8_t qos);
 
-int log_qos(const MqttSnLogger *logger, int8_t qos);
+int log_ctrl(const MqttSnLogger *logger, uint8_t ctrl);
 
+int log_msg_from(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type, const device_address *from);
+int log_msg_to(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type, const device_address *from);
+
+int log_open_braked(const MqttSnLogger *logger);
+int log_close_braked_dot(const MqttSnLogger *logger);
+int log_comma(const MqttSnLogger *logger);
 
 int log_client_mqtt_sn_message(const MqttSnLogger *logger,
                                int level,
@@ -57,126 +71,50 @@ int log_gateway_mqtt_sn_message(const MqttSnLogger *logger,
                                 uint16_t data_len,
                                 const char *additional_msg);
 
-
 int log_mqtt_sn_message(const MqttSnLogger *logger,
-                        int level,
                         const device_address *from,
-                        const char *network,
+                        MQTT_SN_FORWARDER_NETWORK network,
                         const uint8_t *data,
                         uint16_t data_len,
                         const char *additional_msg);
 
-int log_advertise_message(const MqttSnLogger *logger,
-                          ParsedMqttSnHeader *header,
-                          const device_address *from,
-                          const char *network,
-                          const uint8_t *data,
-                          uint16_t len);
+int log_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
+int log_default_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
+int log_verbose_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_searchgw_message(const MqttSnLogger *logger,
-                         ParsedMqttSnHeader *header,
-                         const device_address *from,
-                         const char *network,
-                         const uint8_t *data,
-                         uint16_t len);
+int log_advertise_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_gwinfo_message(const MqttSnLogger *logger,
-                       ParsedMqttSnHeader *header,
-                       const device_address *from,
-                       const char *network,
-                       const uint8_t *data,
-                       uint16_t len);
+int log_searchgw_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_connect_message(const MqttSnLogger *logger,
-                               const ParsedMqttSnHeader *header,
-                               const device_address *address,
-                               const char *network,
-                               const uint8_t *data,
-                               uint16_t data_len);
+int log_gwinfo_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_connack_message(const MqttSnLogger *logger,
-                        ParsedMqttSnHeader *header,
-                        const device_address *from,
-                        const char *network,
-                        const uint8_t *data,
-                        uint16_t len);
+int log_connect_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_register_message(const MqttSnLogger *logger,
-                         ParsedMqttSnHeader *header,
-                         const device_address *from,
-                         const char *network,
-                         const uint8_t *data,
-                         uint16_t len);
+int log_connack_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_regack_message(const MqttSnLogger *logger,
-                       ParsedMqttSnHeader *header,
-                       const device_address *from,
-                       const char *network,
-                       const uint8_t *data,
-                       uint16_t len);
+int log_register_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_publish_message(const MqttSnLogger *logger,
-                        const ParsedMqttSnHeader *header,
-                        const device_address *from,
-                        const char *network,
-                        const uint8_t *data,
-                        uint16_t data_len);
+int log_regack_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_puback_message(const MqttSnLogger *logger,
-                       ParsedMqttSnHeader *header,
-                       const device_address *from,
-                       const char *network,
-                       const uint8_t *data,
-                       uint16_t len);
+int log_publish_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_subscribe_message(const MqttSnLogger *logger,
-                          ParsedMqttSnHeader *header,
-                          const device_address *from,
-                          const char *network,
-                          const uint8_t *data,
-                          uint16_t len);
+int log_puback_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_suback_message(const MqttSnLogger *logger,
-                       ParsedMqttSnHeader *header,
-                       const device_address *from,
-                       const char *network,
-                       const uint8_t *data,
-                       uint16_t len);
+int log_subscribe_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_unsubscribe_message(const MqttSnLogger *logger,
-                            ParsedMqttSnHeader *header,
-                            const device_address *from,
-                            const char *network,
-                            const uint8_t *data,
-                            uint16_t len);
+int log_suback_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_unsuback_message(const MqttSnLogger *logger,
-                         ParsedMqttSnHeader *header,
-                         const device_address *from,
-                         const char *network,
-                         const uint8_t *data,
-                         uint16_t len);
+int log_unsubscribe_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_pingreq_message(const MqttSnLogger *logger,
-                        ParsedMqttSnHeader *header,
-                        const device_address *from,
-                        const char *network,
-                        const uint8_t *data,
-                        uint16_t len);
+int log_unsuback_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_pingresp_message(const MqttSnLogger *logger,
-                         ParsedMqttSnHeader *header,
-                         const device_address *from,
-                         const char *network,
-                         const uint8_t *data,
-                         uint16_t len);
+int log_pingreq_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
 
-int log_disconnect_message(const MqttSnLogger *logger,
-                           const ParsedMqttSnHeader *header,
-                           const device_address *address,
-                           const char *network,
-                           const uint8_t *data,
-                           uint16_t data_len);
+int log_pingresp_message(const MqttSnLogger *logger);
+
+int log_disconnect_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
+
+int log_encapsulated_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
 #ifdef __cplusplus
 }

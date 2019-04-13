@@ -1,4 +1,8 @@
 Featurelist:
+// TODO logging für restiliche mqtt-sn- message
+// TODO error parsing
+
+
   // TODO: printf("                        [-c config_file]\n");
   // TODO  printf(" --json : produce json valid log message
   // TODO: printf(" -c : specify the forwarder config file.\n");

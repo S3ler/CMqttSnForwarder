@@ -24,8 +24,7 @@ MQTT_SN_MESSAGE_TYPE get_mqtt_sn_message_type(const uint8_t *data) {
     type = data[1];
   }
 
-  if (type == RESERVED_03 || type == RESERVED_11 || type == RESERVED_19 ||
-      (type >= RESERVED_1E && type <= RESERVED_FD) || type == RESERVED_FF) {
+  if (MQTT_SN_MESSAGE_TYPE_RESERVED(type)) {
     return RESERVED_INVALID;
   }
   return (MQTT_SN_MESSAGE_TYPE) type;
@@ -62,6 +61,9 @@ int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) 
   }
   h->indicator = is_three_bytes_header(data);
   h->msg_type = get_mqtt_sn_message_type(data);
+  if (h->msg_type == RESERVED_INVALID) {
+    return -1;
+  }
   return 0;
 }
 
@@ -82,6 +84,21 @@ int parse_message(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const ui
                       data + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(h->indicator),
                       data_len - MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(h->indicator))) {
       return -1;
+    }
+  }
+  // TODO check all other message length
+  if (h->msg_type == PINGREQ) {
+    if (h->length > MQTT_SN_PINGREQ_MESSAGE_HEADER_LENGTH) {
+      if (h->length > MQTT_SN_PINGREQ_MESSAGE_HEADER_LENGTH + MQTT_SN_MAX_CLIENT_ID_LENGTH) {
+        return -1;
+      }
+    }
+  }
+  if (h->msg_type == GWINFO) {
+    if (h->length > 3) {
+      if (h->length > MQTT_SN_GWINFO_MESSAGE_HEADER_LENGTH + sizeof(device_address)) {
+        return -1;
+      }
     }
   }
   h->payload = (MqttSnEncapsulatedMessage *) (data + payload_offset);

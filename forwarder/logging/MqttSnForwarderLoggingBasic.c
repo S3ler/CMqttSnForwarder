@@ -17,6 +17,30 @@ int log_int8(const MqttSnLogger *logger, int8_t n) {
   return log_str(logger, n_str);
 }
 
+int log_int16(const MqttSnLogger *logger, int16_t n) {
+  const char *int16_max_str = "-32766";
+  int int16_max_str_length = strlen(int16_max_str);
+  char n_str[int16_max_str_length + 1];
+  snprintf((char *) &n_str, int16_max_str_length + 1, "%d", n);
+  return log_str(logger, n_str);
+}
+
+int log_int32(const MqttSnLogger *logger, int32_t n) {
+  const char *int32_max_str = "-2147483646";
+  int int32_max_str_length = strlen(int32_max_str);
+  char n_str[int32_max_str_length + 1];
+  snprintf((char *) &n_str, int32_max_str_length + 1, "%d", n);
+  return log_str(logger, n_str);
+}
+
+int log_int64(const MqttSnLogger *logger, int64_t n) {
+  const char *int64_max_str = "-9223372036854775806";
+  int int64_max_str_length = strlen(int64_max_str);
+  char n_str[int64_max_str_length + 1];
+  snprintf((char *) &n_str, int64_max_str_length + 1, "%d", n);
+  return log_str(logger, n_str);
+}
+
 int log_uint8(const MqttSnLogger *logger, uint8_t n) {
   const char *uint8_max_str = "255";
   int uint8_max_str_length = strlen(uint8_max_str);
@@ -133,3 +157,4 @@ int log_device_address(const MqttSnLogger *logger, const device_address *address
   }
   return 0;
 }
+
