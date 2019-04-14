@@ -20,11 +20,11 @@ typedef struct MqttSnClientPluginContext_ {
   int (*plugin_network_connect)(const client_plugin_config *cfg, void *plugin_context);
   void (*plugin_network_disconnect)(const client_plugin_config *cfg, void *plugin_context);
   int (*plugin_network_send)(const client_plugin_message *send_message,
-                             int timeout_ms,
+                             int32_t timeout_ms,
                              const client_plugin_config *cfg,
                              void *plugin_context);
   int (*plugin_network_receive)(client_plugin_message *rec_message,
-                                int timeout_ms,
+                                int32_t timeout_ms,
                                 const client_plugin_config *cfg,
                                 void *plugin_context);
   const char *(*plugin_get_short_network_protocol_name)();
@@ -42,12 +42,12 @@ void ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context)
 
 int ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n,
                              MqttSnFixedSizeRingBuffer *receiveBuffer,
-                             int timeout_ms,
+                             int32_t timeout_ms,
                              void *context);
 
 int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
                           MqttSnFixedSizeRingBuffer *sendBuffer,
-                          int timeout_ms,
+                          int32_t timeout_ms,
                           void *context);
 
 #ifdef __cplusplus

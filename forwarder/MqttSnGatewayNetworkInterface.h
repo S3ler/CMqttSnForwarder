@@ -17,9 +17,9 @@ typedef struct MqttSnGatewayNetworkInterface {
 
   int status;
 
-  int (*gateway_network_receive)(struct MqttSnGatewayNetworkInterface *, MqttSnFixedSizeRingBuffer *, int, void *context);
+  int (*gateway_network_receive)(struct MqttSnGatewayNetworkInterface *, MqttSnFixedSizeRingBuffer *, int32_t, void *context);
 
-  int (*gateway_network_send)(struct MqttSnGatewayNetworkInterface *, MqttSnFixedSizeRingBuffer *, int, void *context);
+  int (*gateway_network_send)(struct MqttSnGatewayNetworkInterface *, MqttSnFixedSizeRingBuffer *, int32_t, void *context);
 
   int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface *, void *context);
 

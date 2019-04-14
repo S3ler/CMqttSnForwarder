@@ -57,7 +57,7 @@ void ClientLinuxUdpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
 
 int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
                           MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          int timeout_ms,
+                          int32_t timeout_ms,
                           void *context) {
   MqttSnClientUdpNetwork *clientUdpNetwork = (MqttSnClientUdpNetwork *) context;
 
@@ -94,7 +94,7 @@ int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
 
 int ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
                        MqttSnFixedSizeRingBuffer *sendBuffer,
-                       int timeout_ms,
+                       int32_t timeout_ms,
                        void *context) {
   MqttSnClientUdpNetwork *clientUdpNetwork = (MqttSnClientUdpNetwork *) context;
   MqttSnMessageData clientSendMessageData = {0};

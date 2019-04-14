@@ -1,0 +1,12 @@
+//
+// Created by SomeDude on 07.03.2019.
+//
+
+#ifndef CMQTTSNFORWARDER_FAKENETWORKCONTEXT_H
+#define CMQTTSNFORWARDER_FAKENETWORKCONTEXT_H
+
+class PlaceholderContext {
+  
+};
+
+#endif //CMQTTSNFORWARDER_FAKENETWORKCONTEXT_H

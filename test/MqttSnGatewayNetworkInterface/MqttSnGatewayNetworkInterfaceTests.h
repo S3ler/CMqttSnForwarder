@@ -9,9 +9,9 @@
 #include <gmock/gmock.h>
 #include <GatewayNetworkMock.h>
 #include "../../forwarder/MqttSnFixedSizeRingBuffer.h"
-#include "../MqttSnForwarder/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include "../MqttSnForwarder/PlaceholderNetworkContext/FakeNetworkContext.h"
 
-#ifndef GLOBA_TEST_EXEC
+#ifndef GLOBAL_TEST_EXEC
 GatewayNetworkMock *globalGatewayNetworkMockObj = nullptr;
 #else
 extern GatewayNetworkMock *globalGatewayNetworkMockObj;
@@ -26,16 +26,15 @@ class MqttSnGatewayNetworkInterfaceTests : public ::testing::Test {
   PlaceholderContext placeholderContext;
   void *gatewayNetworkContext = &placeholderContext;
 
-  device_address gateway_network_address;
-  device_address forwader_network_address;
+  device_address forwarder_gateway_network_address;
+  device_address mqtt_sn_gateway_network_address;
 
   virtual void SetUp() {
     globalGatewayNetworkMockObj = &gatewayNetworkMock;
-    device_address gateway_network_address({0, 0, 0, 0, 0, 0});
-    device_address mqtt_sn_gateway_network_address({0, 0, 0, 0, 0, 0});
-    this->gateway_network_address = gateway_network_address;
-    this->forwader_network_address = mqtt_sn_gateway_network_address;
+    memset(&forwarder_gateway_network_address, 0, sizeof(device_address));
+    memset(&mqtt_sn_gateway_network_address, 0, sizeof(device_address));
   }
+
   virtual void TearDown() {
     globalGatewayNetworkMockObj = nullptr;
   }

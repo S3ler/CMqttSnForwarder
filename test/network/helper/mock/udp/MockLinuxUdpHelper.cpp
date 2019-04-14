@@ -33,8 +33,8 @@ int MockLinuxUdpHelper::isUdpMessageReceiver(int socket_fd, uint32_t timeout_ms)
   return is_udp_message_received(socket_fd, timeout_ms);
 }
 std::unique_ptr<MockLinuxUdpDatagram> MockLinuxUdpHelper::receiveUdpMessage(int socket_fd, uint16_t max_data_length) {
-  uint8_t buffer[max_data_length];
-  int buffer_length = max_data_length;
+  std::vector<uint8_t> buffer;
+  buffer.resize(max_data_length);
   ssize_t read_bytes;
 
   struct sockaddr_in recv_sockaddr;
@@ -45,10 +45,11 @@ std::unique_ptr<MockLinuxUdpDatagram> MockLinuxUdpHelper::receiveUdpMessage(int 
   // TODO read out first 3 bytes, peek datasize, if too long remove next datasize bytes out of buffer
   // TODO write a testcase for this behaviour
 
-  if ((read_bytes = recvfrom(socket_fd, buffer, buffer_length, MSG_WAITALL,
+  if ((read_bytes = recvfrom(socket_fd, &buffer[0], buffer.size(), MSG_WAITALL,
                              (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) <= 0) {
     return std::unique_ptr<MockLinuxUdpDatagram>{nullptr};
   }
+  buffer.resize(read_bytes);
 
   device_address gateway_address = MockLinuxUdpHelper::getDeviceAddressFromSockAddrIn(&recv_sockaddr);
 

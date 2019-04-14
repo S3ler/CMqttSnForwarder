@@ -27,11 +27,11 @@ class ClientNetworkMockInterface {
 
 int mock_client_network_receive(struct MqttSnClientNetworkInterface *n,
                                 MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                uint32_t timeout_ms,
+                                int32_t timeout_ms,
                                 void *context);
 int mock_client_network_send(struct MqttSnClientNetworkInterface *n,
                              MqttSnFixedSizeRingBuffer *sendBuffer,
-                             uint32_t timeout_ms,
+                             int32_t timeout_ms,
                              void *context);
 int mock_client_network_init(struct MqttSnClientNetworkInterface *n, void *context);
 int mock_client_network_connect(struct MqttSnClientNetworkInterface *n, void *context);

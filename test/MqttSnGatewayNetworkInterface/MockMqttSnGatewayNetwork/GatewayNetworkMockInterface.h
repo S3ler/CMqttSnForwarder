@@ -26,11 +26,11 @@ class GatewayNetworkMockInterface {
 
 int mock_gateway_network_receive(struct MqttSnGatewayNetworkInterface *n,
                                  MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                 uint32_t timout_ms,
+                                 int timout_ms,
                                  void *context);
 int mock_gateway_network_send(struct MqttSnGatewayNetworkInterface *n,
                               MqttSnFixedSizeRingBuffer *sendBuffer,
-                              uint32_t timout_ms,
+                              int timout_ms,
                               void *context);
 int mock_gateway_network_init(struct MqttSnGatewayNetworkInterface *n, void *context);
 int mock_gateway_network_connect(struct MqttSnGatewayNetworkInterface *n, void *context);

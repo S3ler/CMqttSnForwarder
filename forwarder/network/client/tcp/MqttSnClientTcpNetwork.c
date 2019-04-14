@@ -107,7 +107,7 @@ void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
 
 int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
                           MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          int timeout_ms,
+                          int32_t timeout_ms,
                           void *context) {
 
   MqttSnClientTcpNetwork *clientTcpNetwork = (MqttSnClientTcpNetwork *) context;
@@ -182,7 +182,7 @@ void MqttSnClientNetworkInitReadFdSet(const MqttSnClientTcpNetwork *clientTcpNet
 
 int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
                        MqttSnFixedSizeRingBuffer *sendBuffer,
-                       int timeout_ms,
+                       int32_t timeout_ms,
                        void *context) {
   // TODO: at the moment only 1 packet is sendNetwork per call => can lead to client starvation
   // minimum 1 packet

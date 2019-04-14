@@ -12,7 +12,7 @@
 #include <MqttSnForwarder.h>
 #include <gmock/gmock-nice-strict.h>
 #include "MqttSnForwarderTestsGlobalVariables.h"
-#include "PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include "PlaceholderNetworkContext/FakeNetworkContext.h"
 
 using ::testing::Return;
 using ::testing::Invoke;

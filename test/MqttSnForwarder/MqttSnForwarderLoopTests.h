@@ -12,7 +12,7 @@
 #include <GatewayNetworkMock.h>
 #include <MqttSnFixedSizeRingBufferMock.h>
 #include <MqttSnForwarder.h>
-#include "PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include "PlaceholderNetworkContext/FakeNetworkContext.h"
 
 using ::testing::Return;
 using ::testing::AtLeast;

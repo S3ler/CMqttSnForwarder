@@ -27,18 +27,20 @@ typedef struct MqttSnClientTcpNetwork {
   int port;
 } MqttSnClientTcpNetwork;
 
-
 int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context);
 
 int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context);
 
 void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context);
 
-int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          int timeout_ms,
+int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
+                          MqttSnFixedSizeRingBuffer *receiveBuffer,
+                          int32_t timeout_ms,
                           void *context);
 
-int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, int timeout_ms,
+int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
+                       MqttSnFixedSizeRingBuffer *sendBuffer,
+                       int32_t timeout_ms,
                        void *context);
 
 void MqttSnClientNetworkInitReadFdSet(const MqttSnClientTcpNetwork *clientTcpNetwork, int *max_sd, fd_set *readfds);

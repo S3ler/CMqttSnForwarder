@@ -218,7 +218,7 @@ void ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context)
 }
 int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
                           MqttSnFixedSizeRingBuffer *sendBuffer,
-                          int timeout_ms,
+                          int32_t timeout_ms,
                           void *context) {
   MqttSnClientPluginContext *pluginClientNetwork = (MqttSnClientPluginContext *) context;
 
@@ -284,7 +284,7 @@ int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
 }
 int ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n,
                              MqttSnFixedSizeRingBuffer *receiveBuffer,
-                             int timeout_ms,
+                             int32_t timeout_ms,
                              void *context) {
   MqttSnClientPluginContext *pluginClientNetwork = (MqttSnClientPluginContext *) context;
 

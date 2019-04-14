@@ -223,7 +223,7 @@ int GatewayLinuxPluginConnect(MqttSnGatewayNetworkInterface *n, void *context) {
 
 int GatewayLinuxPluginSend(MqttSnGatewayNetworkInterface *n,
                            MqttSnFixedSizeRingBuffer *sendBuffer,
-                           int timeout_ms,
+                           int32_t timeout_ms,
                            void *context) {
   MqttSnGatewayPluginContext *pluginGatewayNetwork = (MqttSnGatewayPluginContext *) context;
 
@@ -285,7 +285,7 @@ int GatewayLinuxPluginSend(MqttSnGatewayNetworkInterface *n,
 
 int GatewayLinuxPluginReceive(MqttSnGatewayNetworkInterface *n,
                               MqttSnFixedSizeRingBuffer *receiveBuffer,
-                              int timeout_ms,
+                              int32_t timeout_ms,
                               void *context) {
   MqttSnGatewayPluginContext *pluginGatewayNetwork = (MqttSnGatewayPluginContext *) context;
 

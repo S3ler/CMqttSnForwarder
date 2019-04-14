@@ -26,11 +26,14 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
 
 void GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context);
 
-int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *receiveBuffer,
-                           int timeout_ms,
+int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
+                           MqttSnFixedSizeRingBuffer *receiveBuffer,
+                           int32_t timeout_ms,
                            void *context);
 
-int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, int timeout_ms,
+int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
+                        MqttSnFixedSizeRingBuffer *sendBuffer,
+                        int32_t timeout_ms,
                         void *context);
 
 #ifdef __cplusplus

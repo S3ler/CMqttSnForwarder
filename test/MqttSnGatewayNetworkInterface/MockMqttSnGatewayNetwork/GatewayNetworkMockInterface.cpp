@@ -8,16 +8,16 @@
 extern GatewayNetworkMock *globalGatewayNetworkMockObj;
 
 int mock_gateway_network_receive(struct MqttSnGatewayNetworkInterface *n,
-                            MqttSnFixedSizeRingBuffer *receiveBuffer,
-                            uint32_t timout_ms,
-                            void *context) {
+                                 MqttSnFixedSizeRingBuffer *receiveBuffer,
+                                 int timout_ms,
+                                 void *context) {
   return globalGatewayNetworkMockObj->gateway_network_receive(n, receiveBuffer, timout_ms, context);
 }
 
 int mock_gateway_network_send(struct MqttSnGatewayNetworkInterface *n,
-                         MqttSnFixedSizeRingBuffer *sendBuffer,
-                         uint32_t timout_ms,
-                         void *context) {
+                              MqttSnFixedSizeRingBuffer *sendBuffer,
+                              int timout_ms,
+                              void *context) {
   return globalGatewayNetworkMockObj->gateway_network_send(n, sendBuffer, timout_ms, context);
 }
 

@@ -9,14 +9,14 @@ extern ClientNetworkMock *globalClientNetworkMockObj;
 
 int mock_client_network_receive(struct MqttSnClientNetworkInterface *n,
                                 MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                uint32_t timeout_ms,
+                                int32_t timeout_ms,
                                 void *context) {
   return globalClientNetworkMockObj->client_network_receive(n, receiveBuffer, timeout_ms, context);
 }
 
 int mock_client_network_send(struct MqttSnClientNetworkInterface *n,
                              MqttSnFixedSizeRingBuffer *sendBuffer,
-                             uint32_t timeout_ms,
+                             int32_t timeout_ms,
                              void *context) {
   return globalClientNetworkMockObj->client_network_send(n, sendBuffer, timeout_ms, context);
 }

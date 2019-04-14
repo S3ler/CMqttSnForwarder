@@ -37,7 +37,7 @@ int log_int64(const MqttSnLogger *logger, int64_t n) {
   const char *int64_max_str = "-9223372036854775806";
   int int64_max_str_length = strlen(int64_max_str);
   char n_str[int64_max_str_length + 1];
-  snprintf((char *) &n_str, int64_max_str_length + 1, "%d", n);
+  snprintf((char *) &n_str, int64_max_str_length + 1, "%li", n);
   return log_str(logger, n_str);
 }
 

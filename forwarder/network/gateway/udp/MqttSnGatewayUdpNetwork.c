@@ -70,8 +70,9 @@ void GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) 
   }
 }
 
-int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *receiveBuffer,
-                           int timeout_ms,
+int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
+                           MqttSnFixedSizeRingBuffer *receiveBuffer,
+                           int32_t timeout_ms,
                            void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
 
@@ -105,7 +106,9 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   return 0;
 }
 
-int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, int timeout_ms,
+int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
+                        MqttSnFixedSizeRingBuffer *sendBuffer,
+                        int32_t timeout_ms,
                         void *context) {
   // TODO: implement later: sendNetwork more messages until timeout runs out
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;

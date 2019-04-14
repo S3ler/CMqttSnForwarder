@@ -10,7 +10,7 @@
 #include <MqttSnFixedSizeRingBufferMock.h>
 #include <gmock/gmock-nice-strict.h>
 #include <GatewayNetworkMock.h>
-#include "PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include "PlaceholderNetworkContext/FakeNetworkContext.h"
 
 using ::testing::Return;
 using ::testing::AtLeast;

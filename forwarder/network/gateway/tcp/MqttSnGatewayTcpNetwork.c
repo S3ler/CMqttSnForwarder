@@ -117,7 +117,7 @@ void GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) 
 }
 
 int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *receiveBuffer,
-                           int timeout_ms,
+                           int32_t timeout_ms,
                            void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 
@@ -213,7 +213,9 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
   return 0;
 }
 
-int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRingBuffer *sendBuffer, int timeout_ms,
+int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
+                        MqttSnFixedSizeRingBuffer *sendBuffer,
+                        int32_t timeout_ms,
                         void *context) {
   // TODO: implement later: sendNetwork more messages until timeout runs out
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
