@@ -13,11 +13,11 @@ class MockForwarderGatewayNetworkLooper {
   bool startNetworkLoop(
       int (*gatewayNetworkReceive)(MqttSnGatewayNetworkInterface *,
                                    MqttSnFixedSizeRingBuffer *,
-                                   uint32_t,
+                                   int32_t,
                                    void *),
       int (*gatewayNetworkSend)(MqttSnGatewayNetworkInterface *,
                                 MqttSnFixedSizeRingBuffer *,
-                                uint32_t,
+                                int32_t,
                                 void *),
       MqttSnGatewayNetworkInterface *n,
       MqttSnFixedSizeRingBuffer *receiveBuffer,
@@ -44,11 +44,11 @@ class MockForwarderGatewayNetworkLooper {
 
   int (*gatewayNetworkReceive)(MqttSnGatewayNetworkInterface *n,
                                MqttSnFixedSizeRingBuffer *receiveBuffer,
-                               uint32_t timeout_ms,
+                               int32_t timeout_ms,
                                void *context);
   int (*gatewayNetworkSend)(MqttSnGatewayNetworkInterface *n,
                             MqttSnFixedSizeRingBuffer *receiveBuffer,
-                            uint32_t timeout_ms,
+                            int32_t timeout_ms,
                             void *context);
   MqttSnGatewayNetworkInterface *n;
   MqttSnFixedSizeRingBuffer *receiveBuffer;

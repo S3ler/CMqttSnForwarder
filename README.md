@@ -1,4 +1,9 @@
 Featurelist:
+
+//  encapsulatedMessage->crtl = 0;
+//  TODO receive and send broadcasting
+// for more information see Encapsulated message in MQTT-SN spec
+
 // TODO logging für restiliche mqtt-sn- message
 // TODO error parsing
 

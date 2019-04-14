@@ -9,11 +9,11 @@ MockGateway::MockGateway(uint8_t identifier,
                          device_address *forwarderAddress,
                          MockGatewayNetworkInterface *mockGatewayNetworkInterface,
                          MockGatewayNetworkReceiver *receiver)
-    : receiver(receiver),
-      gatewayAddress(gatewayAddress),
+    : identifier(identifier),
+      receiver(receiver),
       forwarderAddress(forwarderAddress),
-      mockGatewayNetworkInterface(mockGatewayNetworkInterface),
-      identifier(identifier) {}
+      gatewayAddress(gatewayAddress),
+      mockGatewayNetworkInterface(mockGatewayNetworkInterface) {}
 
 void MockGateway::loop() {
   done = false;

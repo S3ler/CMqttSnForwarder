@@ -7,7 +7,7 @@
 
 #include "GatewayNetworkMockInterface.h"
 #include <cstdint>
-#include "../../../forwarder/MqttSnFixedSizeRingBuffer.h"
+#include "MqttSnFixedSizeRingBuffer.h"
 #include "FakeClientNetworkInterface.h"
 #include <gmock/gmock-function-mocker.h>
 

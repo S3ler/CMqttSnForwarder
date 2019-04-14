@@ -20,27 +20,27 @@ class ComparableGatewayMqttSnMessageData {
 
   ComparableGatewayMqttSnMessageData(const MqttSnMessageData &mqttSnMessageData,
                                      bool useIdentifier = false)
-      : address(mqttSnMessageData.address),
+      : use_identifier(useIdentifier),
+        address(mqttSnMessageData.address),
         data_length(mqttSnMessageData.data_length),
-        use_identifier(useIdentifier),
         data(mqttSnMessageData.data, mqttSnMessageData.data + mqttSnMessageData.data_length) {}
 
   ComparableGatewayMqttSnMessageData(device_address *address,
                                      uint8_t *data,
                                      uint16_t data_length,
                                      bool useIdentifier)
-      : address(*address),
+      : use_identifier(useIdentifier),
+        address(*address),
         data_length(data_length),
-        use_identifier(useIdentifier),
         data(data, data + data_length) {}
 
   ComparableGatewayMqttSnMessageData(const uint16_t data_length,
                                      const device_address *address,
                                      const uint16_t identifier,
                                      const bool useIdentifier)
-      : address(*address),
+      : use_identifier(useIdentifier),
+        address(*address),
         data_length(data_length),
-        use_identifier(useIdentifier),
         data(generateMessageData(data_length, identifier, true)) {
   }
 
@@ -48,9 +48,9 @@ class ComparableGatewayMqttSnMessageData {
                                      const device_address address,
                                      const uint16_t identifier,
                                      const bool useIdentifier)
-      : address(address),
+      : use_identifier(useIdentifier),
+        address(address),
         data_length(data_length),
-        use_identifier(useIdentifier),
         data(generateMessageData(data_length, identifier, true)) {
   }
 
@@ -97,10 +97,10 @@ class ComparableGatewayMqttSnMessageData {
 
   bool operator==(const ComparableGatewayMqttSnMessageData &rhs) const {
     if (use_identifier) {
-      return rhs.use_identifier == use_identifier & data_length == rhs.data_length & data == rhs.data;
+      return (rhs.use_identifier == use_identifier) && (data_length == rhs.data_length) && (data == rhs.data);
     }
-    return rhs.use_identifier == use_identifier & data_length == rhs.data_length & data == rhs.data &
-        (memcmp(address.bytes, rhs.address.bytes, sizeof(device_address)) == 0);
+    return (rhs.use_identifier == use_identifier) && (data_length == rhs.data_length) && (data == rhs.data)
+        && (memcmp(address.bytes, rhs.address.bytes, sizeof(device_address)) == 0);
 
   }
 

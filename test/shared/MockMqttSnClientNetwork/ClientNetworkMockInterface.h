@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_CLIENTNETWORKMOCKINTERFACE_H
 
 #include <cstdint>
-#include "../../../forwarder/MqttSnClientNetworkInterface.h"
+#include "MqttSnClientNetworkInterface.h"
 
 class ClientNetworkMockInterface {
  public:

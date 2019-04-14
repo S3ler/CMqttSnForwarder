@@ -31,23 +31,17 @@ TEST_F(AddMqttSnForwardingHeaderTests, MinimumDataLengthClientMessageData_Return
 }
 
 TEST_F(AddMqttSnForwardingHeaderTests, MaximumDataLengthClientMessageData_ReturnsZero) {
-  clientMessageData.data_length = GATEWAY_NETWORK_MAX_DATA_LEN - (FORWARDER_HEADER_LEN + sizeof(device_address));
+  clientMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH - MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
   EXPECT_EQ(AddMqttSnForwardingHeader(&clientMessageData, &gatewayMessageData), 0);
 }
 
 TEST_F(AddMqttSnForwardingHeaderTests, AboveMaximumDataLengthClientMessageData_ReturnsMinusOne) {
-  if (GATEWAY_NETWORK_MAX_DATA_LEN - (FORWARDER_HEADER_LEN + sizeof(device_address)) >= UINT16_MAX) {
-    ASSERT_TRUE(false) << "AboveMaximumDataLengthClientMessageData_ReturnsMinusOne is not testable.";
-  }
-  clientMessageData.data_length = GATEWAY_NETWORK_MAX_DATA_LEN - (FORWARDER_HEADER_LEN + sizeof(device_address)) + 1;
+  clientMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH - MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false) + 1;
   EXPECT_EQ(AddMqttSnForwardingHeader(&clientMessageData, &gatewayMessageData), -1);
 }
 
 TEST_F(AddMqttSnForwardingHeaderTests, AboveMaximumDataLengthClientMessageDataAndReturnsMinusOne_ClientMessageDataNotModified) {
-  if (GATEWAY_NETWORK_MAX_DATA_LEN - (FORWARDER_HEADER_LEN + sizeof(device_address)) >= UINT16_MAX) {
-    ASSERT_TRUE(false) << "AboveMaximumDataLengthClientMessageDataAndReturnsMinusOne_ClientMessageDataNotModified is not testable.";
-  }
-  clientMessageData.data_length = GATEWAY_NETWORK_MAX_DATA_LEN - (FORWARDER_HEADER_LEN + sizeof(device_address)) + 1;
+  clientMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH - MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false) + 1;
   MqttSnMessageData expectedMqttSnMessageData = {0};
   memcpy(&expectedMqttSnMessageData, &clientMessageData, sizeof(MqttSnMessageData));
 
@@ -58,11 +52,7 @@ TEST_F(AddMqttSnForwardingHeaderTests, AboveMaximumDataLengthClientMessageDataAn
 
 TEST_F(AddMqttSnForwardingHeaderTests, AboveMaximumDataLengthClientMessageDataAndReturnsMinusOne_GatewayMessageDataNotModified) {
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
-
-  if (GATEWAY_NETWORK_MAX_DATA_LEN - (FORWARDER_HEADER_LEN + sizeof(device_address)) >= UINT16_MAX) {
-    ASSERT_TRUE(false) << "AboveMaximumDataLengthClientMessageDataAndReturnsMinusOne_ClientMessageDataNotModified is not testable.";
-  }
-  clientMessageData.data_length = GATEWAY_NETWORK_MAX_DATA_LEN - (FORWARDER_HEADER_LEN + sizeof(device_address)) + 1;
+  clientMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH - MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false) + 1;
   ASSERT_EQ(AddMqttSnForwardingHeader(&clientMessageData, &gatewayMessageData), -1);
   MqttSnMessageData mqttSnMessageDataZeroed = {0};
   EXPECT_EQ(memcmp(&gatewayMessageData, &mqttSnMessageDataZeroed, sizeof(MqttSnMessageData)), 0);

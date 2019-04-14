@@ -30,11 +30,29 @@ TEST_P(MqttSnGatewayNetworkInterfaceMessageDefragmentationTests, Defragmentation
     );
 
   }
-
+  /*
   uint16_t n = packetSize;
   device_address forwarderDeviceAddress = mockGateway->getForwarderDeviceAddress();
   uint64_t size = (v.size() - 1) / n + 1;
   std::vector<uint8_t> vec[size];
+  for (uint64_t k = 0; k < size; ++k) {
+
+    auto start_itr = std::next(v.cbegin(), k * n);
+    auto end_itr = std::next(v.cbegin(), k * n + n);
+    vec[k].resize(n);
+
+    if (k * n + n > v.size()) {
+      end_itr = v.cend();
+      vec[k].resize(v.size() - k * n);
+    }
+    // copy elements from the input range to the sub-vector
+    std::copy(start_itr, end_itr, vec[k].begin());
+  }
+  */
+  uint16_t n = packetSize;
+  device_address forwarderDeviceAddress = mockGateway->getForwarderDeviceAddress();
+  uint64_t size = (v.size() - 1) / n + 1;
+  std::vector<std::vector<uint8_t>> vec;
   for (uint64_t k = 0; k < size; ++k) {
 
     auto start_itr = std::next(v.cbegin(), k * n);

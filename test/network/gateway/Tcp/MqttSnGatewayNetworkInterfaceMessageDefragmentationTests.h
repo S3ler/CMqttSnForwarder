@@ -67,8 +67,7 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
 
     gatewayToConnectAddress = a.gatewayToConnectAddress;
 
-    if (toTestMessageLength < 2 |
-        useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
+    if ((toTestMessageLength < 2) | useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
       GTEST_SKIP();
     }
 
@@ -140,8 +139,7 @@ class MqttSnGatewayNetworkInterfaceMessageDefragmentationTests
 
   virtual void TearDown() {
 
-    if (toTestMessageLength < 2 |
-        useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
+    if ((toTestMessageLength < 2) | useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
       GTEST_SKIP();
     }
 

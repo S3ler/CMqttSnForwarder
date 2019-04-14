@@ -59,7 +59,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
   device_address forwarderAddress = {0};
 
   virtual void SetUp() {
-    counter=0;
+    counter = 0;
 
     MqttSnClientNetworkTestValueParameter const &a = GetParam();
     MqttSnGatewayClientNetworkTestConfiguration p = a.mqttSnClientNetworkTestFixture;
@@ -72,8 +72,8 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
     useIdentifier = p.useIdentifier;
     forwarderAddress = p.forwarderAddress;
 
-    if (toTestMessageLength < 2 |
-        useIdentifier && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
+    if ((toTestMessageLength < 2) | useIdentifier
+        && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
       GTEST_SKIP();
     }
 
@@ -135,8 +135,8 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::TestWithParam<MqttSn
 
   virtual void TearDown() {
 
-    if (toTestMessageLength < 2 |
-        useIdentifier && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
+    if ((toTestMessageLength < 2) | useIdentifier
+        && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
       GTEST_SKIP();
     }
 

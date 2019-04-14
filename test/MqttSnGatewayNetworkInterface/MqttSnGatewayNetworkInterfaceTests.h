@@ -9,7 +9,8 @@
 #include <gmock/gmock.h>
 #include <GatewayNetworkMock.h>
 #include "../../forwarder/MqttSnFixedSizeRingBuffer.h"
-#include "../MqttSnForwarder/PlaceholderNetworkContext/FakeNetworkContext.h"
+#include "../../forwarder/MqttSnGatewayNetworkInterface.h"
+#include "../shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
 
 #ifndef GLOBAL_TEST_EXEC
 GatewayNetworkMock *globalGatewayNetworkMockObj = nullptr;
@@ -17,13 +18,17 @@ GatewayNetworkMock *globalGatewayNetworkMockObj = nullptr;
 extern GatewayNetworkMock *globalGatewayNetworkMockObj;
 #endif
 
+using ::testing::Return;
+using ::testing::_;
+using ::testing::Invoke;
+
 class MqttSnGatewayNetworkInterfaceTests : public ::testing::Test {
  public:
   MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   GatewayNetworkMock gatewayNetworkMock;
 
-  PlaceholderContext placeholderContext;
+  PlaceholderNetworkContext placeholderContext;
   void *gatewayNetworkContext = &placeholderContext;
 
   device_address forwarder_gateway_network_address;

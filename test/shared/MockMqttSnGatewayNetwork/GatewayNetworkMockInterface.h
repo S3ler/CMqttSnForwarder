@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_GATEWAYNETWORKMOCKINTERFACE_H
 
 #include <cstdint>
-#include "../../../forwarder/MqttSnFixedSizeRingBuffer.h"
+#include "MqttSnFixedSizeRingBuffer.h"
 
 class GatewayNetworkMockInterface {
  public:

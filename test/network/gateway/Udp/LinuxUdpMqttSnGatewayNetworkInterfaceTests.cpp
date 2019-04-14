@@ -15,7 +15,6 @@
 #include <TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h>
 #include "MockGatewayLinuxUdpNetworkImplementation.h"
 #include "../Tests/MqttSnGatewayNetworkInterfaceSendReceiveTests.h"
-#include "../../../MqttSnClientNetworkInterface/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h"
 
 MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock;
 std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>

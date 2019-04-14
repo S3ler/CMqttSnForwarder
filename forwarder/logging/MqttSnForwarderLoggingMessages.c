@@ -13,27 +13,27 @@ static const char *MQTT_SN_MESSAGE_TYPE_STRING[] = {
 
 int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags) {
 
-  uint8_t dup = MQTT_SN_DUP_FLAG(flags);
+  uint8_t dup = GET_MQTT_SN_DUP_FLAG(flags);
   log_dup_flag(logger, dup);
   log_comma(logger);
 
-  int8_t qos = MQTT_SN_QOS_FLAG(flags);
+  int8_t qos = GET_MQTT_SN_QOS_FLAG(flags);
   log_qos_flag(logger, qos);
   log_comma(logger);
 
-  uint8_t retain = MQTT_SN_RETAIN_FLAG(flags);
+  uint8_t retain = GET_MQTT_SN_RETAIN_FLAG(flags);
   log_retain_flag(logger, retain);
   log_comma(logger);
 
-  uint8_t will = MQTT_SN_WILL_FLAG(flags);
+  uint8_t will = GET_MQTT_SN_WILL_FLAG(flags);
   log_will_flag(logger, will);
   log_comma(logger);
 
-  uint8_t clean_session = MQTT_SN_CLEAN_SESSION(flags);
+  uint8_t clean_session = GET_MQTT_SN_CLEAN_SESSION(flags);
   log_clean_flag(logger, clean_session);
   log_comma(logger);
 
-  uint8_t topic_id_type = MQTT_SN_TOPIC_ID_TYPE(flags);
+  uint8_t topic_id_type = GET_MQTT_SN_TOPIC_ID_TYPE(flags);
   log_topic_id_type_flag(logger, topic_id_type);
   log_comma(logger);
 
@@ -173,7 +173,7 @@ int log_mqtt_sn_message(const MqttSnLogger *logger,
     return log_status(logger);
   }
   ParsedMqttSnHeader header = {0};
-  if (parse_message(&header, ANY_MESSAGE_TYPE, data, data_len)) {
+  if (parse_message_tolerant(&header, ANY_MESSAGE_TYPE, data, data_len)) {
     return log_status(logger);
   }
   log_msg_start(logger);
@@ -409,13 +409,13 @@ int log_subscribe_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *
   log_comma(logger);
   log_mqtt_sn_flags(logger, flags);
   log_comma(logger);
-  if (MQTT_SN_TOPIC_ID_TYPE(flags) == 0x00) { // topic name
+  if (GET_MQTT_SN_TOPIC_ID_TYPE(flags) == 0x00) { // topic name
     const char *topicName = s->topicNameOrTopicId.topicName;
     log_str(logger, topicName);
-  } else if (MQTT_SN_TOPIC_ID_TYPE(flags) == 0x01) { // pre-defined topic id
+  } else if (GET_MQTT_SN_TOPIC_ID_TYPE(flags) == 0x01) { // pre-defined topic id
     uint16_t pre_defined_topic_id = ntohs(s->topicNameOrTopicId.topicId);
     log_pre_defined_topic_id(logger, pre_defined_topic_id);
-  } else if (MQTT_SN_TOPIC_ID_TYPE(flags) == 0x02) {// short topic name
+  } else if (GET_MQTT_SN_TOPIC_ID_TYPE(flags) == 0x02) {// short topic name
     uint16_t short_topic_name = ntohs(s->topicNameOrTopicId.topicId);
     log_short_topic_name(logger, short_topic_name);
   }
@@ -455,13 +455,13 @@ int log_unsubscribe_message(const MqttSnLogger *logger, const ParsedMqttSnHeader
   log_comma(logger);
   log_mqtt_sn_flags(logger, flags);
   log_comma(logger);
-  if (MQTT_SN_TOPIC_ID_TYPE(flags) == 0x00) { // topic name
+  if (GET_MQTT_SN_TOPIC_ID_TYPE(flags) == 0x00) { // topic name
     const char *topicName = u->topicNameOrTopicId.topicName;
     log_str(logger, topicName);
-  } else if (MQTT_SN_TOPIC_ID_TYPE(flags) == 0x01) { // pre-defined topic id
+  } else if (GET_MQTT_SN_TOPIC_ID_TYPE(flags) == 0x01) { // pre-defined topic id
     uint16_t pre_defined_topic_id = ntohs(u->topicNameOrTopicId.topicId);
     log_pre_defined_topic_id(logger, pre_defined_topic_id);
-  } else if (MQTT_SN_TOPIC_ID_TYPE(flags) == 0x02) { // short topic name
+  } else if (GET_MQTT_SN_TOPIC_ID_TYPE(flags) == 0x02) { // short topic name
     uint16_t short_topic_name = ntohs(u->topicNameOrTopicId.topicId);
     log_short_topic_name(logger, short_topic_name);
   }

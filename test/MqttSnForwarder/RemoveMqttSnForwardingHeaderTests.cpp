@@ -6,9 +6,9 @@
 
 TEST_F(RemoveMqttSnForwardingHeaderTests, MinimalNotEncpsulatedMessageGatewayMessageData_ReturnsMinusOne1) {
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
-  gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address) + 2;
-  gatewayMessageData.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address) + 2;
-  gatewayMessageData.data[1] = 0;
+  gatewayMessageData.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false) + MQTT_SN_MINIMAL_MESSAGE_LENGTH;
+  gatewayMessageData.data[0] = gatewayMessageData.data_length;
+  gatewayMessageData.data[1] = PINGRESP;
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), -1);
 }
 
@@ -18,18 +18,8 @@ TEST_F(RemoveMqttSnForwardingHeaderTests, ZeroDataLengthGatewayMessageData_Retur
 }
 
 TEST_F(RemoveMqttSnForwardingHeaderTests,
-       GreaterThanCLIENT_NETWORK_MAX_DATA_LENDataLengthGatewayMessageData_ReturnsMinusOne) {
-  if (CLIENT_NETWORK_MAX_DATA_LEN >= UINT16_MAX) {
-    ASSERT_TRUE(false)
-                  << "GreaterThanCLIENT_NETWORK_MAX_DATA_LENDataLengthGatewayMessageData_ReturnsMinusOne is not testable.";
-  }
-  gatewayMessageData.data_length = CLIENT_NETWORK_MAX_DATA_LEN + 1;
-  EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), -1);
-}
-
-TEST_F(RemoveMqttSnForwardingHeaderTests,
-       SmallerThanCLIENT_NETWORK_MAX_DATA_LENDataLengthGatewayMessageData_ReturnsMinusOne) {
-  gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address) - 1;
+       GreaterThanCMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTHDataLengthGatewayMessageData_ReturnsMinusOne) {
+  gatewayMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH + 1;
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), -1);
 }
 
@@ -37,32 +27,33 @@ TEST_F(RemoveMqttSnForwardingHeaderTests,
        DataLengthGatewayMessageDataDoesNotEqualToMqttSnMessageLength_ReturnsMinusOne) {
 
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
-  gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
+  gatewayMessageData.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
   memset(&gatewayMessageData.data, 0, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH);
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), -1);
 
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
-  gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address) + 2;
-  gatewayMessageData.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
+  gatewayMessageData.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false) + MQTT_SN_MINIMAL_MESSAGE_LENGTH;
+  gatewayMessageData.data[0] = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), -1);
 }
 
 TEST_F(RemoveMqttSnForwardingHeaderTests, DataLengthGatewayMessageDataDoesEqualToMqttSnMessageLength_ReturnsZero) {
 
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
-  gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
-  gatewayMessageData.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
-  gatewayMessageData.data[1] = Encapsulated_message;
+  gatewayMessageData.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
+  gatewayMessageData.data[0] = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
+  gatewayMessageData.data[1] = ENCAPSULATED_MESSAGE;
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), 0);
 
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
-  gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address) + 2;
-  gatewayMessageData.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address) + 2;
-  gatewayMessageData.data[1] = Encapsulated_message;
+  gatewayMessageData.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false) + MQTT_SN_MINIMAL_MESSAGE_LENGTH;
+  gatewayMessageData.data[0] = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false) + MQTT_SN_MINIMAL_MESSAGE_LENGTH;
+  gatewayMessageData.data[1] = ENCAPSULATED_MESSAGE;
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), 0);
 }
 
-TEST_F(RemoveMqttSnForwardingHeaderTests, MQTTSNENCAPSULATIONMESSAGEContainedMqttSnMessageIsGreater255_ReturnsMinusOne) {
+TEST_F(RemoveMqttSnForwardingHeaderTests,
+       MQTTSNENCAPSULATIONMESSAGEContainedMqttSnMessageIsGreater255_ReturnsMinusOne) {
   // TODO: no validation if the MQTT-SN Encapsulation Message really contains a MQTT-SN Message
   GTEST_SKIP() << "Not such tests implemented yet.";
 }
@@ -75,9 +66,9 @@ TEST_F(RemoveMqttSnForwardingHeaderTests, MQTTSNENCAPSULATIONMESSAGEDoesNotConta
 TEST_F(RemoveMqttSnForwardingHeaderTests, MinimalGatewayMessageData_ReturnsZero) {
 
   memset(&gatewayMessageData, 0, sizeof(MqttSnMessageData));
-  gatewayMessageData.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
-  gatewayMessageData.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
-  gatewayMessageData.data[1] = Encapsulated_message;
+  gatewayMessageData.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
+  gatewayMessageData.data[0] = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
+  gatewayMessageData.data[1] = ENCAPSULATED_MESSAGE;
   EXPECT_EQ(RemoveMqttSnForwardingHeader(&gatewayMessageData, &clientMessageData), 0);
 }
 

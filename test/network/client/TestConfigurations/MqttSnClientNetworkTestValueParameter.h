@@ -33,8 +33,8 @@ class MqttSnClientNetworkTestValueParameter {
       : mockClientConfigurations(std::move(mockClientIdentifiers)),
         messageCount(messageCount),
         messageLength(messageLength),
-        mqttSnClientNetworkTestFixture(mqttSnClientNetworkTestFixture),
-        messageDataGenerator(msgDataGenerator) {}
+        messageDataGenerator(msgDataGenerator),
+        mqttSnClientNetworkTestFixture(mqttSnClientNetworkTestFixture) {}
 
   friend std::ostream &operator<<(std::ostream &os, const MqttSnClientNetworkTestValueParameter &parameter) {
     os << "mockClientCount" << parameter.mockClientConfigurations.size()

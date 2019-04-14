@@ -69,8 +69,8 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
     useIdentifier = p.useIdentifier;
     gatewayToConnectAddress = a.gatewayToConnectAddress;
 
-    if (toTestMessageLength < 2 |
-        useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
+    if ((toTestMessageLength < 2) | useIdentifier
+        && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
       GTEST_SKIP();
     }
 
@@ -159,8 +159,7 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
 
   virtual void TearDown() {
 
-    if (toTestMessageLength < 2 |
-        useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
+    if ((toTestMessageLength < 2) | useIdentifier && toTestMessageLength < (sizeof(mockGateway->getIdentifier())) + 1) {
       GTEST_SKIP();
     }
 
@@ -173,13 +172,11 @@ class MqttSnGatewayNetworkInterfaceSendReceiveTests
                              GetParam().mqttSnForwarderGatewayNetworkTestConfiguration.gatewayNetworkContext);
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-
     mockGateway->stop_loop();
     while (!mockGateway->getDone()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
 
     globalMqttSnFixedSizeRingBufferMockMap = nullptr;
     globalMqttSnFixedSizeRingBufferMock = nullptr;

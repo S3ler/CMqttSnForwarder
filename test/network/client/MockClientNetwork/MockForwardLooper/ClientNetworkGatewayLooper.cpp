@@ -7,17 +7,17 @@
 bool ClientNetworkGatewayLooper::startNetworkLoop(
     int (*clientNetworkReceive)(MqttSnClientNetworkInterface *,
                                 MqttSnFixedSizeRingBuffer *,
-                                uint32_t,
+                                int32_t,
                                 void *),
 
     int (*clientNetworkSend)(MqttSnClientNetworkInterface *,
                              MqttSnFixedSizeRingBuffer *,
-                             uint32_t,
+                             int32_t,
                              void *),
     MqttSnClientNetworkInterface *n,
     MqttSnFixedSizeRingBuffer *receiveBuffer,
     MqttSnFixedSizeRingBuffer *sendBuffer,
-    uint32_t timeout_ms,
+    int32_t timeout_ms,
     void *context) {
 
   if (clientNetworkReceive == nullptr || clientNetworkSend == nullptr) {
@@ -30,9 +30,6 @@ bool ClientNetworkGatewayLooper::startNetworkLoop(
     return false;
   }
   if (sendBuffer == nullptr) {
-    return false;
-  }
-  if (timeout_ms < 0) {
     return false;
   }
 

@@ -3,13 +3,7 @@
 //
 
 #include "MqttSnGatewayNetworkInterfaceTests.h"
-#include "../../forwarder/MqttSnGatewayNetworkInterface.h"
 
-#include "MockMqttSnGatewayNetwork/GatewayNetworkMock.h"
-
-using ::testing::Return;
-using ::testing::_;
-using ::testing::Invoke;
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, MqttSnGatewayNetworkInterfaceTests_AfterInitSucess_StatusIsZero) {
 

@@ -7,8 +7,8 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <ClientNetworkMock.h>
 #include "../../forwarder/MqttSnClientNetworkInterface.h"
-#include "MockMqttSnClientNetwork/ClientNetworkMock.h"
 
 #ifndef GLOBAL_TEST_EXEC
 ClientNetworkMock* globalClientNetworkMockObj = nullptr;

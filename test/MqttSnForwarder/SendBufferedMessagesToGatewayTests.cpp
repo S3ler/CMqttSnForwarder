@@ -3,6 +3,7 @@
 //
 
 #include "SendBufferedMessagesToGatewayTests.h"
+#include "../shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h"
 
 TEST_F(SendBufferedMessagesToGatewayTests,
        DISABLED_GatewayNetworkSendDoesNotEmptyGatewayNetworkSendBuffer_ProgrammStucks) {
@@ -153,7 +154,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       clientNetworkReceiveBufferMqttSnMessageCount + gatewayNetworkSendBufferMqttSnMessageCount;
 
   uint32_t clientNetworkReceiveBufferMqttSnMessageCounter = clientNetworkReceiveBufferMqttSnMessageCount;
-  uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
+  //uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
 
 
   EXPECT_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))
@@ -175,7 +176,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
               return -1;
             }
             clientNetworkReceiveBufferMqttSnMessageCounter--;
-            MqttSnMessageData mqttSnMessageData = generateM1MqttSnPublishMqttSnMessageData(
+            MqttSnMessageData mqttSnMessageData = MqttSnMessageDataGenerator::generateM1MqttSnPublishMqttSnMessageData(
                 static_cast<uint16_t >(clientNetworkReceiveBufferMqttSnMessageCounter % UINT16_MAX));
             memcpy(m, &mqttSnMessageData, sizeof(MqttSnMessageData));
             return 0;
@@ -208,7 +209,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       clientNetworkReceiveBufferMqttSnMessageCount + gatewayNetworkSendBufferMqttSnMessageCount;
 
   uint32_t clientNetworkReceiveBufferMqttSnMessageCounter = clientNetworkReceiveBufferMqttSnMessageCount;
-  uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
+  //uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
 
 
   EXPECT_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))
@@ -232,7 +233,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
               return -1;
             }
             clientNetworkReceiveBufferMqttSnMessageCounter--;
-            MqttSnMessageData mqttSnMessageData = generateM1MqttSnPublishMqttSnMessageData(
+            MqttSnMessageData mqttSnMessageData = MqttSnMessageDataGenerator::generateM1MqttSnPublishMqttSnMessageData(
                 static_cast<uint16_t >(clientNetworkReceiveBufferMqttSnMessageCounter % UINT16_MAX));
             memcpy(m, &mqttSnMessageData, sizeof(MqttSnMessageData));
             return 0;
@@ -266,7 +267,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       clientNetworkReceiveBufferMqttSnMessageCount + gatewayNetworkSendBufferMqttSnMessageCount;
 
   uint32_t clientNetworkReceiveBufferMqttSnMessageCounter = clientNetworkReceiveBufferMqttSnMessageCount;
-  uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
+  //uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
 
 
   EXPECT_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))
@@ -288,7 +289,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
               return -1;
             }
             clientNetworkReceiveBufferMqttSnMessageCounter--;
-            MqttSnMessageData mqttSnMessageData = generateM1MqttSnPublishMqttSnMessageData(
+            MqttSnMessageData mqttSnMessageData = MqttSnMessageDataGenerator::generateM1MqttSnPublishMqttSnMessageData(
                 static_cast<uint16_t >(clientNetworkReceiveBufferMqttSnMessageCounter % UINT16_MAX));
             memcpy(m, &mqttSnMessageData, sizeof(MqttSnMessageData));
             return 0;
@@ -322,7 +323,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       clientNetworkReceiveBufferMqttSnMessageCount + gatewayNetworkSendBufferMqttSnMessageCount;
 
   uint32_t clientNetworkReceiveBufferMqttSnMessageCounter = clientNetworkReceiveBufferMqttSnMessageCount;
-  uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
+  //uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
 
 
   EXPECT_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))
@@ -346,7 +347,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
               return -1;
             }
             clientNetworkReceiveBufferMqttSnMessageCounter--;
-            MqttSnMessageData mqttSnMessageData = generateM1MqttSnPublishMqttSnMessageData(
+            MqttSnMessageData mqttSnMessageData = MqttSnMessageDataGenerator::generateM1MqttSnPublishMqttSnMessageData(
                 static_cast<uint16_t >(clientNetworkReceiveBufferMqttSnMessageCounter % UINT16_MAX));
             memcpy(m, &mqttSnMessageData, sizeof(MqttSnMessageData));
             return 0;
@@ -381,7 +382,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       clientNetworkReceiveBufferMqttSnMessageCount + gatewayNetworkSendBufferMqttSnMessageCount;
 
   uint32_t clientNetworkReceiveBufferMqttSnMessageCounter = clientNetworkReceiveBufferMqttSnMessageCount;
-  uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
+  //uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
 
 
   EXPECT_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))
@@ -405,7 +406,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
               return -1;
             }
             clientNetworkReceiveBufferMqttSnMessageCounter--;
-            MqttSnMessageData mqttSnMessageData = generateM1MqttSnPublishMqttSnMessageData(
+            MqttSnMessageData mqttSnMessageData = MqttSnMessageDataGenerator::generateM1MqttSnPublishMqttSnMessageData(
                 static_cast<uint16_t >(clientNetworkReceiveBufferMqttSnMessageCounter % UINT16_MAX));
             memcpy(m, &mqttSnMessageData, sizeof(MqttSnMessageData));
             return 0;
@@ -438,7 +439,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       clientNetworkReceiveBufferMqttSnMessageCount + gatewayNetworkSendBufferMqttSnMessageCount;
 
   uint32_t clientNetworkReceiveBufferMqttSnMessageCounter = clientNetworkReceiveBufferMqttSnMessageCount;
-  uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
+  //uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
 
 
   EXPECT_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))
@@ -466,7 +467,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
               return -1;
             }
             clientNetworkReceiveBufferMqttSnMessageCounter--;
-            MqttSnMessageData mqttSnMessageData = generateM1MqttSnPublishMqttSnMessageData(
+            MqttSnMessageData mqttSnMessageData = MqttSnMessageDataGenerator::generateM1MqttSnPublishMqttSnMessageData(
                 static_cast<uint16_t >(clientNetworkReceiveBufferMqttSnMessageCounter % UINT16_MAX));
             memcpy(m, &mqttSnMessageData, sizeof(MqttSnMessageData));
             return 0;
@@ -503,12 +504,11 @@ TEST_F(SendBufferedMessagesToGatewayTests,
   uint32_t clientNetworkReceiveBufferMqttSnMessageCounter = clientNetworkReceiveBufferMqttSnMessageCount;
   uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
 
-
   EXPECT_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))
       .Times(1 + totalMqttSnMessageCounter)
       .WillRepeatedly(Invoke(
           [&clientNetworkReceiveBufferMqttSnMessageCounter]
-              (MqttSnFixedSizeRingBuffer *) -> int {
+              (const MqttSnFixedSizeRingBuffer *) -> int {
             if (clientNetworkReceiveBufferMqttSnMessageCounter == 0) {
               return 1;
             }
@@ -520,7 +520,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       .Times(1 + totalMqttSnMessageCounter)
       .WillRepeatedly(Invoke(
           [&gatewayNetworkSendBufferMqttSnMessageCounter]
-              (MqttSnFixedSizeRingBuffer *) -> int {
+              (const MqttSnFixedSizeRingBuffer *) -> int {
             if (gatewayNetworkSendBufferMqttSnMessageCounter == 0) {
               return 1;
             }
@@ -537,7 +537,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
               return -1;
             }
             clientNetworkReceiveBufferMqttSnMessageCounter--;
-            MqttSnMessageData mqttSnMessageData = generateM1MqttSnPublishMqttSnMessageData(
+            MqttSnMessageData mqttSnMessageData = MqttSnMessageDataGenerator::generateM1MqttSnPublishMqttSnMessageData(
                 static_cast<uint16_t >(clientNetworkReceiveBufferMqttSnMessageCounter % UINT16_MAX));
             memcpy(m, &mqttSnMessageData, sizeof(MqttSnMessageData));
             return 0;
@@ -611,7 +611,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       .Times(1 + totalMqttSnMessageCounter)
       .WillRepeatedly(Invoke(
           [&clientNetworkReceiveBufferMqttSnMessageCounter]
-              (MqttSnFixedSizeRingBuffer *) -> int {
+              (const MqttSnFixedSizeRingBuffer *) -> int {
             if (clientNetworkReceiveBufferMqttSnMessageCounter == 0) {
               return 1;
             }
@@ -623,7 +623,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       .Times(1 + totalMqttSnMessageCounter)
       .WillRepeatedly(Invoke(
           [&gatewayNetworkSendBufferMqttSnMessageCounter]
-              (MqttSnFixedSizeRingBuffer *) -> int {
+              (const MqttSnFixedSizeRingBuffer *) -> int {
             if (gatewayNetworkSendBufferMqttSnMessageCounter == 0) {
               return 1;
             }
@@ -640,7 +640,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
               return -1;
             }
             clientNetworkReceiveBufferMqttSnMessageCounter--;
-            MqttSnMessageData mqttSnMessageData = generateM1MqttSnPublishMqttSnMessageData(
+            MqttSnMessageData mqttSnMessageData = MqttSnMessageDataGenerator::generateM1MqttSnPublishMqttSnMessageData(
                 static_cast<uint16_t >(clientNetworkReceiveBufferMqttSnMessageCounter % UINT16_MAX));
             memcpy(m, &mqttSnMessageData, sizeof(MqttSnMessageData));
             return 0;

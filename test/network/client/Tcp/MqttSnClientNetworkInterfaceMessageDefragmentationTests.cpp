@@ -32,11 +32,34 @@ TEST_P(MqttSnClientNetworkInterfaceMessageDefragmentationTests, DefragmentationT
                std::make_move_iterator(data.data.end())
       );
     }
+    /*
+         uint16_t n = toTestPacketSize;
+      uint64_t size = (v.size() - 1) / n + 1;
+      ASSERT_EQ(size, global_size);     // TODO test if size is ok
+      std::vector<uint8_t> vec[size];
+      for (uint64_t k = 0; k < size; ++k) {
 
+        auto start_itr = std::next(v.cbegin(), k * n);
+        auto end_itr = std::next(v.cbegin(), k * n + n);
+        vec[k].resize(n);
+
+        if (k * n + n > v.size()) {
+          end_itr = v.cend();
+          vec[k].resize(v.size() - k * n);
+        }
+        // copy elements from the input range to the sub-vector
+        std::copy(start_itr, end_itr, vec[k].begin());
+      }
+      std::vector<std::vector<uint8_t>> vecList;
+      for (std::vector<uint8_t> v : vec) {
+        vecList.push_back(v);
+      }
+      vecs.push_back(vecList);
+     */
     uint16_t n = toTestPacketSize;
     uint64_t size = (v.size() - 1) / n + 1;
-    ASSERT_EQ(size, global_size);     // TODO test if size is ok
-    std::vector<uint8_t> vec[size];
+    ASSERT_EQ(size, global_size);
+    std::vector<std::vector<uint8_t>> vec;
     for (uint64_t k = 0; k < size; ++k) {
 
       auto start_itr = std::next(v.cbegin(), k * n);

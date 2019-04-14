@@ -22,26 +22,26 @@ class ComparableClientMqttSnMessageData {
 
   ComparableClientMqttSnMessageData(const MqttSnMessageData &mqttSnMessageData,
                                     bool useIdentifier = false)
-      : address(mqttSnMessageData.address),
+      : use_identifier(useIdentifier),
+        address(mqttSnMessageData.address),
         data_length(mqttSnMessageData.data_length),
-        use_identifier(useIdentifier),
         data(mqttSnMessageData.data, mqttSnMessageData.data + mqttSnMessageData.data_length) {}
 
   ComparableClientMqttSnMessageData(device_address *address,
                                     uint8_t *data,
                                     uint16_t data_length,
                                     bool useIdentifier)
-      : address(*address),
+      : use_identifier(useIdentifier),
+        address(*address),
         data_length(data_length),
-        use_identifier(useIdentifier),
         data(data, data + data_length) {}
 
   ComparableClientMqttSnMessageData(const uint16_t data_length,
                                     const device_address *address,
                                     const uint16_t identifier)
-      : address(*address),
+      : use_identifier(true),
+        address(*address),
         data_length(data_length),
-        use_identifier(true),
         data(generateMessageData(data_length, identifier, true)) {
   }
 
@@ -49,9 +49,9 @@ class ComparableClientMqttSnMessageData {
                                     const device_address *address,
                                     const uint16_t identifier,
                                     const bool useIdentifier)
-      : address(*address),
+      : use_identifier(useIdentifier),
+        address(*address),
         data_length(data_length),
-        use_identifier(useIdentifier),
         data(generateMessageData(data_length, identifier, true)) {
   }
 
@@ -98,10 +98,10 @@ class ComparableClientMqttSnMessageData {
 
   bool operator==(const ComparableClientMqttSnMessageData &rhs) const {
     if (use_identifier) {
-      return rhs.use_identifier == use_identifier & data_length == rhs.data_length & data == rhs.data;
+      return (rhs.use_identifier == use_identifier) && (data_length == rhs.data_length) && (data == rhs.data);
     }
-    return rhs.use_identifier == use_identifier & data_length == rhs.data_length & data == rhs.data &
-        (memcmp(address.bytes, rhs.address.bytes, sizeof(device_address)) == 0);
+    return (rhs.use_identifier == use_identifier) && (data_length == rhs.data_length) && (data == rhs.data)
+        && (memcmp(address.bytes, rhs.address.bytes, sizeof(device_address)) == 0);
 
   }
 

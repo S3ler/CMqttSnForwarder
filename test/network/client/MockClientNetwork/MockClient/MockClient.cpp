@@ -3,17 +3,26 @@
 //
 
 #include "MockClient.h"
-
+/*
+ *   uint16_t identifier;
+  MockClientNetworkReceiver *receiver;
+  std::thread thread;
+  device_address networkAddress;
+  std::atomic<bool> stopped{false};
+  std::atomic<bool> done{false};
+  MockClientNetworkInterface *mockClientNetworkInterface = nullptr;
+  device_address *forwarderAddress = nullptr;
+ */
 MockClient::MockClient(uint16_t identifier,
                        device_address networkAddress,
                        device_address *forwarderAddress,
                        MockClientNetworkInterface *mockClientNetworkInterface,
                        MockClientNetworkReceiver *receiver) :
     identifier(identifier),
+    receiver(receiver),
     networkAddress(networkAddress),
-    forwarderAddress(forwarderAddress),
     mockClientNetworkInterface(mockClientNetworkInterface),
-     receiver(receiver) {}
+    forwarderAddress(forwarderAddress) {}
 
 void MockClient::loop() {
   done = false;

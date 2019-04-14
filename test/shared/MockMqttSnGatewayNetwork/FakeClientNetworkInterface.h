@@ -7,8 +7,8 @@
 
 #include <cstdint>
 #include "GatewayNetworkMockInterface.h"
-#include "../../../forwarder/MqttSnFixedSizeRingBuffer.h"
-#include "../../../forwarder/MqttSnGatewayNetworkInterface.h"
+#include "MqttSnFixedSizeRingBuffer.h"
+#include "MqttSnGatewayNetworkInterface.h"
 
 class FakeGatewayNetworkInterface : public GatewayNetworkMockInterface {
  public:

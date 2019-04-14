@@ -11,7 +11,7 @@
 #include <MqttSnFixedSizeRingBufferMock.h>
 #include <gmock/gmock-nice-strict.h>
 #include <MqttSnForwarder.h>
-#include "PlaceholderNetworkContext/FakeNetworkContext.h"
+#include "../shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
 
 using ::testing::Return;
 using ::testing::Invoke;
@@ -32,12 +32,12 @@ class MqttSnForwarderInitTests : public ::testing::Test {
 
   MqttSnForwarder mqttSnForwarder;
   device_address client_network_address;
-  PlaceholderContext clientPlaceholderContext;
+  PlaceholderNetworkContext clientPlaceholderContext;
   void *clientNetworkContext = &clientPlaceholderContext;
 
   device_address gateway_network_address;
   device_address mqtt_sn_gateway_address;
-  PlaceholderContext gatewayPlaceholderContext;
+  PlaceholderNetworkContext gatewayPlaceholderContext;
   void *gatewayNetworkContext = &gatewayPlaceholderContext;
 
   std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *> mqttSnFixedSizeRingBufferMockMap;

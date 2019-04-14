@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_FAKENETWORKCONTEXT_H
 #define CMQTTSNFORWARDER_FAKENETWORKCONTEXT_H
 
-class PlaceholderContext {
+class PlaceholderNetworkContext {
   
 };
 

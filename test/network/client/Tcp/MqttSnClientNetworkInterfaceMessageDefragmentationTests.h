@@ -67,8 +67,8 @@ class MqttSnClientNetworkInterfaceMessageDefragmentationTests :
     toTestPacketSize = a.packetSize;
     useIdentifier = p.useIdentifier;
 
-    if (toTestMessageLength < 2 |
-        useIdentifier && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
+    if ((toTestMessageLength < 2) | useIdentifier
+        && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
       GTEST_SKIP();
     }
 
@@ -122,8 +122,8 @@ class MqttSnClientNetworkInterfaceMessageDefragmentationTests :
 
   virtual void TearDown() {
 
-    if (toTestMessageLength < 2 |
-        useIdentifier && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
+    if ((toTestMessageLength < 2) | useIdentifier
+        && toTestMessageLength < (sizeof(mockClients[0]->getIdentifier())) + 1) {
       GTEST_SKIP();
     }
 

@@ -7,11 +7,11 @@
 bool MockForwarderGatewayNetworkLooper::startNetworkLoop(
     int (*gatewayNetworkReceive)(MqttSnGatewayNetworkInterface *,
                                  MqttSnFixedSizeRingBuffer *,
-                                 uint32_t,
+                                 int32_t,
                                  void *),
     int (*gatewayNetworkSend)(MqttSnGatewayNetworkInterface *,
                               MqttSnFixedSizeRingBuffer *,
-                              uint32_t,
+                              int32_t,
                               void *),
     MqttSnGatewayNetworkInterface *n,
     MqttSnFixedSizeRingBuffer *receiveBuffer,
@@ -29,9 +29,6 @@ bool MockForwarderGatewayNetworkLooper::startNetworkLoop(
     return false;
   }
   if (sendBuffer == nullptr) {
-    return false;
-  }
-  if (timeout_ms < 0) {
     return false;
   }
 

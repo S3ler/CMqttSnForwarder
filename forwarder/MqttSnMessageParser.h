@@ -99,12 +99,14 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
 #define MQTT_SN_MESSAGE_TYPE_RESERVED(type) (type == RESERVED_03 || type == RESERVED_11 || type == RESERVED_19 \
                                             || (type >= RESERVED_1E && type <= RESERVED_FD) || type == RESERVED_FF)
 
-#define MQTT_SN_FLAG_DUP            0x80 // 0b1000 0000
-#define MQTT_SN_FLAG_QOS            0x60 // 0b0110 0000
-#define MQTT_SN_FLAG_RETAIN         0x10 // 0b0001 0000
-#define MQTT_SN_FLAG_WILL           0x08 // 0b0000 1000
-#define MQTT_SN_FLAG_CLEAN_SESSION  0x04 // 0b0000 0100
-#define MQTT_SN_FLAG_TOPIC_ID_TYPE  0x03 // 0b0000 0011
+#define MQTT_SN_FLAG_LENGTH             1
+
+#define MQTT_SN_FLAG_DUP_POS            0x80 // 0b1000 0000
+#define MQTT_SN_FLAG_QOS_POS            0x60 // 0b0110 0000
+#define MQTT_SN_FLAG_RETAIN_POS         0x10 // 0b0001 0000
+#define MQTT_SN_FLAG_WILL_POS           0x08 // 0b0000 1000
+#define MQTT_SN_FLAG_CLEAN_SESSION_POS  0x04 // 0b0000 0100
+#define MQTT_SN_FLAG_TOPIC_ID_TYPE_POS  0x03 // 0b0000 0011
 
 #define MQTT_SN_FLAG_DUP_SHIFT            7
 #define MQTT_SN_FLAG_QOS_SHIFT            5
@@ -113,23 +115,94 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
 #define MQTT_SN_FLAG_CLEAN_SESSION_SHIFT  2
 #define MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT  0
 
-#define MQTT_SN_DUP_FLAG(flags)       ((flags & MQTT_SN_FLAG_DUP) >> MQTT_SN_FLAG_DUP_SHIFT)
-#define MQTT_SN_QOS_FLAG(flags)       ((flags & MQTT_SN_FLAG_QOS) >> MQTT_SN_FLAG_QOS_SHIFT)
-#define MQTT_SN_RETAIN_FLAG(flags)    ((flags & MQTT_SN_FLAG_RETAIN) >> MQTT_SN_FLAG_RETAIN_SHIFT) == 2 ? \
-                                      -1 : ((flags & MQTT_SN_FLAG_RETAIN) >> MQTT_SN_FLAG_RETAIN_SHIFT)
-#define MQTT_SN_WILL_FLAG(flags)      ((flags & MQTT_SN_FLAG_WILL) >> MQTT_SN_FLAG_WILL_SHIFT)
-#define MQTT_SN_CLEAN_SESSION(flags)  ((flags & MQTT_SN_FLAG_CLEAN_SESSION) >> MQTT_SN_FLAG_CLEAN_SESSION_SHIFT)
-#define MQTT_SN_TOPIC_ID_TYPE(flags)  ((flags & MQTT_SN_FLAG_TOPIC_ID_TYPE) >> MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT)
+#define GET_MQTT_SN_DUP_FLAG(flags)       ((flags & MQTT_SN_FLAG_DUP_POS) >> MQTT_SN_FLAG_DUP_SHIFT)
+#define GET_MQTT_SN_QOS_FLAG(flags)       ((flags & MQTT_SN_FLAG_QOS_POS) >> MQTT_SN_FLAG_QOS_SHIFT)
+#define GET_MQTT_SN_RETAIN_FLAG(flags)    ((flags & MQTT_SN_FLAG_RETAIN_POS) >> MQTT_SN_FLAG_RETAIN_SHIFT) == 2 ? \
+                                            -1 : ((flags & MQTT_SN_FLAG_RETAIN_POS) >> MQTT_SN_FLAG_RETAIN_SHIFT)
+#define GET_MQTT_SN_WILL_FLAG(flags)      ((flags & MQTT_SN_FLAG_WILL_POS) >> MQTT_SN_FLAG_WILL_SHIFT)
+#define GET_MQTT_SN_CLEAN_SESSION(flags)  ((flags & MQTT_SN_FLAG_CLEAN_SESSION_POS) >> MQTT_SN_FLAG_CLEAN_SESSION_SHIFT)
+#define GET_MQTT_SN_TOPIC_ID_TYPE(flags)  ((flags & MQTT_SN_FLAG_TOPIC_ID_TYPE_POS) >> MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT)
 
-#define MQTT_SN_HEADER_OFFSET_LENGTH(indicator)                 (indicator ? 4 : 2)
-#define MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE_LENGTH          1
-#define MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(indicator)  (MQTT_SN_HEADER_OFFSET_LENGTH(indicator) \
-                                                                 + MQTT_SN_ENCAPSULATION_MESSAGE_CRTL_BYTE_LENGTH \
-                                                                 + sizeof(device_address))
+#define MQTT_SN_FLAG_DUP_FIRST_TIME     0x00 // 0b0
+#define MQTT_SN_FLAG_DUB_RETRANSMITTED  0x01 // 0b1
+
+#define MQTT_SN_FLAG_QOS_M1 0x03 // 0b11
+#define MQTT_SN_FLAG_QOS_2  0x02 // 0b10
+#define MQTT_SN_FLAG_QOS_1  0x01 // 0b01
+#define MQTT_SN_FLAG_QOS_0  0x00 // 0b00
+
+#define MQTT_SN_FLAG_RETAIN_TRUE  0x01 // 0b1
+#define MQTT_SN_FLAG_RETAIN_FALSE 0x00 // 0b0
+
+#define MQTT_SN_FLAG_WILL_TRUE 0x01 // 0b01
+#define MQTT_SN_FLAG_WILL_FALSE 0x01 // 0b01
+
+#define MQTT_SN_FLAG_CLEAN_SESSION_TRUE   0x01 // 0b1
+#define MQTT_SN_FLAG_CLEAN_SESSION_FALSE  0x00 // 0b0
+
+#define MQTT_SN_FLAG_TOPIC_ID_TYPE_RESERVED             0x03 // 0b11
+#define MQTT_SN_FLAG_TOPIC_ID_TYPE_SHORT_TOPIC_NAME     0x02 // 0b10
+#define MQTT_SN_FLAG_TOPIC_ID_TYPE_PREDEFINED_TOPIC_ID  0x01 // 0b01
+#define MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME           0x00 // 0b00
+
+#define SET_MQTT_SN_DUP_FLAG_FIRST_TIME(flags)    ((MQTT_SN_FLAG_DUP_FIRST_TIME << MQTT_SN_FLAG_DUP_SHIFT) | flags)
+#define SET_MQTT_SN_DUP_FLAG_RETRANSMITTED(flags) ((MQTT_SN_FLAG_DUB_RETRANSMITTED << MQTT_SN_FLAG_DUP_SHIFT) | flags)
+
+#define SET_MQTT_SN_FLAG_QOS_M1(flags)  ((MQTT_SN_FLAG_QOS_M1 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_QOS_2(flags)   ((MQTT_SN_FLAG_QOS_2 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_QOS_1(flags)   ((MQTT_SN_FLAG_QOS_1 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_QOS_0(flags)   ((MQTT_SN_FLAG_QOS_0 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
+
+#define SET_MQTT_SN_FLAG_RETAIN_TRUE(flags) ((MQTT_SN_FLAG_RETAIN_TRUE << MQTT_SN_FLAG_RETAIN_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_RETAIN_FALSE(flags) ((MQTT_SN_FLAG_RETAIN_FALSE << MQTT_SN_FLAG_RETAIN_SHIFT) | flags)
+
+#define SET_MQTT_SN_FLAG_WILL_TRUE(flags) ((MQTT_SN_FLAG_WILL_TRUE << MQTT_SN_FLAG_WILL_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_WILL_FALSE(flags) ((MQTT_SN_FLAG_CLEAN_SESSION_FALSE << MQTT_SN_FLAG_WILL_SHIFT) | flags)
+
+#define SET_MQTT_SN_CLEAN_SESSION_TRUE(flags) ((MQTT_SN_FLAG_CLEAN_SESSION_TRUE << MQTT_SN_FLAG_CLEAN_SESSION_SHIFT) | flags)
+#define SET_MQTT_SN_CLEAN_SESSION_FALSE(flags) ((MQTT_SN_FLAG_CLEAN_SESSION_FALSE << MQTT_SN_FLAG_CLEAN_SESSION_SHIFT) | flags)
+
+#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_RESERVED(flags)              ((MQTT_SN_FLAG_TOPIC_ID_TYPE_RESERVED << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_SHORT_TOPIC_NAME(flags)      ((MQTT_SN_FLAG_TOPIC_ID_TYPE_SHORT_TOPIC_NAME << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_PREDEFINED_TOPIC_ID(flags)   ((MQTT_SN_FLAG_TOPIC_ID_TYPE_PREDEFINED_TOPIC_ID << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME(flags)            ((MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
+
 #define MQTT_SN_PINGREQ_MESSAGE_HEADER_LENGTH 2
 #define MQTT_SN_GWINFO_MESSAGE_HEADER_LENGTH 3
 #define MQTT_SN_MAX_CLIENT_ID_STRING_LENGTH 23 // without null terminator
 #define MQTT_SN_MAX_CLIENT_ID_LENGTH 24 // including null terminator
+
+#define MQTT_SN_HEADER_LENGTH(indicator)                        (indicator ? 4 : 2)
+
+#define MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BYTE_LENGTH           1
+#define MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(indicator)   (MQTT_SN_HEADER_LENGTH(indicator) \
+                                                                 + MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BYTE_LENGTH \
+                                                                 + sizeof(device_address))
+
+#define MQTT_SN_PINGRESP_MESSAGE_HEADER_LENGTH  sizeof(MqttSnMessagePingResp)
+#define MQTT_SN_MINIMAL_MESSAGE_LENGTH          MQTT_SN_PINGRESP_MESSAGE_HEADER_LENGTH
+#define MQTT_SN_MAXIMUM_MESSAGE_LENGTH          UINT16_MAX
+
+#define MQTT_SN_TOPIC_ID_LENGTH   2
+#define MQTT_SN_MESSAGE_ID_LENGTH 2
+#define MQTT_SN_PUBLISH_MESSAGE_WO_HEADER_LENGTH (MQTT_SN_FLAG_LENGTH + MQTT_SN_TOPIC_ID_LENGTH + MQTT_SN_MESSAGE_ID_LENGTH)
+#define MQTT_SN_PUBLISH_MESSAGE_HEADER_LENGTH(indicator) (MQTT_SN_HEADER_LENGTH(indicator) + MQTT_SN_PUBLISH_MESSAGE_WO_HEADER_LENGTH)
+
+#pragma pack(push)
+#pragma pack(1)
+typedef struct MqttSnMessageHeaderOneOctetLengthField_ {
+  uint8_t length;
+  uint8_t msg_type;
+} MqttSnMessageHeaderOneOctetLengthField;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MqttSnMessageHeaderThreeOctetsLengthField_ {
+  uint8_t indicator;
+  uint16_t length;
+  uint8_t msg_type;
+} MqttSnMessageHeaderThreeOctetsLengthField;
+#pragma pack(pop)
 
 #pragma pack(push, 1)
 typedef struct MqttSnAdvertise_ {
@@ -151,22 +224,6 @@ typedef struct MqttSnGwInfo_ {
 } MqttSnGwInfo;
 #pragma pack(pop)
 
-#pragma pack(push)
-#pragma pack(1)
-typedef struct MqttSnMessageHeaderOneOctetLengthField {
-  uint8_t length;
-  uint8_t msg_type;
-} MqttSnMessageHeaderOneOctetLengthField;
-#pragma pack(pop)
-
-#pragma pack(push, 1)
-typedef struct MqttSnMessageHeaderThreeOctetsLengthField {
-  uint8_t indicator;
-  uint16_t length;
-  uint8_t msg_type;
-} MqttSnMessageHeaderThreeOctetsLengthField;
-#pragma pack(pop)
-
 #pragma pack(push, 1)
 typedef struct ParsedMqttSnHeader_ {
   uint8_t indicator;
@@ -181,7 +238,7 @@ typedef struct MqttSnMessagePublish_ {
   uint8_t flags;
   uint16_t topicId;
   uint16_t msgId;
-  uint16_t *data;
+  uint8_t *data;
 } MqttSnMessagePublish;
 #pragma pack(pop)
 
@@ -268,6 +325,13 @@ typedef struct MqttSnMessagePingReq_ {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
+typedef struct MqttSnMessagePingResp_ {
+  uint8_t length;
+  uint8_t msgType;
+} MqttSnMessagePingResp;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
 typedef struct MqttSnMessageDisconnect_ {
   uint16_t duration;
 } MqttSnMessageDisconnect;
@@ -277,13 +341,16 @@ typedef struct MqttSnMessageDisconnect_ {
 typedef struct MqttSnEncapsulatedMessage_ {
   uint8_t crtl;
   device_address wireless_node_id;
-  void* mqtt_sn_message;
+  void *mqtt_sn_message;
 } MqttSnEncapsulatedMessage;
 #pragma pack(pop)
 
 int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
-int parse_message(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const uint8_t *data, uint16_t data_len);
+int parse_message_tolerant(ParsedMqttSnHeader *h,
+                           MQTT_SN_MESSAGE_TYPE msg_type,
+                           const uint8_t *data,
+                           uint16_t data_len);
 
 int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
@@ -302,5 +369,16 @@ MQTT_SN_MESSAGE_TYPE get_mqtt_sn_message_type(const uint8_t *data);
 int is_valid_three_bytes_header(const uint8_t *data, ssize_t data_len);
 
 uint8_t is_three_bytes_header(const uint8_t *data);
+
+int generate_publish(uint8_t *dst,
+                     uint16_t dst_len,
+                     uint8_t dup,
+                     int8_t qos,
+                     uint8_t retain,
+                     uint8_t topic_id_type,
+                     uint16_t msg_id,
+                     uint32_t topic_id,
+                     uint8_t *data,
+                     uint16_t data_len);
 
 #endif //CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H

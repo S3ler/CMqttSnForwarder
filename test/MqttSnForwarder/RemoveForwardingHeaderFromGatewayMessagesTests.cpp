@@ -136,9 +136,9 @@ TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests,
   auto setMqttSnMessageDataDataLengthToMinimumSize =
       [](MqttSnFixedSizeRingBuffer *clientNetworkReceiveBuffer, MqttSnMessageData *gatewayMessageData) -> int {
         MqttSnMessageData mqttSnMessageDataDataLengthMinimumSize = {0};
-        mqttSnMessageDataDataLengthMinimumSize.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
-        mqttSnMessageDataDataLengthMinimumSize.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
-        mqttSnMessageDataDataLengthMinimumSize.data[1] = Encapsulated_message;
+        mqttSnMessageDataDataLengthMinimumSize.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
+        mqttSnMessageDataDataLengthMinimumSize.data[0] = mqttSnMessageDataDataLengthMinimumSize.data_length;
+        mqttSnMessageDataDataLengthMinimumSize.data[1] = ENCAPSULATED_MESSAGE;
         memcpy(gatewayMessageData, &mqttSnMessageDataDataLengthMinimumSize, sizeof(MqttSnMessageData));
         return 0;
       };
@@ -161,9 +161,9 @@ TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests,
   auto setMqttSnMessageDataDataLengthToMinimumSize =
       [](MqttSnFixedSizeRingBuffer *clientNetworkReceiveBuffer, MqttSnMessageData *gatewayMessageData) -> int {
         MqttSnMessageData mqttSnMessageDataDataLengthMinimumSize = {0};
-        mqttSnMessageDataDataLengthMinimumSize.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
-        mqttSnMessageDataDataLengthMinimumSize.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
-        mqttSnMessageDataDataLengthMinimumSize.data[1] = Encapsulated_message;
+        mqttSnMessageDataDataLengthMinimumSize.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
+        mqttSnMessageDataDataLengthMinimumSize.data[0] = mqttSnMessageDataDataLengthMinimumSize.data_length;
+        mqttSnMessageDataDataLengthMinimumSize.data[1] = ENCAPSULATED_MESSAGE;
         memcpy(gatewayMessageData, &mqttSnMessageDataDataLengthMinimumSize, sizeof(MqttSnMessageData));
         return 0;
       };
@@ -186,9 +186,9 @@ TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests,
   auto setMqttSnMessageDataDataLengthToMinimumSize =
       [](MqttSnFixedSizeRingBuffer *clientNetworkReceiveBuffer, MqttSnMessageData *gatewayMessageData) -> int {
         MqttSnMessageData mqttSnMessageDataDataLengthMinimumSize = {0};
-        mqttSnMessageDataDataLengthMinimumSize.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
-        mqttSnMessageDataDataLengthMinimumSize.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
-        mqttSnMessageDataDataLengthMinimumSize.data[1] = Encapsulated_message;
+        mqttSnMessageDataDataLengthMinimumSize.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
+        mqttSnMessageDataDataLengthMinimumSize.data[0] = mqttSnMessageDataDataLengthMinimumSize.data_length;
+        mqttSnMessageDataDataLengthMinimumSize.data[1] = ENCAPSULATED_MESSAGE;
         memcpy(gatewayMessageData, &mqttSnMessageDataDataLengthMinimumSize, sizeof(MqttSnMessageData));
         return 0;
       };
@@ -215,9 +215,9 @@ TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests,
   auto setMqttSnMessageDataDataLengthToMinimumSize =
       [](MqttSnFixedSizeRingBuffer *clientNetworkReceiveBuffer, MqttSnMessageData *gatewayMessageData) -> int {
         MqttSnMessageData mqttSnMessageDataDataLengthMinimumSize = {0};
-        mqttSnMessageDataDataLengthMinimumSize.data_length = FORWARDER_HEADER_LEN + sizeof(device_address);
-        mqttSnMessageDataDataLengthMinimumSize.data[0] = FORWARDER_HEADER_LEN + sizeof(device_address);
-        mqttSnMessageDataDataLengthMinimumSize.data[1] = Encapsulated_message;
+        mqttSnMessageDataDataLengthMinimumSize.data_length = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false);
+        mqttSnMessageDataDataLengthMinimumSize.data[0] = mqttSnMessageDataDataLengthMinimumSize.data_length;
+        mqttSnMessageDataDataLengthMinimumSize.data[1] = ENCAPSULATED_MESSAGE;
         memcpy(gatewayMessageData, &mqttSnMessageDataDataLengthMinimumSize, sizeof(MqttSnMessageData));
         return 0;
       };

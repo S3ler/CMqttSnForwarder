@@ -280,9 +280,9 @@ int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData, MqttSnMe
   ParsedMqttSnHeader encapsulatedMessageHeader = {0};
   if (parse_header(&encapsulatedMessageHeader,
                    gatewayMessageData->data
-                       + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator),
+                       + MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator),
                    gatewayMessageHeader.length
-                       - MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator))) {
+                       - MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator))) {
     // not valid header in encapsulated message
     return -1;
   }
@@ -293,7 +293,7 @@ int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData, MqttSnMe
   clientMessageData->data_length = encapsulatedMessageHeader.length;
 
   memcpy(clientMessageData->data,
-         gatewayMessageData->data + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator),
+         gatewayMessageData->data + MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator),
          encapsulatedMessageHeader.length);
   return 0;
 }
@@ -305,12 +305,12 @@ int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessag
     return -1;
   }
 
-  if (clientMessageHeader.length + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator)
+  if (clientMessageHeader.length + MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator)
       > CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {
     return -1;
   }
   gatewayMessageData->data_length = clientMessageHeader.length
-      + MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator);
+      + MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator);
   gatewayMessageData->address = clientMessageData->address;
 
   if (clientMessageHeader.indicator) {
@@ -327,11 +327,11 @@ int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessag
   }
 
   MqttSnEncapsulatedMessage *encapsulatedMessage = (MqttSnEncapsulatedMessage *) (gatewayMessageData->data
-      + MQTT_SN_HEADER_OFFSET_LENGTH(clientMessageHeader.indicator));
-  encapsulatedMessage->crtl = 5;
+      + MQTT_SN_HEADER_LENGTH(clientMessageHeader.indicator));
+  encapsulatedMessage->crtl = 0;
   memcpy(&encapsulatedMessage->wireless_node_id, &clientMessageData->address, sizeof(device_address));
 
-  memcpy(&gatewayMessageData->data[MQTT_SN_ENCAPSULATION_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator)],
+  memcpy(&gatewayMessageData->data[MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(clientMessageHeader.indicator)],
          clientMessageData->data,
          clientMessageHeader.length);
   return 0;
