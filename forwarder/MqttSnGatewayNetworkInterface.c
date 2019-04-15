@@ -42,7 +42,6 @@ int GatewayNetworkConnect(MqttSnGatewayNetworkInterface *n, void *context) {
       n->gateway_network_connect != NULL &&
       n->gateway_network_connect(n, context) == 0) {
     n->status = 2;
-    return 0;
   } else {
     n->status = -1;
   }
@@ -54,7 +53,7 @@ int GatewayNetworkConnect(MqttSnGatewayNetworkInterface *n, void *context) {
 }
 
 void GatewayNetworkDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
-  if (n->gateway_network_disconnect != 0) {
+  if (n->gateway_network_disconnect != NULL) {
     n->gateway_network_disconnect(n, context);
   }
   n->status = -1;

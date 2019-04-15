@@ -7,8 +7,6 @@
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, MqttSnGatewayNetworkInterfaceTests_AfterInitSucess_StatusIsOne) {
 
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
-
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
       .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
@@ -23,8 +21,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, MqttSnGatewayNetworkInterfaceTests_Af
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_MqttSnGatewayNetworkAddressIsSet) {
-
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
@@ -41,8 +37,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_MqttSnGatewayNetworkA
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkAddressIsSet) {
 
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
-
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
       .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
@@ -57,8 +51,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkAddress
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkInitIsSet) {
-
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
@@ -75,8 +67,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkInitIsS
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkInitIsCalled) {
 
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
-
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
       .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
@@ -89,8 +79,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkInitIsC
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, MqttSnGatewayNetworkInterfaceTests_InitSucess_ReturnsZero) {
-
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
@@ -105,7 +93,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, MqttSnGatewayNetworkInterfaceTests_In
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitFails_ReturnsMinusOne) {
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
@@ -119,7 +106,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitFails_ReturnsM
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitFails_StatusIsMinusOne) {
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
@@ -135,7 +121,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitFails_StatusIs
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitIsCalledSuccess_GatewayNetworkInitIsSet) {
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
@@ -151,7 +136,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitIsCalledSucces
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitIsCalledSuccess_GatewayNetworkConnectIsSet) {
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
@@ -167,7 +151,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitIsCalledSucces
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitIsCalledSuccess_GatewayNetworkDisconnectIsSet) {
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
@@ -185,8 +168,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitIsCalledSucces
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        AfterGatewayNetworkInitIsCalledSuccess_GatewayNetworkReceiveIsSet) {
 
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
-
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
       .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
@@ -203,8 +184,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        AfterGatewayNetworkInitIsCalledSuccess_GatewayNetworkSendIsSet) {
 
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
-
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
       .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
@@ -220,8 +199,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkConnectSuccess_GatewayNetworkConnectIsCalled) {
-
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
@@ -247,8 +224,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkConnectSuccess_ReturnsZero) {
 
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
-
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
       .Times(1)
@@ -272,8 +247,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkConnectSuccess_StatusIsTwo) {
-
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
@@ -301,8 +274,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkConnectFails_ReturnsMinusOne) {
 
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
-
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
       .Times(1)
@@ -327,8 +298,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkConnectFails_StatusIsMinusOne) {
-
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
@@ -356,8 +325,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkConnectCalledBeforeInit_GatewayNetworkConnectIsNotCalled) {
 
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
-
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
       .Times(0);
@@ -371,8 +338,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkConnectCalledBeforeInit_ReturnsMinusOne) {
-
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   GatewayNetworkConnect(&mqttSnGatewayNetworkInterface, gatewayNetworkContext);
 
@@ -389,8 +354,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkConnectCalledBeforeInit_StatusIsZero) {
-
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   GatewayNetworkConnect(&mqttSnGatewayNetworkInterface, gatewayNetworkContext);
 
@@ -409,7 +372,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkDisonnectCalledBeforeInit_GatewayNetworkDisconnectIsNotCalled) {
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   GatewayNetworkConnect(&mqttSnGatewayNetworkInterface, gatewayNetworkContext);
 
@@ -428,8 +390,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkDisonnectCalledBeforeInit_StatusIsMinusOne) {
 
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
-
   GatewayNetworkConnect(&mqttSnGatewayNetworkInterface, gatewayNetworkContext);
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
@@ -447,8 +407,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkDisonnectCalled_GatewayNetworkDisconnectIsCalled) {
-
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
@@ -469,7 +427,6 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
        GatewayNetworkDisonnectCalled_StatusIsMinusOne) {
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)

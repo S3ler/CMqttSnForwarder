@@ -24,7 +24,6 @@ using ::testing::Invoke;
 
 class MqttSnGatewayNetworkInterfaceTests : public ::testing::Test {
  public:
-  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   GatewayNetworkMock gatewayNetworkMock;
 
@@ -33,14 +32,19 @@ class MqttSnGatewayNetworkInterfaceTests : public ::testing::Test {
 
   device_address forwarder_gateway_network_address;
   device_address mqtt_sn_gateway_network_address;
+  MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface;
 
   virtual void SetUp() {
     globalGatewayNetworkMockObj = &gatewayNetworkMock;
-    memset(&forwarder_gateway_network_address, 0, sizeof(device_address));
-    memset(&mqtt_sn_gateway_network_address, 0, sizeof(device_address));
+    memset(&mqttSnGatewayNetworkInterface, 0, sizeof(MqttSnGatewayNetworkInterface));
+    memset(&forwarder_gateway_network_address, 1, sizeof(device_address));
+    memset(&mqtt_sn_gateway_network_address, 2, sizeof(device_address));
   }
 
   virtual void TearDown() {
+    memset(&mqttSnGatewayNetworkInterface, 0, sizeof(MqttSnGatewayNetworkInterface));
+    memset(&forwarder_gateway_network_address, 0, sizeof(device_address));
+    memset(&mqtt_sn_gateway_network_address, 0, sizeof(device_address));
     globalGatewayNetworkMockObj = nullptr;
   }
 
