@@ -5,13 +5,13 @@
 #include "MqttSnGatewayNetworkInterfaceTests.h"
 
 
-TEST_F(MqttSnGatewayNetworkInterfaceTests, MqttSnGatewayNetworkInterfaceTests_AfterInitSucess_StatusIsZero) {
+TEST_F(MqttSnGatewayNetworkInterfaceTests, MqttSnGatewayNetworkInterfaceTests_AfterInitSucess_StatusIsOne) {
 
   MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Return(0));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -19,7 +19,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, MqttSnGatewayNetworkInterfaceTests_Af
                                gatewayNetworkContext,
                                mock_gateway_network_init), 0);
 
-  EXPECT_EQ(mqttSnGatewayNetworkInterface.status, 0);
+  EXPECT_EQ(mqttSnGatewayNetworkInterface.status, 1);
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_MqttSnGatewayNetworkAddressIsSet) {
@@ -28,7 +28,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_MqttSnGatewayNetworkA
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Return(0));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -45,7 +45,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkAddress
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Return(0));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -62,7 +62,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkInitIsS
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Return(0));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -79,7 +79,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkInitIsC
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Return(0));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -94,7 +94,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, MqttSnGatewayNetworkInterfaceTests_In
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Return(0));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   EXPECT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -109,7 +109,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitFails_ReturnsM
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Return(-1));
+      .WillOnce(Invoke(fakeGatewayNetworkInitFail));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -123,7 +123,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitFails_StatusIs
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Return(-1));
+      .WillOnce(Invoke(fakeGatewayNetworkInitFail));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -139,7 +139,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitIsCalledSucces
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -155,7 +155,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitIsCalledSucces
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -171,7 +171,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterGatewayNetworkInitIsCalledSucces
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -189,7 +189,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -207,7 +207,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -226,7 +226,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -252,7 +252,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -271,14 +271,14 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
-       GatewayNetworkConnectSuccess_StatusIsOne) {
+       GatewayNetworkConnectSuccess_StatusIsTwo) {
 
   MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -295,7 +295,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
   ASSERT_EQ(GatewayNetworkConnect(&mqttSnGatewayNetworkInterface, gatewayNetworkContext), 0);
 
-  EXPECT_EQ(mqttSnGatewayNetworkInterface.status, 1);
+  EXPECT_EQ(mqttSnGatewayNetworkInterface.status, 2);
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
@@ -306,7 +306,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -333,7 +333,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface,
                                                        gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -388,7 +388,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
-       GatewayNetworkConnectCalledBeforeInit_StatusIsMinusOne) {
+       GatewayNetworkConnectCalledBeforeInit_StatusIsZero) {
 
   MqttSnGatewayNetworkInterface mqttSnGatewayNetworkInterface = {0};
 
@@ -404,7 +404,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
   ASSERT_EQ(GatewayNetworkConnect(&mqttSnGatewayNetworkInterface, gatewayNetworkContext), -1);
 
-  EXPECT_EQ(mqttSnGatewayNetworkInterface.status, -1);
+  EXPECT_EQ(mqttSnGatewayNetworkInterface.status, 0);
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests,
@@ -452,7 +452,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,
@@ -473,7 +473,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests,
 
   EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnGatewayNetworkInterface, gatewayNetworkContext))
       .Times(1)
-      .WillOnce(Invoke(fakeGatewayNetworkInitFunction));
+      .WillOnce(Invoke(fakeGatewayNetworkInitSuccess));
 
   ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                                &forwarder_gateway_network_address,

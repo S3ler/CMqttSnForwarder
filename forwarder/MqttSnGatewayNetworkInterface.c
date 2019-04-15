@@ -22,27 +22,35 @@ int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
     assert(n->gateway_network_disconnect != NULL);
     assert(n->gateway_network_send != NULL);
     assert(n->gateway_network_receive != NULL);
-    n->status = 0;
+    n->status = 1;
   } else {
     n->status = -1;
   }
-  return n->status;
+
+  if (n->status != 1) {
+    return -1;
+  }
+  return 0;
 }
 
 int GatewayNetworkConnect(MqttSnGatewayNetworkInterface *n, void *context) {
-  if (n->status < 0) {
+  if (n->status != 1) {
     return -1;
   }
   assert(n->gateway_network_connect != NULL);
-  if (n->status == 0 &&
-      n->gateway_network_connect != 0 &&
+  if (n->status == 1 &&
+      n->gateway_network_connect != NULL &&
       n->gateway_network_connect(n, context) == 0) {
-    n->status = 1;
+    n->status = 2;
     return 0;
   } else {
     n->status = -1;
   }
-  return n->status;
+
+  if (n->status != 2) {
+    return -1;
+  }
+  return 0;
 }
 
 void GatewayNetworkDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
@@ -56,27 +64,35 @@ int GatewayNetworkSend(struct MqttSnGatewayNetworkInterface *n,
                        MqttSnFixedSizeRingBuffer *sendBuffer,
                        int timeout_ms,
                        void *context) {
-  if (n->status <= 0) {
+  if (n->status != 2) {
     return -1;
   }
   assert(n->gateway_network_send != NULL);
   if (n->gateway_network_send(n, sendBuffer, timeout_ms, context)) {
     n->status = -1;
   }
-  return n->status != 1;
+
+  if (n->status != 2) {
+    return -1;
+  }
+  return 0;
 }
 
 int GatewayNetworkReceive(struct MqttSnGatewayNetworkInterface *n,
                           MqttSnFixedSizeRingBuffer *receiveBuffer,
                           int timeout_ms,
                           void *context) {
-  if (n->status <= 0) {
+  if (n->status != 2) {
     return -1;
   }
   assert(n->gateway_network_receive != NULL);
   if (n->gateway_network_receive(n, receiveBuffer, timeout_ms, context)) {
     n->status = -1;
   }
-  return n->status != 1;
+
+  if (n->status != 2) {
+    return -1;
+  }
+  return 0;
 }
 
