@@ -552,7 +552,7 @@ steps:
         DRONE_TAG ${DRONE_TAG}\n
         DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/drone_report
 
-  - name: BuildAddConfigurations
+  - name: BuildAllConfigurations
     image: gcc7cmake:3.14.0
     when:
       status: [ success ]
@@ -579,7 +579,7 @@ steps:
 
   - name: GatherBuildReports
     image: ubuntu
-    depends_on: [ BuildAddConfigurations ]
+    depends_on: [ BuildAllConfigurations ]
     when:
       status: [ success, failure ]
     volumes:
