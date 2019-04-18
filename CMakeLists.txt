@@ -133,8 +133,14 @@ if (WITH_LINUX_UDP)
             forwarder/network/iphelper/MqttSnIpNetworkHelper.h
             forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${UDP_CLIENT_NETWORK_FILES})
-
 endif ()
+
+
+option(WITH_HIREDIS_PLUGIN "Include HIREDIS_PLUGIN support?" ON)
+if (WITH_HIREDIS_PLUGIN)
+    add_subdirectory(plugins)
+endif ()
+
 
 add_library(lib-mqtt-sn-gateway-network ${GATEWAY_NETWORK_FILES})
 target_compile_options(lib-mqtt-sn-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
@@ -537,6 +543,3 @@ else ()
 
 
 endif ()
-
-
-

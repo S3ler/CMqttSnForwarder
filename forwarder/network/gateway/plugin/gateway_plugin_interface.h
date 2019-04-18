@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#include "MqttSnGatewayNetworkInterface.h"
+#include <stdint.h>
 
 typedef struct gateway_plugin_device_address_ {
   const uint8_t length;

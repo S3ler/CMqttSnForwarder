@@ -52,5 +52,5 @@ int log_max_msg_length_mismatch(const MqttSnLogger *logger, int level, uint16_t 
   if (log_str(logger, dot)) {
     return -1;
   }
-  return 0;
+  return log_flush(logger);
 }

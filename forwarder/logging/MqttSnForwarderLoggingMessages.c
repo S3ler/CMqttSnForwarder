@@ -489,10 +489,10 @@ int log_pingreq_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *he
     log_str(logger, clientId);
     log_char(logger, '.');
   }
-  return log_flush(logger);
+  return log_status(logger);
 }
 int log_pingresp_message(const MqttSnLogger *logger) {
-  return log_flush(logger);
+  return log_status(logger);
 }
 int log_disconnect_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
   if (header->length == 4) {
@@ -502,7 +502,7 @@ int log_disconnect_message(const MqttSnLogger *logger, const ParsedMqttSnHeader 
     log_duration(logger, duration);
     log_close_braked_dot(logger);
   }
-  return log_flush(logger);
+  return log_status(logger);
 }
 int log_encapsulated_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
   MqttSnEncapsulatedMessage *e = (MqttSnEncapsulatedMessage *) header->payload;

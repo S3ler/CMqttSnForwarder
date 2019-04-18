@@ -140,7 +140,7 @@ int log_network_connect(const MqttSnLogger *logger,
 
   const char *connect = ": Connect ";
   const char *space = " ";
-  const char *network_as = " network connect as  ";
+  const char *network_as = " network connect as ";
   const char *dot = ".";
 
   return (log_current_time(logger) ||
