@@ -386,7 +386,6 @@ void *inc_c(void *mqttSnForwarderFcfgPtr_ptr) {
 #ifdef WITH_LOGGING
   const forwarder_config *fcfg = mqttSnForwarderFcfgPtr->fcfg_ptr;
   if (log_forwarder_terminated(&mqttSnForwarder->logger,
-                               fcfg->log_lvl,
                                fcfg->version,
                                fcfg->major,
                                fcfg->minor,
@@ -454,7 +453,6 @@ int start_forwarder(const forwarder_config *fcfg,
     return -1;
   }
   if (log_forwarder_started(&logger,
-                            fcfg->log_lvl,
                             fcfg->version,
                             fcfg->major,
                             fcfg->minor,

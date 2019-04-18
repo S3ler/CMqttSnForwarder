@@ -58,14 +58,12 @@ int log_close_braked_dot(const MqttSnLogger *logger);
 int log_comma(const MqttSnLogger *logger);
 
 int log_client_mqtt_sn_message(const MqttSnLogger *logger,
-                               int level,
                                const device_address *from,
                                const uint8_t *data,
                                uint16_t data_len,
                                const char *additional_msg);
 
 int log_gateway_mqtt_sn_message(const MqttSnLogger *logger,
-                                int level,
                                 const device_address *from,
                                 const uint8_t *data,
                                 uint16_t data_len,

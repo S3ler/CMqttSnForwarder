@@ -70,7 +70,6 @@ int log_str(const MqttSnLogger *logger, const char *str) {
 }
 
 int log_forwarder_started(const MqttSnLogger *logger,
-                          int level,
                           const char *version,
                           int major,
                           int minor,
@@ -80,29 +79,29 @@ int log_forwarder_started(const MqttSnLogger *logger,
     return 0;
   }
 
-  const char *name_version = ": cmqttsnforwarder version ";
+  const char *name_version = "cmqttsnforwarder version ";
   const char *is = " is ";
   const char *dot = ".";
   const char *build_date_str = " (build date ";
   const char *action = ") started.";
 
-  return (log_current_time(logger) ||
-      log_str(logger, name_version) ||
-      log_str(logger, version) ||
-      log_str(logger, is) ||
-      log_uint32(logger, major) ||
-      log_str(logger, dot) ||
-      log_uint32(logger, minor) ||
-      log_str(logger, dot) ||
-      log_uintmax(logger, tweak) ||
-      log_str(logger, build_date_str) ||
-      log_str(logger, build_date) ||
-      log_str(logger, action) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  log_str(logger, name_version);
+  log_str(logger, version);
+  log_str(logger, is);
+  log_uint32(logger, major);
+  log_str(logger, dot);
+  log_uint32(logger, minor);
+  log_str(logger, dot);
+  log_uintmax(logger, tweak);
+  log_str(logger, build_date_str);
+  log_str(logger, build_date);
+  log_str(logger, action);
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_forwarder_terminated(const MqttSnLogger *logger,
-                             int level,
                              const char *version,
                              uint32_t major,
                              uint32_t minor,
@@ -111,47 +110,48 @@ int log_forwarder_terminated(const MqttSnLogger *logger,
     return 0;
   }
 
-  const char *name_version = ": cmqttsnforwarder version ";
+  const char *name_version = "cmqttsnforwarder version ";
   const char *is = " is ";
   const char *dot = ".";
   const char *action = " terminated.";
 
-  return (log_current_time(logger) ||
-      log_str(logger, name_version) ||
-      log_str(logger, version) ||
-      log_str(logger, is) ||
-      log_uint32(logger, major) ||
-      log_str(logger, dot) ||
-      log_uint32(logger, minor) ||
-      log_str(logger, dot) ||
-      log_uintmax(logger, tweak) ||
-      log_str(logger, action) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  log_str(logger, name_version);
+  log_str(logger, version);
+  log_str(logger, is);
+  log_uint32(logger, major);
+  log_str(logger, dot);
+  log_uint32(logger, minor);
+  log_str(logger, dot);
+  log_uintmax(logger, tweak);
+  log_str(logger, action);
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_network_connect(const MqttSnLogger *logger,
-                        int level,
-                        const char *protocol,
+                        const char *protocol_name,
                         const char *network_name,
                         const device_address *address) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
 
-  const char *connect = ": Connect ";
+  const char *connect = "Connect ";
   const char *space = " ";
   const char *network_as = " network connect as ";
   const char *dot = ".";
 
-  return (log_current_time(logger) ||
-      log_str(logger, connect) ||
-      log_str(logger, protocol) ||
-      log_str(logger, space) ||
-      log_str(logger, network_name) ||
-      log_str(logger, network_as) ||
-      log_device_address(logger, address) ||
-      log_str(logger, dot) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  log_str(logger, connect);
+  log_str(logger, protocol_name);
+  log_str(logger, space);
+  log_str(logger, network_name);
+  log_str(logger, network_as);
+  log_device_address(logger, address);
+  log_str(logger, dot);
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_network_connect_fail(const MqttSnLogger *logger,
@@ -164,97 +164,68 @@ int log_network_connect_fail(const MqttSnLogger *logger,
   const char *connect = " Connect to ";
   const char *network_as = " network as ";
   const char *failed_dot = " failed.";
-  if (log_msg_start(logger)) {
-    return -1;
-  }
-  if (log_str(logger, connect)) {
-    return -1;
-  }
-  if (log_str(logger, network_name)) {
-    return -1;
-  }
-  if (log_str(logger, network_as)) {
-    return -1;
-  }
-  if (log_device_address(logger, as)) {
-    return -1;
-  }
+  log_msg_start(logger);
+  log_str(logger, connect);
+  log_str(logger, network_name);
+  log_str(logger, network_as);
+  log_device_address(logger, as);
   if (to != NULL) {
     const char *to_str = " to ";
-    if (log_str(logger, to_str)) {
-      return -1;
-    }
-    if (log_device_address(logger, to)) {
-      return -1;
-    }
+    log_str(logger, to_str);
+    log_device_address(logger, to);
   }
-  if (log_str(logger, failed_dot)) {
-    return -1;
-  }
-  return 0;
+  log_str(logger, failed_dot);
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_network_disconnect(const MqttSnLogger *logger,
-                           int level,
-                           const char *protocol,
+                           const char *protocol_name,
                            const char *network_name,
                            const device_address *address) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
 
-  const char *connect = ": Disconnect ";
+  const char *connect = "Disconnect ";
   const char *space = " ";
   const char *network_as = " network connect as  ";
   const char *dot = ".";
 
-  return (log_current_time(logger) ||
-      log_str(logger, connect) ||
-      log_str(logger, protocol) ||
-      log_str(logger, space) ||
-      log_str(logger, network_name) ||
-      log_str(logger, network_as) ||
-      log_device_address(logger, address) ||
-      log_str(logger, dot) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  log_str(logger, connect);
+  log_str(logger, protocol_name);
+  log_str(logger, space);
+  log_str(logger, network_name);
+  log_str(logger, network_as);
+  log_device_address(logger, address);
+  log_str(logger, dot);
+
+  log_flush(logger);
+  return log_status(logger);
 }
 
-int log_protocol_mismatch(const MqttSnLogger *logger, int level, const char *expected, const char *actual) {
+int log_protocol_mismatch(const MqttSnLogger *logger, const char *expected, const char *actual) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
 
-  const char *mismatch = ": plugin protocol mismatch - expected: ";
+  const char *mismatch = "plugin protocol mismatch - expected: ";
   const char *actual_str = " actual: ";
   const char *dot = ".";
 
-  if (log_current_time(logger)) {
-    return -1;
-  }
-  if (log_str(logger, mismatch)) {
-    return -1;
-  }
-  if (log_str(logger, expected)) {
-    return -1;
-  }
-  if (log_str(logger, actual_str)) {
-    return -1;
-  }
-  if (log_str(logger, actual)) {
-    return -1;
-  }
-  if (log_str(logger, dot)) {
-    return -1;
-  }
-  if (log_flush(logger)) {
-    return -1;
-  }
+  log_msg_start(logger);
+  log_str(logger, mismatch);
+  log_str(logger, expected);
+  log_str(logger, actual_str);
+  log_str(logger, actual);
+  log_str(logger, dot);
 
-  return 0;
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_too_long_message(const MqttSnLogger *logger,
-                         int level,
                          const device_address *address,
                          const uint8_t *data,
                          uint16_t data_len) {
@@ -263,15 +234,11 @@ int log_too_long_message(const MqttSnLogger *logger,
   }
 
   const char *description = "dropping too long message: ";
-  if (log_gateway_mqtt_sn_message(logger, level, address, data, data_len, description)) {
-    return -1;
-  }
-  return 0;
+  return log_gateway_mqtt_sn_message(logger, address, data, data_len, description);
 }
 
 #ifdef WITH_DEBUG_LOGGING
 int log_db_rec_client_message(const MqttSnLogger *logger,
-                              int level,
                               const device_address *from,
                               const device_address *to,
                               const uint8_t *data,
@@ -286,21 +253,22 @@ int log_db_rec_client_message(const MqttSnLogger *logger,
   const char *comma_data_braked_open = ", data( ";
   const char *double_braked_close_dot = ")).";
 
-  return (log_msg_start(logger) ||
-      log_str(logger, rec_client_msg_from) ||
-      log_device_address(logger, from) ||
-      log_str(logger, to_str) ||
-      log_device_address(logger, to) ||
-      log_str(logger, braked_open_len) ||
-      log_uint32(logger, data_len) ||
-      log_str(logger, comma_data_braked_open) ||
-      log_uint8_array(logger, data, data_len) ||
-      log_str(logger, double_braked_close_dot) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  log_str(logger, rec_client_msg_from);
+  log_device_address(logger, from);
+  log_str(logger, to_str);
+  log_device_address(logger, to);
+  log_str(logger, braked_open_len);
+  log_uint32(logger, data_len);
+  log_str(logger, comma_data_braked_open);
+  log_uint8_array(logger, data, data_len);
+  log_str(logger, double_braked_close_dot);
+
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_db_rec_gateway_message(const MqttSnLogger *logger,
-                               int level,
                                const device_address *from,
                                const uint8_t *data,
                                uint16_t data_len) {
@@ -308,28 +276,27 @@ int log_db_rec_gateway_message(const MqttSnLogger *logger,
     return 0;
   }
 
-  const char *send_g_msg_from = ": receive gateway message from ";
+  const char *send_g_msg_from = "receive gateway message from ";
   const char *to_str = " to ";
   const char *braked_open_len = " ( len";
   const char *comma_data_bracked_open = ", data( ";
   const char *double_bracked_close_dot = ")).";
-  //device_address* std; // TODO get dst
 
-  return (log_current_time(logger) ||
-      log_str(logger, send_g_msg_from) ||
-      log_device_address(logger, from) ||
-      log_str(logger, to_str) ||
-      //log_device_address(logger, dst) ||
-      log_str(logger, braked_open_len) ||
-      log_uint32(logger, data_len) ||
-      log_str(logger, comma_data_bracked_open) ||
-      log_uint8_array(logger, data, data_len) ||
-      log_str(logger, double_bracked_close_dot) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  log_str(logger, send_g_msg_from);
+  log_device_address(logger, from);
+  log_str(logger, to_str);
+  log_str(logger, braked_open_len);
+  log_uint32(logger, data_len);
+  log_str(logger, comma_data_bracked_open);
+  log_uint8_array(logger, data, data_len);
+  log_str(logger, double_bracked_close_dot);
+
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_db_send_client_message(const MqttSnLogger *logger,
-                               int level,
                                const device_address *from,
                                const device_address *dst,
                                const uint8_t *data,
@@ -338,27 +305,29 @@ int log_db_send_client_message(const MqttSnLogger *logger,
     return 0;
   }
 
-  const char *send_c_msg_from = ": send client message from ";
+  const char *send_c_msg_from = "send client message from ";
   const char *to_str = " to ";
   const char *braked_open_len = " ( len";
   const char *comma_data_bracked_open = ", data( ";
   const char *double_bracked_close_dot = ")).";
 
-  return (log_current_time(logger) ||
-      log_str(logger, send_c_msg_from) ||
-      log_device_address(logger, from) ||
-      log_str(logger, to_str) ||
-      log_device_address(logger, dst) ||
-      log_str(logger, braked_open_len) ||
-      log_uint32(logger, data_len) ||
-      log_str(logger, comma_data_bracked_open) ||
-      log_uint8_array(logger, data, data_len) ||
-      log_str(logger, double_bracked_close_dot) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+
+  log_str(logger, send_c_msg_from);
+  log_device_address(logger, from);
+  log_str(logger, to_str);
+  log_device_address(logger, dst);
+  log_str(logger, braked_open_len);
+  log_uint32(logger, data_len);
+  log_str(logger, comma_data_bracked_open);
+  log_uint8_array(logger, data, data_len);
+  log_str(logger, double_bracked_close_dot);
+
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_db_send_gateway_message(const MqttSnLogger *logger,
-                                int level,
                                 const device_address *from,
                                 const device_address *dst,
                                 const uint8_t *data,
@@ -367,26 +336,27 @@ int log_db_send_gateway_message(const MqttSnLogger *logger,
     return 0;
   }
 
-  const char *send_g_msg_from = ": send gateway message from ";
+  const char *send_g_msg_from = "send gateway message from ";
   const char *to_str = " to ";
   const char *braked_open_len = " ( len";
   const char *comma_data_bracked_open = ", data( ";
   const char *double_bracked_close_dot = ")).";
 
-  return (log_current_time(logger) ||
-      log_str(logger, send_g_msg_from) ||
-      log_device_address(logger, from) ||
-      log_str(logger, to_str) ||
-      log_device_address(logger, dst) ||
-      log_str(logger, braked_open_len) ||
-      log_uint32(logger, data_len) ||
-      log_str(logger, comma_data_bracked_open) ||
-      log_uint8_array(logger, data, data_len) ||
-      log_str(logger, double_bracked_close_dot) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  log_str(logger, send_g_msg_from);
+  log_device_address(logger, from);
+  log_str(logger, to_str);
+  log_device_address(logger, dst);
+  log_str(logger, braked_open_len);
+  log_uint32(logger, data_len);
+  log_str(logger, comma_data_bracked_open);
+  log_uint8_array(logger, data, data_len);
+  log_str(logger, double_bracked_close_dot);
+
+  log_flush(logger);
+  return log_status(logger);
 }
 int log_incomplete_message(const MqttSnLogger *logger,
-                           int level,
                            const device_address *address,
                            const uint8_t *data,
                            uint16_t data_len) {
@@ -395,9 +365,6 @@ int log_incomplete_message(const MqttSnLogger *logger,
   }
 
   const char *description = "could not send message completely - try again later: ";
-  if (log_gateway_mqtt_sn_message(logger, level, address, data, data_len, description)) {
-    return -1;
-  }
-  return 0;
+  return log_gateway_mqtt_sn_message(logger, address, data, data_len, description);
 }
 #endif

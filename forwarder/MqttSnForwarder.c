@@ -220,7 +220,6 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
 
 #ifdef WITH_LOGGING
   if (log_gateway_mqtt_sn_message(&forwarder->logger,
-                                  forwarder->logger.log_level,
                                   &clientMessageData->address,
                                   clientMessageData->data,
                                   clientMessageData->data_length,
@@ -252,7 +251,6 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
 
 #ifdef WITH_LOGGING
   log_client_mqtt_sn_message(&forwarder->logger,
-                             forwarder->logger.log_level,
                              &clientMessageData->address,
                              clientMessageData->data,
                              clientMessageData->data_length, NULL);

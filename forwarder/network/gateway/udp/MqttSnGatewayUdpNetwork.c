@@ -96,7 +96,6 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
     if (n->logger) {
       const MqttSnMessageData *msg = back(receiveBuffer);
       log_db_rec_gateway_message(n->logger,
-                                 n->logger->log_level,
                                  n->gateway_network_address,
                                  msg->data,
                                  msg->data_length);
@@ -119,7 +118,6 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
   }
 #ifdef WITH_DEBUG_LOGGING
   log_db_send_gateway_message(n->logger,
-                              n->logger->log_level,
                               &gatewaySendMessageData.address,
                               n->gateway_network_address,
                               gatewaySendMessageData.data,
@@ -137,7 +135,7 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
     // TODO check if a udp buffer can return different values and why
     put(sendBuffer, &gatewaySendMessageData);
 #ifdef WITH_DEBUG_LOGGING
-    log_incomplete_message(n->logger, n->logger->log_level,
+    log_incomplete_message(n->logger,
                            &gatewaySendMessageData.address,
                            gatewaySendMessageData.data,
                            gatewaySendMessageData.data_length);

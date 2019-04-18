@@ -41,7 +41,6 @@ int log_char(const MqttSnLogger *logger, char c);
 int log_str(const MqttSnLogger *logger, const char *str);
 
 int log_forwarder_started(const MqttSnLogger *logger,
-                          int level,
                           const char *version,
                           int major,
                           int minor,
@@ -49,15 +48,13 @@ int log_forwarder_started(const MqttSnLogger *logger,
                           const char *build_date);
 
 int log_forwarder_terminated(const MqttSnLogger *logger,
-                             int level,
                              const char *version,
                              uint32_t major,
                              uint32_t minor,
                              uintmax_t tweak);
 
 int log_network_connect(const MqttSnLogger *logger,
-                        int level,
-                        const char *protocol,
+                        const char *protocol_name,
                         const char *network_name,
                         const device_address *address);
 
@@ -67,51 +64,41 @@ int log_network_connect_fail(const MqttSnLogger *logger,
                              const device_address *to);
 
 int log_network_disconnect(const MqttSnLogger *logger,
-                           int level,
-                           const char *protocol,
+                           const char *protocol_name,
                            const char *network_name,
                            const device_address *address);
 
-int log_protocol_mismatch(const MqttSnLogger *logger,
-                          int level,
-                          const char *expected,
-                          const char *actual);
+int log_protocol_mismatch(const MqttSnLogger *logger, const char *expected, const char *actual);
 
 int log_too_long_message(const MqttSnLogger *logger,
-                         int level,
                          const device_address *address,
                          const uint8_t *data,
                          uint16_t data_len);
 
 #ifdef WITH_DEBUG_LOGGING
 int log_db_rec_client_message(const MqttSnLogger *logger,
-                              int level,
                               const device_address *from,
                               const device_address *to,
                               const uint8_t *data,
                               uint16_t data_len);
 
 int log_db_rec_gateway_message(const MqttSnLogger *logger,
-                               int level,
                                const device_address *from,
                                const uint8_t *data,
                                uint16_t data_len);
 
 int log_db_send_client_message(const MqttSnLogger *logger,
-                               int level,
                                const device_address *from,
                                const device_address *dst,
                                const uint8_t *data,
                                uint16_t data_len);
 
 int log_db_send_gateway_message(const MqttSnLogger *logger,
-                                int level,
                                 const device_address *from,
                                 const device_address *dst,
                                 const uint8_t *data,
                                 uint16_t data_len);
 int log_incomplete_message(const MqttSnLogger *logger,
-                           int level,
                            const device_address *address,
                            const uint8_t *data,
                            uint16_t data_len);
