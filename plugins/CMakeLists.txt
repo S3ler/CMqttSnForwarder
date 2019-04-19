@@ -9,12 +9,20 @@ set(HIREDIS_NETWORK_PLUGIN_FILES
         network/client/plugin/hiredis_client_network_plugin.h
         network/gateway/plugin/gateway_plugin_interface.h
         network/gateway/plugin/hiredis_gateway_network_plugin.c
+        network/shared/plugin/plugin_device_address_converter.c
+        network/shared/plugin/plugin_device_address_converter.h
         network/shared/plugin/plugin_json.c
         network/shared/plugin/plugin_json.h)
 
 find_library(hiredis /usr/local/)
-
 add_library(hiredis_plugin SHARED ${HIREDIS_NETWORK_PLUGIN_FILES})
+
+option(WITH_PLUGIN_ERROR_MSG "Include PLUGIN_ERROR_MSG support?" ON)
+if (WITH_PLUGIN_ERROR_MSG)
+    message("Building with WITH_PLUGIN_ERROR_MSG support")
+    add_definitions(-DWITH_PLUGIN_ERROR_MSG)
+endif ()
+
 target_include_directories(hiredis_plugin PRIVATE external/hiredis)
 target_include_directories(hiredis_plugin PRIVATE /usr/local/include/hiredis)
 target_link_libraries(hiredis_plugin hiredis)

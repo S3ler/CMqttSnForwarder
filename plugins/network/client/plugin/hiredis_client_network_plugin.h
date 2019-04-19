@@ -10,7 +10,7 @@
 
 typedef struct hiredis_client_context_ {
   int8_t status;
-  redisContext *redis_contest;
+  redisContext *redis_context;
   char *redis_send_list;
   char *redis_receive_list;
 } hiredis_client_context;
