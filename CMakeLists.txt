@@ -198,10 +198,10 @@ if (NOT BUILD_TESTING)
 
 
     add_executable(TcpCMqttSnForwarderTester tcptestermain.c forwarder/global_defines.h)
-    target_link_libraries(TcpCMqttSnForwarderTester lib-mqtt-sn-forwarder pthread)
+    target_link_libraries(TcpCMqttSnForwarderTester pthread)
 
     add_executable(UdpCMqttSnForwarderTester udptestermain.c forwarder/global_defines.h)
-    target_link_libraries(UdpCMqttSnForwarderTester lib-mqtt-sn-forwarder pthread)
+    target_link_libraries(UdpCMqttSnForwarderTester pthread)
 else ()
     message("Bulding as C++ project")
 

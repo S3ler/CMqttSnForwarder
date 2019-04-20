@@ -3,6 +3,7 @@
 //
 
 #include <assert.h>
+#include <stdio.h>
 #include "MqttSnGatewayNetworkInterface.h"
 
 int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,

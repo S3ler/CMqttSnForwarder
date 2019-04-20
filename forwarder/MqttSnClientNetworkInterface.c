@@ -3,6 +3,7 @@
 //
 
 #include <assert.h>
+#include <stdio.h>
 #include "MqttSnClientNetworkInterface.h"
 
 int ClientNetworkInit(MqttSnClientNetworkInterface *n,

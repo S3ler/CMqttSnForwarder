@@ -6,6 +6,7 @@
 #include <network/plugin/MqttSnPluginLogger.h>
 #include <MqttSnForwarderLogging.h>
 #include <string.h>
+#include <logging/MqttSnForwarderLoggingMessages.h>
 #include "MqttSnClientPluginNetwork.h"
 
 int ClientLinuxPluginInit(MqttSnClientNetworkInterface *n, void *context) {
@@ -242,6 +243,7 @@ int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
     if (log_too_long_message(n->logger,
                              &clientSendMessageData.address,
+                             MQTT_SN_FORWARDER_NETWORK_CLIENT,
                              clientSendMessageData.data,
                              clientSendMessageData.data_length)) {
       return -1;

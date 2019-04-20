@@ -28,10 +28,7 @@ int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
     memset(clientTcpNetwork->client_buffer[i], 0, CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH);
     clientTcpNetwork->client_buffer_bytes[i] = 0;
   }
-  uint16_t port = n->client_network_address->bytes[5];
-  port += (uint16_t) n->client_network_address->bytes[4] << 8;
 
-  clientTcpNetwork->port = port;
   n->client_network_init = ClientLinuxTcpInit;
   n->client_network_connect = ClientLinuxTcpConnect;
   n->client_network_disconnect = ClientLinuxTcpDisconnect;

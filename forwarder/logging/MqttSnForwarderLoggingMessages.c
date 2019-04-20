@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <MqttSnMessageParser.h>
 #include "MqttSnForwarderLoggingMessages.h"
+#include "MqttSnForwarderLoggingBasic.h"
 
 #define MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET 2
 static const char *MQTT_SN_MESSAGE_TYPE_STRING[] = {
@@ -150,7 +151,7 @@ int log_client_mqtt_sn_message(const MqttSnLogger *logger,
                                const uint8_t *data,
                                uint16_t data_len,
                                const char *additional_msg) {
-  return log_mqtt_sn_message(logger, from, CLIENT, data, data_len, additional_msg);
+  return log_mqtt_sn_message(logger, from, MQTT_SN_FORWARDER_NETWORK_CLIENT, data, data_len, additional_msg);
 }
 
 int log_gateway_mqtt_sn_message(const MqttSnLogger *logger,
@@ -158,7 +159,7 @@ int log_gateway_mqtt_sn_message(const MqttSnLogger *logger,
                                 const uint8_t *data,
                                 uint16_t data_len,
                                 const char *additional_msg) {
-  return log_mqtt_sn_message(logger, from, GATEWAY, data, data_len, additional_msg);
+  return log_mqtt_sn_message(logger, from, MQTT_SN_FORWARDER_NETWORK_GATEWAY, data, data_len, additional_msg);
 }
 
 int log_mqtt_sn_message(const MqttSnLogger *logger,
@@ -183,11 +184,11 @@ int log_mqtt_sn_message(const MqttSnLogger *logger,
       return log_status(logger);
     }
   }
-  if (network == CLIENT) {
+  if (network == MQTT_SN_FORWARDER_NETWORK_CLIENT) {
     log_str(logger, "client ");
     log_msg_from(logger, header.msg_type, from);
   }
-  if (network == GATEWAY) {
+  if (network == MQTT_SN_FORWARDER_NETWORK_GATEWAY) {
     log_str(logger, "gateway ");
     log_msg_to(logger, header.msg_type, from);
   }

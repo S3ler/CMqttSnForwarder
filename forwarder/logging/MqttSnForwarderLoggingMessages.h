@@ -9,14 +9,8 @@
 extern "C" {
 #endif
 
-#include "MqttSnForwarderLogging.h"
-#include "MqttSnForwarderLoggingBasic.h"
-
-typedef enum MQTT_SN_FORWARDER_NETWORK_ {
-  NETWORK_INVALID = -1,
-  GATEWAY = 0,
-  CLIENT = 1
-} MQTT_SN_FORWARDER_NETWORK;
+#include <MqttSnForwarderLogging.h>
+#include <MqttSnMessageParser.h>
 
 int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags);
 
