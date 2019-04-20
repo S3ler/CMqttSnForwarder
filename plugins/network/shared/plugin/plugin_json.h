@@ -26,7 +26,7 @@ int parse_device_address_from_json(uint8_t *device_address,
                                    const char *json_str,
                                    size_t json_str_len);
 int parse_data_from_json(uint8_t *data,
-                         uint16_t* data_len,
+                         uint16_t *data_len,
                          uint16_t max_data_len,
                          const char *json_str,
                          size_t json_str_len);
@@ -37,5 +37,8 @@ int parse_uint8_array_from_json(const char *key,
                                 uint16_t max_data_len,
                                 const char *json_str,
                                 size_t json_str_len);
+
+void free_json_device_address(char *json_device_address);
+void free_json_data(char *json_data);
 
 #endif //CMQTTSNFORWARDER_PLUGINS_NETWORK_SHARED_PLUGIN_PLUGIN_JSON_H_

@@ -4,8 +4,6 @@
 #include <errno.h>
 #include "plugin_json.h"
 
-// TODO the whole return -1 on malloc and parse error stuff could lead to problems - maybe return 1 on parse error, -1 or malloc error
-
 
 char *generate_json_from_device_address(const uint8_t *src_device_address, const uint16_t src_device_address_len) {
   const char *device_address_key_str = "device_address";
@@ -25,6 +23,10 @@ char *generate_json_from_device_address(const uint8_t *src_device_address, const
   return dst;
 }
 
+void free_json_device_address(char* json_device_address){
+  free(json_device_address);
+}
+
 char *generate_json_from_data(uint8_t *src_data, uint16_t src_data_len) {
   const char *device_address_key_str = "data";
   char *dst = NULL;
@@ -37,6 +39,10 @@ char *generate_json_from_data(uint8_t *src_data, uint16_t src_data_len) {
     return NULL;
   }
   return dst;
+}
+
+void free_json_data(char* json_data){
+  free(json_data);
 }
 
 int malloc_json_key_array(char **dst, uint32_t *dst_len, const char *key, uint16_t d_a_len) {
@@ -148,7 +154,6 @@ int parse_uint8_array_from_json(const char *key,
     // key does not exist
     return -1;
   }
-  // we have the start
 
   const char *array_start = strchr(start_key_str, '[');
   if (array_start == NULL) {
@@ -191,40 +196,3 @@ int parse_uint8_array_from_json(const char *key,
   free(array_cpy);
   return rc;
 }
-
-/*
-int convert_string_to_device_address(const char *string, device_address *address) {
-  char *cp_string = strdup(string);
-  char *token = strtok(cp_string, ".");
-  size_t i = 0;
-  int rc = 0;
-  while (token != NULL) {
-    char *end_prt;
-    long int n = strtol(token, &end_prt, 10);
-    if (errno == EOVERFLOW) {
-      rc = -1;
-      break;
-    }
-    if (*end_prt != '\0') {
-      // no conversion performed
-      rc = -1;
-      break;
-    }
-    if (n > UINT8_MAX || n < 0) {
-      rc = -1;
-      break;
-    }
-    // address->bytes[i++] = atoi(token);
-    if (i + 1 > sizeof(device_address)) {
-      // given string address is too long
-      rc = -1;
-      break;
-    }
-    address->bytes[i++] = n;
-    token = strtok(NULL, ".");
-  }
-
-  free(cp_string);
-  return rc;
-}
-*/
