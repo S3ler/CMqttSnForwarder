@@ -209,15 +209,15 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     }
 #ifdef WITH_PLUGIN
-      else if (!strcmp(argv[i], "-gnp") || !strcmp(argv[i], "--gateway_network_plugin")) {
-        if (i == argc - 1) {
-          fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
-          return 1;
-        } else {
-          fcfg->gateway_network_plugin_path = strdup(argv[i + 1]);
-        }
-        i++;
+    else if (!strcmp(argv[i], "-gnp") || !strcmp(argv[i], "--gateway_network_plugin")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        fcfg->gateway_network_plugin_path = strdup(argv[i + 1]);
       }
+      i++;
+    }
 #endif
     else if (!strcmp(argv[i], "-cP") || !strcmp(argv[i], "--client_network_protocol")) {
       if (i == argc - 1) {
@@ -317,15 +317,15 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     }
 #ifdef WITH_PLUGIN
-      else if (!strcmp(argv[i], "-cnp") || !strcmp(argv[i], "--client_network_plugin")) {
-        if (i == argc - 1) {
-          fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
-          return 1;
-        } else {
-          fcfg->client_network_plugin_path = strdup(argv[i + 1]);
-        }
-        i++;
+    else if (!strcmp(argv[i], "-cnp") || !strcmp(argv[i], "--client_network_plugin")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no path specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        fcfg->client_network_plugin_path = strdup(argv[i + 1]);
       }
+      i++;
+    }
 #endif
     else if (!strcmp(argv[i], "-V") || !strcmp(argv[i], "--protocol-version")) {
       if (i == argc - 1) {
