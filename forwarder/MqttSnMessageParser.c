@@ -5,6 +5,7 @@
 #include "MqttSnMessageParser.h"
 #include <string.h>
 #include <netinet/in.h>
+#include <stdbool.h>
 
 uint16_t get_message_length(const uint8_t *data) {
   MqttSnMessageHeaderThreeOctetsLengthField
@@ -95,7 +96,6 @@ int parse_message_tolerant(ParsedMqttSnHeader *h,
   if (parse_header(h, msg_type, data, data_len)) {
     return -1;
   }
-
   int payload_offset = MQTT_SN_HEADER_LENGTH(h->indicator);
   if (h->msg_type == ENCAPSULATED_MESSAGE) {
     ParsedMqttSnHeader encapsulated_header = {0};
@@ -108,6 +108,51 @@ int parse_message_tolerant(ParsedMqttSnHeader *h,
   }
 
   h->payload = (MqttSnEncapsulatedMessage *) (data + payload_offset);
+  return 0;
+}
+
+int32_t parse_encapsulation_message(uint8_t *broadcast,
+                                    device_address *from,
+                                    uint8_t *mqtt_sn_message,
+                                    uint16_t *mqtt_sn_message_len,
+                                    uint16_t max_mqtt_sn_message_len,
+                                    uint8_t *data,
+                                    uint16_t data_len) {
+  ParsedMqttSnHeader h = {0};
+  int32_t read_bytes = 0;
+  if (parse_encapsulation_header(&h, data, data_len, &read_bytes)) {
+    return -1;
+  }
+  MqttSnEncapsulatedMessage *encapsulated_header = (MqttSnEncapsulatedMessage *) h.payload;
+  if (encapsulated_header->crtl >= 0x01) {
+    return -1;
+  }
+  *broadcast = encapsulated_header->crtl;
+  *from = encapsulated_header->wireless_node_id;
+  *mqtt_sn_message_len = data_len - read_bytes;
+  if (*mqtt_sn_message > max_mqtt_sn_message_len) {
+    return -1;
+  }
+  memcpy(mqtt_sn_message, &data[read_bytes], *mqtt_sn_message_len);
+  read_bytes += *mqtt_sn_message_len;
+  return read_bytes;
+}
+
+int parse_encapsulation_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len, int32_t *read_bytes) {
+  if (data_len < 2) {
+    return -1;
+  }
+  h->indicator = is_three_bytes_header(data);
+  h->length = get_message_length(data);
+  h->msg_type = get_mqtt_sn_message_type(data);
+  if (h->msg_type != ENCAPSULATED_MESSAGE) {
+    return -1;
+  }
+  if (h->length <= MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(h->indicator)) {
+    return -1;
+  }
+  h->payload = (void *) &data[MQTT_SN_HEADER_LENGTH(h->indicator)];
+  *read_bytes += MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(h->indicator);
   return 0;
 }
 
@@ -237,7 +282,7 @@ int generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, uint16_t *u
   return 0;
 }
 
-int generate_data(uint8_t *dst, uint16_t dst_len, uint8_t *data, uint16_t data_len, uint16_t *used_bytes) {
+int generate_data(uint8_t *dst, uint16_t dst_len, const uint8_t *data, uint16_t data_len, uint16_t *used_bytes) {
   *used_bytes += data_len;
   if (dst_len < *used_bytes) {
     return -1;
@@ -281,4 +326,49 @@ int generate_publish(uint8_t *dst,
     return -1;
   }
   return 0;
+}
+
+int generate_encapsulation_header(uint8_t *dst,
+                                  uint16_t dst_len,
+                                  uint8_t broadcast,
+                                  const device_address *from,
+                                  uint16_t *used_bytes) {
+  *used_bytes += MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BYTE_LENGTH;
+  if (*used_bytes > dst_len) {
+    return -1;
+  }
+  if (broadcast >= 0x01) {
+    return -1;
+  }
+  dst[0] = broadcast;
+  *used_bytes += sizeof(device_address);
+  if (*used_bytes > dst_len) {
+    return -1;
+  }
+  memcpy(&dst[1], from->bytes, sizeof(device_address));
+  return 0;
+}
+
+int generate_encapsulation_message(uint8_t *dst,
+                                   uint16_t dst_len,
+                                   uint8_t broadcast,
+                                   const device_address *from,
+                                   const uint8_t *data,
+                                   uint16_t data_len) {
+  uint16_t used_bytes = 0;
+  uint8_t indicator = (data_len + MQTT_SN_HEADER_LENGTH(0) > UINT8_MAX);
+  if (generate_mqtt_sn_header(dst,
+                              dst_len,
+                              data_len + MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(indicator),
+                              ENCAPSULATED_MESSAGE,
+                              &used_bytes)) {
+    return -1;
+  }
+  if (generate_encapsulation_header(dst + used_bytes, dst_len, broadcast, from, &used_bytes)) {
+    return -1;
+  }
+  if (generate_data(dst + used_bytes, dst_len, data, data_len, &used_bytes)) {
+    return -1;
+  }
+  return used_bytes;
 }

@@ -341,7 +341,6 @@ typedef struct MqttSnMessageDisconnect_ {
 typedef struct MqttSnEncapsulatedMessage_ {
   uint8_t crtl;
   device_address wireless_node_id;
-  void *mqtt_sn_message;
 } MqttSnEncapsulatedMessage;
 #pragma pack(pop)
 
@@ -351,6 +350,16 @@ int parse_message_tolerant(ParsedMqttSnHeader *h,
                            MQTT_SN_MESSAGE_TYPE msg_type,
                            const uint8_t *data,
                            uint16_t data_len);
+
+int32_t parse_encapsulation_message(uint8_t *broadcast,
+                                    device_address *from,
+                                    uint8_t *mqtt_sn_message,
+                                    uint16_t *mqtt_sn_message_len,
+                                    uint16_t max_mqtt_sn_message_len,
+                                    uint8_t *data,
+                                    uint16_t data_len);
+
+int parse_encapsulation_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len, int32_t *read_bytes);
 
 int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
@@ -380,5 +389,22 @@ int generate_publish(uint8_t *dst,
                      uint32_t topic_id,
                      uint8_t *data,
                      uint16_t data_len);
+
+/**
+ * Generates a MQTT-SN Forwarder Encapsulation frame.
+ * @param dst pointer to the destination buffer.
+ * @param dst_len length of the destination buffer.
+ * @param broadcast indicator if the message was send with broadcast radius.
+ * @param from sender address.
+ * @param data to encapsulate MQTT-SN message. Any data is accepted
+ * @param data_len of the to encapsulate MQTT-SN message.
+ * @return -1 if the broadcast value is not allowed or if frame does not fit into the dst buffer.
+ */
+int generate_encapsulation_message(uint8_t *dst,
+                                   uint16_t dst_len,
+                                   uint8_t broadcast,
+                                   const device_address *from,
+                                   const uint8_t *data,
+                                   uint16_t data_len);
 
 #endif //CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H

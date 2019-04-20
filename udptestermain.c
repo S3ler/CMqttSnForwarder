@@ -66,7 +66,7 @@ int main() {
     perror("client socket connect");
     exit(EXIT_FAILURE);
   }
-  sleep(1);
+  //sleep(1);
   printf("Ready");
   fflush(stdout);
 
