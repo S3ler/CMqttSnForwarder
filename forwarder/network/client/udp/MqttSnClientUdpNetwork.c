@@ -123,7 +123,6 @@ int ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
     return -1;
   }
   if (send_bytes != clientSendMessageData.data_length) {
-    // TODO check if a udp buffer can return different values and why
     put(sendBuffer, &clientSendMessageData);
 #ifdef WITH_DEBUG_LOGGING
     log_incomplete_message(n->logger,

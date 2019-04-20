@@ -167,7 +167,6 @@ int receive_udp_message(int socket_fd, MqttSnFixedSizeRingBuffer *receiveBuffer,
   memset(&recv_sockaddr, 0, sizeof(recv_sockaddr));
   socklen_t recv_sockaddr_socklen = sizeof(recv_sockaddr);
 
-  // TODO test behaviour if too much data received.
   if ((read_bytes = recvfrom(socket_fd, buffer, buffer_length, MSG_PEEK | MSG_TRUNC,
                              (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) <= 0) {
     return -1;
@@ -177,9 +176,9 @@ int receive_udp_message(int socket_fd, MqttSnFixedSizeRingBuffer *receiveBuffer,
     // read bytes and discard
     if ((read_bytes = recvfrom(socket_fd, buffer, buffer_length, MSG_WAITALL,
                                (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) <= 0) {
-      return 0;
+      return -1;
     }
-
+    return 0;
   }
 
   if ((read_bytes = recvfrom(socket_fd, buffer, buffer_length, MSG_WAITALL,
