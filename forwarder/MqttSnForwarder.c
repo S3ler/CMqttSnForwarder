@@ -215,7 +215,6 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
 
 #ifdef WITH_LOGGING
   if (log_gateway_mqtt_sn_message(&forwarder->logger,
-                                  forwarder->logger.log_level,
                                   &clientMessageData->address,
                                   clientMessageData->data,
                                   clientMessageData->data_length,
@@ -247,7 +246,6 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
 
 #ifdef WITH_LOGGING
   log_client_mqtt_sn_message(&forwarder->logger,
-                             forwarder->logger.log_level,
                              &clientMessageData->address,
                              clientMessageData->data,
                              clientMessageData->data_length, NULL);
@@ -273,7 +271,7 @@ int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData, MqttSnMe
 
   MqttSnEncapsulatedMessage *encapsulatedMessage = (MqttSnEncapsulatedMessage *) gatewayMessageHeader.payload;
   ParsedMqttSnHeader encapsulatedMessageHeader = {0};
-  if (parse_header(&encapsulatedMessageHeader,
+  if (parse_header(&encapsulatedMessageHeader, ANY_MESSAGE_TYPE,
                    gatewayMessageData->data
                        + MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(gatewayMessageHeader.indicator),
                    gatewayMessageHeader.length
@@ -295,7 +293,7 @@ int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData, MqttSnMe
 int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessageData *gatewayMessageData) {
 
   ParsedMqttSnHeader clientMessageHeader = {0};
-  if (parse_header(&clientMessageHeader, clientMessageData->data, clientMessageData->data_length)) {
+  if (parse_header(&clientMessageHeader, ANY_MESSAGE_TYPE, clientMessageData->data, clientMessageData->data_length)) {
     // not valid enough
     return -1;
   }

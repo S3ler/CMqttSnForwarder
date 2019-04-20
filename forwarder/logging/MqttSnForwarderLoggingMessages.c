@@ -146,7 +146,6 @@ int log_comma(const MqttSnLogger *logger) {
 }
 
 int log_client_mqtt_sn_message(const MqttSnLogger *logger,
-                               int level,
                                const device_address *from,
                                const uint8_t *data,
                                uint16_t data_len,
@@ -155,7 +154,6 @@ int log_client_mqtt_sn_message(const MqttSnLogger *logger,
 }
 
 int log_gateway_mqtt_sn_message(const MqttSnLogger *logger,
-                                int level,
                                 const device_address *from,
                                 const uint8_t *data,
                                 uint16_t data_len,

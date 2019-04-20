@@ -155,7 +155,6 @@ int GatewayLinuxPluginInit(MqttSnGatewayNetworkInterface *n, void *context) {
       != 0) {
 #ifdef WITH_LOGGING
     log_protocol_mismatch(n->logger,
-                          n->logger->log_level,
                           pluginGatewayNetwork->plugin_cfg->protocol,
                           pluginGatewayNetwork->plugin_get_short_network_protocol_name());
 #endif
@@ -189,7 +188,6 @@ void GatewayLinuxPluginDisconnect(MqttSnGatewayNetworkInterface *n, void *contex
 #ifdef WITH_LOGGING
   if (n->logger) {
     log_network_disconnect(n->logger,
-                           n->logger->log_level,
                            pluginGatewayNetwork->plugin_get_short_network_protocol_name(), NULL,
                            n->gateway_network_address);
   }
@@ -234,7 +232,7 @@ int GatewayLinuxPluginSend(MqttSnGatewayNetworkInterface *n,
   if (pluginGatewayNetwork->plugin_get_maximum_message_length() <= gatewaySendMessageData.data_length) {
     // too long messages for the protocol are ignored by the standard
 #ifdef WITH_DEBUG_LOGGING
-    if (log_too_long_message(n->logger, n->logger->log_level,
+    if (log_too_long_message(n->logger,
                              &gatewaySendMessageData.address,
                              gatewaySendMessageData.data,
                              gatewaySendMessageData.data_length)) {
@@ -245,7 +243,6 @@ int GatewayLinuxPluginSend(MqttSnGatewayNetworkInterface *n,
   }
 #ifdef WITH_DEBUG_LOGGING
   log_db_send_gateway_message(n->logger,
-                              n->logger->log_level,
                               &gatewaySendMessageData.address,
                               n->gateway_network_address,
                               gatewaySendMessageData.data,
@@ -270,7 +267,7 @@ int GatewayLinuxPluginSend(MqttSnGatewayNetworkInterface *n,
   if (send_bytes != gatewaySendMessageData.data_length) {
     put(sendBuffer, &gatewaySendMessageData);
 #ifdef WITH_DEBUG_LOGGING
-    if (log_incomplete_message(n->logger, n->logger->log_level,
+    if (log_incomplete_message(n->logger,
                                &gatewaySendMessageData.address,
                                gatewaySendMessageData.data,
                                gatewaySendMessageData.data_length)) {
@@ -316,7 +313,6 @@ int GatewayLinuxPluginReceive(MqttSnGatewayNetworkInterface *n,
   if (n->logger) {
     const MqttSnMessageData *msg = back(receiveBuffer);
     log_db_rec_gateway_message(n->logger,
-                               n->logger->log_level,
                                n->gateway_network_address,
                                msg->data,
                                msg->data_length);

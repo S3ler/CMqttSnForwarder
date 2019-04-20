@@ -166,7 +166,7 @@ set(FORWARDER_FILES
         forwarder/MqttSnClientNetworkInterface.h
         forwarder/MqttSnForwarder.h
         forwarder/MqttSnGatewayNetworkInterface.h
-        forwarder/MqttSnFordwarder.c
+        forwarder/MqttSnForwarder.c
         forwarder/global_defines.h
         forwarder/MqttSnGatewayNetworkInterface.c
         forwarder/MqttSnClientNetworkInterface.c

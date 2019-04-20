@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <network/tcphelper/MqttSnTcpNetworkMessageParser.h>
+#include <network/iphelper/MqttSnIpNetworkHelper.h>
 
 #include "MqttSnClientTcpNetwork.h"
 #include "../../../MqttSnClientNetworkInterface.h"
@@ -48,45 +49,27 @@ int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context) {
 
   // create master socket
   if ((master_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-    perror("socket failed");
     return -1;
-    exit(EXIT_FAILURE);
   }
 
-  // set master socket to allow multiple connections,
-  // this is just a good habit, it will work without this
   int option = 1;
   if (setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *) &option, sizeof(option)) < 0) {
-    perror("setsockopt");
     return -1;
-    exit(EXIT_FAILURE);
   }
 
   // type of socket created
   address.sin_family = AF_INET;
   address.sin_addr.s_addr = INADDR_ANY;
-  address.sin_port = htons(clientTcpNetwork->port);
+  address.sin_port = htons(get_port_from_device_address(n->client_network_address));
 
-  // bind the socket to the localhost clientTcpNetwork->port
   if (bind(master_socket, (struct sockaddr *) &address, addrlen) < 0) {
-    perror("bind failed");
     return -1;
-    exit(EXIT_FAILURE);
   }
-  printf("Listener on port %d \n", clientTcpNetwork->port);
 
-  // try to specify maximum of 3 pending connections for the master socket
-  if (listen(master_socket, 3) < 0) {
-    // TODO find out more about the functionality here
-    perror("listen");
+  if (listen(master_socket, CMQTTSNFORWARDER_MAXIMUM_PENDING_CONNECTIONS) < 0) {
     return -1;
-    exit(EXIT_FAILURE);
   }
   clientTcpNetwork->master_socket = master_socket;
-
-  // accept the incoming connection
-  addrlen = sizeof(address);
-  puts("Waiting for connections ...");
   return 0;
 }
 

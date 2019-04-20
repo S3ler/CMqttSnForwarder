@@ -81,7 +81,6 @@ int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
     if (n->logger) {
       const MqttSnMessageData *msg = back(receiveBuffer);
       log_db_rec_client_message(n->logger,
-                                n->logger->log_level,
                                 &msg->address,
                                 n->mqtt_sn_gateway_address,
                                 msg->data,
@@ -106,7 +105,6 @@ int ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
   if (n->logger) {
     if (log_db_send_client_message(n->logger,
-                                   n->logger->log_level,
                                    n->mqtt_sn_gateway_address,
                                    &clientSendMessageData.address,
                                    clientSendMessageData.data,
@@ -128,7 +126,7 @@ int ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
     // TODO check if a udp buffer can return different values and why
     put(sendBuffer, &clientSendMessageData);
 #ifdef WITH_DEBUG_LOGGING
-    log_incomplete_message(n->logger, n->logger->log_level,
+    log_incomplete_message(n->logger,
                            &clientSendMessageData.address,
                            clientSendMessageData.data,
                            clientSendMessageData.data_length);

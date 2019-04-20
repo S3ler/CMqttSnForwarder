@@ -153,7 +153,6 @@ int ClientLinuxPluginInit(MqttSnClientNetworkInterface *n, void *context) {
       != 0) {
 #ifdef WITH_LOGGING
     log_protocol_mismatch(n->logger,
-                          n->logger->log_level,
                           pluginClientNetwork->plugin_cfg->protocol,
                           pluginClientNetwork->plugin_get_short_network_protocol_name());
 #endif
@@ -213,9 +212,13 @@ void ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context)
 #ifdef WITH_LOGGING
   if (n->logger) {
     log_network_disconnect(n->logger,
+<<<<<<< HEAD
                            n->logger->log_level,
                            pluginClientNetwork->plugin_get_short_network_protocol_name(),
                            "client",
+=======
+                           pluginClientNetwork->plugin_get_short_network_protocol_name(), NULL,
+>>>>>>> 115e0d4ab20cd11ce4902686a89cf52cde2fc319
                            n->client_network_address);
   }
 #endif
@@ -242,7 +245,7 @@ int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
   if (pluginClientNetwork->plugin_get_maximum_message_length() <= clientSendMessageData.data_length) {
     // too long messages for the protocol are ignored by the standard
 #ifdef WITH_DEBUG_LOGGING
-    if (log_too_long_message(n->logger, n->logger->log_level,
+    if (log_too_long_message(n->logger,
                              &clientSendMessageData.address,
                              clientSendMessageData.data,
                              clientSendMessageData.data_length)) {
@@ -255,7 +258,6 @@ int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
   if (n->logger) {
     if (log_db_send_client_message(n->logger,
-                                   n->logger->log_level,
                                    n->mqtt_sn_gateway_address,
                                    &clientSendMessageData.address,
                                    clientSendMessageData.data,
@@ -285,7 +287,7 @@ int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
   if (send_bytes != clientSendMessageData.data_length) {
     put(sendBuffer, &clientSendMessageData);
 #ifdef WITH_DEBUG_LOGGING
-    log_incomplete_message(n->logger, n->logger->log_level,
+    log_incomplete_message(n->logger,
                            &clientSendMessageData.address,
                            clientSendMessageData.data,
                            clientSendMessageData.data_length);
@@ -328,7 +330,6 @@ int ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n,
   if (n->logger) {
     const MqttSnMessageData *msg = back(receiveBuffer);
     log_db_rec_client_message(n->logger,
-                              n->logger->log_level,
                               &msg->address,
                               n->mqtt_sn_gateway_address,
                               msg->data,

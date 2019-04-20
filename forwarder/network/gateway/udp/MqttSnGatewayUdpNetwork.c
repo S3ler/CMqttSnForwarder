@@ -34,7 +34,8 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
 
   if (networkInterface->forwarder_network_address == NULL) {
-    // TODO implement searching for gateway
+    // FEATURE implement searching for gateway
+    return -1;
   }
   uint16_t port = get_port_from_device_address(networkInterface->forwarder_network_address);
 
@@ -96,7 +97,6 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
     if (n->logger) {
       const MqttSnMessageData *msg = back(receiveBuffer);
       log_db_rec_gateway_message(n->logger,
-                                 n->logger->log_level,
                                  n->gateway_network_address,
                                  msg->data,
                                  msg->data_length);
@@ -110,7 +110,6 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
                         MqttSnFixedSizeRingBuffer *sendBuffer,
                         int32_t timeout_ms,
                         void *context) {
-  // TODO: implement later: sendNetwork more messages until timeout runs out
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
   MqttSnMessageData gatewaySendMessageData = {0};
 
@@ -119,7 +118,6 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
   }
 #ifdef WITH_DEBUG_LOGGING
   log_db_send_gateway_message(n->logger,
-                              n->logger->log_level,
                               &gatewaySendMessageData.address,
                               n->gateway_network_address,
                               gatewaySendMessageData.data,
@@ -134,10 +132,9 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
     return -1;
   }
   if (send_bytes != gatewaySendMessageData.data_length) {
-    // TODO check if a udp buffer can return different values and why
     put(sendBuffer, &gatewaySendMessageData);
 #ifdef WITH_DEBUG_LOGGING
-    log_incomplete_message(n->logger, n->logger->log_level,
+    log_incomplete_message(n->logger,
                            &gatewaySendMessageData.address,
                            gatewaySendMessageData.data,
                            gatewaySendMessageData.data_length);
