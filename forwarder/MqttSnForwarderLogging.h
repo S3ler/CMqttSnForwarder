@@ -10,7 +10,6 @@ extern "C" {
 #endif
 
 #include <global_defines.h>
-#include "../main/forwarder_config.h"
 #include "MqttSnMessageParser.h"
 
 typedef enum {

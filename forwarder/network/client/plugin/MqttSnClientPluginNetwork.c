@@ -212,13 +212,8 @@ void ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context)
 #ifdef WITH_LOGGING
   if (n->logger) {
     log_network_disconnect(n->logger,
-<<<<<<< HEAD
-                           n->logger->log_level,
                            pluginClientNetwork->plugin_get_short_network_protocol_name(),
                            "client",
-=======
-                           pluginClientNetwork->plugin_get_short_network_protocol_name(), NULL,
->>>>>>> 115e0d4ab20cd11ce4902686a89cf52cde2fc319
                            n->client_network_address);
   }
 #endif
