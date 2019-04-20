@@ -12,8 +12,8 @@ extern "C" {
 #include <stdint.h>
 
 typedef struct gateway_plugin_device_address_ {
-  const uint8_t length;
-  const uint8_t *bytes;
+  uint8_t length;
+  uint8_t *bytes;
 } gateway_plugin_device_address;
 
 typedef struct gateway_plugin_config_ {
@@ -31,7 +31,6 @@ typedef struct gateway_plugin_message_ {
   uint16_t data_length;
 } gateway_plugin_message;
 
-// TODO rewrite doku
 /**
  * initialize the network - use the protocol to check if the protocol matches you
  * match the protocol
@@ -40,7 +39,7 @@ typedef struct gateway_plugin_message_ {
  * initialize the plugin_context here
  * @return -1 on error or when the protocol does not match else 0
  */
-int gateway_plugin_network_init(const gateway_plugin_config *cfg, void *plugin_context);
+int gateway_plugin_network_init(const gateway_plugin_config *cfg, void **plugin_context);
 
 /**
  * initialize the network - use the protocol to check if the protocol matches you
@@ -50,7 +49,7 @@ int gateway_plugin_network_init(const gateway_plugin_config *cfg, void *plugin_c
  * initialize the plugin_context here
  * @return -1 on error or when the protocol does not match else 0
  */
-int gateway_plugin_network_deinit(const gateway_plugin_config *cfg, void *plugin_context);
+void gateway_plugin_network_deinit(const gateway_plugin_config *cfg, void **plugin_context);
 
 /**
  *

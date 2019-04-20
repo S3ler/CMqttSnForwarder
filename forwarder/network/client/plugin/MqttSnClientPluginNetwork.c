@@ -76,7 +76,7 @@ int ClientLinuxPluginInit(MqttSnClientNetworkInterface *n, void *context) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginClientNetwork->plugin_network_deinit =
-      (int (*)(const client_plugin_config *cfg, void **plugin_context))
+      (void (*)(const client_plugin_config *cfg, void **plugin_context))
           dlsym(pluginClientNetwork->dl_handle, "client_plugin_network_deinit");
 #pragma GCC diagnostic pop
   error = dlerror();
@@ -176,27 +176,34 @@ int ClientLinuxPluginConnect(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientPluginContext *pluginClientNetwork = (MqttSnClientPluginContext *) context;
   if (pluginClientNetwork->plugin_network_connect(pluginClientNetwork->plugin_cfg,
                                                   pluginClientNetwork->plugin_context)) {
+#ifdef WITH_LOGGING
+    log_network_connect_fail(n->logger,
+                             pluginClientNetwork->plugin_get_short_network_protocol_name(),
+                             "client",
+                             n->client_network_address,
+                             NULL);
+#endif
     return -1;
   }
 #ifdef WITH_LOGGING
   if (n->logger) {
     log_network_connect(n->logger,
-                        n->logger->log_level,
                         pluginClientNetwork->plugin_get_short_network_protocol_name(),
                         "client",
                         n->client_network_address);
-  }// TODO fixed network name client
+  }
 #endif
   return 0;
 }
 void ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientPluginContext *pluginClientNetwork = (MqttSnClientPluginContext *) context;
-
+  if (pluginClientNetwork->dl_handle == NULL) {
+    return;
+  }
   pluginClientNetwork->plugin_network_disconnect(pluginClientNetwork->plugin_cfg,
                                                  pluginClientNetwork->plugin_context);
-  // TODO here error logging?
   pluginClientNetwork->plugin_network_deinit(pluginClientNetwork->plugin_cfg,
-                                                 &pluginClientNetwork->plugin_context);
+                                             &pluginClientNetwork->plugin_context);
   char *error = dlerror();
   if (error != NULL) {
 #ifdef WITH_LOGGING
@@ -207,7 +214,8 @@ void ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context)
   if (n->logger) {
     log_network_disconnect(n->logger,
                            n->logger->log_level,
-                           pluginClientNetwork->plugin_get_short_network_protocol_name(), NULL,
+                           pluginClientNetwork->plugin_get_short_network_protocol_name(),
+                           "client",
                            n->client_network_address);
   }
 #endif
@@ -219,6 +227,7 @@ void ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context)
 #endif
     }
   }
+  pluginClientNetwork->dl_handle = NULL;
 }
 int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
                           MqttSnFixedSizeRingBuffer *sendBuffer,

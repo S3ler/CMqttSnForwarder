@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 int malloc_json_key_array(char **dst, uint32_t *dst_len, const char *key, uint16_t d_a_len);
-char *generate_json_from_data(uint8_t *src_data, uint16_t src_data_len);
+char *generate_json_from_data(const uint8_t *src_data, uint16_t src_data_len);
 char *generate_json_from_device_address(const uint8_t *src_device_address, const uint16_t src_device_address_len);
 int generate_json_array_from_uint8_array(const char *key,
                                          char *dst,
@@ -22,7 +22,7 @@ int generate_json_array_from_uint8_array(const char *key,
 
 int parse_device_address_from_json(uint8_t *device_address,
                                    uint16_t *device_address_len,
-                                   uint8_t max_device_address_len,
+                                   uint16_t max_device_address_len,
                                    const char *json_str,
                                    size_t json_str_len);
 int parse_data_from_json(uint8_t *data,

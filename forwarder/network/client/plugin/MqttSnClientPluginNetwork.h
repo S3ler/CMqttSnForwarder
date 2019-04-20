@@ -16,7 +16,7 @@ extern "C" {
 typedef struct MqttSnClientPluginContext_ {
   void *dl_handle;
   int (*plugin_network_init)(const client_plugin_config *cfg, void **plugin_context);
-  int (*plugin_network_deinit)(const client_plugin_config *cfg, void **plugin_context);
+  void (*plugin_network_deinit)(const client_plugin_config *cfg, void **plugin_context);
   int (*plugin_network_connect)(const client_plugin_config *cfg, void *plugin_context);
   void (*plugin_network_disconnect)(const client_plugin_config *cfg, void *plugin_context);
   int (*plugin_network_send)(const client_plugin_message *send_message,

@@ -34,9 +34,10 @@ const char *client_plugin_get_short_network_protocol_name();
 uint16_t client_plugin_get_maximum_message_length();
 
 int client_plugin_network_init(const client_plugin_config *cfg, void **plugin_context);
-int client_plugin_network_deinit(const client_plugin_config *cfg, void **plugin_context);
 int client_plugin_network_connect(const client_plugin_config *cfg, void *plugin_context);
 void client_plugin_network_disconnect(const client_plugin_config *cfg, void *plugin_context);
+void client_plugin_network_deinit(const client_plugin_config *cfg, void **plugin_context);
+
 int client_plugin_network_send(const client_plugin_message *send_message,
                                int timeout_ms,
                                const client_plugin_config *cfg,

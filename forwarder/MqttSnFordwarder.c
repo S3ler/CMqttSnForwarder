@@ -35,12 +35,6 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
   MqttSnFixedSizeRingBufferInit(&mqttSnForwarder->gatewayNetworkSendBuffer);
 
   if (ClientNetworkConnect(&mqttSnForwarder->clientNetwork, mqttSnForwarder->clientNetworkContext) != 0) {
-#ifdef WITH_LOGGING
-    log_network_connect_fail(&mqttSnForwarder->logger,
-                             "client",
-                             mqttSnForwarder->clientNetwork.client_network_address,
-                             NULL);
-#endif
     MqttSnForwarderDeinit(mqttSnForwarder);
     return -1;
   }
@@ -54,6 +48,7 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
   if (GatewayNetworkConnect(&mqttSnForwarder->gatewayNetwork, mqttSnForwarder->gatewayNetworkContext) != 0) {
 #ifdef WITH_LOGGING
     log_network_connect_fail(&mqttSnForwarder->logger,
+                             NULL,
                              "gateway",
                              mqttSnForwarder->gatewayNetwork.forwarder_network_address,
                              mqttSnForwarder->gatewayNetwork.gateway_network_address);

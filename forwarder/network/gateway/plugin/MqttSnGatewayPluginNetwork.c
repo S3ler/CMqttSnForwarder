@@ -213,8 +213,8 @@ int GatewayLinuxPluginConnect(MqttSnGatewayNetworkInterface *n, void *context) {
 #ifdef WITH_LOGGING
   if (n->logger) {
     log_network_connect(n->logger,
-                        n->logger->log_level,
-                        pluginGatewayNetwork->plugin_get_short_network_protocol_name(), NULL,
+                        pluginGatewayNetwork->plugin_get_short_network_protocol_name(),
+                        "gateway",
                         n->gateway_network_address);
   }
 #endif

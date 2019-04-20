@@ -27,7 +27,7 @@ void free_json_device_address(char* json_device_address){
   free(json_device_address);
 }
 
-char *generate_json_from_data(uint8_t *src_data, uint16_t src_data_len) {
+char *generate_json_from_data(const uint8_t *src_data, uint16_t src_data_len) {
   const char *device_address_key_str = "data";
   char *dst = NULL;
   uint32_t dst_len = 0;
@@ -103,7 +103,7 @@ int generate_json_array_from_uint8_array(const char *key,
 
 int parse_device_address_from_json(uint8_t *device_address,
                                    uint16_t *device_address_len,
-                                   uint8_t max_device_address_len,
+                                   uint16_t max_device_address_len,
                                    const char *json_str,
                                    size_t json_str_len) {
   const char *key = "device_address";

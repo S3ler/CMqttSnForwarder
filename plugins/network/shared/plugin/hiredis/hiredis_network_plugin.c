@@ -1,26 +1,39 @@
 //
-// Created by SomeDude on 15.04.2019.
+// Created by SomeDude on 19.04.2019.
 //
 
-#include "hiredis_client_network_plugin.h"
-#include "../../shared/plugin/plugin_json.h"
-#include "../../shared/plugin/plugin_device_address_converter.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "hiredis_network_plugin.h"
+#include "../plugin_device_address_converter.h"
+#include "../plugin_json.h"
 
-const char *client_plugin_get_short_network_protocol_name() {
+const char *hiredis_plugin_get_short_network_protocol_name() {
   return "redis";
 }
 
-uint16_t client_plugin_get_maximum_message_length() {
+uint16_t hiredis_plugin_get_maximum_message_length() {
   return 1024;
 }
 
-int client_plugin_network_init(const client_plugin_config *cfg, void **plugin_context) {
-  hiredis_client_context *context = calloc(1, sizeof(hiredis_client_context));
+int hiredis_gateway_plugin_network_init(void **plugin_context) {
+  hiredis_context *context = calloc(1, sizeof(hiredis_context));
   if (context == NULL) {
-    printf("Can't allocate redis_client_context\n");
+    printf("Can't allocate hiredis_context\n");
+    return -1;
+  }
+  context->redis_context = 0;
+  context->redis_context = NULL;
+  context->redis_send_list = NULL;
+  context->redis_receive_list = NULL;
+  context->redis_send_list = strdup("gsl");
+  context->redis_receive_list = strdup("grl");
+  *plugin_context = context;
+  return 0;
+}
+
+int hiredis_client_plugin_network_init(void **plugin_context) {
+  hiredis_context *context = calloc(1, sizeof(hiredis_context));
+  if (context == NULL) {
+    printf("Can't allocate hiredis_context\n");
     return -1;
   }
   context->redis_context = 0;
@@ -33,15 +46,15 @@ int client_plugin_network_init(const client_plugin_config *cfg, void **plugin_co
   return 0;
 }
 
-void client_plugin_network_disconnect(const client_plugin_config *cfg, void *plugin_context) {
-  hiredis_client_context *context = (hiredis_client_context *) plugin_context;
+void hiredis_plugin_network_disconnect(void *plugin_context) {
+  hiredis_context *context = (hiredis_context *) plugin_context;
   redisFree(context->redis_context);
   context->redis_context = NULL;
   context->status = 0;
 }
 
-void client_plugin_network_deinit(const client_plugin_config *cfg, void **plugin_context) {
-  hiredis_client_context *context = (hiredis_client_context *) *plugin_context;
+void hiredis_plugin_network_deinit(void **plugin_context) {
+  hiredis_context *context = (hiredis_context *) plugin_context;
   free(context->redis_send_list);
   free(context->redis_receive_list);
   free(context);
@@ -49,12 +62,15 @@ void client_plugin_network_deinit(const client_plugin_config *cfg, void **plugin
   context->status = -1;
 }
 
-int client_plugin_network_connect(const client_plugin_config *cfg, void *plugin_context) {
-  hiredis_client_context *context = (hiredis_client_context *) plugin_context;
+int hiredis_plugin_network_connect(const uint8_t* address,
+                                   uint16_t address_len,
+                                   uint16_t network_max_device_address_length,
+                                   void *plugin_context) {
+  hiredis_context *context = (hiredis_context *) plugin_context;
   if (context->status != 0) {
     return -1;
   }
-  if (cfg->client_plugin_device_address_length < 6) {
+  if (network_max_device_address_length < 6) {
     return -1;
   }
 
@@ -65,8 +81,8 @@ int client_plugin_network_connect(const client_plugin_config *cfg, void *plugin_
   if (get_ipv4_string_and_port_from_device_address(ipv4_str,
                                                    ipv4_str_length,
                                                    &port,
-                                                   cfg->forwarder_client_network_address->bytes,
-                                                   cfg->forwarder_client_network_address->length)) {
+                                                   address,
+                                                   address_len)) {
     return -1;
   }
 
@@ -84,11 +100,15 @@ int client_plugin_network_connect(const client_plugin_config *cfg, void *plugin_
   return 0;
 }
 
-int client_plugin_network_send(const client_plugin_message *send_message,
-                               int timeout_ms,
-                               const client_plugin_config *cfg,
-                               void *plugin_context) {
-  hiredis_client_context *context = (hiredis_client_context *) plugin_context;
+int hiredis_plugin_network_send(const uint8_t *to,
+                                uint16_t to_len,
+                                uint16_t network_max_device_address_length,
+                                const uint8_t *data,
+                                uint16_t data_len,
+                                uint16_t network_max_message_length,
+                                int timeout_ms,
+                                void *plugin_context) {
+  hiredis_context *context = (hiredis_context *) plugin_context;
 
   struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
   if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
@@ -103,8 +123,7 @@ int client_plugin_network_send(const client_plugin_message *send_message,
     return -1;
   }
 
-  char *json_device_address =
-      generate_json_from_device_address(send_message->address.bytes, send_message->address.length);
+  char *json_device_address = generate_json_from_device_address(to, to_len);
   if (json_device_address == NULL) {
 #ifdef WITH_PLUGIN_ERROR_MSG
     printf("Can't create json_device_address\n");
@@ -112,7 +131,7 @@ int client_plugin_network_send(const client_plugin_message *send_message,
     return -1;
   }
 
-  char *json_data = generate_json_from_data(send_message->data, *send_message->data_length);
+  char *json_data = generate_json_from_data(data, data_len);
   if (json_data == NULL) {
     free_json_device_address(json_device_address);
 #ifdef WITH_PLUGIN_ERROR_MSG
@@ -150,14 +169,18 @@ int client_plugin_network_send(const client_plugin_message *send_message,
     return -1;
   }
 
-  return *send_message->data_length;
+  return data_len;
 }
 
-int client_plugin_network_receive(client_plugin_message *rec_message,
-                                  int timeout_ms,
-                                  const client_plugin_config *cfg,
-                                  void *plugin_context) {
-  hiredis_client_context *context = (hiredis_client_context *) plugin_context;
+int hiredis_plugin_network_receive(uint8_t *from,
+                                   uint16_t *from_len,
+                                   uint16_t network_max_device_address_length,
+                                   uint8_t *data,
+                                   uint16_t *data_len,
+                                   uint16_t network_max_data_length,
+                                   int timeout_ms,
+                                   void *plugin_context) {
+  hiredis_context *context = (hiredis_context *) plugin_context;
 
   struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
   if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
@@ -199,10 +222,9 @@ int client_plugin_network_receive(client_plugin_message *rec_message,
     return -1;
   }
 
-  uint16_t address_length = 0;
-  if (parse_device_address_from_json(rec_message->address.bytes,
-                                     &address_length,
-                                     cfg->client_plugin_device_address_length,
+  if (parse_device_address_from_json(from,
+                                     from_len,
+                                     network_max_device_address_length,
                                      reply->str,
                                      reply->len)) {
 #ifdef WITH_PLUGIN_ERROR_MSG
@@ -211,11 +233,10 @@ int client_plugin_network_receive(client_plugin_message *rec_message,
     freeReplyObject(reply);
     return 0;
   }
-  rec_message->address.length = address_length;
 
-  if (parse_data_from_json(rec_message->data,
-                           rec_message->data_length,
-                           cfg->forwarder_maximum_message_length,
+  if (parse_data_from_json(data,
+                           data_len,
+                           network_max_data_length,
                            reply->str,
                            reply->len)) {
 #ifdef WITH_PLUGIN_ERROR_MSG

@@ -56,12 +56,12 @@ int log_forwarder_terminated(const MqttSnLogger *logger,
                              uintmax_t tweak);
 
 int log_network_connect(const MqttSnLogger *logger,
-                        int level,
-                        const char *protocol,
+                        const char *protocol_name,
                         const char *network_name,
                         const device_address *address);
 
 int log_network_connect_fail(const MqttSnLogger *logger,
+                             const char *protocol_name,
                              const char *network_name,
                              const device_address *as,
                              const device_address *to);

@@ -1,5 +1,5 @@
 Featurelist:
-
+// TODO mention: easily adeptable for other platforms like RTOS
 //  encapsulatedMessage->crtl = 0;
 //  TODO receive and send broadcasting
 // for more information see Encapsulated message in MQTT-SN spec

@@ -12,15 +12,15 @@ extern "C" {
 #include <stdint.h>
 
 typedef struct gateway_plugin_device_address_ {
-  const uint8_t length;
-  const uint8_t *bytes;
+  uint16_t length;
+  uint8_t *bytes;
 } gateway_plugin_device_address;
 
 typedef struct gateway_plugin_config_ {
   const char *plugin_path;
   const char *protocol;
   uint16_t forwarder_maximum_message_length;
-  uint8_t gateway_plugin_device_address_length;
+  uint16_t gateway_plugin_device_address_length;
   const gateway_plugin_device_address *mqtt_sn_gateway_network_address;
   const gateway_plugin_device_address *forwarder_gateway_network_address;
 } gateway_plugin_config;
@@ -31,9 +31,9 @@ typedef struct gateway_plugin_message_ {
   uint16_t data_length;
 } gateway_plugin_message;
 
-int gateway_plugin_network_init(const gateway_plugin_config *cfg, void *plugin_context);
+int gateway_plugin_network_init(const gateway_plugin_config *cfg, void **plugin_context);
 
-int gateway_plugin_network_deinit(const gateway_plugin_config *cfg, void *plugin_context);
+void gateway_plugin_network_deinit(const gateway_plugin_config *cfg, void **plugin_context);
 
 const char *gateway_plugin_get_short_network_protocol_name();
 
