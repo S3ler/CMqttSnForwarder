@@ -15,13 +15,6 @@ extern "C" {
 #include "MqttSnClientNetworkInterface.h"
 #include "MqttSnForwarderLogging.h"
 
-/*
-#define CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT 1000
-#define CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT 1000
-
-#define GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT 1000
-#define GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT 1000
-*/
 
 typedef struct MqttSnForwarder {
   MqttSnClientNetworkInterface clientNetwork;

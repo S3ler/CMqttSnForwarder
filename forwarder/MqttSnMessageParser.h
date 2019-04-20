@@ -345,7 +345,7 @@ typedef struct MqttSnEncapsulatedMessage_ {
 } MqttSnEncapsulatedMessage;
 #pragma pack(pop)
 
-int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
+int parse_header(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const uint8_t *data, uint16_t data_len);
 
 int parse_message_tolerant(ParsedMqttSnHeader *h,
                            MQTT_SN_MESSAGE_TYPE msg_type,

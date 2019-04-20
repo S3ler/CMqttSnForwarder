@@ -31,7 +31,6 @@ typedef struct gateway_plugin_message_ {
   uint16_t data_length;
 } gateway_plugin_message;
 
-// TODO rewrite doku
 /**
  * initialize the network - use the protocol to check if the protocol matches you
  * match the protocol

@@ -34,7 +34,8 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
 
   if (networkInterface->forwarder_network_address == NULL) {
-    // TODO implement searching for gateway
+    // FEATURE implement searching for gateway
+    return -1;
   }
   uint16_t port = get_port_from_device_address(networkInterface->forwarder_network_address);
 
@@ -109,7 +110,6 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
                         MqttSnFixedSizeRingBuffer *sendBuffer,
                         int32_t timeout_ms,
                         void *context) {
-  // TODO: implement later: sendNetwork more messages until timeout runs out
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
   MqttSnMessageData gatewaySendMessageData = {0};
 
@@ -132,7 +132,6 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
     return -1;
   }
   if (send_bytes != gatewaySendMessageData.data_length) {
-    // TODO check if a udp buffer can return different values and why
     put(sendBuffer, &gatewaySendMessageData);
 #ifdef WITH_DEBUG_LOGGING
     log_incomplete_message(n->logger,

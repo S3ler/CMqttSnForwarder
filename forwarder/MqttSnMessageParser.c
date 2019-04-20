@@ -48,7 +48,15 @@ uint8_t is_three_bytes_header(const uint8_t *data) {
   return 0;
 }
 
-int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
+/**
+ * Parses a byte array into a ParsedMqttSnHeader.
+ * Failures are generated if the header is malformed or the parsed length of the header is unequal to data_len.
+ * @param h to parse the header to.
+ * @param data to parse to the header.
+ * @param data_len length of data.
+ * @return 0 on success and -1 on failure.
+ */
+int parse_header(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const uint8_t *data, uint16_t data_len) {
   if (data_len < 2) {
     return -1;
   }
@@ -64,46 +72,41 @@ int parse_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) 
   if (h->msg_type == RESERVED_INVALID) {
     return -1;
   }
-  return 0;
-}
-
-int parse_message_tolerant(ParsedMqttSnHeader *h,
-                           MQTT_SN_MESSAGE_TYPE msg_type,
-                           const uint8_t *data,
-                           uint16_t data_len) {
-  if (parse_header(h, data, data_len)) {
-    return -1;
-  }
   if (msg_type != ANY_MESSAGE_TYPE) {
     if (h->msg_type != msg_type) {
       return -1;
     }
   }
+  return 0;
+}
+
+/**
+ * Return Error on invalid header or header length.
+ * @param h
+ * @param msg_type
+ * @param data
+ * @param data_len
+ * @return
+ */
+int parse_message_tolerant(ParsedMqttSnHeader *h,
+                           MQTT_SN_MESSAGE_TYPE msg_type,
+                           const uint8_t *data,
+                           uint16_t data_len) {
+  if (parse_header(h, msg_type, data, data_len)) {
+    return -1;
+  }
+
   int payload_offset = MQTT_SN_HEADER_LENGTH(h->indicator);
   if (h->msg_type == ENCAPSULATED_MESSAGE) {
     ParsedMqttSnHeader encapsulated_header = {0};
     if (parse_message_tolerant(&encapsulated_header,
                                ANY_MESSAGE_TYPE,
-                               data + MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(h->indicator),
-                               data_len - MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(h->indicator))) {
+                               data + payload_offset,
+                               data_len - payload_offset)) {
       return -1;
     }
   }
-  // TODO check all other message length
-  if (h->msg_type == PINGREQ) {
-    if (h->length > MQTT_SN_PINGREQ_MESSAGE_HEADER_LENGTH) {
-      if (h->length > MQTT_SN_PINGREQ_MESSAGE_HEADER_LENGTH + MQTT_SN_MAX_CLIENT_ID_LENGTH) {
-        return -1;
-      }
-    }
-  }
-  if (h->msg_type == GWINFO) {
-    if (h->length > 3) {
-      if (h->length > MQTT_SN_GWINFO_MESSAGE_HEADER_LENGTH + sizeof(device_address)) {
-        return -1;
-      }
-    }
-  }
+
   h->payload = (MqttSnEncapsulatedMessage *) (data + payload_offset);
   return 0;
 }

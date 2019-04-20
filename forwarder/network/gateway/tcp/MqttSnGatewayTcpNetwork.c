@@ -31,7 +31,8 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 
   if (networkInterface->forwarder_network_address == NULL) {
-    // TODO implement searching for gateway
+    // FEATURE implement searching for gateway
+    return -1;
   }
 
   /*

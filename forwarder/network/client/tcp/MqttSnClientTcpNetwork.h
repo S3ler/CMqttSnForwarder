@@ -17,6 +17,8 @@ extern "C" {
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS 10
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH 1024
 
+#define CMQTTSNFORWARDER_MAXIMUM_PENDING_CONNECTIONS 3
+
 typedef struct MqttSnClientTcpNetwork {
   int master_socket;
   int client_socket[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
@@ -24,7 +26,6 @@ typedef struct MqttSnClientTcpNetwork {
   [CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t client_buffer_bytes[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
   int max_clients;
-  int port;
 } MqttSnClientTcpNetwork;
 
 int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context);
