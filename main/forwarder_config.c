@@ -100,7 +100,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
           fprintf(stderr, "Error: unsupported URL scheme.\n\n");
           return 1;
         }
-
+        free(fcfg->mqtt_sn_gateway_host);
         fcfg->mqtt_sn_gateway_host = url + 2;
         char *tmp = strchr(url, ':');
         if (tmp) {
@@ -299,6 +299,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         }
 
         if (addr) {
+          free(fcfg->client_network_bind_address);
           fcfg->client_network_bind_address = strdup(addr);
         } else {
           fprintf(stderr, "Error: unsupported URL scheme.\n\n");
@@ -357,14 +358,6 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #endif
     else if (!strcmp(argv[i], "--help")) {
       return 2;
-    } else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
-      if (i == argc - 1) {
-        fprintf(stderr, "Error: %s argument given but no host specified.\n\n", argv[i]);
-        return 1;
-      } else {
-        fcfg->mqtt_sn_gateway_host = strdup(argv[i + 1]);
-      }
-      i++;
     } else {
       fprintf(stderr, "Error: Unknown option '%s'.\n", argv[i]);
       return 1;
