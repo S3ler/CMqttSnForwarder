@@ -7,7 +7,7 @@ Featurelist:
 // TODO logging für restiliche mqtt-sn- message
 // TODO error parsing
 -cL redis://localhost:6379 -gL redis://localhost:6379 -gnp ./plugins/libhiredis_plugin.so -cnp ./plugins/libhiredis_plugin.so --debug
-
+--debug -gP tcp -cP tcp -cA 127.0.0.1 -gA 127.0.0.1
   // TODO: printf("                        [-c config_file]\n");
   // TODO  printf(" --json : produce json valid log message
   // TODO: printf(" -c : specify the forwarder config file.\n");

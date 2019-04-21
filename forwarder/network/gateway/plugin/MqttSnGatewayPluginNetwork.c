@@ -331,6 +331,7 @@ int GatewayLinuxPluginReceive(MqttSnGatewayNetworkInterface *n,
     const MqttSnMessageData *msg = back(receiveBuffer);
     log_db_rec_gateway_message(n->logger,
                                n->gateway_network_address,
+                               &msg->address,
                                msg->data,
                                msg->data_length);
   }

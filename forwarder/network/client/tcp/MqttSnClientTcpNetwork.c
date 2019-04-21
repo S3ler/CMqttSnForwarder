@@ -125,12 +125,12 @@ int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
   // MqttSnClientNetworkInitReadFdSet(clientTcpNetwork, &max_sd, &readfds);
 
   // if something happened on the master socket, then it is an incoming connection
-  if (MqttSnClientHandleMasterSocket(clientTcpNetwork, &readfds) != 0) {
+  if (MqttSnClientHandleMasterSocket(n, clientTcpNetwork, &readfds) != 0) {
     return -1;
   }
 
   // else its some IO operation on some other socket
-  MqttSnClientHandleClientSockets(clientTcpNetwork, receiveBuffer, &readfds);
+  MqttSnClientHandleClientSockets(n, clientTcpNetwork, receiveBuffer, &readfds);
 
   return 0;
 }
@@ -192,8 +192,20 @@ int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
     if (send(clientTcpNetwork->client_socket[i], sendMessage.data, sendMessage.data_length, 0) !=
         sendMessage.data_length) {
       close_client_connection(clientTcpNetwork, i);
+      break;
     }
-
+#ifdef WITH_DEBUG_LOGGING
+    if (n->logger) {
+      if (log_db_send_client_message(n->logger,
+                                     n->mqtt_sn_gateway_address,
+                                     &sendMessage.address,
+                                     sendMessage.data,
+                                     sendMessage.data_length)) {
+        return -1;
+      }
+    }
+#endif
+    // TODO on debug logging when logging message cannot be send and retried
   }
 
   return 0;
@@ -283,7 +295,9 @@ int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNe
   */
 }
 
-void MqttSnClientHandleClientSockets(MqttSnClientTcpNetwork *clientTcpNetwork, MqttSnFixedSizeRingBuffer *receiveBuffer,
+void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
+                                     MqttSnClientTcpNetwork *clientTcpNetwork,
+                                     MqttSnFixedSizeRingBuffer *receiveBuffer,
                                      fd_set *readfds) {
   for (int client_socket_position = 0;
        client_socket_position < clientTcpNetwork->max_clients;
@@ -303,6 +317,16 @@ void MqttSnClientHandleClientSockets(MqttSnClientTcpNetwork *clientTcpNetwork, M
              CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH);
       clientTcpNetwork->client_buffer_bytes[client_socket_position] = 0;
     }
+#ifdef WITH_DEBUG_LOGGING
+    if (n->logger) {
+      const MqttSnMessageData *msg = back(receiveBuffer);
+      log_db_rec_client_message(n->logger,
+                                &msg->address,
+                                n->mqtt_sn_gateway_address,
+                                msg->data,
+                                msg->data_length);
+    }
+#endif
   }
 }
 device_address get_client_device_address(int client_file_descriptor) {
@@ -326,7 +350,9 @@ device_address get_client_device_address(int client_file_descriptor) {
   return clientAddress;
 }
 
-int MqttSnClientHandleMasterSocket(MqttSnClientTcpNetwork *clientTcpNetwork, fd_set *readfds) {
+int MqttSnClientHandleMasterSocket(MqttSnClientNetworkInterface *n,
+                                   MqttSnClientTcpNetwork *clientTcpNetwork,
+                                   fd_set *readfds) {
   if (FD_ISSET(clientTcpNetwork->master_socket, readfds)) {
     int new_socket;
     int addrlen;

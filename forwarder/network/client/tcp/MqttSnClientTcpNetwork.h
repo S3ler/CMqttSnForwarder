@@ -46,9 +46,13 @@ int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
 
 void MqttSnClientNetworkInitReadFdSet(const MqttSnClientTcpNetwork *clientTcpNetwork, int *max_sd, fd_set *readfds);
 
-int MqttSnClientHandleMasterSocket(MqttSnClientTcpNetwork *clientTcpNetwork, fd_set *readfds);
+int MqttSnClientHandleMasterSocket(MqttSnClientNetworkInterface *n,
+                                   MqttSnClientTcpNetwork *clientTcpNetwork,
+                                   fd_set *readfds);
 
-void MqttSnClientHandleClientSockets(MqttSnClientTcpNetwork *clientTcpNetwork, MqttSnFixedSizeRingBuffer *receiveBuffer,
+void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
+                                     MqttSnClientTcpNetwork *clientTcpNetwork,
+                                     MqttSnFixedSizeRingBuffer *receiveBuffer,
                                      fd_set *readfds);
 
 int getDeviceAddressFromFileDescriptor(int peer_fd, device_address *peer_address);

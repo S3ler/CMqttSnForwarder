@@ -103,6 +103,7 @@ int log_db_rec_client_message(const MqttSnLogger *logger,
 
 int log_db_rec_gateway_message(const MqttSnLogger *logger,
                                const device_address *from,
+                               const device_address *to,
                                const uint8_t *data,
                                uint16_t data_len);
 

@@ -14,8 +14,8 @@
 #include <MqttSnMessageParser.h>
 #include "forwarder/global_defines.h"
 
-#define FORWARDER_CLIENT_NETWORK_PORT 9999
-#define GATEWAY_PORT 22222
+#define FORWARDER_CLIENT_NETWORK_PORT 7777
+#define GATEWAY_PORT 8888
 #define MAX_MSG_LEN 255
 //#define FORWARDER_HEADER_LEN 3
 #define PUBLISH_HEADER_LEN 7

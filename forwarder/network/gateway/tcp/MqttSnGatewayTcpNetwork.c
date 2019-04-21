@@ -83,13 +83,13 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   }
   */
 
-  uint32_t gateway_ip = (((uint32_t) networkInterface->gateway_network_address->bytes[0]) << 24)
-      + (((uint32_t) networkInterface->gateway_network_address->bytes[1]) << 16)
-      + (((uint32_t) networkInterface->gateway_network_address->bytes[2]) << 8)
-      + (((uint32_t) networkInterface->gateway_network_address->bytes[3]) << 0);
+  uint32_t gateway_ip = (((uint32_t) networkInterface->mqtt_sn_gateway_address->bytes[0]) << 24)
+      + (((uint32_t) networkInterface->mqtt_sn_gateway_address->bytes[1]) << 16)
+      + (((uint32_t) networkInterface->mqtt_sn_gateway_address->bytes[2]) << 8)
+      + (((uint32_t) networkInterface->mqtt_sn_gateway_address->bytes[3]) << 0);
 
-  uint16_t gateway_port = ((uint16_t) networkInterface->gateway_network_address->bytes[4] << 8)
-      + ((uint16_t) networkInterface->gateway_network_address->bytes[5]);
+  uint16_t gateway_port = ((uint16_t) networkInterface->mqtt_sn_gateway_address->bytes[4] << 8)
+      + ((uint16_t) networkInterface->mqtt_sn_gateway_address->bytes[5]);
 
   struct sockaddr_in address;
   address.sin_port = htons(gateway_port);
@@ -154,6 +154,16 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n, MqttSnFixedSizeRing
     GatewayLinuxTcpDisconnect(n, context);
     return -1;
   }
+#ifdef WITH_DEBUG_LOGGING
+  if (n->logger) {
+    const MqttSnMessageData *msg = back(receiveBuffer);
+    log_db_rec_gateway_message(n->logger,
+                               n->mqtt_sn_gateway_address,
+                               NULL,
+                               msg->data,
+                               msg->data_length);
+  }
+#endif
   /*
   if (MqttSnGatewayHandleMasterSocket(tcpNetwork, receiveBuffer, &readfds) != 0) {
     return -1;
@@ -229,9 +239,21 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
 
     setsockopt(tcpNetwork->mqtt_sg_gateway_fd, SOL_SOCKET, SO_SNDTIMEO, (char *) &tv, sizeof(struct timeval));
     ssize_t rc = write(tcpNetwork->mqtt_sg_gateway_fd, gatewaySendMessageData.data, gatewaySendMessageData.data_length);
-
+#ifdef WITH_DEBUG_LOGGING
+    log_db_send_gateway_message(n->logger,
+                                &gatewaySendMessageData.address,
+                                n->mqtt_sn_gateway_address,
+                                gatewaySendMessageData.data,
+                                gatewaySendMessageData.data_length);
+#endif
     if (rc != gatewaySendMessageData.data_length) {
       put(sendBuffer, &gatewaySendMessageData);
+#ifdef WITH_DEBUG_LOGGING
+      log_incomplete_message(n->logger,
+                             &gatewaySendMessageData.address,
+                             gatewaySendMessageData.data,
+                             gatewaySendMessageData.data_length);
+#endif
       return -1;
     }
   }
