@@ -57,9 +57,8 @@ void hiredis_plugin_network_deinit(void **plugin_context) {
   hiredis_context *context = (hiredis_context *) *plugin_context;
   free(context->redis_send_list);
   free(context->redis_receive_list);
-  free(context);
+  free(*plugin_context);
   *plugin_context = NULL;
-  context->status = -1;
 }
 
 int hiredis_plugin_network_connect(const uint8_t* address,
@@ -160,15 +159,15 @@ int hiredis_plugin_network_send(const uint8_t *to,
     return -1;
   }
 
-  freeReplyObject(reply);
-
   if (reply->type == REDIS_REPLY_ERROR) {
 #ifdef WITH_PLUGIN_ERROR_MSG
-    fprintf(stderr, "Error: %s\n", context->redis_context->errstr);
+    printf("Error: %s\n", context->redis_context->errstr);
 #endif
+    freeReplyObject(reply);
     return -1;
   }
 
+  freeReplyObject(reply);
   return data_len;
 }
 

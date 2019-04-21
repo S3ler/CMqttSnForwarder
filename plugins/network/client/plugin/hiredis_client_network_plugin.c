@@ -44,9 +44,8 @@ void client_plugin_network_deinit(const client_plugin_config *cfg, void **plugin
   hiredis_client_context *context = (hiredis_client_context *) *plugin_context;
   free(context->redis_send_list);
   free(context->redis_receive_list);
-  free(context);
+  free(*plugin_context);
   *plugin_context = NULL;
-  context->status = -1;
 }
 
 int client_plugin_network_connect(const client_plugin_config *cfg, void *plugin_context) {
