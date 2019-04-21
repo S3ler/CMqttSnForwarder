@@ -59,7 +59,7 @@ typedef struct MqttSnClientNetworkInterface {
  * @return -1 in case of an error, 0 otherwise.
  */
 int ClientNetworkInit(MqttSnClientNetworkInterface *n,
-                      device_address *mqtt_sn_gateway_device_address,
+                      device_address *mqtt_sn_gateway_address,
                       device_address *client_network_address,
                       void *context,
                       int (*client_network_init)(MqttSnClientNetworkInterface *, void *));

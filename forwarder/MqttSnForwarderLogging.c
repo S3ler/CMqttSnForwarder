@@ -174,34 +174,6 @@ int log_network_connect_fail(const MqttSnLogger *logger,
                              const device_address *as,
                              const device_address *to) {
   return log_network_connect_result(logger, protocol_name, network_name, "failed", as, to);
-
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
-    return 0;
-  }
-  const char *connect = "Connect to ";
-  const char *space = " ";
-  const char *network_as = " network as ";
-  const char *failed_dot = " failed.";
-  log_msg_start(logger);
-  log_str(logger, connect);
-
-  if (protocol_name != NULL) {
-    log_str(logger, protocol_name);
-    log_str(logger, space);
-  }
-
-  log_str(logger, network_name);
-  log_str(logger, network_as);
-  log_device_address(logger, as);
-  if (to != NULL) {
-    const char *to_str = " to ";
-    log_str(logger, to_str);
-    log_device_address(logger, to);
-  }
-
-  log_str(logger, failed_dot);
-  log_flush(logger);
-  return log_status(logger);
 }
 
 int log_network_disconnect(const MqttSnLogger *logger,

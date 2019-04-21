@@ -11,39 +11,43 @@
 
 #ifdef WITH_LOGGING
 int log_new_tcp_connection(const MqttSnLogger *logger, int level, const device_address *address) {
-  if (level <= LOG_LEVEL_QUIET) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
-  const char *new_client = ": New client connection from ";
+
+  const char *new_client = "New client connection from ";
   const char *on_port = " on port ";
   const char *dot = ".";
   uint32_t port = get_port_from_device_address(address);
 
-  return (log_current_time(logger) ||
-      logger->log_str(new_client) ||
-      log_device_address(logger, address) ||
-      logger->log_str(on_port) ||
-      log_uint32(logger, port) ||
-      logger->log_str(dot) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  logger->log_str(new_client);
+  log_device_address(logger, address);
+  logger->log_str(on_port);
+  log_uint32(logger, port);
+  logger->log_str(dot);
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_close_tcp_connection(const MqttSnLogger *logger, int level, const device_address *address) {
-  if (level <= LOG_LEVEL_QUIET) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
-  const char *close_client = ": Closed client connection from ";
+
+  const char *close_client = "Closed client connection from ";
   const char *on_port = " on port ";
   const char *dot = ".";
   uint32_t port = get_port_from_device_address(address);
 
-  return (log_current_time(logger) ||
-      log_str(logger, close_client) ||
-      log_device_address(logger, address) ||
-      log_str(logger, on_port) ||
-      log_uint32(logger, port) ||
-      log_str(logger, dot) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  log_str(logger, close_client);
+  log_device_address(logger, address);
+  log_str(logger, on_port);
+  log_uint32(logger, port);
+  log_str(logger, dot);
+  log_flush(logger);
+  return log_status(logger);
 }
 #endif //WITH_LOGGING
 
