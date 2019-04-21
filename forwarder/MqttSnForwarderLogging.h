@@ -12,7 +12,7 @@ extern "C" {
 #include <global_defines.h>
 
 typedef enum MQTT_SN_FORWARDER_NETWORK_ {
-    MQTT_SN_FORWARDER_NETWORK_NETWORK_INVALID = -1,
+    MQTT_SN_FORWARDER_NETWORK_INVALID = -1,
     MQTT_SN_FORWARDER_NETWORK_GATEWAY = 0,
     MQTT_SN_FORWARDER_NETWORK_CLIENT = 1
 } MQTT_SN_FORWARDER_NETWORK;
@@ -71,7 +71,8 @@ int log_forwarder_terminated(const MqttSnLogger *logger,
 int log_network_connect(const MqttSnLogger *logger,
                         const char *protocol_name,
                         const char *network_name,
-                        const device_address *address);
+                        const device_address *as,
+                        const device_address *to);
 
 int log_network_connect_fail(const MqttSnLogger *logger,
                              const char *protocol_name,

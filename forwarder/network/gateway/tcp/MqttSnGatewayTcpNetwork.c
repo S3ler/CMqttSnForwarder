@@ -30,7 +30,7 @@ int GatewayLinuxTcpInit(struct MqttSnGatewayNetworkInterface *n, void *context) 
 int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 
-  if (networkInterface->forwarder_network_address == NULL) {
+  if (networkInterface->mqtt_sn_gateway_address == NULL) {
     // FEATURE implement searching for gateway
     return -1;
   }
@@ -39,14 +39,14 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   char ipAsString[255] = {0};
   sprintf(ipAsString,
           "%d.%d.%d.%d",
-          networkInterface->forwarder_network_address->bytes[0],
-          networkInterface->forwarder_network_address->bytes[1],
-          networkInterface->forwarder_network_address->bytes[2],
-          networkInterface->forwarder_network_address->bytes[3]);
-  uint16_t port_msb = ((uint16_t) networkInterface->forwarder_network_address->bytes[4] << 8);
-  uint16_t port_lsb = ((uint16_t) networkInterface->forwarder_network_address->bytes[5]);
-  uint16_t port = ((uint16_t) networkInterface->forwarder_network_address->bytes[4] << 8)
-      + ((uint16_t) networkInterface->forwarder_network_address->bytes[5]);
+          networkInterface->mqtt_sn_gateway_address->bytes[0],
+          networkInterface->mqtt_sn_gateway_address->bytes[1],
+          networkInterface->mqtt_sn_gateway_address->bytes[2],
+          networkInterface->mqtt_sn_gateway_address->bytes[3]);
+  uint16_t port_msb = ((uint16_t) networkInterface->mqtt_sn_gateway_address->bytes[4] << 8);
+  uint16_t port_lsb = ((uint16_t) networkInterface->mqtt_sn_gateway_address->bytes[5]);
+  uint16_t port = ((uint16_t) networkInterface->mqtt_sn_gateway_address->bytes[4] << 8)
+      + ((uint16_t) networkInterface->mqtt_sn_gateway_address->bytes[5]);
 
   char *addr = ipAsString;
   if (addr == NULL) {

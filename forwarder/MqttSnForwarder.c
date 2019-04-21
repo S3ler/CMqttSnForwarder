@@ -38,26 +38,13 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
     MqttSnForwarderDeinit(mqttSnForwarder);
     return -1;
   }
-#ifdef WITH_LOGGING
-  if (mqttSnForwarder->logger.status) {
-    MqttSnForwarderDeinit(mqttSnForwarder);
-    return -1;
-  }
-#endif
 
   if (GatewayNetworkConnect(&mqttSnForwarder->gatewayNetwork, mqttSnForwarder->gatewayNetworkContext) != 0) {
-#ifdef WITH_LOGGING
-    log_network_connect_fail(&mqttSnForwarder->logger,
-                             NULL,
-                             "gateway",
-                             mqttSnForwarder->gatewayNetwork.forwarder_network_address,
-                             mqttSnForwarder->gatewayNetwork.gateway_network_address);
-#endif
     MqttSnForwarderDeinit(mqttSnForwarder);
     return -1;
   }
 #ifdef WITH_LOGGING
-  if (mqttSnForwarder->logger.status) {
+  if (log_status(&mqttSnForwarder->logger)) {
     MqttSnForwarderDeinit(mqttSnForwarder);
     return -1;
   }

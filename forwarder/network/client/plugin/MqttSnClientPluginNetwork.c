@@ -181,7 +181,7 @@ int ClientLinuxPluginConnect(MqttSnClientNetworkInterface *n, void *context) {
                              pluginClientNetwork->plugin_get_short_network_protocol_name(),
                              "client",
                              n->client_network_address,
-                             NULL);
+                             n->mqtt_sn_gateway_address);
 #endif
     return -1;
   }
@@ -190,7 +190,8 @@ int ClientLinuxPluginConnect(MqttSnClientNetworkInterface *n, void *context) {
     log_network_connect(n->logger,
                         pluginClientNetwork->plugin_get_short_network_protocol_name(),
                         "client",
-                        n->client_network_address);
+                        n->client_network_address,
+                        n->mqtt_sn_gateway_address);
   }
 #endif
   return 0;

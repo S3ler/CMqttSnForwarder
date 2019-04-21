@@ -12,7 +12,7 @@ extern "C" {
 #include <stdint.h>
 
 typedef struct client_plugin_device_address_ {
-  uint8_t length;
+  uint16_t length;
   uint8_t *bytes;
 } client_plugin_device_address;
 
@@ -20,7 +20,7 @@ typedef struct client_plugin_config_ {
   const char *plugin_path;
   const char *protocol;
   const uint16_t forwarder_maximum_message_length;
-  const uint8_t client_plugin_device_address_length;
+  const uint16_t client_plugin_device_address_length;
   const client_plugin_device_address *forwarder_client_network_address;
 } client_plugin_config;
 

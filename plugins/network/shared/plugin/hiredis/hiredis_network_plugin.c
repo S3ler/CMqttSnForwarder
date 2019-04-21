@@ -54,7 +54,7 @@ void hiredis_plugin_network_disconnect(void *plugin_context) {
 }
 
 void hiredis_plugin_network_deinit(void **plugin_context) {
-  hiredis_context *context = (hiredis_context *) plugin_context;
+  hiredis_context *context = (hiredis_context *) *plugin_context;
   free(context->redis_send_list);
   free(context->redis_receive_list);
   free(context);

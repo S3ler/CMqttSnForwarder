@@ -4,7 +4,6 @@
 #include <errno.h>
 #include "plugin_json.h"
 
-
 char *generate_json_from_device_address(const uint8_t *src_device_address, const uint16_t src_device_address_len) {
   const char *device_address_key_str = "device_address";
   char *dst = NULL;
@@ -23,7 +22,7 @@ char *generate_json_from_device_address(const uint8_t *src_device_address, const
   return dst;
 }
 
-void free_json_device_address(char* json_device_address){
+void free_json_device_address(char *json_device_address) {
   free(json_device_address);
 }
 
@@ -41,7 +40,7 @@ char *generate_json_from_data(const uint8_t *src_data, uint16_t src_data_len) {
   return dst;
 }
 
-void free_json_data(char* json_data){
+void free_json_data(char *json_data) {
   free(json_data);
 }
 
