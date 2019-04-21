@@ -7,15 +7,15 @@
 #include "MqttSnGatewayNetworkInterface.h"
 
 int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
+                       device_address *mqtt_sn_gateway_address,
                        device_address *gateway_network_address,
-                       device_address *forwarder_network_address,
                        void *context,
                        int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface *, void *context)) {
   assert(gateway_network_init != NULL);
 
   n->status = 0;
   n->gateway_network_address = gateway_network_address;
-  n->mqtt_sn_gateway_address = forwarder_network_address;
+  n->mqtt_sn_gateway_address = mqtt_sn_gateway_address;
   n->gateway_network_init = gateway_network_init;
   if (n->gateway_network_init(n, context) == 0) {
     assert(n->gateway_network_init != NULL);

@@ -7,7 +7,7 @@
 #include "MqttSnClientNetworkInterface.h"
 
 int ClientNetworkInit(MqttSnClientNetworkInterface *n,
-                      device_address *mqtt_sn_gateway_device_address,
+                      device_address *mqtt_sn_gateway_address,
                       device_address *client_network_address,
                       void *context,
                       int (*client_network_init)(MqttSnClientNetworkInterface *, void *)) {
@@ -15,7 +15,7 @@ int ClientNetworkInit(MqttSnClientNetworkInterface *n,
 
   n->status = 0;
   n->client_network_address = client_network_address;
-  n->mqtt_sn_gateway_address = mqtt_sn_gateway_device_address;
+  n->mqtt_sn_gateway_address = mqtt_sn_gateway_address;
   n->client_network_init = client_network_init;
   if (n->client_network_init(n, context) == 0) {
     assert(n->client_network_init != NULL);

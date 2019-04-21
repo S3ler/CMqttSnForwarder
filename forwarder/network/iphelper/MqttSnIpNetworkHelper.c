@@ -14,48 +14,49 @@
 
 #ifdef WITH_LOGGING
 int log_open_socket(const MqttSnLogger *logger, int level, const char *protocol, const device_address *address) {
-  if (level <= LOG_LEVEL_QUIET) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
 
-  const char *opening = ": Opening ";
+  const char *opening = "Opening ";
   const char *listen_socket = " socket ";
   const char *on_port = " on port ";
   const char *dot = ".";
   uint32_t port = get_port_from_device_address(address);
 
-  return (log_current_time(logger) ||
-      log_str(logger, opening) ||
-      log_str(logger, protocol) ||
-      log_str(logger, listen_socket) ||
-      log_device_address(logger, address) ||
-      log_str(logger, on_port) ||
-      log_uint32(logger, port) ||
-      log_str(logger, dot) ||
-      log_flush(logger) != 0);
+  log_msg_start(logger);
+  log_str(logger, opening);
+  log_str(logger, protocol);
+  log_str(logger, listen_socket);
+  log_device_address(logger, address);
+  log_str(logger, on_port);
+  log_uint32(logger, port);
+  log_str(logger, dot);
+  log_flush(logger);
+  return log_status(logger);
 }
 
 int log_close_socket(const MqttSnLogger *logger, int level, const char *protocol, const device_address *address) {
-  if (level <= LOG_LEVEL_QUIET) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
 
-  const char *close = ": Close ";
+  const char *close = "Close ";
   const char *listen_socket = " socket ";
   const char *on_port = " on port ";
   const char *dot = ".";
   uint32_t port = get_port_from_device_address(address);
 
-  return (log_current_time(logger) ||
-      log_str(logger, close) ||
-      log_str(logger, protocol) ||
-      log_str(logger, listen_socket) ||
-      log_device_address(logger, address) ||
-      log_str(logger, on_port) ||
-      log_uint32(logger, port) ||
-      log_str(logger, dot) ||
-      log_flush(logger) != 0);
-
+  log_msg_start(logger);
+  log_str(logger, close);
+  log_str(logger, protocol);
+  log_str(logger, listen_socket);
+  log_device_address(logger, address);
+  log_str(logger, on_port);
+  log_uint32(logger, port);
+  log_str(logger, dot);
+  log_flush(logger);
+  return log_status(logger);
 }
 #endif //WITH_LOGGING
 
