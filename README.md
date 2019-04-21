@@ -6,7 +6,7 @@ Featurelist:
 
 // TODO logging für restiliche mqtt-sn- message
 // TODO error parsing
-
+-cL redis://localhost:6379 -gL redis://localhost:6379 -gnp ./plugins/libhiredis_plugin.so -cnp ./plugins/libhiredis_plugin.so --debug
 
   // TODO: printf("                        [-c config_file]\n");
   // TODO  printf(" --json : produce json valid log message

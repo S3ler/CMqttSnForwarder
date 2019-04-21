@@ -37,7 +37,7 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
     // FEATURE implement searching for gateway
     return -1;
   }
-  uint16_t port = get_port_from_device_address(networkInterface->mqtt_sn_gateway_address);
+  uint16_t port = get_port_from_device_address(networkInterface->gateway_network_address);
 
   udpNetwork->my_socket = initialize_udp_socket(port);
 
@@ -49,7 +49,7 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
     log_open_socket(networkInterface->logger,
                     networkInterface->logger->log_level,
                     udpNetwork->protocol,
-                    networkInterface->mqtt_sn_gateway_address);
+                    networkInterface->gateway_network_address);
   }
 #endif
   return 0;
@@ -119,12 +119,12 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
   log_db_send_gateway_message(n->logger,
                               &gatewaySendMessageData.address,
-                              n->gateway_network_address,
+                              n->mqtt_sn_gateway_address,
                               gatewaySendMessageData.data,
                               gatewaySendMessageData.data_length);
 #endif
   ssize_t send_bytes = send_udp_message(udpNetwork->my_socket,
-                                        n->gateway_network_address,
+                                        n->mqtt_sn_gateway_address,
                                         gatewaySendMessageData.data,
                                         gatewaySendMessageData.data_length);
 
