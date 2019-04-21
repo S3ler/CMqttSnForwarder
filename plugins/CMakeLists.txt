@@ -4,11 +4,12 @@ project(CHiredisNetworkPlugin C)
 set(CMAKE_C_STANDARD 99)
 
 set(HIREDIS_NETWORK_PLUGIN_FILES
-        network/client/plugin/client_network_plugin_interface.h
+
+        ../../forwarder/network/client/plugin/client_network_plugin_interface.h
         network/client/plugin/hiredis_client_network_plugin.c
         network/client/plugin/hiredis_client_network_plugin.h
 
-        network/gateway/plugin/gateway_plugin_interface.h
+        ../../forwarder/network/gateway/plugin/gateway_network_plugin_interface.h
         network/gateway/plugin/hiredis_gateway_network_plugin.c
         network/gateway/plugin/hiredis_gateway_network_plugin.h
 

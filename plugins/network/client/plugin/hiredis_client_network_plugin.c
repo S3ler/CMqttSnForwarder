@@ -5,6 +5,7 @@
 #include "hiredis_client_network_plugin.h"
 #include "../../shared/plugin/plugin_json.h"
 #include "../../shared/plugin/plugin_device_address_converter.h"
+#include "../../../../forwarder/network/client/plugin/client_network_plugin_interface.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

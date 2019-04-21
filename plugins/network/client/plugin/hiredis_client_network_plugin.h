@@ -5,7 +5,6 @@
 #ifndef CMQTTSNFORWARDER_PLUGINS_NETWORK_CLIENT_PLUGIN_HIREDIS_CLIENT_NETWORK_PLUGIN_H_
 #define CMQTTSNFORWARDER_PLUGINS_NETWORK_CLIENT_PLUGIN_HIREDIS_CLIENT_NETWORK_PLUGIN_H_
 
-#include "client_network_plugin_interface.h"
 #include <hiredis.h>
 
 typedef struct hiredis_client_context_ {

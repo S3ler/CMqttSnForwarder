@@ -67,7 +67,7 @@ if (WITH_PLUGIN)
     add_definitions(-DWITH_PLUGIN)
     set(PLUGIN_FILES
             forwarder/network/client/plugin/client_network_plugin_interface.h
-            forwarder/network/gateway/plugin/gateway_plugin_interface.h
+            forwarder/network/gateway/plugin/gateway_network_plugin_interface.h
 
             forwarder/network/gateway/plugin/MqttSnGatewayPluginNetwork.h
             forwarder/network/gateway/plugin/MqttSnGatewayPluginNetwork.c

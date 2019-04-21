@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 #include "MqttSnGatewayNetworkInterface.h"
-#include "gateway_plugin_interface.h"
+#include "gateway_network_plugin_interface.h"
 
 typedef struct MqttSnGatewayPluginContext_ {
   void *dl_handle;

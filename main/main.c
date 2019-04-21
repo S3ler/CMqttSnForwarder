@@ -1,19 +1,5 @@
 #include <stdio.h>
-
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <ctype.h>
-#include <getopt.h>
-#include <string.h>
-#include <network/client/udp/MqttSnClientUdpNetwork.h>
-#include <MqttSnForwarder.h>
-#include <network/gateway/udp/MqttSnGatewayUdpNetwork.h>
-#include <network/iphelper/MqttSnIpNetworkHelper.h>
-#include <network/gateway/plugin/gateway_plugin_interface.h>
-#include <network/gateway/plugin/MqttSnGatewayPluginNetwork.h>
-#include <network/gateway/tcp/MqttSnGatewayTcpNetwork.h>
-#include <network/client/tcp/MqttSnClientTcpNetwork.h>
 #include "forwarder_config.h"
 #include "forwarder_starter.h"
 

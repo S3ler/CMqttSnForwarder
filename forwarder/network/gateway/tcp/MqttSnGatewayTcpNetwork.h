@@ -10,7 +10,6 @@ extern "C" {
 #endif
 
 #include "../../../MqttSnGatewayNetworkInterface.h"
-#include <sys/select.h>
 
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH 1024
 

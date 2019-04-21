@@ -4,7 +4,7 @@
 #include "forwarder_starter.h"
 #include "MqttSnForwarderLogging.h"
 #include <stdlib.h>
-#include <network/gateway/plugin/gateway_plugin_interface.h>
+#include <network/gateway/plugin/gateway_network_plugin_interface.h>
 #include <network/gateway/plugin/MqttSnGatewayPluginNetwork.h>
 #include <string.h>
 #include <network/gateway/tcp/MqttSnGatewayTcpNetwork.h>
