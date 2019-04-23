@@ -13,7 +13,7 @@
 #include <logging/MqttSnForwarderLoggingBasic.h>
 
 #ifdef WITH_LOGGING
-int log_open_socket(const MqttSnLogger *logger, int level, const char *protocol, const device_address *address) {
+int log_open_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
@@ -36,7 +36,7 @@ int log_open_socket(const MqttSnLogger *logger, int level, const char *protocol,
   return log_status(logger);
 }
 
-int log_close_socket(const MqttSnLogger *logger, int level, const char *protocol, const device_address *address) {
+int log_close_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
@@ -58,6 +58,102 @@ int log_close_socket(const MqttSnLogger *logger, int level, const char *protocol
   log_flush(logger);
   return log_status(logger);
 }
+
+int log_new_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return 0;
+  }
+
+  const char *client_str = "Client ";
+  const char *space = " ";
+  const char *connected_dot = " connected.";
+
+  log_msg_start(logger);
+  log_str(logger, client_str);
+  log_str(logger, protocol);
+  log_str(logger, space);
+  log_device_address(logger, address);
+  log_str(logger, connected_dot);
+  log_flush(logger);
+  return log_status(logger);
+}
+
+int log_close_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return 0;
+  }
+
+  const char *client_str = "Client ";
+  const char *space = " ";
+  const char *disconnected_dot = " disconnected.";
+
+  log_msg_start(logger);
+  log_str(logger, client_str);
+  log_str(logger, protocol);
+  log_str(logger, space);
+  log_device_address(logger, address);
+  log_str(logger, disconnected_dot);
+  log_flush(logger);
+  return log_status(logger);
+}
+
+int log_lost_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return 0;
+  }
+
+  const char *client_str = "Client ";
+  const char *space = " ";
+  const char *disconnected_dot = " lost.";
+
+  log_msg_start(logger);
+  log_str(logger, client_str);
+  log_str(logger, protocol);
+  log_str(logger, space);
+  log_device_address(logger, address);
+  log_str(logger, disconnected_dot);
+  log_flush(logger);
+  return log_status(logger);
+}
+
+int log_gateway_close_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return 0;
+  }
+
+  const char *client_str = "MQTT-SN Gateway ";
+  const char *space = " ";
+  const char *disconnected_dot = " disconnected.";
+
+  log_msg_start(logger);
+  log_str(logger, client_str);
+  log_str(logger, protocol);
+  log_str(logger, space);
+  log_device_address(logger, address);
+  log_str(logger, disconnected_dot);
+  log_flush(logger);
+  return log_status(logger);
+}
+
+int log_gateway_lost_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return 0;
+  }
+
+  const char *client_str = "MQTT-SN Gateway ";
+  const char *space = " ";
+  const char *disconnected_dot = " lost.";
+
+  log_msg_start(logger);
+  log_str(logger, client_str);
+  log_str(logger, protocol);
+  log_str(logger, space);
+  log_device_address(logger, address);
+  log_str(logger, disconnected_dot);
+  log_flush(logger);
+  return log_status(logger);
+}
+
 #endif //WITH_LOGGING
 
 int get_device_address_from_hostname(const char *hostname, device_address *dst) {
@@ -99,13 +195,11 @@ int get_device_address_from_hostname(const char *hostname, device_address *dst) 
 }
 
 struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *deviceAddress) {
-  uint16_t port = (((uint16_t) deviceAddress->bytes[4]) << 8)
-      + ((uint16_t) deviceAddress->bytes[5]);
+  uint32_t ip = 0;
+  uint16_t port = 0;
+  get_ipv4_and_port_from_device_address(&ip, &port, deviceAddress);
+
   sa_family_t family = AF_INET;
-  uint32_t ip = (((uint32_t) deviceAddress->bytes[0]) << 24)
-      + (((uint32_t) deviceAddress->bytes[1]) << 16)
-      + (((uint32_t) deviceAddress->bytes[2]) << 8)
-      + (((uint32_t) deviceAddress->bytes[3]) << 0);
 
   struct sockaddr_in address;
   address.sin_family = family;
@@ -164,3 +258,23 @@ uint32_t get_port_from_device_address(const device_address *src) {
   return (((uint32_t) src->bytes[sizeof(device_address) - 2]) << 8)
       + (((uint32_t) src->bytes[sizeof(device_address) - 1]) << 0);
 }
+
+device_address get_device_address_from_file_descriptor(int file_descriptor) {
+  struct sockaddr_in address;
+  socklen_t addrlen = sizeof(address);
+  getpeername(file_descriptor, (struct sockaddr *) &address, &addrlen);
+  return get_device_address_from_sockaddr_in(&address);
+}
+
+int get_ipv4_and_port_from_device_address(uint32_t *dst_ip, uint16_t *dst_port, const device_address *address) {
+  *dst_ip = (((uint32_t) address->bytes[0]) << 24)
+      + (((uint32_t) address->bytes[1]) << 16)
+      + (((uint32_t) address->bytes[2]) << 8)
+      + (((uint32_t) address->bytes[3]) << 0);
+
+  *dst_port = ((uint16_t) address->bytes[4] << 8)
+      + ((uint16_t) address->bytes[5]);
+  return 0;
+}
+
+

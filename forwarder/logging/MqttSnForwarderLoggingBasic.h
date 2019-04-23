@@ -12,7 +12,6 @@ extern "C" {
 #include <MqttSnForwarderLogging.h>
 #include <stdint.h>
 
-
 int log_int8(const MqttSnLogger *logger, int8_t n);
 int log_int16(const MqttSnLogger *logger, int16_t n);
 int log_int32(const MqttSnLogger *logger, int32_t n);

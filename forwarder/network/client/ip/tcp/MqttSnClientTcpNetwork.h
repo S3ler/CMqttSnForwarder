@@ -14,7 +14,7 @@ extern "C" {
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
 
-#define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS 10
+#define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS 2
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH 1024
 
 #define CMQTTSNFORWARDER_MAXIMUM_PENDING_CONNECTIONS 3
@@ -26,6 +26,7 @@ typedef struct MqttSnClientTcpNetwork_ {
   [CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t client_buffer_bytes[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
   int max_clients;
+  char protocol[4];
 } MqttSnClientTcpNetwork;
 
 int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context);
@@ -44,7 +45,9 @@ int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
                        int32_t timeout_ms,
                        void *context);
 
-void MqttSnClientNetworkInitReadFdSet(const MqttSnClientTcpNetwork *clientTcpNetwork, int *max_sd, fd_set *readfds);
+void MqttSnClientNetworkInitReadFdSet(const MqttSnClientTcpNetwork *clientTcpNetwork,
+                                      int *maximum_socket_descriptor,
+                                      fd_set *read_file_descriptor_set);
 
 int MqttSnClientHandleMasterSocket(MqttSnClientNetworkInterface *n,
                                    MqttSnClientTcpNetwork *clientTcpNetwork,
@@ -55,11 +58,7 @@ void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
                                      MqttSnFixedSizeRingBuffer *receiveBuffer,
                                      fd_set *readfds);
 
-int getDeviceAddressFromFileDescriptor(int peer_fd, device_address *peer_address);
-
-void close_client_connection(MqttSnClientTcpNetwork *clientTcpNetwork, int i);
-
-device_address get_client_device_address(int client_file_descriptor);
+void close_client_connection(MqttSnClientNetworkInterface *n, MqttSnClientTcpNetwork *clientTcpNetwork, int i);
 
 int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNetwork *clientTcpNetwork,
                                                                MqttSnFixedSizeRingBuffer *receiveBuffer,

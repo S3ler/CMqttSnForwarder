@@ -31,7 +31,6 @@ int ClientLinuxUdpConnect(MqttSnClientNetworkInterface *n, void *context) {
 #ifdef WITH_LOGGING
   if (n->logger) {
     log_open_socket(n->logger,
-                    n->logger->log_level,
                     clientUdpNetwork->protocol,
                     n->client_network_address);
   }
@@ -47,7 +46,6 @@ void ClientLinuxUdpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
 #ifdef WITH_LOGGING
     if (n->logger) {
       log_close_socket(n->logger,
-                       n->logger->log_level,
                        clientUdpNetwork->protocol,
                        n->client_network_address);
     }

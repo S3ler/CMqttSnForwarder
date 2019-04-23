@@ -47,7 +47,6 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
 #ifdef WITH_LOGGING
   if (networkInterface->logger) {
     log_open_socket(networkInterface->logger,
-                    networkInterface->logger->log_level,
                     udpNetwork->protocol,
                     networkInterface->gateway_network_address);
   }
@@ -63,7 +62,6 @@ void GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) 
 #ifdef WITH_LOGGING
     if (n->logger) {
       log_close_socket(n->logger,
-                       n->logger->log_level,
                        udpNetwork->protocol,
                        n->mqtt_sn_gateway_address);
     }

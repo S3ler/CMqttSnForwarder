@@ -16,16 +16,9 @@
 #endif
 
 #ifdef WITH_LOGGING
-// 1554750679: New client connection from 127.0.0.1 on port 1883 [34, 11].
-// device_address, port [0 - 65535]
-// LOG_LEVEL_DEFAULT
-int log_new_tcp_connection(const MqttSnLogger *logger, int level, const device_address *address);
 
-// 1554750679: Closed client connection from 127.0.0.1 on port 1883 [34, 11].
-// 1554750679: Client 127.0.0.1 on port 1883 [34, 11] disconnected.
-// device_address, port [0 - 65535]
-// LOG_LEVEL_DEFAULT
-int log_close_tcp_connection(const MqttSnLogger *logger, int level, const device_address *address);
+int log_select_error(const MqttSnLogger *logger);
+
 #endif //WITH_LOGGING
 
 int save_messages_into_receive_buffer(uint8_t *data,

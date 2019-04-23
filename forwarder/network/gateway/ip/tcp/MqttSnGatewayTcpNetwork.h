@@ -10,6 +10,7 @@ extern "C" {
 #endif
 
 #include "MqttSnGatewayNetworkInterface.h"
+#include <sys/select.h>
 
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH 1024
 
@@ -17,9 +18,10 @@ typedef struct MqttSnGatewayTcpNetwork {
   int mqtt_sg_gateway_fd;
   uint8_t gateway_buffer[CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t gateway_buffer_bytes;
+  char protocol[4];
 } MqttSnGatewayTcpNetwork;
 
-int GatewayLinuxTcpInit(struct MqttSnGatewayNetworkInterface *n, void *context);
+int GatewayLinuxTcpInit(MqttSnGatewayNetworkInterface *n, void *context);
 
 int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void *context);
 
@@ -34,13 +36,6 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
                         MqttSnFixedSizeRingBuffer *sendBuffer,
                         int32_t timeout_ms,
                         void *context);
-
-void MqttSnGatewaytNetworkInitReadFdSet(MqttSnGatewayTcpNetwork *clientTcpNetwork, int *max_sd,
-                                        fd_set *readfds);
-
-int MqttSnGatewayHandleMasterSocket(MqttSnGatewayTcpNetwork *clientTcpNetwork,
-                                    MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                    fd_set *readfds);
 
 int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
     MqttSnGatewayTcpNetwork *gatewayTcpNetwork,
