@@ -13,9 +13,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
-#include <network/tcphelper/MqttSnTcpNetworkMessageParser.h>
 #include "MqttSnGatewayTcpNetwork.h"
-#include "../../../MqttSnFixedSizeRingBuffer.h"
+#include <MqttSnFixedSizeRingBuffer.h>
+#include <network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h>
 
 int GatewayLinuxTcpInit(struct MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;

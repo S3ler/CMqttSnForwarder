@@ -9,7 +9,8 @@
 extern "C" {
 #endif
 
-#include "MqttSnForwarderLogging.h"
+#include <MqttSnForwarderLogging.h>
+#include <stdint.h>
 
 
 int log_int8(const MqttSnLogger *logger, int8_t n);
@@ -29,7 +30,7 @@ int log_char_key_int8_value(const MqttSnLogger *logger, char key, int8_t val);
 int log_char_key_uint8_value(const MqttSnLogger *logger, char key, uint8_t val);
 int log_char_key_uint16_value(const MqttSnLogger *logger, char key, uint16_t val);
 
-int log_str_key_uint8_value(const MqttSnLogger *logger, const char* key, uint8_t val);
+int log_str_key_uint8_value(const MqttSnLogger *logger, const char *key, uint8_t val);
 int log_str_key_uint16_value(const MqttSnLogger *logger, const char *key, uint16_t val);
 
 int log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length);

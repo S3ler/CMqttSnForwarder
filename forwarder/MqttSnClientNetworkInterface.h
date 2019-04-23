@@ -88,9 +88,9 @@ int ClientNetworkSend(MqttSnClientNetworkInterface *n,
                       void *context);
 
 int ClientNetworkReceive(MqttSnClientNetworkInterface *n,
-                      MqttSnFixedSizeRingBuffer *receiveBuffer,
-                      int timeout_ms,
-                      void *context);
+                         MqttSnFixedSizeRingBuffer *receiveBuffer,
+                         int timeout_ms,
+                         void *context);
 #ifdef __cplusplus
 }
 #endif

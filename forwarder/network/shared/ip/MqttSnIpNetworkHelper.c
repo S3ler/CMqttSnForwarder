@@ -5,7 +5,7 @@
 #include <netdb.h>
 #include <stdio.h>
 #include "MqttSnIpNetworkHelper.h"
-#include "../../../main/forwarder_config.h"
+#include "../../../../main/forwarder_config.h"
 #include <string.h>
 #include <arpa/inet.h>
 #include <assert.h>

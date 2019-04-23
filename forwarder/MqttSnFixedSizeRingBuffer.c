@@ -63,14 +63,14 @@ int isEmpty(const MqttSnFixedSizeRingBuffer *queue) {
 }
 
 const MqttSnMessageData *back(const MqttSnFixedSizeRingBuffer *queue) {
-  if(isEmpty(queue)){
+  if (isEmpty(queue)) {
     return NULL;
   }
   return &queue->items[queue->tail];
 }
 
 const MqttSnMessageData *front(const MqttSnFixedSizeRingBuffer *queue) {
-  if(isEmpty(queue)){
+  if (isEmpty(queue)) {
     return NULL;
   }
   return &queue->items[queue->head];

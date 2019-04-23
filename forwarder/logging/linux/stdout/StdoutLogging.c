@@ -1,8 +1,8 @@
 //
 // Created by SomeDude on 09.04.2019.
 //
-#include <stdio.h>
 #include "StdoutLogging.h"
+#include <stdio.h>
 
 int stdout_log_init(struct MqttSnLogger_ *logger) {
   return 0;

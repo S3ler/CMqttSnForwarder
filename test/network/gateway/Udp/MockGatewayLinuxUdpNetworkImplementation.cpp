@@ -15,7 +15,7 @@
 #include <netinet/in.h>
 #include "MockGatewayLinuxUdpNetworkImplementation.h"
 #include "../../helper/mock/udp/MockLinuxUdpHelper.h"
-#include "../../../../forwarder/network/iphelper/MqttSnIpNetworkHelper.h"
+#include "../../../../forwarder/network/shared/ip/MqttSnIpNetworkHelper.h"
 
 bool MockGatewayLinuxUdpNetworkImplementation::isNetworkConnected() {
   return !isNetworkDisconnected();

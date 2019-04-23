@@ -4,7 +4,6 @@
 
 #include "MqttSnUdpNetworkMessageParser.h"
 #include <string.h>
-#include <network/gateway/udp/MqttSnGatewayUdpNetwork.h>
 #include <sys/socket.h>
 #include <sys/param.h>
 #include <unistd.h>
@@ -15,7 +14,7 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include <sys/select.h>
-#include <network/iphelper/MqttSnIpNetworkHelper.h>
+#include <network/shared/ip/MqttSnIpNetworkHelper.h>
 #include <MqttSnMessageParser.h>
 
 int save_udp_messages_into_receive_buffer(uint8_t *buffer,

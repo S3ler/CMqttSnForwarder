@@ -11,15 +11,15 @@ extern "C" {
 
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include "../../../MqttSnFixedSizeRingBuffer.h"
-#include "../../../MqttSnClientNetworkInterface.h"
+#include "MqttSnFixedSizeRingBuffer.h"
+#include "MqttSnClientNetworkInterface.h"
 
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS 10
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH 1024
 
 #define CMQTTSNFORWARDER_MAXIMUM_PENDING_CONNECTIONS 3
 
-typedef struct MqttSnClientTcpNetwork {
+typedef struct MqttSnClientTcpNetwork_ {
   int master_socket;
   int client_socket[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
   uint8_t client_buffer[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS]

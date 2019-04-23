@@ -74,33 +74,33 @@ int log_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHe
 int log_default_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 int log_verbose_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_advertise_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_advertise_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_searchgw_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_searchgw_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_gwinfo_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_gwinfo_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
 int log_connect_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_connack_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_connack_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_register_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_register_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_regack_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_regack_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
 int log_publish_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_puback_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_puback_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_subscribe_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_subscribe_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_suback_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_suback_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_unsubscribe_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_unsubscribe_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_unsuback_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_unsuback_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
-int log_pingreq_message(const MqttSnLogger *logger,const ParsedMqttSnHeader *header);
+int log_pingreq_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
 int log_pingresp_message(const MqttSnLogger *logger);
 

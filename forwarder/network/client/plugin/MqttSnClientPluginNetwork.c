@@ -3,10 +3,10 @@
 //
 
 #include <dlfcn.h>
-#include <network/plugin/MqttSnPluginLogger.h>
 #include <MqttSnForwarderLogging.h>
 #include <string.h>
 #include <logging/MqttSnForwarderLoggingMessages.h>
+#include <network/shared/plugin/MqttSnPluginLogger.h>
 #include "MqttSnClientPluginNetwork.h"
 
 int ClientLinuxPluginInit(MqttSnClientNetworkInterface *n, void *context) {

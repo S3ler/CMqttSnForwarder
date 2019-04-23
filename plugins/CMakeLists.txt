@@ -10,8 +10,8 @@ set(HIREDIS_NETWORK_PLUGIN_FILES
         network/client/plugin/hiredis_client_network_plugin.h
 
         ../../forwarder/network/gateway/plugin/gateway_network_plugin_interface.h
-        network/gateway/plugin/hiredis_gateway_network_plugin.c
-        network/gateway/plugin/hiredis_gateway_network_plugin.h
+        network/gateway/plugin/hiredis/hiredis_gateway_network_plugin.c
+        network/gateway/plugin/hiredis/hiredis_gateway_network_plugin.h
 
         network/shared/plugin/hiredis/hiredis_network_plugin.c
         network/shared/plugin/hiredis/hiredis_network_plugin.h

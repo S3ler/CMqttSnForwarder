@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 
-#include "../../../MqttSnClientNetworkInterface.h"
-#include "../../../MqttSnFixedSizeRingBuffer.h"
+#include "MqttSnClientNetworkInterface.h"
+#include "MqttSnFixedSizeRingBuffer.h"
 #include <unistd.h>
 
 #define CMQTTSNFORWARDER_MQTTSNCLIENTUDPNETWORK_MAX_DATA_LENGTH 1024

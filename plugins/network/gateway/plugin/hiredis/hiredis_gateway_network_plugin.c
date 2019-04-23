@@ -3,8 +3,8 @@
 //
 
 #include "hiredis_gateway_network_plugin.h"
-#include "../../shared/plugin/hiredis/hiredis_network_plugin.h"
-#include "../../../../forwarder/network/gateway/plugin/gateway_network_plugin_interface.h"
+#include "../../../shared/plugin/hiredis/hiredis_network_plugin.h"
+#include "gateway_network_plugin_interface.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

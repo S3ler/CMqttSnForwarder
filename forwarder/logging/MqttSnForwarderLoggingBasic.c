@@ -3,12 +3,11 @@
 //
 
 #include "MqttSnForwarderLoggingBasic.h"
-#include <stdio.h>
-#include <string.h>
-#include <inttypes.h>
-#include <netinet/in.h>
-#include <stdint.h>
+#include <MqttSnMessageParser.h>
 #include <time.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
 
 int log_int8(const MqttSnLogger *logger, int8_t n) {
   const char *int8_max_str = "-128";

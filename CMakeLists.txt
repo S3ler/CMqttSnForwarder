@@ -41,6 +41,7 @@ if (WITH_LOGGING)
         message("Building with DEBUG_LOGGING support")
         add_definitions(-DWITH_DEBUG_LOGGING)
     endif ()
+    include_directories(forwarder/logging)
     set(CORE_LOGGING_FILES
             forwarder/MqttSnForwarderLogging.h
             forwarder/MqttSnForwarderLogging.c
@@ -48,6 +49,8 @@ if (WITH_LOGGING)
             forwarder/logging/MqttSnForwarderLoggingBasic.h
             forwarder/logging/MqttSnForwarderLoggingMessages.c
             forwarder/logging/MqttSnForwarderLoggingMessages.h)
+
+    include_directories(forwarder/logging/linux/stdout)
     set(STDOUT_LOGGING_FILES
             forwarder/logging/linux/stdout/StdoutLogging.c
             forwarder/logging/linux/stdout/StdoutLogging.h)
@@ -65,6 +68,9 @@ option(WITH_PLUGIN "Include PLUGIN support?" ON)
 if (WITH_PLUGIN)
     message("Building with PLUGIN support")
     add_definitions(-DWITH_PLUGIN)
+    include_directories(forwarder/network/client/plugin)
+    include_directories(forwarder/network/gateway/plugin)
+    include_directories(forwarder/network/shared/plugin)
     set(PLUGIN_FILES
             forwarder/network/client/plugin/client_network_plugin_interface.h
             forwarder/network/gateway/plugin/gateway_network_plugin_interface.h
@@ -76,8 +82,8 @@ if (WITH_PLUGIN)
 
     if (WITH_LOGGING)
         set(PLUGIN_FILES ${PLUGIN_FILES}
-                forwarder/network/plugin/MqttSnPluginLogger.h
-                forwarder/network/plugin/MqttSnPluginLogger.c)
+                forwarder/network/shared/plugin/MqttSnPluginLogger.h
+                forwarder/network/shared/plugin/MqttSnPluginLogger.c)
     endif ()
 
 endif ()
@@ -87,23 +93,25 @@ if (WITH_LINUX_TCP)
     message("Building with LINUX_TCP support")
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_TCP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_TCP)
-
+    include_directories(forwarder/network/client/ip/tcp)
+    include_directories(forwarder/network/gateway/ip/tcp)
+    include_directories(forwarder/network/shared/ip/tcphelper)
     set(TCP_GATWAY_NETWORK_FILES
-            forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h
-            forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.c
-            forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.c
-            forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+            forwarder/network/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h
+            forwarder/network/gateway/ip/tcp/MqttSnGatewayTcpNetwork.c
+            forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
+            forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
     set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES} ${TCP_GATWAY_NETWORK_FILES})
 
     set(TCP_CLIENT_NETWORK_FILES
-            forwarder/network/client/tcp/MqttSnClientTcpNetwork.h
-            forwarder/network/client/tcp/MqttSnClientTcpNetwork.c
-            forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.c
-            forwarder/network/tcphelper/MqttSnTcpNetworkMessageParser.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+            forwarder/network/client/ip/tcp/MqttSnClientTcpNetwork.h
+            forwarder/network/client/ip/tcp/MqttSnClientTcpNetwork.c
+            forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
+            forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${TCP_CLIENT_NETWORK_FILES})
 
 endif ()
@@ -114,23 +122,25 @@ if (WITH_LINUX_UDP)
     message("Building with LINUX_UDP support")
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_UDP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_UDP)
-
+    include_directories(forwarder/network/client/ip/udp)
+    include_directories(forwarder/network/gateway/ip/udp)
+    include_directories(forwarder/network/shared/ip/udphelper)
     set(UDP_GATWAY_NETWORK_FILES
-            forwarder/network/gateway/udp/MqttSnGatewayUdpNetwork.h
-            forwarder/network/gateway/udp/MqttSnGatewayUdpNetwork.c
-            forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.h
-            forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.c
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+            forwarder/network/gateway/ip/udp/MqttSnGatewayUdpNetwork.h
+            forwarder/network/gateway/ip/udp/MqttSnGatewayUdpNetwork.c
+            forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
+            forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
     set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES} ${UDP_GATWAY_NETWORK_FILES})
 
     set(UDP_CLIENT_NETWORK_FILES
-            forwarder/network/client/udp/MqttSnClientUdpNetwork.c
-            forwarder/network/client/udp/MqttSnClientUdpNetwork.h
-            forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.h
-            forwarder/network/udphelper/MqttSnUdpNetworkMessageParser.c
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.c)
+            forwarder/network/client/ip/udp/MqttSnClientUdpNetwork.c
+            forwarder/network/client/ip/udp/MqttSnClientUdpNetwork.h
+            forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
+            forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${UDP_CLIENT_NETWORK_FILES})
 endif ()
 
@@ -140,6 +150,7 @@ if (WITH_HIREDIS_PLUGIN)
     add_subdirectory(plugins)
 endif ()
 
+include_directories(forwarder)
 
 add_library(lib-mqtt-sn-gateway-network ${GATEWAY_NETWORK_FILES})
 target_compile_options(lib-mqtt-sn-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
@@ -171,7 +182,6 @@ set(FORWARDER_FILES
         forwarder/MqttSnGatewayNetworkInterface.c
         forwarder/MqttSnClientNetworkInterface.c
         ${PLUGIN_FILES})
-include_directories(forwarder)
 
 add_library(lib-mqtt-sn-forwarder ${FORWARDER_FILES})
 target_compile_options(lib-mqtt-sn-forwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
@@ -319,8 +329,8 @@ else ()
 
             test/network/helper/mock/udp/MockLinuxUdpHelper.cpp
             test/network/helper/mock/udp/MockLinuxUdpHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.c
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c
             test/network/helper/mock/udp/MockLinuxUdpDatagram.cpp
             test/network/helper/mock/udp/MockLinuxUdpDatagram.h
             ${LOGGING_FILES}
@@ -403,8 +413,8 @@ else ()
             test/network/gateway/MockGateway/ComparableGatewayMqttSnMessageData.h
             test/network/helper/mock/udp/MockLinuxUdpHelper.cpp
             test/network/helper/mock/udp/MockLinuxUdpHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.c
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c
             test/network/helper/mock/udp/MockLinuxUdpDatagram.cpp
             test/network/helper/mock/udp/MockLinuxUdpDatagram.h
             ${LOGGING_FILES}
@@ -430,8 +440,8 @@ else ()
             test/shared/MockMqttSnClientNetwork/FakeClientNetworkInterface.h
             test/network/helper/mock/udp/MockLinuxUdpHelper.cpp
             test/network/helper/mock/udp/MockLinuxUdpHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.c
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c
             test/network/helper/mock/udp/MockLinuxUdpDatagram.cpp
             test/network/helper/mock/udp/MockLinuxUdpDatagram.h)
     include_directories(test/shared/MockMqttSnClientNetwork)
@@ -445,8 +455,8 @@ else ()
             test/shared/MockMqttSnGatewayNetwork/FakeClientNetworkInterface.h
             test/network/helper/mock/udp/MockLinuxUdpHelper.cpp
             test/network/helper/mock/udp/MockLinuxUdpHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.h
-            forwarder/network/iphelper/MqttSnIpNetworkHelper.c
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c
             test/network/helper/mock/udp/MockLinuxUdpDatagram.cpp
             test/network/helper/mock/udp/MockLinuxUdpDatagram.h)
     include_directories(test/shared/MockMqttSnGatewayNetwork)

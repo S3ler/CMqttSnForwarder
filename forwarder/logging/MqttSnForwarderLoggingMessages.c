@@ -2,10 +2,10 @@
 // Created by SomeDude on 11.04.2019.
 //
 
-#include <netinet/in.h>
-#include <MqttSnMessageParser.h>
 #include "MqttSnForwarderLoggingMessages.h"
 #include "MqttSnForwarderLoggingBasic.h"
+#include <MqttSnMessageParser.h>
+#include <netinet/in.h>
 
 #define MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET 2
 static const char *MQTT_SN_MESSAGE_TYPE_STRING[] = {

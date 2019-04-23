@@ -5,10 +5,8 @@
 
 #define CMQTTSNFORWARDER_DEVICE_ADDRESS_LENGTH 6
 
-typedef struct device_address {
+typedef struct device_address_ {
   uint8_t bytes[CMQTTSNFORWARDER_DEVICE_ADDRESS_LENGTH];
 } device_address;
-
-
 
 #endif //GATEWAY_GLOBAL_DEFINES_H

@@ -2,19 +2,18 @@
 // Created by SomeDude on 07.04.2019.
 //
 #include "forwarder_starter.h"
-#include "MqttSnForwarderLogging.h"
+#include <MqttSnForwarderLogging.h>
 #include <stdlib.h>
-#include <network/gateway/plugin/gateway_network_plugin_interface.h>
-#include <network/gateway/plugin/MqttSnGatewayPluginNetwork.h>
 #include <string.h>
-#include <network/gateway/tcp/MqttSnGatewayTcpNetwork.h>
-#include <network/iphelper/MqttSnIpNetworkHelper.h>
-#include <network/gateway/udp/MqttSnGatewayUdpNetwork.h>
-#include <network/client/udp/MqttSnClientUdpNetwork.h>
-#include <network/client/tcp/MqttSnClientTcpNetwork.h>
 #include <errno.h>
-#include <logging/linux/stdout/StdoutLogging.h>
-#include <network/client/plugin/MqttSnClientPluginNetwork.h>
+#include <network/shared/ip/MqttSnIpNetworkHelper.h>
+#include <MqttSnGatewayPluginNetwork.h>
+#include <MqttSnGatewayTcpNetwork.h>
+#include <MqttSnGatewayUdpNetwork.h>
+#include <client_network_plugin_interface.h>
+#include <MqttSnClientPluginNetwork.h>
+#include <MqttSnClientTcpNetwork.h>
+#include <MqttSnClientUdpNetwork.h>
 
 int convert_string_to_device_address(const char *string, device_address *address) {
   char *cp_string = strdup(string);

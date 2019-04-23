@@ -12,31 +12,31 @@ extern "C" {
 #include <global_defines.h>
 
 typedef enum MQTT_SN_FORWARDER_NETWORK_ {
-    MQTT_SN_FORWARDER_NETWORK_INVALID = -1,
-    MQTT_SN_FORWARDER_NETWORK_GATEWAY = 0,
-    MQTT_SN_FORWARDER_NETWORK_CLIENT = 1
+  MQTT_SN_FORWARDER_NETWORK_INVALID = -1,
+  MQTT_SN_FORWARDER_NETWORK_GATEWAY = 0,
+  MQTT_SN_FORWARDER_NETWORK_CLIENT = 1
 } MQTT_SN_FORWARDER_NETWORK;
 
 typedef enum {
-    LOG_LEVEL_QUIET = 0,
-    LOG_LEVEL_DEFAULT = 1,
-    LOG_LEVEL_VERBOSE = 2,
-    LOG_LEVEL_DEBUG = 3
+  LOG_LEVEL_QUIET = 0,
+  LOG_LEVEL_DEFAULT = 1,
+  LOG_LEVEL_VERBOSE = 2,
+  LOG_LEVEL_DEBUG = 3
 } log_level_t;
 
 typedef struct MqttSnLogger_ {
-    int (*log_init)(struct MqttSnLogger_ *logger);
+  int (*log_init)(struct MqttSnLogger_ *logger);
 
-    void (*log_deinit)(struct MqttSnLogger_ *logger);
+  void (*log_deinit)(struct MqttSnLogger_ *logger);
 
-    int (*log_flush)(const struct MqttSnLogger_ *logger);
+  int (*log_flush)(const struct MqttSnLogger_ *logger);
 
-    int (*log_str)(const char *str);
+  int (*log_str)(const char *str);
 
-    int (*log_char)(char c);
+  int (*log_char)(char c);
 
-    int log_level;
-    int status;
+  int log_level;
+  int status;
 } MqttSnLogger;
 
 int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level);

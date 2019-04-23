@@ -15,7 +15,6 @@ extern "C" {
 #include "MqttSnClientNetworkInterface.h"
 #include "MqttSnForwarderLogging.h"
 
-
 typedef struct MqttSnForwarder {
   MqttSnClientNetworkInterface clientNetwork;
   MqttSnGatewayNetworkInterface gatewayNetwork;

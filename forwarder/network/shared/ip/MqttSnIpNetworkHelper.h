@@ -11,14 +11,11 @@
 
 #ifdef WITH_LOGGING
 
-//1554809803: Opening udp listen socket 1.1.1.1.1.1 on port 1883.
 int log_open_socket(const MqttSnLogger *logger, int level, const char *protocol, const device_address *address);
 
-//1554809803: Close udp listen socket 1.1.1.1.1.1 on port 1883.
 int log_close_socket(const MqttSnLogger *logger, int level, const char *protocol, const device_address *address);
 
 #endif //WITH_LOGGING
-
 
 int get_device_address_from_hostname(const char *hostname, device_address *dst);
 

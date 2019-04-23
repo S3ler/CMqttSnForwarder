@@ -3,11 +3,11 @@
 //
 
 #include <string.h>
-#include <network/iphelper/MqttSnIpNetworkHelper.h>
+#include <network/shared/ip/MqttSnIpNetworkHelper.h>
 #include <MqttSnMessageParser.h>
 #include <logging/MqttSnForwarderLoggingBasic.h>
 #include "MqttSnTcpNetworkMessageParser.h"
-#include "../../../main/forwarder_config.h"
+#include "../../../../../main/forwarder_config.h"
 
 #ifdef WITH_LOGGING
 int log_new_tcp_connection(const MqttSnLogger *logger, int level, const device_address *address) {

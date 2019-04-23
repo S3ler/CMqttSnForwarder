@@ -2,6 +2,8 @@
 // Created by bele on 27.01.19.
 //
 
+#include "MqttSnClientTcpNetwork.h"
+
 #include <memory.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,12 +14,9 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <network/tcphelper/MqttSnTcpNetworkMessageParser.h>
-#include <network/iphelper/MqttSnIpNetworkHelper.h>
-
-#include "MqttSnClientTcpNetwork.h"
-#include "../../../MqttSnClientNetworkInterface.h"
-#include "../../../MqttSnFixedSizeRingBuffer.h"
+#include <network/shared/ip/MqttSnIpNetworkHelper.h>
+#include <network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h>
+#include <MqttSnMessageParser.h>
 
 int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientTcpNetwork *clientTcpNetwork = (MqttSnClientTcpNetwork *) context;

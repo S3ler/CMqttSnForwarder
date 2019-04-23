@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#include "../../../MqttSnForwarderLogging.h"
+#include <MqttSnForwarderLogging.h>
 
 int stdout_log_init(struct MqttSnLogger_ *logger);
 void stdout_log_deinit(struct MqttSnLogger_ *logger);

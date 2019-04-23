@@ -37,7 +37,7 @@ int save_udp_message_into_receive_buffer(uint8_t *data,
 
 int initialize_udp_socket(uint16_t port);
 
-ssize_t send_udp_message(int socket_fd,const device_address *to,const uint8_t *data, uint16_t data_length);
+ssize_t send_udp_message(int socket_fd, const device_address *to, const uint8_t *data, uint16_t data_length);
 
 /*
  *
@@ -46,8 +46,6 @@ ssize_t send_udp_message(int socket_fd,const device_address *to,const uint8_t *d
 int is_udp_message_received(int socket_fd, int timeout_ms);
 
 int receive_udp_message(int socket_fd, MqttSnFixedSizeRingBuffer *receiveBuffer, uint16_t max_data_length);
-
-
 
 #ifdef __cplusplus
 }

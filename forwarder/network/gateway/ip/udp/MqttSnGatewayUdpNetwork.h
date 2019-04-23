@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#include "../../../MqttSnGatewayNetworkInterface.h"
+#include "MqttSnGatewayNetworkInterface.h"
 
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH 1024
 

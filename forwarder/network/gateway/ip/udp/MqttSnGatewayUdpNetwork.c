@@ -14,9 +14,9 @@
 #include <sys/select.h>
 #include <memory.h>
 #include "MqttSnGatewayUdpNetwork.h"
-#include <network/udphelper/MqttSnUdpNetworkMessageParser.h>
-#include <network/iphelper/MqttSnIpNetworkHelper.h>
-#include "../../../MqttSnFixedSizeRingBuffer.h"
+#include <network/shared/ip/MqttSnIpNetworkHelper.h>
+#include <network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
+#include "MqttSnFixedSizeRingBuffer.h"
 
 int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
