@@ -147,7 +147,7 @@ if (WITH_LINUX_UDP)
 endif ()
 
 
-option(WITH_HIREDIS_PLUGIN "Include HIREDIS_PLUGIN support?" ON)
+option(WITH_HIREDIS_PLUGIN "Include HIREDIS_PLUGIN support?" OFF)
 if (WITH_HIREDIS_PLUGIN)
     add_subdirectory(plugins)
 endif ()
