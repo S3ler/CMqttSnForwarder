@@ -9,9 +9,8 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <stdbool.h>
 #include "global_defines.h"
+#include <stdint.h>
 
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN 100
 

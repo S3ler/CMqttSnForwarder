@@ -9,12 +9,13 @@
 extern "C" {
 #endif
 
-#include "MqttSnGatewayNetworkInterface.h"
+#include <MqttSnGatewayNetworkInterface.h>
+#include <stdint.h>
 #include <sys/select.h>
 
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH 1024
 
-typedef struct MqttSnGatewayTcpNetwork {
+typedef struct MqttSnGatewayTcpNetwork_ {
   int mqtt_sg_gateway_fd;
   uint8_t gateway_buffer[CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t gateway_buffer_bytes;

@@ -72,7 +72,9 @@ if (WITH_PLUGIN)
     include_directories(forwarder/network/gateway/plugin)
     include_directories(forwarder/network/shared/plugin)
     set(PLUGIN_FILES
+            forwarder/network/client/plugin/client_network_plugin_interface.c
             forwarder/network/client/plugin/client_network_plugin_interface.h
+            forwarder/network/gateway/plugin/gateway_network_plugin_interface.c
             forwarder/network/gateway/plugin/gateway_network_plugin_interface.h
 
             forwarder/network/gateway/plugin/MqttSnGatewayPluginNetwork.h

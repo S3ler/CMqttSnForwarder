@@ -9,13 +9,11 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
 #include "MqttSnGatewayNetworkInterface.h"
-#include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
-#include "MqttSnForwarderLogging.h"
+#include <stdint.h>
 
-typedef struct MqttSnForwarder {
+typedef struct MqttSnForwarder_ {
   MqttSnClientNetworkInterface clientNetwork;
   MqttSnGatewayNetworkInterface gatewayNetwork;
   MqttSnFixedSizeRingBuffer clientNetworkReceiveBuffer;

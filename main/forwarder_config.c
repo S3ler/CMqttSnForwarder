@@ -1,12 +1,9 @@
 
-
+#include "forwarder_config.h"
 #include <errno.h>
-#include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "forwarder_config.h"
 
 void forwarder_config_init(forwarder_config *fcfg) {
   memset(fcfg, 0, sizeof(*fcfg));

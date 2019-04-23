@@ -2,8 +2,8 @@
 // Created by bele on 25.01.19.
 //
 
-#include <memory.h>
 #include "MqttSnFixedSizeRingBuffer.h"
+#include <memory.h>
 
 void MqttSnFixedSizeRingBufferInit(MqttSnFixedSizeRingBuffer *queue) {
   queue->head = 0;

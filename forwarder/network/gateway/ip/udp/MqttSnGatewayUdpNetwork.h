@@ -13,7 +13,7 @@ extern "C" {
 
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH 1024
 
-typedef struct MqttSnGatewayUdpNetwork {
+typedef struct MqttSnGatewayUdpNetwork_ {
   int my_socket;
   char *ip;
   int port;

@@ -2,15 +2,15 @@
 // Created by bele on 28.01.19.
 //
 
+#include "MqttSnGatewayNetworkInterface.h"
 #include <assert.h>
 #include <stdio.h>
-#include "MqttSnGatewayNetworkInterface.h"
 
 int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
                        device_address *mqtt_sn_gateway_address,
                        device_address *gateway_network_address,
                        void *context,
-                       int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface *, void *context)) {
+                       int (*gateway_network_init)(MqttSnGatewayNetworkInterface *, void *context)) {
   assert(gateway_network_init != NULL);
 
   n->status = 0;
@@ -60,7 +60,7 @@ void GatewayNetworkDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
   n->status = -1;
 }
 
-int GatewayNetworkSend(struct MqttSnGatewayNetworkInterface *n,
+int GatewayNetworkSend(MqttSnGatewayNetworkInterface *n,
                        MqttSnFixedSizeRingBuffer *sendBuffer,
                        int timeout_ms,
                        void *context) {
@@ -78,7 +78,7 @@ int GatewayNetworkSend(struct MqttSnGatewayNetworkInterface *n,
   return 0;
 }
 
-int GatewayNetworkReceive(struct MqttSnGatewayNetworkInterface *n,
+int GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
                           MqttSnFixedSizeRingBuffer *receiveBuffer,
                           int timeout_ms,
                           void *context) {

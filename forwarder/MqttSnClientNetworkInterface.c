@@ -2,9 +2,9 @@
 // Created by bele on 28.01.19.
 //
 
+#include "MqttSnClientNetworkInterface.h"
 #include <assert.h>
 #include <stdio.h>
-#include "MqttSnClientNetworkInterface.h"
 
 int ClientNetworkInit(MqttSnClientNetworkInterface *n,
                       device_address *mqtt_sn_gateway_address,

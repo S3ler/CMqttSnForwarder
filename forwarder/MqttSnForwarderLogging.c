@@ -2,10 +2,10 @@
 // Created by SomeDude on 09.04.2019.
 //
 
-#include <logging/linux/stdout/StdoutLogging.h>
-#include "logging/MqttSnForwarderLoggingBasic.h"
-#include "logging/MqttSnForwarderLoggingMessages.h"
 #include "MqttSnForwarderLogging.h"
+#include <logging/linux/stdout/StdoutLogging.h>
+#include <MqttSnForwarderLoggingBasic.h>
+#include <MqttSnForwarderLoggingMessages.h>
 
 int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level) {
   logger->log_init = stdout_log_init;

@@ -9,10 +9,9 @@
 extern "C" {
 #endif
 
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
+#include <sys/select.h>
 
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS 2
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH 1024

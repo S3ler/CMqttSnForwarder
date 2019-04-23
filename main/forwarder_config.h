@@ -1,9 +1,9 @@
 #ifndef CMQTTSNFORWARDER_FORWARDER_CONFIG_H
 #define CMQTTSNFORWARDER_FORWARDER_CONFIG_H
 
+#include "MqttSnForwarderLogging.h"
 #include <stdio.h>
 #include <stdbool.h>
-#include "MqttSnForwarderLogging.h"
 
 void print_usage(void);
 

@@ -2,8 +2,8 @@
 // Created by SomeDude on 10.04.2019.
 //
 
-#include <logging/MqttSnForwarderLoggingBasic.h>
 #include "MqttSnPluginLogger.h"
+#include <MqttSnForwarderLoggingBasic.h>
 
 int log_dlerror(const MqttSnLogger *logger, int level, const char *error) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {

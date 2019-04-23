@@ -9,7 +9,6 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
 #include <global_defines.h>
 #include <MqttSnFixedSizeRingBuffer.h>
 #include <unistd.h>

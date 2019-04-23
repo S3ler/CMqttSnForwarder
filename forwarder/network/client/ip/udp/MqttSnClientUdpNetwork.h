@@ -7,11 +7,10 @@ extern "C" {
 
 #include "MqttSnClientNetworkInterface.h"
 #include "MqttSnFixedSizeRingBuffer.h"
-#include <unistd.h>
 
 #define CMQTTSNFORWARDER_MQTTSNCLIENTUDPNETWORK_MAX_DATA_LENGTH 1024
 
-typedef struct MqttSnClientUdpNetwork {
+typedef struct MqttSnClientUdpNetwork_ {
   int master_socket;
   char protocol[4];
 } MqttSnClientUdpNetwork;

@@ -3,20 +3,11 @@
 //
 
 #include "MqttSnClientTcpNetwork.h"
-
-#include <memory.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <errno.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <network/shared/ip/MqttSnIpNetworkHelper.h>
 #include <network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h>
 #include <MqttSnMessageParser.h>
+#include <string.h>
+#include <errno.h>
 
 int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientTcpNetwork *clientTcpNetwork = (MqttSnClientTcpNetwork *) context;
@@ -248,12 +239,12 @@ int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNe
   }
 
   device_address client_address = get_device_address_from_file_descriptor(client_fd);
-  return save_messages_into_receive_buffer(buffer,
-                                           read_bytes,
-                                           client_address,
-                                           clientTcpNetwork->client_buffer[client_socket_position],
-                                           &clientTcpNetwork->client_buffer_bytes[client_socket_position],
-                                           receiveBuffer);
+  return save_tcp_messages_into_receive_buffer(buffer,
+                                               read_bytes,
+                                               client_address,
+                                               clientTcpNetwork->client_buffer[client_socket_position],
+                                               &clientTcpNetwork->client_buffer_bytes[client_socket_position],
+                                               receiveBuffer);
 }
 
 void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,

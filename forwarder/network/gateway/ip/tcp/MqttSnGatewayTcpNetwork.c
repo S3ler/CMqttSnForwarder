@@ -9,9 +9,7 @@
 #include <errno.h>
 #include <sys/select.h>
 #include <unistd.h>
-#include <memory.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
 int GatewayLinuxTcpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
@@ -207,10 +205,10 @@ int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
     return -1;
   }
   device_address gateway_address = get_device_address_from_file_descriptor(gateway_fd);
-  return save_messages_into_receive_buffer(buffer,
-                                           read_bytes,
-                                           gateway_address,
-                                           gatewayTcpNetwork->gateway_buffer,
-                                           &gatewayTcpNetwork->gateway_buffer_bytes,
-                                           receiveBuffer);
+  return save_tcp_messages_into_receive_buffer(buffer,
+                                               read_bytes,
+                                               gateway_address,
+                                               gatewayTcpNetwork->gateway_buffer,
+                                               &gatewayTcpNetwork->gateway_buffer_bytes,
+                                               receiveBuffer);
 }

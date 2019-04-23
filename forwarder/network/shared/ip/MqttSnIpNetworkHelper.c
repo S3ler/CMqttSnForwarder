@@ -2,15 +2,11 @@
 // Created by SomeDude on 05.04.2019.
 //
 
-#include <netdb.h>
-#include <stdio.h>
 #include "MqttSnIpNetworkHelper.h"
-#include "../../../../main/forwarder_config.h"
-#include <string.h>
-#include <arpa/inet.h>
-#include <assert.h>
-#include <netinet/in.h>
 #include <logging/MqttSnForwarderLoggingBasic.h>
+#include <string.h>
+#include <assert.h>
+#include <stdio.h>
 
 #ifdef WITH_LOGGING
 int log_open_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {

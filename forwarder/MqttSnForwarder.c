@@ -2,15 +2,14 @@
 // Created by bele on 26.01.19.
 //
 
-#include <memory.h>
-#include <stdio.h>
-#include <signal.h>
-#include <netinet/in.h>
 #include "MqttSnForwarder.h"
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
 #include "MqttSnMessageParser.h"
-#include "logging/MqttSnForwarderLoggingMessages.h"
+#include <MqttSnForwarderLoggingMessages.h>
+#include <memory.h>
+#include <stdio.h>
+#include <signal.h>
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         log_level_t log_level,

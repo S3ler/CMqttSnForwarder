@@ -3,19 +3,11 @@
 //
 
 #include "MqttSnUdpNetworkMessageParser.h"
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/param.h>
-#include <unistd.h>
-#include <errno.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <arpa/inet.h>
-#include <sys/select.h>
 #include <network/shared/ip/MqttSnIpNetworkHelper.h>
 #include <MqttSnMessageParser.h>
+#include <sys/select.h>
+#include <errno.h>
+#include <string.h>
 
 int save_udp_messages_into_receive_buffer(uint8_t *buffer,
                                           ssize_t read_bytes,
@@ -92,7 +84,7 @@ int initialize_udp_socket(uint16_t port) {
     return -1;
   }
 
-  int option = true;
+  int option = 1;
   if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char *) &option, sizeof(option)) < 0) {
     close(socket_fd);
     return -1;

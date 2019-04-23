@@ -5,9 +5,8 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H
 #define CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H
 
-#include <stdint.h>
-#include <unistd.h>
 #include "global_defines.h"
+#include <unistd.h>
 
 /*
 typedef enum MQTT_SN_MESSAGE_TYPE_ {

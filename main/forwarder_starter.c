@@ -3,17 +3,19 @@
 //
 #include "forwarder_starter.h"
 #include <MqttSnForwarderLogging.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
 #include <network/shared/ip/MqttSnIpNetworkHelper.h>
 #include <MqttSnGatewayPluginNetwork.h>
 #include <MqttSnGatewayTcpNetwork.h>
 #include <MqttSnGatewayUdpNetwork.h>
-#include <client_network_plugin_interface.h>
 #include <MqttSnClientPluginNetwork.h>
 #include <MqttSnClientTcpNetwork.h>
 #include <MqttSnClientUdpNetwork.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <bits/types/sig_atomic_t.h>
+#include <signal.h>
+#include <pthread.h>
 
 int convert_string_to_device_address(const char *string, device_address *address) {
   char *cp_string = strdup(string);

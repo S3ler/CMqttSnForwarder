@@ -9,32 +9,33 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnForwarderLogging.h"
+#include <stdint.h>
+
 /**
  * MqttSnClientNetworkInterface provides an interface for to glue different kind of network implementations to the
  * MqttSnForwarder.
  */
-typedef struct MqttSnClientNetworkInterface {
+typedef struct MqttSnClientNetworkInterface_ {
 
   int status;
 
-  int (*client_network_receive)(struct MqttSnClientNetworkInterface *,
+  int (*client_network_receive)(struct MqttSnClientNetworkInterface_ *,
                                 MqttSnFixedSizeRingBuffer *,
                                 int32_t,
                                 void *context);
 
-  int (*client_network_send)(struct MqttSnClientNetworkInterface *,
+  int (*client_network_send)(struct MqttSnClientNetworkInterface_ *,
                              MqttSnFixedSizeRingBuffer *,
                              int32_t,
                              void *context);
 
-  int (*client_network_init)(struct MqttSnClientNetworkInterface *, void *context);
+  int (*client_network_init)(struct MqttSnClientNetworkInterface_ *, void *context);
 
-  int (*client_network_connect)(struct MqttSnClientNetworkInterface *, void *context);
+  int (*client_network_connect)(struct MqttSnClientNetworkInterface_ *, void *context);
 
-  void (*client_network_disconnect)(struct MqttSnClientNetworkInterface *, void *context);
+  void (*client_network_disconnect)(struct MqttSnClientNetworkInterface_ *, void *context);
 
   device_address *client_network_address;
 
