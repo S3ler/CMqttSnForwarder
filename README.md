@@ -1,8 +1,8 @@
 Featurelist:
-load configuration from file
-indicator for ctrl flag in encapsulated messages
-fix tests
-
+* load configuration from file
+* indicator for ctrl flag in encapsulated messages
+* fix tests
+* use network interface by address
 
 
 // TODO mention: easily adeptable for other platforms like RTOS
