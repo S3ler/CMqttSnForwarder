@@ -1,5 +1,4 @@
 Featurelist:
-load configuration from file
 indicator for ctrl flag in encapsulated messages
 fix tests
 
