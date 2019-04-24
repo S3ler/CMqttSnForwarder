@@ -4,7 +4,7 @@
 
 #include "MqttSnFixedSizeRingBufferTests.h"
 #include <shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h>
-#include <shared/MqttSnFixedSizeRingBufferTests/CompareableMqttSnMessageData.h>
+#include <shared/ComparableMqttSnForwaderStructures/ComparableMqttSnMessageData.h>
 
 TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_AfterInit_HeadIsZero) {
   EXPECT_EQ(ringBuffer.head, 0);
@@ -267,8 +267,8 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutOnePopO
   for (auto mqttSnMessageData : mqttSnMessageDatas) {
     MqttSnMessageData popMqttSnMessageData = {0};
     ASSERT_EQ(pop(&ringBuffer, &popMqttSnMessageData), 0);
-    CompareableMqttSnMessageData expected(mqttSnMessageData);
-    CompareableMqttSnMessageData actual(popMqttSnMessageData);
+    ComparableMqttSnMessageData expected(mqttSnMessageData);
+    ComparableMqttSnMessageData actual(popMqttSnMessageData);
     EXPECT_EQ(actual, expected);
   }
 
@@ -294,8 +294,8 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutTwoPopT
   for (auto mqttSnMessageData : mqttSnMessageDatas) {
     MqttSnMessageData popMqttSnMessageData = {0};
     ASSERT_EQ(pop(&ringBuffer, &popMqttSnMessageData), 0);
-    CompareableMqttSnMessageData expected(mqttSnMessageData);
-    CompareableMqttSnMessageData actual(popMqttSnMessageData);
+    ComparableMqttSnMessageData expected(mqttSnMessageData);
+    ComparableMqttSnMessageData actual(popMqttSnMessageData);
     EXPECT_EQ(actual, expected);
   }
 
@@ -321,8 +321,8 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutThreePo
   for (auto mqttSnMessageData : mqttSnMessageDatas) {
     MqttSnMessageData popMqttSnMessageData = {0};
     ASSERT_EQ(pop(&ringBuffer, &popMqttSnMessageData), 0);
-    CompareableMqttSnMessageData expected(mqttSnMessageData);
-    CompareableMqttSnMessageData actual(popMqttSnMessageData);
+    ComparableMqttSnMessageData expected(mqttSnMessageData);
+    ComparableMqttSnMessageData actual(popMqttSnMessageData);
     EXPECT_EQ(actual, expected);
   }
 
@@ -348,8 +348,8 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENP
   for (auto mqttSnMessageData : mqttSnMessageDatas) {
     MqttSnMessageData popMqttSnMessageData = {0};
     ASSERT_EQ(pop(&ringBuffer, &popMqttSnMessageData), 0);
-    CompareableMqttSnMessageData expected(mqttSnMessageData);
-    CompareableMqttSnMessageData actual(popMqttSnMessageData);
+    ComparableMqttSnMessageData expected(mqttSnMessageData);
+    ComparableMqttSnMessageData actual(popMqttSnMessageData);
     EXPECT_EQ(actual, expected);
   }
 

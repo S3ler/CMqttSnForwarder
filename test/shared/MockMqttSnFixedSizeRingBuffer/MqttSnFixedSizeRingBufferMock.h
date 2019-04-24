@@ -5,11 +5,8 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFERMOCK_H
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFERMOCK_H
 
-#include <gmock/gmock-function-mocker.h>
 #include "MqttSnFixedSizeRingBufferMockInterface.h"
-
-using ::testing::_;
-using ::testing::Invoke;
+#include <gmock/gmock.h>
 
 class MqttSnFixedSizeRingBufferMock : public MqttSnFixedSizeRingBufferMockInterface {
  public:

@@ -7,16 +7,12 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <GatewayNetworkMock.h>
-#include "../../forwarder/MqttSnFixedSizeRingBuffer.h"
-#include "../../forwarder/MqttSnGatewayNetworkInterface.h"
-#include "../shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include <MqttSnFixedSizeRingBuffer.h>
+#include <MqttSnGatewayNetworkInterface.h>
+#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
+#include <shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
 
-#ifndef GLOBAL_TEST_EXEC
 GatewayNetworkMock *globalGatewayNetworkMockObj = nullptr;
-#else
-extern GatewayNetworkMock *globalGatewayNetworkMockObj;
-#endif
 
 using ::testing::Return;
 using ::testing::_;
@@ -48,7 +44,7 @@ class MqttSnGatewayNetworkInterfaceTests : public ::testing::Test {
     globalGatewayNetworkMockObj = nullptr;
   }
 
-  static int fakeGatewayNetworkInitSuccess(struct MqttSnGatewayNetworkInterface *n, void *context) {
+  static int fakeGatewayNetworkInitSuccess(MqttSnGatewayNetworkInterface *n, void *context) {
     n->gateway_network_receive = mock_gateway_network_receive;
     n->gateway_network_send = mock_gateway_network_send;
     n->gateway_network_init = mock_gateway_network_init;
@@ -57,8 +53,7 @@ class MqttSnGatewayNetworkInterfaceTests : public ::testing::Test {
     return 0;
   };
 
-
-  static int fakeGatewayNetworkInitFail(struct MqttSnGatewayNetworkInterface *n, void *context) {
+  static int fakeGatewayNetworkInitFail(MqttSnGatewayNetworkInterface *n, void *context) {
     n->gateway_network_receive = mock_gateway_network_receive;
     n->gateway_network_send = mock_gateway_network_send;
     n->gateway_network_init = mock_gateway_network_init;

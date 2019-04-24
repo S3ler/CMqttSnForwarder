@@ -5,11 +5,8 @@
 #ifndef CMQTTSNFORWARDER_CLIENTNETWORKMOCK_H
 #define CMQTTSNFORWARDER_CLIENTNETWORKMOCK_H
 
-#include <gmock/gmock-function-mocker.h>
+#include <gmock/gmock.h>
 #include "ClientNetworkMockInterface.h"
-
-using ::testing::_;
-using ::testing::Invoke;
 
 class ClientNetworkMock : public ClientNetworkMockInterface {
  public:

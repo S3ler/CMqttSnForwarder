@@ -3,7 +3,6 @@
 //
 
 #include "MqttSnClientNetworkInterfaceTests.h"
-#include <MqttSnClientNetworkInterface.h>
 
 using ::testing::Return;
 using ::testing::_;

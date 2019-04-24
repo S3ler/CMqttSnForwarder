@@ -32,7 +32,7 @@ TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_MqttSnGatewayNetworkA
                                gatewayNetworkContext,
                                mock_gateway_network_init), 0);
 
-  EXPECT_EQ(mqttSnGatewayNetworkInterface.forwarder_network_address, &mqtt_sn_gateway_network_address);
+  EXPECT_EQ(mqttSnGatewayNetworkInterface.mqtt_sn_gateway_address, &mqtt_sn_gateway_network_address);
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkAddressIsSet) {
