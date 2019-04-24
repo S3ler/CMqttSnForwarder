@@ -1,4 +1,10 @@
 Featurelist:
+load configuration from file
+indicator for ctrl flag in encapsulated messages
+fix tests
+
+
+
 // TODO mention: easily adeptable for other platforms like RTOS
 //  encapsulatedMessage->crtl = 0;
 //  TODO receive and send broadcasting
