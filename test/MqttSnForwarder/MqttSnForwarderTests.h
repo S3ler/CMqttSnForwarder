@@ -6,13 +6,13 @@
 #define CMQTTSNFORWARDER_MQTTSNFORWARDERTESTS_H
 
 #include <gtest/gtest.h>
-#include <ClientNetworkMock.h>
-#include <GatewayNetworkMock.h>
-#include <MqttSnFixedSizeRingBufferMock.h>
+#include <gmock/gmock.h>
 #include <MqttSnForwarder.h>
-#include <gmock/gmock-nice-strict.h>
 #include "MqttSnForwarderTestsGlobalVariables.h"
-#include "../shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include <shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
+#include <shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
+#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
+#include <shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
 
 using ::testing::Return;
 using ::testing::Invoke;
@@ -78,7 +78,6 @@ class MqttSnForwarderTests : public ::testing::Test {
       return 0;
     };
 
-    // clientNetworkMock.DelegateToFake();
     EXPECT_CALL(clientNetworkMock, client_network_init(&mqttSnForwarder.clientNetwork, clientNetworkContext))
         .Times(1)
         .WillOnce(Invoke(local_client_network_init));
@@ -92,18 +91,18 @@ class MqttSnForwarderTests : public ::testing::Test {
       return 0;
     };
 
-    //gatewayNetworkMock.DelegateToFake();
     EXPECT_CALL(gatewayNetworkMock, gateway_network_init(&mqttSnForwarder.gatewayNetwork, gatewayNetworkContext))
         .Times(1)
         .WillOnce(Invoke(local_gateway_network_init));
 
-    ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork, NULL,
+    ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork,
+                                &mqtt_sn_gateway_address,
                                 &client_network_address,
                                 clientNetworkContext,
                                 mock_client_network_init), 0);
     EXPECT_EQ(GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
-                                 &gateway_network_address,
                                  &mqtt_sn_gateway_address,
+                                 &gateway_network_address,
                                  gatewayNetworkContext,
                                  mock_gateway_network_init), 0);
 

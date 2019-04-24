@@ -6,12 +6,13 @@
 #define CMQTTSNFORWARDER_MQTTSNFORWARDERINITTESTS_H
 
 #include <gtest/gtest.h>
-#include <ClientNetworkMock.h>
-#include <GatewayNetworkMock.h>
-#include <MqttSnFixedSizeRingBufferMock.h>
-#include <gmock/gmock-nice-strict.h>
+#include <gmock/gmock.h>
 #include <MqttSnForwarder.h>
-#include "../shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include <shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
+#include <shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
+#include <shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
+#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
+#include "../MqttSnForwarderTestsGlobalVariables.h"
 
 using ::testing::Return;
 using ::testing::Invoke;
