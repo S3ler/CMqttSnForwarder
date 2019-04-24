@@ -1,7 +1,7 @@
 Featurelist:
-indicator for ctrl flag in encapsulated messages
-fix tests
-
+* indicator for ctrl flag in encapsulated messages
+* fix tests
+* use network interface by address
 
 
 // TODO mention: easily adeptable for other platforms like RTOS
