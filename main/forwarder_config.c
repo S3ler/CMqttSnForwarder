@@ -91,9 +91,15 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
           // parse argv_line
           char *argv_line[argc_line];
           int tk_count = 0;
-          argv_line[tk_count++] = argv[1];
+          argv_line[tk_count++] = argv[0];
           for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
             argv_line[tk_count++] = tk;
+          }
+          // remove '\n' from tokens
+          for (uint16_t i = 0; i < argc_line; i++) {
+            if (argv_line[i][(strlen(argv_line[i]) - 1)] == '\n') {
+              argv_line[i][(strlen(argv_line[i]) - 1)] = '\0';
+            }
           }
           if (process_forwarder_config_line(fcfg, argc_line, argv_line)) {
             fclose(config_file);
