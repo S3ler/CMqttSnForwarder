@@ -413,12 +413,12 @@ int start_forwarder(const forwarder_config *fcfg,
     }
 #endif
 #ifdef WITH_LINUX_GATEWAY_NETWORK_UDP
-    if (!strncasecmp(fcfg->gateway_network_protocol, "udp", 3)) {
+    if (!strcmp(fcfg->gateway_network_protocol, "udp")) {
       return start_gateway_udp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
 #endif
 #ifdef WITH_LINUX_GATEWAY_NETWORK_TCP
-    if (!strncasecmp(fcfg->gateway_network_protocol, "tcp", 3)) {
+    if (!strcmp(fcfg->gateway_network_protocol, "tcp")) {
       return start_gateway_tcp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
 #endif
@@ -433,12 +433,12 @@ int start_forwarder(const forwarder_config *fcfg,
     }
 #endif
 #ifdef WITH_LINUX_CLIENT_NETWORK_UDP
-    if (!strncasecmp(fcfg->client_network_protocol, "udp", 3)) {
+    if (!strcmp(fcfg->client_network_protocol, "udp")) {
       return start_client_udp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
 #endif
 #ifdef WITH_LINUX_CLIENT_NETWORK_TCP
-    if (!strncasecmp(fcfg->client_network_protocol, "tcp", 3)) {
+    if (!strcmp(fcfg->client_network_protocol, "tcp")) {
       return start_client_tcp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
 #endif

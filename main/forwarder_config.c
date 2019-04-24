@@ -64,7 +64,53 @@ static int parse_timeout(char *timeout_str, int *dst) {
 int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]) {
 
   for (int i = 1; i < argc; i++) {
-    if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
+    if (!strcmp(argv[i], "-c") || !strcmp(argv[i], "--config-file")) {
+      if (i == argc - 1) {
+        fprintf(stderr, "Error: %s argument given but no config file specified.\n\n", argv[i]);
+        return 1;
+      } else {
+        FILE *config_file = fopen(argv[i + 1], "r");
+        if (!config_file) {
+          fprintf(stderr, "Error: Could not read config file: %s.\n", strerror(errno));
+          return 1;
+        }
+        char *line;
+        size_t len = 0;
+        ssize_t read;
+        while ((read = getline(&line, &len, config_file)) != -1) {
+          char line_copy[len];
+          memcpy(line_copy, line, len);
+
+          int argc_line = 1;
+
+          // estimates argc_line
+          for (char *tk = strtok(line, " "); tk != NULL; tk = strtok(NULL, " ")) {
+            argc_line++;
+          }
+
+          // parse argv_line
+          char *argv_line[argc_line];
+          int tk_count = 0;
+          argv_line[tk_count++] = argv[1];
+          for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
+            argv_line[tk_count++] = tk;
+          }
+          if (process_forwarder_config_line(fcfg, argc_line, argv_line)) {
+            fclose(config_file);
+            fprintf(stderr, "Error: Could not read config file.\n");
+            if (line) {
+              free(line);
+            }
+            return 1;
+          }
+        }
+        fclose(config_file);
+        if (line) {
+          free(line);
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
       if (i == argc - 1) {
         fprintf(stderr, "Error: %s argument given but no host specified.\n\n", argv[i]);
         return 1;
@@ -393,6 +439,7 @@ void print_usage(void) {
   printf("                        [[-q quiet] | [-d default] | [-v verbose]]\n");
 #endif
 #endif
+  printf("       [-c --config-file]\n");
   printf("       cmqttsnforwarder --help\n\n");
 
   printf(" -h : mqtt-sn gateway host to connect to. Defaults to localhost.\n");
@@ -451,6 +498,7 @@ void print_usage(void) {
   printf(" -db : specify debug logging. Print all mqtt-sn messages including payload and internal information.\n");
 #endif
 #endif
+  printf(" -c : specify the config file.\n");
   printf(" --help : display this message.\n");
   printf("\nSee %s for more information.\n\n", MANUAL_WEBSITE);
 }
