@@ -263,6 +263,36 @@ else ()
     # Now simply link against gtest or gtest_main as needed. Eg
 
     # create a testing mock libraries for gateway network and client network
+
+    add_library(mock-client-network
+            test/shared/MockMqttSnClientNetwork/ClientNetworkMock.h
+            test/shared/MockMqttSnClientNetwork/ClientNetworkMockInterface.cpp
+            test/shared/MockMqttSnClientNetwork/ClientNetworkMockInterface.h
+            )
+    target_link_libraries(mock-client-network gmock)
+
+
+    add_executable(mqtt-sn-client-network-interface-test
+            forwarder/MqttSnClientNetworkInterface.c
+            forwarder/MqttSnClientNetworkInterface.h
+            test/MqttSnClientNetworkInterface/MqttSnClientNetworkInterfaceTests.cpp
+            test/MqttSnClientNetworkInterface/MqttSnClientNetworkInterfaceTests.h)
+    target_link_libraries(mqtt-sn-client-network-interface-test gtest gtest_main gmock mock-client-network)
+    target_include_directories(mqtt-sn-client-network-interface-test PRIVATE
+            forwarder/
+            test/)
+
+
+    add_executable(mqtt-sn-fixed-size-ring-buffer-test
+            test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.cpp
+            test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.h)
+    target_include_directories(mqtt-sn-fixed-size-ring-buffer-test PRIVATE
+            forwarder/
+            test/)
+    target_link_libraries(mqtt-sn-fixed-size-ring-buffer-test gtest gtest_main lib-mqtt-sn-ring-buffer)
+
+
+    # reworked until here
     add_library(lib-mqtt-sn-client-mock-network
             forwarder/global_defines.h
             test/network/client/MockClientNetwork/MockClient/ComparableClientMqttSnMessageData.h
@@ -439,7 +469,6 @@ else ()
             test/shared/MockMqttSnClientNetwork/ClientNetworkMockInterface.cpp
             test/shared/MockMqttSnClientNetwork/ClientNetworkMockInterface.h
             test/shared/MockMqttSnClientNetwork/ClientNetworkMock.h
-            test/shared/MockMqttSnClientNetwork/FakeClientNetworkInterface.h
             test/network/helper/mock/udp/MockLinuxUdpHelper.cpp
             test/network/helper/mock/udp/MockLinuxUdpHelper.h
             forwarder/network/shared/ip/MqttSnIpNetworkHelper.h

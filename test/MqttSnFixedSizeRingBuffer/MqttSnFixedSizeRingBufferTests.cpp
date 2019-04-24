@@ -3,7 +3,8 @@
 //
 
 #include "MqttSnFixedSizeRingBufferTests.h"
-#include "../shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h"
+#include <shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h>
+#include <shared/MqttSnFixedSizeRingBufferTests/CompareableMqttSnMessageData.h>
 
 TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_AfterInit_HeadIsZero) {
   EXPECT_EQ(ringBuffer.head, 0);

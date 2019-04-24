@@ -7,22 +7,19 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <ClientNetworkMock.h>
-#include "../../forwarder/MqttSnClientNetworkInterface.h"
-#include "../shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include <global_defines.h>
+#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
+#include <shared/MockMqttSnClientNetwork/ClientNetworkMockInterface.h>
+#include <shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
 
-#ifndef GLOBAL_TEST_EXEC
-ClientNetworkMock* globalClientNetworkMockObj = nullptr;
-#else
-extern ClientNetworkMock* globalClientNetworkMockObj;
-#endif
+ClientNetworkMock *globalClientNetworkMockObj = nullptr;
 
 class MqttSnClientNetworkInterfaceTests : public ::testing::Test {
  public:
   ClientNetworkMock clientNetworkMock;
 
   PlaceholderNetworkContext placeholderContext;
-  void* clientNetworkContext = &placeholderContext;
+  void *clientNetworkContext = &placeholderContext;
 
   device_address forwarder_client_network_address;
   device_address mqtt_sn_gateway_network_address;
@@ -41,7 +38,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::Test {
     globalClientNetworkMockObj = nullptr;
   }
 
-  static int fakeClientNetworkInitSuccess(struct MqttSnClientNetworkInterface *n, void *context) {
+  static int fakeClientNetworkInitSuccess(MqttSnClientNetworkInterface *n, void *context) {
     n->client_network_receive = mock_client_network_receive;
     n->client_network_send = mock_client_network_send;
     n->client_network_init = mock_client_network_init;
@@ -50,8 +47,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::Test {
     return 0;
   };
 
-
-  static int fakeClientNetworkInitFail(struct MqttSnClientNetworkInterface *n, void *context) {
+  static int fakeClientNetworkInitFail(MqttSnClientNetworkInterface *n, void *context) {
     n->client_network_receive = mock_client_network_receive;
     n->client_network_send = mock_client_network_send;
     n->client_network_init = mock_client_network_init;
@@ -59,7 +55,7 @@ class MqttSnClientNetworkInterfaceTests : public ::testing::Test {
     n->client_network_disconnect = mock_client_network_disconnect;
     return -1;
   };
-  
+
   virtual ~MqttSnClientNetworkInterfaceTests() {}
 
   MqttSnClientNetworkInterfaceTests() {}

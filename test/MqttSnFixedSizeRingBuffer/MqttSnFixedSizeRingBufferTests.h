@@ -6,8 +6,7 @@
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFERTESTS_H
 
 #include <gtest/gtest.h>
-#include "../../forwarder/MqttSnFixedSizeRingBuffer.h"
-#include "../shared/MqttSnFixedSizeRingBufferTests/CompareableMqttSnMessageData.h"
+#include <MqttSnFixedSizeRingBuffer.h>
 
 class MqttSnFixedSizeRingBufferTests : public ::testing::Test {
  protected:
