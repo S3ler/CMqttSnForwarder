@@ -2,8 +2,7 @@
 // Created by SomeDude on 06.03.2019.
 //
 
-#include "MqttSnForwarderTests.h"
-
+#include "MqttSnForwarder/MqttSnForwarderTests.h"
 
 TEST_F(MqttSnForwarderTests,
        MqttSnForwarderTests_AddForwardingHeaderToClientMessages_CallsPopOnClientNetworkReceiveBuffer) {
@@ -151,12 +150,13 @@ TEST_F(MqttSnForwarderTests,
   MqttSnMessageData clientMessageData = {0};
   MqttSnMessageData gatewayMessageData = {0};
 
-  auto setMqttSnMessageDataDataLengthToOne = [](MqttSnFixedSizeRingBuffer *clientNetworkReceiveBuffer, MqttSnMessageData *clientMessageData) -> int {
-    MqttSnMessageData mqttSnMessageDataDataLengthOne = {0};
-    mqttSnMessageDataDataLengthOne.data_length = 1;
-    memcpy(clientMessageData, &mqttSnMessageDataDataLengthOne, sizeof(MqttSnMessageData));
-    return 0;
-  };
+  auto setMqttSnMessageDataDataLengthToOne =
+      [](MqttSnFixedSizeRingBuffer *clientNetworkReceiveBuffer, MqttSnMessageData *clientMessageData) -> int {
+        MqttSnMessageData mqttSnMessageDataDataLengthOne = {0};
+        mqttSnMessageDataDataLengthOne.data_length = 1;
+        memcpy(clientMessageData, &mqttSnMessageDataDataLengthOne, sizeof(MqttSnMessageData));
+        return 0;
+      };
 
   EXPECT_CALL(clientNetworkReceiveBuffer, pop(&mqttSnForwarder.clientNetworkReceiveBuffer, &clientMessageData))
       .Times(1)

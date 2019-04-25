@@ -2,36 +2,37 @@
 // Created by SomeDude on 07.03.2019.
 //
 
-#ifndef CMQTTSNFORWARDER_SENDBUFFEREDMESSAGESTOGATEWAYTESTS_H
-#define CMQTTSNFORWARDER_SENDBUFFEREDMESSAGESTOGATEWAYTESTS_H
+#ifndef CMQTTSNFORWARDER_SENDBUFFEREDMESSAGESTOCLIENTSTESTS_H
+#define CMQTTSNFORWARDER_SENDBUFFEREDMESSAGESTOCLIENTSTESTS_H
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <MqttSnForwarder.h>
-#include <MqttSnFixedSizeRingBufferMock.h>
-#include <gmock/gmock-nice-strict.h>
-#include <GatewayNetworkMock.h>
-#include "../shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include <shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
+#include <shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
+#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
 
 using ::testing::Return;
 using ::testing::AtLeast;
 using ::testing::StrictMock;
+using ::testing::_;
+using ::testing::Invoke;
 
-extern GatewayNetworkMock *globalGatewayNetworkMockObj;
+extern ClientNetworkMock *globalClientNetworkMockObj;
 
 extern MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock;
 extern std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
     *globalMqttSnFixedSizeRingBufferMockMap;
 
-class SendBufferedMessagesToGatewayTests : public testing::Test {
+class SendBufferedMessagesToClientsTests : public ::testing::Test {
+
  public:
   MqttSnForwarder mqttSnForwarder;
 
-  StrictMock<GatewayNetworkMock> gatewayNetworkMock;
-
-  device_address gateway_network_address;
-  device_address mqtt_sn_gateway_address;
-  PlaceholderNetworkContext gatewayNetworkPlaceholderContext;
-  void *gatewayNetworkContext = &gatewayNetworkPlaceholderContext;
+  StrictMock<ClientNetworkMock> clientNetworkMock;
+  device_address client_network_address;
+  PlaceholderNetworkContext clientNetworkPlaceholderContext;
+  void *clientNetworkContext = &clientNetworkPlaceholderContext;
 
   std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *> mqttSnFixedSizeRingBufferMockMap;
 
@@ -42,12 +43,15 @@ class SendBufferedMessagesToGatewayTests : public testing::Test {
   StrictMock<MqttSnFixedSizeRingBufferMock> gatewayNetworkReceiveBuffer;
   StrictMock<MqttSnFixedSizeRingBufferMock> gatewayNetworkSendBuffer;
 
-  MqttSnMessageData clientMessageData;
-  MqttSnMessageData gatewayMessageData;
+  int32_t clientNetworkSendTimeout = 1000;
+  int32_t clientNetworkReceiveTimeout = 1000;
+
+  int32_t gatewayNetworkSendTimeout = 1000;
+  int32_t gatewayNetworkReceiveTimeout = 1000;
 
   virtual void SetUp() {
-    memset(&mqtt_sn_gateway_address, 0, sizeof(device_address));
-    memset(&gateway_network_address, 0, sizeof(device_address));
+    device_address client_network_address({0, 0, 0, 0, 0, 0});
+    this->client_network_address = client_network_address;
 
     mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&mqttSnForwarder.clientNetworkReceiveBuffer,
                                                            &clientNetworkReceiveBuffer));
@@ -61,26 +65,24 @@ class SendBufferedMessagesToGatewayTests : public testing::Test {
 
     globalMqttSnFixedSizeRingBufferMock = &defaultMqttSnFixedSizeRingBufferMock;
 
-    globalGatewayNetworkMockObj = &gatewayNetworkMock;
+    globalClientNetworkMockObj = &clientNetworkMock;
 
-    mqttSnForwarder.gatewayNetwork.gateway_network_send = mock_gateway_network_send;
-    mqttSnForwarder.gatewayNetworkContext = gatewayNetworkContext;
+    mqttSnForwarder.clientNetwork.client_network_send = mock_client_network_send;
+    mqttSnForwarder.clientNetworkContext = clientNetworkContext;
 
-    ON_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))
+    ON_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
         .WillByDefault(Return(1));
-    ON_CALL(gatewayNetworkSendBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkSendBuffer))
+    ON_CALL(clientNetworkSendBuffer, isEmpty(&mqttSnForwarder.clientNetworkSendBuffer))
         .WillByDefault(Return(1));
   }
-
   virtual void TearDown() {
     globalMqttSnFixedSizeRingBufferMockMap = nullptr;
     globalMqttSnFixedSizeRingBufferMock = nullptr;
-    globalGatewayNetworkMockObj = nullptr;
+    globalClientNetworkMockObj = nullptr;
   }
 
-  SendBufferedMessagesToGatewayTests() {};
-  virtual ~  SendBufferedMessagesToGatewayTests() {}
-
+  SendBufferedMessagesToClientsTests() {}
+  virtual ~SendBufferedMessagesToClientsTests() {}
 };
 
-#endif //CMQTTSNFORWARDER_SENDBUFFEREDMESSAGESTOGATEWAYTESTS_H
+#endif //CMQTTSNFORWARDER_SENDBUFFEREDMESSAGESTOCLIENTSTESTS_H

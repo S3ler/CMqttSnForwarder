@@ -60,7 +60,7 @@ class MqttSnMessageDataGenerator {
     uint16_t msg_id = 0;
     uint16_t topic_id = 0;
     generate_publish(&buffer[0],
-                     buffer.size(),
+                     (uint16_t) buffer.size(),
                      MQTT_SN_FLAG_DUP_FIRST_TIME,
                      -1,
                      MQTT_SN_FLAG_RETAIN_FALSE,

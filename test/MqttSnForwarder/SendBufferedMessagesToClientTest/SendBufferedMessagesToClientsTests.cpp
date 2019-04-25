@@ -3,7 +3,7 @@
 //
 
 #include "SendBufferedMessagesToClientsTests.h"
-#include "../shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h"
+#include <shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h>
 
 TEST_F(SendBufferedMessagesToClientsTests,
        DISABLED_ClientNetworkSendDoesNotEmptyClientNetworkSendBuffer_ProgrammStucks) {
@@ -47,7 +47,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(1)
       .WillOnce(Return(0));
@@ -77,7 +77,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(1)
       .WillOnce(Return(0));
@@ -105,7 +105,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(1)
       .WillOnce(Return(-1));
@@ -134,7 +134,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(2)
       .WillOnce(Return(0))
@@ -189,7 +189,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(totalMqttSnMessageCount)
       .WillRepeatedly(Return(0));
@@ -247,7 +247,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(totalMqttSnMessageCount)
       .WillOnce(Return(0));
@@ -307,7 +307,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(totalMqttSnMessageCount)
       .WillOnce(Return(0))
@@ -369,7 +369,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(totalMqttSnMessageCount)
       .WillOnce(Return(0))
@@ -429,7 +429,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(totalMqttSnMessageCount)
       .WillOnce(Return(0))
@@ -495,7 +495,7 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(totalMqttSnMessageCount)
       .WillOnce(Return(0))
@@ -598,12 +598,12 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(totalMqttSnMessageCount)
       .WillRepeatedly(Invoke(
           [&clientNetworkSendBufferMqttSnMessageDataCounter]
-              (struct MqttSnClientNetworkInterface *n,
+              (MqttSnClientNetworkInterface *n,
                MqttSnFixedSizeRingBuffer *sendBuffer,
                uint32_t timeout_ms,
                void *context) -> int {
@@ -706,12 +706,12 @@ TEST_F(SendBufferedMessagesToClientsTests,
   EXPECT_CALL(clientNetworkMock, client_network_send(
       &mqttSnForwarder.clientNetwork,
       &mqttSnForwarder.clientNetworkSendBuffer,
-      CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT,
+      clientNetworkSendTimeout,
       clientNetworkContext))
       .Times(totalMqttSnMessageCount)
       .WillRepeatedly(Invoke(
           [&clientNetworkSendBufferMqttSnMessageDataCounter]
-              (struct MqttSnClientNetworkInterface *n,
+              (MqttSnClientNetworkInterface *n,
                MqttSnFixedSizeRingBuffer *sendBuffer,
                uint32_t timeout_ms,
                void *context) -> int {

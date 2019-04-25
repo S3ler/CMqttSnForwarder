@@ -2,25 +2,25 @@
 // Created by SomeDude on 06.03.2019.
 //
 
-#ifndef CMQTTSNFORWARDER_ADDFORWARDINGHEADERTOCLIENTMESSAGESTESTS_H
-#define CMQTTSNFORWARDER_ADDFORWARDINGHEADERTOCLIENTMESSAGESTESTS_H
+#ifndef CMQTTSNFORWARDER_REMOVEFORWARDINGHEADERFROMGATEWAYMESSAGESTESTS_H
+#define CMQTTSNFORWARDER_REMOVEFORWARDINGHEADERFROMGATEWAYMESSAGESTESTS_H
 
 #include <gtest/gtest.h>
-#include <gmock/gmock-nice-strict.h>
-#include <ClientNetworkMock.h>
-#include <GatewayNetworkMock.h>
-#include <MqttSnFixedSizeRingBufferMock.h>
+#include <gmock/gmock.h>
 #include <MqttSnForwarder.h>
+#include <shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
 
+using ::testing::Return;
+using ::testing::Invoke;
 using ::testing::StrictMock;
+using ::testing::_;
 
 extern MqttSnFixedSizeRingBufferMock *globalMqttSnFixedSizeRingBufferMock;
 extern std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
     *globalMqttSnFixedSizeRingBufferMockMap;
 
-class AddForwardingHeaderToClientMessagesTests : public ::testing::Test {
+class RemoveForwardingHeaderFromGatewayMessagesTests : public ::testing::Test {
  public:
-
   MqttSnForwarder mqttSnForwarder;
 
   std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *> mqttSnFixedSizeRingBufferMockMap;
@@ -32,8 +32,8 @@ class AddForwardingHeaderToClientMessagesTests : public ::testing::Test {
   StrictMock<MqttSnFixedSizeRingBufferMock> gatewayNetworkReceiveBuffer;
   StrictMock<MqttSnFixedSizeRingBufferMock> gatewayNetworkSendBuffer;
 
-  MqttSnMessageData clientMessageData = {0};
   MqttSnMessageData gatewayMessageData = {0};
+  MqttSnMessageData clientMessageData = {0};
 
   virtual void SetUp() {
 
@@ -58,15 +58,14 @@ class AddForwardingHeaderToClientMessagesTests : public ::testing::Test {
         .Times(0);
 
   }
+
   virtual void TearDown() {
 
-      globalMqttSnFixedSizeRingBufferMock = nullptr;
-      globalMqttSnFixedSizeRingBufferMockMap = nullptr;
   }
 
-  virtual ~AddForwardingHeaderToClientMessagesTests() {}
-  AddForwardingHeaderToClientMessagesTests() {}
+  virtual ~RemoveForwardingHeaderFromGatewayMessagesTests() {}
+  RemoveForwardingHeaderFromGatewayMessagesTests() {}
 
 };
 
-#endif //CMQTTSNFORWARDER_ADDFORWARDINGHEADERTOCLIENTMESSAGESTESTS_H
+#endif //CMQTTSNFORWARDER_REMOVEFORWARDINGHEADERFROMGATEWAYMESSAGESTESTS_H

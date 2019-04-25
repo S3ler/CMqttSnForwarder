@@ -4,12 +4,6 @@
 
 #include "AddForwardingHeaderToClientMessagesTests.h"
 
-#include <MqttSnFixedSizeRingBuffer.h>
-#include <gmock/gmock-actions.h>
-
-using ::testing::Return;
-using ::testing::Invoke;
-
 TEST_F(AddForwardingHeaderToClientMessagesTests,
        AddForwardingHeaderTests_ClientNetworkReceiveBufferIsEmpty_ReturnsZero) {
 

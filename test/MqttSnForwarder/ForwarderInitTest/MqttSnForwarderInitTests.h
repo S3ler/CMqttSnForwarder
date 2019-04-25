@@ -12,7 +12,6 @@
 #include <shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
 #include <shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
 #include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
-#include "../MqttSnForwarderTestsGlobalVariables.h"
 
 using ::testing::Return;
 using ::testing::Invoke;

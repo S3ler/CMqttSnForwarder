@@ -2,8 +2,8 @@
 // Created by SomeDude on 07.03.2019.
 //
 
+#include <shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h>
 #include "SendBufferedMessagesToGatewayTests.h"
-#include "../shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h"
 
 TEST_F(SendBufferedMessagesToGatewayTests,
        DISABLED_GatewayNetworkSendDoesNotEmptyGatewayNetworkSendBuffer_ProgrammStucks) {
@@ -581,7 +581,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       .Times(totalMqttSnMessageCounter)
       .WillRepeatedly(Invoke(
           [&gatewayNetworkSendBufferMqttSnMessageCounter]
-              (struct MqttSnGatewayNetworkInterface *n,
+              (MqttSnGatewayNetworkInterface *n,
                MqttSnFixedSizeRingBuffer *sendBuffer,
                uint32_t timeout_ms,
                void *context) -> int {
@@ -605,7 +605,6 @@ TEST_F(SendBufferedMessagesToGatewayTests,
 
   uint32_t clientNetworkReceiveBufferMqttSnMessageCounter = clientNetworkReceiveBufferMqttSnMessageCount;
   uint32_t gatewayNetworkSendBufferMqttSnMessageCounter = gatewayNetworkSendBufferMqttSnMessageCount;
-
 
   EXPECT_CALL(clientNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.clientNetworkReceiveBuffer))
       .Times(1 + totalMqttSnMessageCounter)
@@ -684,7 +683,7 @@ TEST_F(SendBufferedMessagesToGatewayTests,
       .Times(totalMqttSnMessageCounter)
       .WillRepeatedly(Invoke(
           [&gatewayNetworkSendBufferMqttSnMessageCounter]
-              (struct MqttSnGatewayNetworkInterface *n,
+              (MqttSnGatewayNetworkInterface *n,
                MqttSnFixedSizeRingBuffer *sendBuffer,
                uint32_t timeout_ms,
                void *context) -> int {

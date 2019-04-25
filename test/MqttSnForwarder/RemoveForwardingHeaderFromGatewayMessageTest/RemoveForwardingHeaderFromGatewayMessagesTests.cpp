@@ -2,13 +2,8 @@
 // Created by SomeDude on 06.03.2019.
 //
 
+#include <MqttSnMessageParser.h>
 #include "RemoveForwardingHeaderFromGatewayMessagesTests.h"
-
-#include <MqttSnFixedSizeRingBuffer.h>
-#include <gmock/gmock-actions.h>
-
-using ::testing::Return;
-using ::testing::Invoke;
 
 TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests, GatewayNetworkReceiveBufferIsEmpty_ReturnsZero) {
   EXPECT_CALL(gatewayNetworkReceiveBuffer, pop(&mqttSnForwarder.gatewayNetworkReceiveBuffer, &gatewayMessageData))

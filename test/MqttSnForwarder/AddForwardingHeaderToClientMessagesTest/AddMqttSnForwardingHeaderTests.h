@@ -18,5 +18,4 @@ class AddMqttSnForwardingHeaderTests : public ::testing::Test {
   AddMqttSnForwardingHeaderTests() {}
 };
 
-
 #endif //CMQTTSNFORWARDER_ADDMQTTSNFORWARDINGHEADERTESTS_H

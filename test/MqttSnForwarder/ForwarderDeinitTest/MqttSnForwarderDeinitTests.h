@@ -7,13 +7,11 @@
 #define CMQTTSNFORWARDER_MQTTSNFORWARDERDEINITTESTS_H
 
 #include <gtest/gtest.h>
-#include <gmock/gmock-actions.h>
-#include <gmock/gmock-nice-strict.h>
-#include <ClientNetworkMock.h>
-#include <GatewayNetworkMock.h>
-#include <MqttSnFixedSizeRingBufferMock.h>
+#include <gmock/gmock.h>
 #include <MqttSnForwarder.h>
-#include "../shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include <shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
+#include <shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
+#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
 
 using ::testing::Return;
 using ::testing::Invoke;
@@ -79,13 +77,14 @@ class MqttSnForwarderDeinitTests : public ::testing::Test {
         .Times(1)
         .WillOnce(Invoke(local_gateway_network_init));
 
-    ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork, NULL,
+    ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork,
+                                &mqtt_sn_gateway_address,
                                 &client_network_address,
                                 clientNetworkContext,
                                 mock_client_network_init), 0);
     EXPECT_EQ(GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
-                                 &gateway_network_address,
                                  &mqtt_sn_gateway_address,
+                                 &gateway_network_address,
                                  gatewayNetworkContext,
                                  mock_gateway_network_init), 0);
 

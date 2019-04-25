@@ -5,6 +5,10 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H
 #define CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "global_defines.h"
 #include <unistd.h>
 
@@ -405,5 +409,9 @@ int generate_encapsulation_message(uint8_t *dst,
                                    const device_address *from,
                                    const uint8_t *data,
                                    uint16_t data_len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H

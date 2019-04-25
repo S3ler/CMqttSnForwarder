@@ -6,19 +6,19 @@
 #define CMQTTSNFORWARDER_MQTTSNFORWARDERLOOPTESTS_H
 
 #include <gtest/gtest.h>
-#include <gmock/gmock-actions.h>
-#include <gmock/gmock-nice-strict.h>
-#include <ClientNetworkMock.h>
-#include <GatewayNetworkMock.h>
-#include <MqttSnFixedSizeRingBufferMock.h>
+#include <gmock/gmock.h>
 #include <MqttSnForwarder.h>
-#include "../shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h"
+#include <shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
+#include <shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
+#include <shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
+#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
 
 using ::testing::Return;
 using ::testing::AtLeast;
 using ::testing::Invoke;
 using ::testing::StrictMock;
 using ::testing::NiceMock;
+using ::testing::_;
 
 extern ClientNetworkMock *globalClientNetworkMockObj;
 extern GatewayNetworkMock *globalGatewayNetworkMockObj;
@@ -50,6 +50,12 @@ class MqttSnForwarderLoopTests : public ::testing::Test {
   NiceMock<MqttSnFixedSizeRingBufferMock> clientNetworkSendBuffer;
   NiceMock<MqttSnFixedSizeRingBufferMock> gatewayNetworkReceiveBuffer;
   NiceMock<MqttSnFixedSizeRingBufferMock> gatewayNetworkSendBuffer;
+
+  int32_t clientNetworkSendTimeout = 1000;
+  int32_t clientNetworkReceiveTimeout = 1000;
+
+  int32_t gatewayNetworkSendTimeout = 1000;
+  int32_t gatewayNetworkReceiveTimeout = 1000;
 
   virtual void SetUp() {
 
@@ -104,13 +110,14 @@ class MqttSnForwarderLoopTests : public ::testing::Test {
         .Times(1)
         .WillOnce(Invoke(local_gateway_network_init));
 
-    ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork, NULL,
+    ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork,
+                                &mqtt_sn_gateway_address,
                                 &client_network_address,
                                 clientNetworkContext,
                                 mock_client_network_init), 0);
     EXPECT_EQ(GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
-                                 &gateway_network_address,
                                  &mqtt_sn_gateway_address,
+                                 &gateway_network_address,
                                  gatewayNetworkContext,
                                  mock_gateway_network_init), 0);
 
