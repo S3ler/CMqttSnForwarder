@@ -305,6 +305,8 @@ else ()
     target_link_libraries(mqtt-sn-gateway-network-interface-test gtest gtest_main gmock mock-gateway-network)
 
     add_executable(mqtt-sn-fixed-size-ring-buffer-test
+            forwarder/MqttSnFixedSizeRingBuffer.c
+            forwarder/MqttSnFixedSizeRingBuffer.c
             test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.cpp
             test/MqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferTests.h)
     target_include_directories(mqtt-sn-fixed-size-ring-buffer-test PRIVATE forwarder/ test/)
@@ -360,13 +362,21 @@ else ()
         #LIST(APPEND Coverage_GENHTML_ARGS "--rc lcov_branch_coverage=1")
         set(COVERAGE_LCOV_EXCLUDES '/usr/*' 'test/*' '${PROJECT_SOURCE_DIR}/test/*' '${CMAKE_CURRENT_BINARY_DIR}/*')
 
-        #set(RING_EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFordwarder.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnClientNetworkInterface.*' '${PROJECT_SOURCE_DIR}/forwarder/MqttSnGatewayNetworkInterface.*')
-        SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "MqttSnFixedSizeRingBufferUnitTests_coverage"
-                EXECUTABLE "MqttSnFixedSizeRingBufferUnitTests"
-                DEPENDENCIES "MqttSnFixedSizeRingBufferUnitTests"
-                EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnFordwarder.*'
+        SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "mqtt-sn-fixed-size-ring-buffer-testt-coverage"
+                EXECUTABLE "mqtt-sn-fixed-size-ring-buffer-test"
+                DEPENDENCIES "mqtt-sn-fixed-size-ring-buffer-test"
+                EXCLUDES '${PROJECT_SOURCE_DIR}/forwarder/MqttSnForwarder.*'
+                '${PROJECT_SOURCE_DIR}/forwarder/MqttSnMessageParser.*'
+                '${PROJECT_SOURCE_DIR}/forwarder/MqttSnForwarderLogging.*'
                 '${PROJECT_SOURCE_DIR}/forwarder/MqttSnClientNetworkInterface.*'
-                '${PROJECT_SOURCE_DIR}/forwarder/MqttSnGatewayNetworkInterface.*')
+                '${PROJECT_SOURCE_DIR}/forwarder/MqttSnGatewayNetworkInterface.*'
+                '${PROJECT_SOURCE_DIR}/forwarder/client/*'
+                '${PROJECT_SOURCE_DIR}/forwarder/gateway/*'
+                '${PROJECT_SOURCE_DIR}/forwarder/shared/*'
+                '${PROJECT_SOURCE_DIR}/forwarder/logging/*'
+                'client/*'
+                'gateway/*'
+                'shared/*')
 
         #SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "MqttSnForwarderIntegrationTests_coverage"
         #        EXECUTABLE "MqttSnForwarderIntegrationTests"
