@@ -17,7 +17,7 @@ steps:
       - echo "DRONE_BRANCH ${DRONE_BRANCH}\n
         DRONE_BUILD_CREATED ${DRONE_BUILD_CREATED}\n
         DRONE_BUILD_EVENT ${DRONE_BUILD_EVENT}\n
-        DRONE_BUILD_NUMBER ${DRONE_BUILD_NUMBER}\nu
+        DRONE_BUILD_NUMBER ${DRONE_BUILD_NUMBER}\n
         DRONE_BUILD_STARTED ${DRONE_BUILD_STARTED}\n
         DRONE_COMMIT_AFTER ${DRONE_COMMIT_AFTER}\n
         DRONE_COMMIT_AUTHOR ${DRONE_COMMIT_AUTHOR}\n
@@ -56,21 +56,34 @@ steps:
         DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/drone_report
 
 
-  - name: BuildBasicTests
+  - name: Build
     image: gcc7cmake:3.14.0
     when:
       status: [ success ]
     depends_on: [ PrepareReports ]
     commands:
+      - cp lcovrc /etc/lcovrc
       - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G "CodeBlocks - Unix Makefiles" 2>&1 | tee cmake_report
-      - cmake --build . --target mqtt-sn-client-network-interface-test -- -j $(nproc) &&
-        cmake --build . --target mqtt-sn-gateway-network-interface-test -- -j $(nproc) &&
-        cmake --build . --target mqtt-sn-fixed-size-ring-buffer-test -- -j $(nproc) &&
-        cmake --build . --target mqtt-sn-forwarder-test -- -j $(nproc) 2>&1 | tee make_report
+      - cmake --build . --target MqttSnClientNetworkInterfaceUnitTests -- -j $(nproc) &&
+        cmake --build . --target MqttSnGatewayNetworkInterfaceUnitTests -- -j $(nproc) &&
+        cmake --build . --target MqttSnFixedSizeRingBufferUnitTests -- -j $(nproc) &&
+        cmake --build . --target MqttSnForwarderIntegrationTests -- -j $(nproc) &&
+        cmake --build . --target MqttSnForwarderLinuxTcpClientNetworkTests -- -j $(nproc) &&
+        cmake --build . --target MqttSnForwarderLinuxTcpGatewayNetworkTests -- -j $(nproc) 2>&1 | tee make_report
+      - cp MqttSnForwarderLinuxTcpClientNetworkTests MqttSnClientNetworkInterfaceMessageDefragmentationTests
+      - cp MqttSnForwarderLinuxTcpClientNetworkTests SendMultipleClientMultipleMessageVariableLength
+      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveMultipleClientMultipleMessageVariableLength
+      - cp MqttSnForwarderLinuxTcpClientNetworkTests SendToClientsReceiveOnForwarderTests
+      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveOnForwarderSendToClientTests
+      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests GatewayDefragmentationTests
+      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGateway
+      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGateway
+      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
+      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
 
   - name: GatherBuildReports
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     when:
       status: [ success, failure ]
     volumes:
@@ -83,34 +96,34 @@ steps:
 
   - name: MqttSnClientNetworkInterfaceUnitTests
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     commands:
-      - ./mqtt-sn-client-network-interface-test
-        --gtest_output=xml:mqtt-sn-client-network-interface-test.xml
+      - ./MqttSnClientNetworkInterfaceUnitTests
+        --gtest_output=xml:MqttSnClientNetworkInterfaceUnitTests.xml
         --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnGatewayNetworkInterfaceUnitTests
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     commands:
-      - ./mqtt-sn-gateway-network-interface-test
-        --gtest_output=xml:mqtt-sn-gateway-network-interface-test.xml
+      - ./MqttSnGatewayNetworkInterfaceUnitTests
+        --gtest_output=xml:MqttSnGatewayNetworkInterfaceUnitTests.xml
         --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnFixedSizeRingBufferUnitTests
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     commands:
-      - ./mqtt-sn-fixed-size-ring-buffer-test
-        --gtest_output=xml:mqtt-sn-fixed-size-ring-buffer-test.xml
+      - ./MqttSnFixedSizeRingBufferUnitTests
+        --gtest_output=xml:MqttSnFixedSizeRingBufferUnitTests.xml
         --gtest_filter=* --gtest_color=yes
 
   - name: MqttSnForwarderIntegrationTests
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     commands:
-      - ./mqtt-sn-forwarder-test
-        --gtest_output=xml:mqtt-sn-forwarder-test.xml
+      - ./MqttSnForwarderIntegrationTests
+        --gtest_output=xml:MqttSnForwarderIntegrationTests.xml
         --gtest_filter=* --gtest_color=yes
 
 
@@ -128,28 +141,6 @@ steps:
       - cp MqttSnFixedSizeRingBufferUnitTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnFixedSizeRingBufferUnitTests.xml
       - cp MqttSnForwarderIntegrationTests.xml /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/MqttSnForwarderIntegrationTests.xml
 
-  - name: BuildNetworkTests
-    image: gcc7cmake:3.14.0
-    when:
-      status: [ success ]
-    depends_on: [ PrepareReports ]
-    commands:
-      - cmake --build . --target MqttSnClientNetworkInterfaceUnitTests -- -j $(nproc) &&
-        cmake --build . --target MqttSnGatewayNetworkInterfaceUnitTests -- -j $(nproc) &&
-        cmake --build . --target MqttSnFixedSizeRingBufferUnitTests -- -j $(nproc) &&
-        cmake --build . --target MqttSnForwarderIntegrationTests -- -j $(nproc) &&
-        cmake --build . --target MqttSnForwarderLinuxTcpClientNetworkTests -- -j $(nproc) &&
-        cmake --build . --target MqttSnForwarderLinuxTcpGatewayNetworkTests -- -j $(nproc) 2>&1 | tee make_report
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests MqttSnClientNetworkInterfaceMessageDefragmentationTests
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests SendMultipleClientMultipleMessageVariableLength
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveMultipleClientMultipleMessageVariableLength
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests SendToClientsReceiveOnForwarderTests
-      - cp MqttSnForwarderLinuxTcpClientNetworkTests ReceiveOnForwarderSendToClientTests
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests GatewayDefragmentationTests
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGateway
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGateway
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests SendToGatewayReceiveOnForwarder
-      - cp MqttSnForwarderLinuxTcpGatewayNetworkTests ReceiveFromGatewaySendToGateway
 
   - name: MqttSnClientNetworkInterfaceMessageDefragmentationTests
     image: ubuntu
@@ -325,7 +316,7 @@ steps:
         DRONE_TARGET_BRANCH ${DRONE_TARGET_BRANCH}\n" > /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/drone_report
 
 
-  - name: BuildBasicTests
+  - name: Build
     image: gcc7cmake:3.14.0
     when:
       status: [ success ]
@@ -350,7 +341,7 @@ steps:
 
   - name: GatherBuildReports
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     when:
       status: [ success, failure ]
     volumes:
@@ -363,7 +354,7 @@ steps:
 
   - name: MqttSnClientNetworkInterfaceUnitTests
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     commands:
       - ./MqttSnClientNetworkInterfaceUnitTests
         --gtest_output=xml:MqttSnClientNetworkInterfaceUnitTests.xml
@@ -371,7 +362,7 @@ steps:
 
   - name: MqttSnGatewayNetworkInterfaceUnitTests
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     commands:
       - ./MqttSnGatewayNetworkInterfaceUnitTests
         --gtest_output=xml:MqttSnGatewayNetworkInterfaceUnitTests.xml
@@ -379,7 +370,7 @@ steps:
 
   - name: MqttSnFixedSizeRingBufferUnitTests
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     commands:
       - ./MqttSnFixedSizeRingBufferUnitTests
         --gtest_output=xml:MqttSnFixedSizeRingBufferUnitTests.xml
@@ -387,7 +378,7 @@ steps:
 
   - name: MqttSnForwarderIntegrationTests
     image: ubuntu
-    depends_on: [ BuildBasicTests ]
+    depends_on: [ Build ]
     commands:
       - ./MqttSnForwarderIntegrationTests
         --gtest_output=xml:MqttSnForwarderIntegrationTests.xml
