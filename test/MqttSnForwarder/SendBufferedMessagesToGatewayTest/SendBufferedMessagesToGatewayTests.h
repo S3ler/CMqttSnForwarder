@@ -47,11 +47,11 @@ class SendBufferedMessagesToGatewayTests : public testing::Test {
   MqttSnMessageData clientMessageData;
   MqttSnMessageData gatewayMessageData;
 
-  int32_t CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT = 1000;
-  int32_t CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT = 1000;
+  int32_t CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT = 0;
+  int32_t CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT = 0;
 
-  int32_t GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT = 1000;
-  int32_t GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT = 1000;
+  int32_t GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT = 0;
+  int32_t GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT = 0;
 
   virtual void SetUp() {
     memset(&mqtt_sn_gateway_address, 0, sizeof(device_address));
