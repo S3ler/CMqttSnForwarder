@@ -28,6 +28,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
 TEST_F(SendBufferedMessagesToClientsTests,
        ClientNetworkReceiveBufferIsEmptyAndGatewayNetworkSendBufferIsNotEmpty_ReturnsAfterTwoLoops) {
 
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(1)
+      .WillOnce(Return(0));
+
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(2)
       .WillOnce(Return(1))
@@ -57,6 +61,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
 
 TEST_F(SendBufferedMessagesToClientsTests,
        ClientNetworkReceiveBufferIsNotEmptyAndGatewayNetworkSendBufferIsEmpty_ReturnsAfterTwoLoops) {
+
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(1)
+      .WillOnce(Return(0));
 
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(2)
@@ -88,6 +96,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
 TEST_F(SendBufferedMessagesToClientsTests,
        AfterFirstCallClientNetworkSendReturnMinusOne_ReturnsImmediately) {
 
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(1)
+      .WillOnce(Return(0));
+
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(1)
       .WillOnce(Return(0));
@@ -115,6 +127,11 @@ TEST_F(SendBufferedMessagesToClientsTests,
 
 TEST_F(SendBufferedMessagesToClientsTests,
        AfterSecondCallClientNetworkSendReturnMinusOne_ReturnsImmediately) {
+
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(2)
+      .WillRepeatedly(Return(0));
+
 
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(2)
@@ -153,6 +170,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
 
   uint32_t gatewayNetworkReceiveBufferMqttSnMessageDataCounter = gatewayNetworkReceiveBufferMqttSnMessageCount;
   //uint32_t clientNetworkSendBufferMqttSnMessageDataCounter = clientNetworkSendBufferMqttSnMessageCount;
+
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(totalMqttSnMessageCount)
+      .WillRepeatedly(Return(0));
 
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(1 + totalMqttSnMessageCount)
@@ -211,6 +232,11 @@ TEST_F(SendBufferedMessagesToClientsTests,
   uint32_t gatewayNetworkReceiveBufferMqttSnMessageDataCounter = gatewayNetworkReceiveBufferMqttSnMessageCount;
   //uint32_t clientNetworkSendBufferMqttSnMessageDataCounter = clientNetworkSendBufferMqttSnMessageCount;
 
+
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(totalMqttSnMessageCount)
+      .WillRepeatedly(Return(0));
+
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(1 + totalMqttSnMessageCount)
       .WillOnce(Return(0))
@@ -268,6 +294,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
 
   uint32_t gatewayNetworkReceiveBufferMqttSnMessageDataCounter = gatewayNetworkReceiveBufferMqttSnMessageCount;
   //uint32_t clientNetworkSendBufferMqttSnMessageDataCounter = clientNetworkSendBufferMqttSnMessageCount;
+
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(totalMqttSnMessageCount)
+      .WillRepeatedly(Return(0));
 
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(1 + totalMqttSnMessageCount)
@@ -329,6 +359,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
 
   uint32_t gatewayNetworkReceiveBufferMqttSnMessageDataCounter = gatewayNetworkReceiveBufferMqttSnMessageCount;
   //uint32_t clientNetworkSendBufferMqttSnMessageDataCounter = clientNetworkSendBufferMqttSnMessageCount;
+
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(totalMqttSnMessageCount)
+      .WillRepeatedly(Return(0));
 
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(1 + totalMqttSnMessageCount)
@@ -392,6 +426,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
   uint32_t gatewayNetworkReceiveBufferMqttSnMessageDataCounter = gatewayNetworkReceiveBufferMqttSnMessageCount;
   //uint32_t clientNetworkSendBufferMqttSnMessageDataCounter = clientNetworkSendBufferMqttSnMessageCount;
 
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(totalMqttSnMessageCount)
+      .WillRepeatedly(Return(0));
+
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(1 + totalMqttSnMessageCount)
       .WillOnce(Return(1))
@@ -451,6 +489,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
 
   uint32_t gatewayNetworkReceiveBufferMqttSnMessageDataCounter = gatewayNetworkReceiveBufferMqttSnMessageCount;
   //uint32_t clientNetworkSendBufferMqttSnMessageDataCounter = clientNetworkSendBufferMqttSnMessageCount;
+
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(totalMqttSnMessageCount)
+      .WillRepeatedly(Return(0));
 
   EXPECT_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .Times(1 + totalMqttSnMessageCount)
@@ -519,6 +561,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
 
   uint32_t gatewayNetworkReceiveBufferMqttSnMessageDataCounter = gatewayNetworkReceiveBufferMqttSnMessageCount;
   uint32_t clientNetworkSendBufferMqttSnMessageDataCounter = clientNetworkSendBufferMqttSnMessageCount;
+
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(totalMqttSnMessageCount)
+      .WillRepeatedly(Return(0));
 
   ON_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .WillByDefault(Return(1));
@@ -627,6 +673,10 @@ TEST_F(SendBufferedMessagesToClientsTests,
 
   uint32_t gatewayNetworkReceiveBufferMqttSnMessageDataCounter = gatewayNetworkReceiveBufferMqttSnMessageCount;
   uint32_t clientNetworkSendBufferMqttSnMessageDataCounter = clientNetworkSendBufferMqttSnMessageCount;
+
+  EXPECT_CALL(clientNetworkSendBuffer, isFull(&mqttSnForwarder.clientNetworkSendBuffer))
+      .Times(totalMqttSnMessageCount)
+      .WillRepeatedly(Return(0));
 
   ON_CALL(gatewayNetworkReceiveBuffer, isEmpty(&mqttSnForwarder.gatewayNetworkReceiveBuffer))
       .WillByDefault(Return(1));
