@@ -1,0 +1,451 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - mqtt-sn-forwarder-test-coverage.info.cleaned - forwarder/MqttSnForwarderLogging.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">forwarder</a> - MqttSnForwarderLogging.c<span style="font-size: 80%;"> (source / <a href="MqttSnForwarderLogging.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">mqtt-sn-forwarder-test-coverage.info.cleaned</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntry">228</td>
+            <td class="headerCovTableEntryLo">8.3 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2019-04-27 01:05:09</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntryLo">19.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Created by SomeDude on 09.04.2019.
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            : #include &quot;MqttSnForwarderLogging.h&quot;
+<span class="lineNum">       6 </span>            : #include &lt;logging/linux/stdout/StdoutLogging.h&gt;
+<span class="lineNum">       7 </span>            : #include &lt;MqttSnForwarderLoggingBasic.h&gt;
+<a name="8"><span class="lineNum">       8 </span>            : #include &lt;MqttSnForwarderLoggingMessages.h&gt;</a>
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span><span class="lineCov">         45 : int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level) {</span>
+<span class="lineNum">      11 </span><span class="lineCov">         45 :   logger-&gt;log_init = stdout_log_init;</span>
+<span class="lineNum">      12 </span><span class="lineCov">         45 :   logger-&gt;log_deinit = stdout_log_deinit;</span>
+<span class="lineNum">      13 </span><span class="lineCov">         45 :   logger-&gt;log_flush = stdout_log_flush;</span>
+<span class="lineNum">      14 </span><span class="lineCov">         45 :   logger-&gt;log_str = stdout_log_str;</span>
+<span class="lineNum">      15 </span><span class="lineCov">         45 :   logger-&gt;log_char = stdout_log_char;</span>
+<span class="lineNum">      16 </span><span class="lineCov">         45 :   logger-&gt;log_level = log_level;</span>
+<span class="lineNum">      17 </span><span class="lineCov">         45 :   logger-&gt;status = -1;</span>
+<span class="lineNum">      18 </span><span class="lineCov">         45 :   if (logger-&gt;log_init(logger) == 0) {</span>
+<span class="lineNum">      19 </span><span class="lineCov">         45 :     logger-&gt;status = 0;</span>
+<span class="lineNum">      20 </span>            :   }
+<span class="lineNum">      21 </span><span class="lineCov">         45 :   return logger-&gt;status;</span>
+<a name="22"><span class="lineNum">      22 </span>            : }</a>
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span><span class="lineNoCov">          0 : void MqttSnLoggerDeinit(MqttSnLogger *logger) {</span>
+<span class="lineNum">      25 </span><span class="lineNoCov">          0 :   logger-&gt;log_deinit(logger);</span>
+<span class="lineNum">      26 </span><span class="lineNoCov">          0 :   logger-&gt;status = -1;</span>
+<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span><span class="lineCov">        493 : int log_status(const MqttSnLogger *logger) {</span>
+<span class="lineNum">      30 </span><span class="lineCov">        493 :   return logger-&gt;status;</span>
+<a name="31"><span class="lineNum">      31 </span>            : }</a>
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span><span class="lineCov">        452 : int is_logger_not_available(const MqttSnLogger *logger) {</span>
+<span class="lineNum">      34 </span><span class="lineCov">        452 :   if (logger-&gt;status &lt; 0) {</span>
+<span class="lineNum">      35 </span><span class="lineNoCov">          0 :     return 1;</span>
+<span class="lineNum">      36 </span>            :   }
+<span class="lineNum">      37 </span><span class="lineCov">        452 :   return 0;</span>
+<a name="38"><span class="lineNum">      38 </span>            : }</a>
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span><span class="lineCov">        452 : int shall_not_be_logged(const MqttSnLogger *logger, int max_level) {</span>
+<span class="lineNum">      41 </span><span class="lineCov">        452 :   if (logger-&gt;log_level &lt;= LOG_LEVEL_QUIET) {</span>
+<span class="lineNum">      42 </span><span class="lineCov">        452 :     return 1;</span>
+<span class="lineNum">      43 </span>            :   }
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 :   if (logger-&gt;log_level &lt; max_level) {</span>
+<span class="lineNum">      45 </span><span class="lineNoCov">          0 :     return 1;</span>
+<span class="lineNum">      46 </span>            :   }
+<span class="lineNum">      47 </span><span class="lineNoCov">          0 :   return 0;</span>
+<a name="48"><span class="lineNum">      48 </span>            : }</a>
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span><span class="lineNoCov">          0 : int log_flush(const MqttSnLogger *logger) {</span>
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 :   if (logger-&gt;status &lt; 0) {</span>
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :     return -1;</span>
+<span class="lineNum">      53 </span>            :   }
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :   return logger-&gt;log_flush(logger);</span>
+<a name="55"><span class="lineNum">      55 </span>            : }</a>
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 : int log_char(const MqttSnLogger *logger, char c) {</span>
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 :   if (logger-&gt;status &lt; 0) {</span>
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :     return -1;</span>
+<span class="lineNum">      60 </span>            :   }
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :   return logger-&gt;log_char(c);</span>
+<a name="62"><span class="lineNum">      62 </span>            : }</a>
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 : int log_str(const MqttSnLogger *logger, const char *str) {</span>
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :   if (logger-&gt;status &lt; 0) {</span>
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :     return -1;</span>
+<span class="lineNum">      67 </span>            :   }
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :   return logger-&gt;log_str(str);</span>
+<a name="69"><span class="lineNum">      69 </span>            : }</a>
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 : int log_forwarder_started(const MqttSnLogger *logger, const char *version, int major, int minor, int tweak,</span>
+<span class="lineNum">      72 </span>            :                           const char *build_date) {
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">      75 </span>            :   }
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :   const char *name_version = &quot;cmqttsnforwarder version &quot;;</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :   const char *is = &quot; is &quot;;</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :   const char *dot = &quot;.&quot;;</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :   const char *build_date_str = &quot; (build date &quot;;</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :   const char *action = &quot;) started.&quot;;</span>
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :   log_msg_start(logger);</span>
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :   log_str(logger, name_version);</span>
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :   log_str(logger, version);</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :   log_str(logger, is);</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :   log_uint32(logger, major);</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :   log_str(logger, dot);</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :   log_uint32(logger, minor);</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :   log_str(logger, dot);</span>
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :   log_uintmax(logger, tweak);</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :   log_str(logger, build_date_str);</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :   log_str(logger, build_date);</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :   log_str(logger, action);</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :   log_flush(logger);</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :   return log_status(logger);</span>
+<a name="97"><span class="lineNum">      97 </span>            : }</a>
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 : int log_forwarder_terminated(const MqttSnLogger *logger,</span>
+<span class="lineNum">     100 </span>            :                              const char *version,
+<span class="lineNum">     101 </span>            :                              uint32_t major,
+<span class="lineNum">     102 </span>            :                              uint32_t minor,
+<span class="lineNum">     103 </span>            :                              uintmax_t tweak) {
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {</span>
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     106 </span>            :   }
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :   const char *name_version = &quot;cmqttsnforwarder version &quot;;</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :   const char *is = &quot; is &quot;;</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :   const char *dot = &quot;.&quot;;</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :   const char *action = &quot; terminated.&quot;;</span>
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :   log_msg_start(logger);</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :   log_str(logger, name_version);</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :   log_str(logger, version);</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :   log_str(logger, is);</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :   log_uint32(logger, major);</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :   log_str(logger, dot);</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :   log_uint32(logger, minor);</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :   log_str(logger, dot);</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :   log_uintmax(logger, tweak);</span>
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :   log_str(logger, action);</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :   log_flush(logger);</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :   return log_status(logger);</span>
+<a name="125"><span class="lineNum">     125 </span>            : }</a>
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 : int log_network_connect_result(const MqttSnLogger *logger,</span>
+<span class="lineNum">     128 </span>            :                                const char *protocol_name,
+<span class="lineNum">     129 </span>            :                                const char *network_name,
+<span class="lineNum">     130 </span>            :                                const char *result,
+<span class="lineNum">     131 </span>            :                                const device_address *as,
+<span class="lineNum">     132 </span>            :                                const device_address *to) {
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     135 </span>            :   }
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :   const char *connect = &quot;Connect to &quot;;</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :   const char *space = &quot; &quot;;</span>
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :   const char *network_as = &quot; network as &quot;;</span>
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   log_msg_start(logger);</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :   log_str(logger, connect);</span>
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :   if (protocol_name) {</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :     log_str(logger, protocol_name);</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :     log_str(logger, space);</span>
+<span class="lineNum">     146 </span>            :   }
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :   log_str(logger, network_name);</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :   log_str(logger, network_as);</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :   log_device_address(logger, as);</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :   if (to) {</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :     const char *to_str = &quot; to &quot;;</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :     log_str(logger, to_str);</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :     log_device_address(logger, to);</span>
+<span class="lineNum">     155 </span>            :   }
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :   log_str(logger, space);</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :   log_str(logger, result);</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :   log_flush(logger);</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :   return log_status(logger);</span>
+<a name="161"><span class="lineNum">     161 </span>            : }</a>
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 : int log_network_connect(const MqttSnLogger *logger,</span>
+<span class="lineNum">     164 </span>            :                         const char *protocol_name,
+<span class="lineNum">     165 </span>            :                         const char *network_name,
+<span class="lineNum">     166 </span>            :                         const device_address *as,
+<span class="lineNum">     167 </span>            :                         const device_address *to) {
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :   return log_network_connect_result(logger, protocol_name, network_name, &quot;success&quot;, as, to);</span>
+<a name="169"><span class="lineNum">     169 </span>            : }</a>
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 : int log_network_connect_fail(const MqttSnLogger *logger,</span>
+<span class="lineNum">     172 </span>            :                              const char *protocol_name,
+<span class="lineNum">     173 </span>            :                              const char *network_name,
+<span class="lineNum">     174 </span>            :                              const device_address *as,
+<span class="lineNum">     175 </span>            :                              const device_address *to) {
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :   return log_network_connect_result(logger, protocol_name, network_name, &quot;failed&quot;, as, to);</span>
+<a name="177"><span class="lineNum">     177 </span>            : }</a>
+<span class="lineNum">     178 </span>            : 
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 : int log_network_disconnect(const MqttSnLogger *logger,</span>
+<span class="lineNum">     180 </span>            :                            const char *protocol_name,
+<span class="lineNum">     181 </span>            :                            const char *network_name,
+<span class="lineNum">     182 </span>            :                            const device_address *address) {
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     185 </span>            :   }
+<span class="lineNum">     186 </span>            : 
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :   const char *connect = &quot;Disconnect &quot;;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :   const char *space = &quot; &quot;;</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :   const char *network_as = &quot; network connect as &quot;;</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :   const char *dot = &quot;.&quot;;</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :   log_msg_start(logger);</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :   log_str(logger, connect);</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :   log_str(logger, protocol_name);</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :   log_str(logger, space);</span>
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :   log_str(logger, network_name);</span>
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :   log_str(logger, network_as);</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :   log_device_address(logger, address);</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :   log_str(logger, dot);</span>
+<span class="lineNum">     200 </span>            : 
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :   log_flush(logger);</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :   return log_status(logger);</span>
+<a name="203"><span class="lineNum">     203 </span>            : }</a>
+<span class="lineNum">     204 </span>            : 
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 : int log_protocol_mismatch(const MqttSnLogger *logger, const char *expected, const char *actual) {</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     208 </span>            :   }
+<span class="lineNum">     209 </span>            : 
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :   const char *mismatch = &quot;plugin protocol mismatch - expected: &quot;;</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :   const char *actual_str = &quot; actual: &quot;;</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :   const char *dot = &quot;.&quot;;</span>
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :   log_msg_start(logger);</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :   log_str(logger, mismatch);</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :   log_str(logger, expected);</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :   log_str(logger, actual_str);</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :   log_str(logger, actual);</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :   log_str(logger, dot);</span>
+<span class="lineNum">     220 </span>            : 
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :   log_flush(logger);</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :   return log_status(logger);</span>
+<a name="223"><span class="lineNum">     223 </span>            : }</a>
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 : int log_too_long_message(const MqttSnLogger *logger,</span>
+<span class="lineNum">     226 </span>            :                          const device_address *from,
+<span class="lineNum">     227 </span>            :                          MQTT_SN_FORWARDER_NETWORK network,
+<span class="lineNum">     228 </span>            :                          const uint8_t *data,
+<span class="lineNum">     229 </span>            :                          uint16_t data_len) {
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     232 </span>            :   }
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :   const char *description = &quot;dropping too long message: &quot;;</span>
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :   return log_mqtt_sn_message(logger, from, network, data, data_len, description);</span>
+<span class="lineNum">     236 </span>            : }
+<span class="lineNum">     237 </span>            : 
+<a name="238"><span class="lineNum">     238 </span>            : #ifdef WITH_DEBUG_LOGGING</a>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 : int log_db_rec_client_message(const MqttSnLogger *logger,</span>
+<span class="lineNum">     241 </span>            :                               const device_address *from,
+<span class="lineNum">     242 </span>            :                               const device_address *to,
+<span class="lineNum">     243 </span>            :                               const uint8_t *data,
+<span class="lineNum">     244 </span>            :                               uint16_t data_len) {
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     247 </span>            :   }
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :   const char *rec_client_msg_from = &quot;received client message from &quot;;</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :   const char *to_str = &quot; to &quot;;</span>
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :   const char *braked_open_len = &quot; ( len&quot;;</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :   const char *comma_data_braked_open = &quot;, data( &quot;;</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :   const char *double_braked_close_dot = &quot;)).&quot;;</span>
+<span class="lineNum">     254 </span>            : 
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :   log_msg_start(logger);</span>
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :   log_str(logger, rec_client_msg_from);</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :   log_device_address(logger, from);</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :   log_str(logger, to_str);</span>
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 :   log_device_address(logger, to);</span>
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :   log_str(logger, braked_open_len);</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :   log_uint32(logger, data_len);</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :   log_str(logger, comma_data_braked_open);</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :   log_uint8_array(logger, data, data_len);</span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :   log_str(logger, double_braked_close_dot);</span>
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :   log_flush(logger);</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :   return log_status(logger);</span>
+<a name="268"><span class="lineNum">     268 </span>            : }</a>
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 : int log_db_rec_gateway_message(const MqttSnLogger *logger,</span>
+<span class="lineNum">     271 </span>            :                                const device_address *from,
+<span class="lineNum">     272 </span>            :                                const device_address *to,
+<span class="lineNum">     273 </span>            :                                const uint8_t *data,
+<span class="lineNum">     274 </span>            :                                uint16_t data_len) {
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {</span>
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     277 </span>            :   }
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :   const char *send_g_msg_from = &quot;receive gateway message from &quot;;</span>
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :   const char *to_str = &quot; to &quot;;</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :   const char *braked_open_len = &quot; ( len&quot;;</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :   const char *comma_data_bracked_open = &quot;, data( &quot;;</span>
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :   const char *double_bracked_close_dot = &quot;)).&quot;;</span>
+<span class="lineNum">     284 </span>            : 
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :   log_msg_start(logger);</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :   log_str(logger, send_g_msg_from);</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :   log_device_address(logger, from);</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :   if (to) {</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :     log_str(logger, to_str);</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :     log_device_address(logger, to);</span>
+<span class="lineNum">     291 </span>            :   }
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :   log_str(logger, braked_open_len);</span>
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :   log_uint32(logger, data_len);</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :   log_str(logger, comma_data_bracked_open);</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :   log_uint8_array(logger, data, data_len);</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :   log_str(logger, double_bracked_close_dot);</span>
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :   log_flush(logger);</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :   return log_status(logger);</span>
+<a name="300"><span class="lineNum">     300 </span>            : }</a>
+<span class="lineNum">     301 </span>            : 
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 : int log_db_send_client_message(const MqttSnLogger *logger,</span>
+<span class="lineNum">     303 </span>            :                                const device_address *from,
+<span class="lineNum">     304 </span>            :                                const device_address *dst,
+<span class="lineNum">     305 </span>            :                                const uint8_t *data,
+<span class="lineNum">     306 </span>            :                                uint16_t data_len) {
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     309 </span>            :   }
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :   const char *send_c_msg_from = &quot;send client message from &quot;;</span>
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :   const char *to_str = &quot; to &quot;;</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :   const char *braked_open_len = &quot; ( len&quot;;</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :   const char *comma_data_bracked_open = &quot;, data( &quot;;</span>
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :   const char *double_bracked_close_dot = &quot;)).&quot;;</span>
+<span class="lineNum">     316 </span>            : 
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :   log_msg_start(logger);</span>
+<span class="lineNum">     318 </span>            : 
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :   log_str(logger, send_c_msg_from);</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :   log_device_address(logger, from);</span>
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :   log_str(logger, to_str);</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :   log_device_address(logger, dst);</span>
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :   log_str(logger, braked_open_len);</span>
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :   log_uint32(logger, data_len);</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :   log_str(logger, comma_data_bracked_open);</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :   log_uint8_array(logger, data, data_len);</span>
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :   log_str(logger, double_bracked_close_dot);</span>
+<span class="lineNum">     328 </span>            : 
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :   log_flush(logger);</span>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :   return log_status(logger);</span>
+<a name="331"><span class="lineNum">     331 </span>            : }</a>
+<span class="lineNum">     332 </span>            : 
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 : int log_db_send_gateway_message(const MqttSnLogger *logger,</span>
+<span class="lineNum">     334 </span>            :                                 const device_address *from,
+<span class="lineNum">     335 </span>            :                                 const device_address *dst,
+<span class="lineNum">     336 </span>            :                                 const uint8_t *data,
+<span class="lineNum">     337 </span>            :                                 uint16_t data_len) {
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     340 </span>            :   }
+<span class="lineNum">     341 </span>            : 
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :   const char *send_g_msg_from = &quot;send gateway message from &quot;;</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :   const char *to_str = &quot; to &quot;;</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :   const char *braked_open_len = &quot; ( len&quot;;</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :   const char *comma_data_bracked_open = &quot;, data( &quot;;</span>
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :   const char *double_bracked_close_dot = &quot;)).&quot;;</span>
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :   log_msg_start(logger);</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :   log_str(logger, send_g_msg_from);</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :   log_device_address(logger, from);</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :   log_str(logger, to_str);</span>
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :   log_device_address(logger, dst);</span>
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :   log_str(logger, braked_open_len);</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :   log_uint32(logger, data_len);</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :   log_str(logger, comma_data_bracked_open);</span>
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :   log_uint8_array(logger, data, data_len);</span>
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :   log_str(logger, double_bracked_close_dot);</span>
+<span class="lineNum">     358 </span>            : 
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :   log_flush(logger);</span>
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :   return log_status(logger);</span>
+<a name="361"><span class="lineNum">     361 </span>            : }</a>
+<span class="lineNum">     362 </span>            : 
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 : int log_incomplete_message(const MqttSnLogger *logger,</span>
+<span class="lineNum">     364 </span>            :                            const device_address *address,
+<span class="lineNum">     365 </span>            :                            const uint8_t *data,
+<span class="lineNum">     366 </span>            :                            uint16_t data_len) {
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {</span>
+<span class="lineNum">     368 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     369 </span>            :   }
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :   const char *description = &quot;could not send message completely - try again later: &quot;;</span>
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 :   return log_gateway_mqtt_sn_message(logger, address, data, data_len, description);</span>
+<span class="lineNum">     373 </span>            : }
+<span class="lineNum">     374 </span>            : 
+<span class="lineNum">     375 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

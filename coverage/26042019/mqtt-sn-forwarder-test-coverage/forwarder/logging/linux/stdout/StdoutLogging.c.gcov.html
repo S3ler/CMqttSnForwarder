@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - mqtt-sn-forwarder-test-coverage.info.cleaned - forwarder/logging/linux/stdout/StdoutLogging.c</title>
+  <link rel="stylesheet" type="text/css" href="../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../index.html">top level</a> - <a href="index.html">forwarder/logging/linux/stdout</a> - StdoutLogging.c<span style="font-size: 80%;"> (source / <a href="StdoutLogging.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">mqtt-sn-forwarder-test-coverage.info.cleaned</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntryLo">29.4 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2019-04-27 01:05:09</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryLo">40.0 %</td>
+          </tr>
+          <tr><td><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Created by SomeDude on 09.04.2019.
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : #include &quot;StdoutLogging.h&quot;
+<a name="5"><span class="lineNum">       5 </span>            : #include &lt;stdio.h&gt;</a>
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span><span class="lineCov">         45 : int stdout_log_init(MqttSnLogger *logger) {</span>
+<span class="lineNum">       8 </span><span class="lineCov">         45 :   return 0;</span>
+<a name="9"><span class="lineNum">       9 </span>            : }</a>
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span><span class="lineCov">         28 : void stdout_log_deinit(MqttSnLogger *logger) {</span>
+<span class="lineNum">      12 </span><span class="lineCov">         28 :   fflush(stdout);</span>
+<a name="13"><span class="lineNum">      13 </span><span class="lineCov">         28 : }</span></a>
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span><span class="lineNoCov">          0 : int stdout_log_flush(const MqttSnLogger *logger) {</span>
+<span class="lineNum">      16 </span><span class="lineNoCov">          0 :   if (logger-&gt;log_str(&quot;\n&quot;) || fflush(stdout) == EOF) {</span>
+<span class="lineNum">      17 </span><span class="lineNoCov">          0 :     return -1;</span>
+<span class="lineNum">      18 </span>            :   }
+<span class="lineNum">      19 </span><span class="lineNoCov">          0 :   return 0;</span>
+<a name="20"><span class="lineNum">      20 </span>            : }</a>
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span><span class="lineNoCov">          0 : int stdout_log_str(const char *str) {</span>
+<span class="lineNum">      23 </span><span class="lineNoCov">          0 :   if (fputs(str, stdout) == EOF) {</span>
+<span class="lineNum">      24 </span><span class="lineNoCov">          0 :     return -1;</span>
+<span class="lineNum">      25 </span>            :   }
+<span class="lineNum">      26 </span><span class="lineNoCov">          0 :   return 0;</span>
+<a name="27"><span class="lineNum">      27 </span>            : }</a>
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span><span class="lineNoCov">          0 : int stdout_log_char(char c) {</span>
+<span class="lineNum">      30 </span><span class="lineNoCov">          0 :   if (fputc(c, stdout) == EOF) {</span>
+<span class="lineNum">      31 </span><span class="lineNoCov">          0 :     return -1;</span>
+<span class="lineNum">      32 </span>            :   }
+<span class="lineNum">      33 </span><span class="lineNoCov">          0 :   return 0;</span>
+<span class="lineNum">      34 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

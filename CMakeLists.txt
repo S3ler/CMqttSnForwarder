@@ -354,14 +354,14 @@ else ()
         target_link_libraries(mqtt-sn-forwarder-test lib-mqtt-sn-logging)
     endif ()
 
-    option(WITH_LINE_COVERAGE "Include LINE COVERAGE?" OFF)
+    option(WITH_LINE_COVERAGE "Include LINE COVERAGE?" ON)
     if (WITH_LINE_COVERAGE)
         if (${CMAKE_VERSION} VERSION_GREATER "3.12.0" AND CMAKE_COMPILER_IS_GNUCXX)
             LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
             INCLUDE(CodeCoverage)
             APPEND_COVERAGE_COMPILER_FLAGS()
             LIST(APPEND Coverage_GENHTML_ARGS "--rc lcov_branch_coverage=1")
-            set(COVERAGE_LCOV_EXCLUDES '/usr/*' 'test/*' '${PROJECT_SOURCE_DIR}/test/*' '${CMAKE_CURRENT_BINARY_DIR}/*')
+            set(COVERAGE_LCOV_EXCLUDES '/usr/*' 'test/*' '${PROJECT_SOURCE_DIR}/test/*' '${CMAKE_CURRENT_BINARY_DIR}/*' '${PROJECT_SOURCE_DIR}/forwarder/network/*')
 
             SETUP_TARGET_FOR_COVERAGE_LCOV(NAME "mqtt-sn-fixed-size-ring-buffer-test-coverage"
                     EXECUTABLE "mqtt-sn-fixed-size-ring-buffer-test"
@@ -375,9 +375,9 @@ else ()
                     EXECUTABLE "mqtt-sn-gateway-network-interface-test"
                     DEPENDENCIES "mqtt-sn-gateway-network-interface-test")
 
-            #SETUP_TARGET_FOR_COVERAGE_LCOV(NAME "mqtt-sn-forwarder-test-coverage"
-            #        EXECUTABLE "mqtt-sn-forwarder-test"
-            #        DEPENDENCIES "mqtt-sn-forwarder-test")
+            SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE(NAME "mqtt-sn-forwarder-test-coverage"
+                    EXECUTABLE "mqtt-sn-forwarder-test"
+                    DEPENDENCIES "mqtt-sn-forwarder-test")
 
         else ()
             message("Consider to switch to CMake 3.12.0 or newer and GNUCXX for test coverage support.")
