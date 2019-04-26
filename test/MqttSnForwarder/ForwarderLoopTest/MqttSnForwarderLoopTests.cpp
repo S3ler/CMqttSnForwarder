@@ -198,7 +198,7 @@ TEST_F(MqttSnForwarderLoopTests, GatewayNetworkSendFailed_GatewayNetworkDeinitia
   EXPECT_CALL(gatewayNetworkMock, gateway_network_disconnect(
       &mqttSnForwarder.gatewayNetwork,
       gatewayNetworkContext))
-      .Times(1);
+      .Times(AtLeast(1));
 
   MqttSnForwarderLoop(&mqttSnForwarder);
 }
@@ -252,7 +252,7 @@ TEST_F(MqttSnForwarderLoopTests, ClientNetworkSendFailed_ClientNetworkDeinitiali
   EXPECT_CALL(clientNetworkMock, client_network_disconnect(
       &mqttSnForwarder.clientNetwork,
       clientNetworkContext))
-      .Times(1);
+      .Times(AtLeast(1));
 
   MqttSnForwarderLoop(&mqttSnForwarder);
 }
@@ -325,11 +325,11 @@ TEST_F(MqttSnForwarderLoopTests, BeforeLoopIsClientNetworkStatusOneAndGatewayNet
 }
 
 // mqttSnForwarder.clientNetwork.status == 1 and mqttSnForwarder.gatewayNetwork.status == 1 before loop
-TEST_F(MqttSnForwarderLoopTests, BeforeLoopIsClientNetworkStatusOneAndGatewayNetworkStatusOne_ReturnsOne) {
+TEST_F(MqttSnForwarderLoopTests, BeforeLoopIsClientNetworkStatusOneAndGatewayNetworkStatusOne_ReturnsMinusOne) {
   mqttSnForwarder.clientNetwork.status = 1;
   mqttSnForwarder.gatewayNetwork.status = 1;
 
-  EXPECT_EQ(MqttSnForwarderLoop(&mqttSnForwarder), 0);
+  EXPECT_EQ(MqttSnForwarderLoop(&mqttSnForwarder), -1);
 }
 
 // GatewayNetworkReceiveFailed

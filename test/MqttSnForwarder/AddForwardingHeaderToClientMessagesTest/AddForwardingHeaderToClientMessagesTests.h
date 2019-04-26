@@ -37,15 +37,36 @@ class AddForwardingHeaderToClientMessagesTests : public ::testing::Test {
   MqttSnMessageData gatewayMessageData = {0};
 
   virtual void SetUp() {
-
+    std::cout << std::endl;
     mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&mqttSnForwarder.clientNetworkReceiveBuffer,
                                                            &clientNetworkReceiveBuffer));
+
     mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&mqttSnForwarder.clientNetworkSendBuffer,
                                                            &clientNetworkSendBuffer));
+
     mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&mqttSnForwarder.gatewayNetworkReceiveBuffer,
                                                            &gatewayNetworkReceiveBuffer));
+
     mqttSnFixedSizeRingBufferMockMap.insert(std::make_pair(&mqttSnForwarder.gatewayNetworkSendBuffer,
                                                            &gatewayNetworkSendBuffer));
+
+    std::cout << "make_pair: &mqttSnForwarder.clientNetworkReceiveBuffer: "
+              << std::hex << &mqttSnForwarder.clientNetworkReceiveBuffer
+              << " | &clientNetworkReceiveBuffer: "
+              << std::hex << &clientNetworkReceiveBuffer << std::endl;
+    std::cout << "make_pair: &mqttSnForwarder.clientNetworkSendBuffer: "
+              << std::hex << &mqttSnForwarder.clientNetworkSendBuffer
+              << " | &clientNetworkSendBuffer: "
+              << std::hex << &clientNetworkSendBuffer << std::endl;
+    std::cout << "make_pair: &mqttSnForwarder.gatewayNetworkReceiveBuffer: "
+              << std::hex << &mqttSnForwarder.gatewayNetworkReceiveBuffer
+              << " | &gatewayNetworkReceiveBuffer: "
+              << std::hex << &gatewayNetworkReceiveBuffer << std::endl;
+    std::cout << "make_pair: &mqttSnForwarder.gatewayNetworkSendBuffer: "
+              << std::hex << &mqttSnForwarder.gatewayNetworkSendBuffer
+              << " | &gatewayNetworkSendBuffer: "
+              << std::hex << &gatewayNetworkSendBuffer << std::endl;
+
     globalMqttSnFixedSizeRingBufferMockMap = &mqttSnFixedSizeRingBufferMockMap;
 
     globalMqttSnFixedSizeRingBufferMock = &defaultMqttSnFixedSizeRingBufferMock;

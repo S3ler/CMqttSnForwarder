@@ -51,11 +51,11 @@ class MqttSnForwarderLoopTests : public ::testing::Test {
   NiceMock<MqttSnFixedSizeRingBufferMock> gatewayNetworkReceiveBuffer;
   NiceMock<MqttSnFixedSizeRingBufferMock> gatewayNetworkSendBuffer;
 
-  int32_t clientNetworkSendTimeout = 1000;
-  int32_t clientNetworkReceiveTimeout = 1000;
+  int32_t clientNetworkSendTimeout = 0;
+  int32_t clientNetworkReceiveTimeout = 0;
 
-  int32_t gatewayNetworkSendTimeout = 1000;
-  int32_t gatewayNetworkReceiveTimeout = 1000;
+  int32_t gatewayNetworkSendTimeout = 0;
+  int32_t gatewayNetworkReceiveTimeout = 0;
 
   virtual void SetUp() {
 
