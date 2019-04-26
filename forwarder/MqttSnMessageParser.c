@@ -147,7 +147,7 @@ int parse_encapsulation_header(ParsedMqttSnHeader *h, const uint8_t *data, uint1
   if (h->msg_type != ENCAPSULATED_MESSAGE) {
     return -1;
   }
-  if (h->length <= MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(h->indicator)) {
+  if (h->length < MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(h->indicator)) {
     return -1;
   }
   h->payload = (void *) &data[MQTT_SN_HEADER_LENGTH(h->indicator)];
