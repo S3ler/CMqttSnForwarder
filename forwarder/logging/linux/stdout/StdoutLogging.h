@@ -11,9 +11,9 @@ extern "C" {
 
 #include <MqttSnForwarderLogging.h>
 
-int stdout_log_init(struct MqttSnLogger_ *logger);
-void stdout_log_deinit(struct MqttSnLogger_ *logger);
-int stdout_log_flush(const struct MqttSnLogger_ *logger);
+int stdout_log_init(MqttSnLogger *logger);
+void stdout_log_deinit(MqttSnLogger *logger);
+int stdout_log_flush(const MqttSnLogger *logger);
 int stdout_log_str(const char *str);
 int stdout_log_char(char c);
 

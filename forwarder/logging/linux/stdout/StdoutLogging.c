@@ -4,15 +4,15 @@
 #include "StdoutLogging.h"
 #include <stdio.h>
 
-int stdout_log_init(struct MqttSnLogger_ *logger) {
+int stdout_log_init(MqttSnLogger *logger) {
   return 0;
 }
 
-void stdout_log_deinit(struct MqttSnLogger_ *logger) {
+void stdout_log_deinit(MqttSnLogger *logger) {
   fflush(stdout);
 }
 
-int stdout_log_flush(const struct MqttSnLogger_ *logger) {
+int stdout_log_flush(const MqttSnLogger *logger) {
   if (logger->log_str("\n") || fflush(stdout) == EOF) {
     return -1;
   }
