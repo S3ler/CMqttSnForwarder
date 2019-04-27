@@ -5,23 +5,28 @@
 #include <string.h>
 #include <stdint.h>
 
+int get_arc_line_len(char *line);
+void parse_argv_line(char **argv_line, char **argv, char *line_copy, int argc_line);
 void forwarder_config_init(forwarder_config *fcfg) {
   memset(fcfg, 0, sizeof(*fcfg));
-  fcfg->version = strdup(VERSION);
+  memcpy(fcfg->version, VERSION, sizeof(VERSION));
   fcfg->major = MAJOR;
   fcfg->minor = MINOR;
   fcfg->tweak = TWEAK;
-  fcfg->build_date = strdup(CMAKE_BUILD_TIMESTAMP);
+  memcpy(fcfg->build_date, CMAKE_BUILD_TIMESTAMP, sizeof(CMAKE_BUILD_TIMESTAMP));
 
   fcfg->log_lvl = LOG_LEVEL_DEFAULT;
 
   fcfg->protocol_version = MQTT_SN_PROTOCOL_V1;
 
-  fcfg->mqtt_sn_gateway_host = strdup("localhost");
+  memcpy(fcfg->localhost, DEFAULT_LOCALHOST, sizeof(DEFAULT_LOCALHOST));
+  fcfg->mqtt_sn_gateway_host = fcfg->localhost;
   fcfg->mqtt_sn_gateway_port = 8888;
-  fcfg->gateway_network_protocol = strdup("udp");
+  memcpy(fcfg->udp, DEFAULT_UDP, sizeof(DEFAULT_UDP));
+  fcfg->gateway_network_protocol = fcfg->udp;
   fcfg->gateway_network_bind_port = 9999;
-  fcfg->client_network_protocol = strdup("udp");
+  memcpy(fcfg->udp, DEFAULT_UDP, sizeof(DEFAULT_UDP));
+  fcfg->client_network_protocol = fcfg->udp;
   fcfg->client_network_bind_port = 7777;
 
   fcfg->gateway_network_send_timeout = GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT;
@@ -32,11 +37,15 @@ void forwarder_config_init(forwarder_config *fcfg) {
 }
 
 void forwarder_config_cleanup(forwarder_config *fcfg) {
-  free(fcfg->version);
-  free(fcfg->build_date);
-  free(fcfg->mqtt_sn_gateway_host);
-  free(fcfg->gateway_network_protocol);
-  free(fcfg->client_network_protocol);
+  if (fcfg->mqtt_sn_gateway_host != fcfg->localhost) {
+    free(fcfg->mqtt_sn_gateway_host);
+  }
+  if (fcfg->gateway_network_protocol != fcfg->udp) {
+    free(fcfg->gateway_network_protocol);
+  }
+  if (fcfg->client_network_protocol != fcfg->udp) {
+    free(fcfg->client_network_protocol);
+  }
 }
 
 static int parse_port(char *port_str, int *dst) {
@@ -69,6 +78,32 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         fprintf(stderr, "Error: %s argument given but no config file specified.\n\n", argv[i]);
         return 1;
       } else {
+#ifdef Arduino_h
+        File config_file = myFile = SD.open(argv[i + 1], FILE_READ);
+        if (config_file) {
+          if (config_file.size() > nByte) {
+            while (config_file.available()) {
+              uint16_t nByte = 1024;
+              char buf[1024] = {0};
+
+              int len = config_file.read(&buf, nByte);
+              char line_copy[len];
+              memcpy(line_copy, line, len);
+              int argc_line = get_arc_line_len(buf);
+
+              char *argv_line[argc_line];
+              parse_argv_line(argv_line, argv, line_copy, argc_line);
+
+              if (process_forwarder_config_line(fcfg, argc_line, argv_line)) {
+                config_file.close();
+                //fprintf(stderr, "Error: Could not read config file.\n");
+                return 1;
+              }
+            }
+          }
+        }
+        config_file.close();
+#else
         FILE *config_file = fopen(argv[i + 1], "r");
         if (!config_file) {
           fprintf(stderr, "Error: Could not read config file: %s.\n", strerror(errno));
@@ -81,26 +116,11 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
           char line_copy[len];
           memcpy(line_copy, line, len);
 
-          int argc_line = 1;
+          int argc_line = get_arc_line_len(line);
 
-          // estimates argc_line
-          for (char *tk = strtok(line, " "); tk != NULL; tk = strtok(NULL, " ")) {
-            argc_line++;
-          }
-
-          // parse argv_line
           char *argv_line[argc_line];
-          int tk_count = 0;
-          argv_line[tk_count++] = argv[0];
-          for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
-            argv_line[tk_count++] = tk;
-          }
-          // remove '\n' from tokens
-          for (uint16_t i = 0; i < argc_line; i++) {
-            if (argv_line[i][(strlen(argv_line[i]) - 1)] == '\n') {
-              argv_line[i][(strlen(argv_line[i]) - 1)] = '\0';
-            }
-          }
+          parse_argv_line(argv_line, argv, line_copy, argc_line);
+
           if (process_forwarder_config_line(fcfg, argc_line, argv_line)) {
             fclose(config_file);
             fprintf(stderr, "Error: Could not read config file.\n");
@@ -114,6 +134,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         if (line) {
           free(line);
         }
+#endif
       }
       i++;
     } else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
@@ -165,7 +186,6 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         fprintf(stderr, "Error: %s argument given but no protocol specified.\n\n", argv[i]);
         return 1;
       } else {
-        free(fcfg->gateway_network_protocol);
         fcfg->gateway_network_protocol = strdup(argv[i + 1]);
       }
       i++;
@@ -273,7 +293,6 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         fprintf(stderr, "Error: %s argument given but no protocol specified.\n\n", argv[i]);
         return 1;
       } else {
-        free(fcfg->client_network_protocol);
         fcfg->client_network_protocol = strdup(argv[i + 1]);
       }
       i++;
@@ -414,6 +433,30 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
   }
 
   return 0;
+}
+void parse_argv_line(char **argv_line, char **argv, char *line_copy, int argc_line) {
+
+  // parse argv_line
+  int tk_count = 0;
+  *argv_line[tk_count++] = *argv[0];
+  for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
+    argv_line[tk_count++] = tk;
+  }
+  // remove '\n' from tokens
+  for (uint16_t i = 0; i < argc_line; i++) {
+    if (argv_line[i][(strlen(argv_line[i]) - 1)] == '\n') {
+      argv_line[i][(strlen(argv_line[i]) - 1)] = '\0';
+    }
+  }
+}
+int get_arc_line_len(char *line) {
+  int argc_line = 1;
+
+  // estimates argc_line
+  for (char *tk = strtok(line, " "); tk != NULL; tk = strtok(NULL, " ")) {
+    argc_line++;
+  }
+  return argc_line;
 }
 
 void print_usage(void) {

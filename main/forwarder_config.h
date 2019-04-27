@@ -4,6 +4,7 @@
 #include "MqttSnForwarderLogging.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 void print_usage(void);
 
@@ -33,21 +34,33 @@ void print_usage(void);
 #ifndef MANUAL_WEBSITE
 #define MANUAL_WEBSITE "N/D"
 #endif
+#ifndef DEFAULT_LOCALHOST
+#define DEFAULT_LOCALHOST "localhost"
+#endif
+#ifndef DEFAULT_UDP
+#define DEFAULT_UDP "udp"
+#endif
+#ifndef DEFAULT_TCP
+#define DEFAULT_TCP "tcp"
+#endif
+
 
 typedef struct forwarder_config_ {
-  char *version;
+  char version[sizeof(VERSION)];
   int major;
   int minor;
   uint64_t tweak;
-  char *build_date;
+  char build_date[sizeof(CMAKE_BUILD_TIMESTAMP)];
 
   int protocol_version;
   int log_lvl;
 
   // mqtt-sn gateway
+  char localhost[sizeof(DEFAULT_LOCALHOST)];
   char *mqtt_sn_gateway_host;
   int mqtt_sn_gateway_port;
   // gateway network config
+  char udp[sizeof(DEFAULT_UDP)];
   char *gateway_network_protocol;
   char *gateway_network_bind_address;
   int gateway_network_bind_port;
@@ -56,6 +69,7 @@ typedef struct forwarder_config_ {
 #endif
 
   // client network config
+  char tcp[sizeof(DEFAULT_TCP)];
   char *client_network_protocol;
   char *client_network_bind_address;
   int client_network_bind_port;
