@@ -12,7 +12,7 @@
 #include <stdbool.h>
 #include <arpa/inet.h>
 #include <MqttSnMessageParser.h>
-#include "forwarder/global_defines.h"
+#include "global_defines.h"
 
 #define FORWARDER_CLIENT_NETWORK_PORT 7777
 #define GATEWAY_PORT 8888

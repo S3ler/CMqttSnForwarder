@@ -9,8 +9,8 @@
 extern "C" {
 #endif
 
-#include <MqttSnForwarderLogging.h>
-#include <MqttSnMessageParser.h>
+#include <forwarder/MqttSnForwarderLogging.h>
+#include <forwarder/MqttSnMessageParser.h>
 
 int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags);
 

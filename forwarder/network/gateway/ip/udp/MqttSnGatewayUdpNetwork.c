@@ -3,13 +3,12 @@
 //
 
 #include "MqttSnGatewayUdpNetwork.h"
-#include <network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
-#include <network/shared/ip/MqttSnIpNetworkHelper.h>
-#include <MqttSnFixedSizeRingBuffer.h>
 #include <errno.h>
 #include <sys/select.h>
 #include <unistd.h>
 #include <string.h>
+#include <forwarder/network/shared/ip/MqttSnIpNetworkHelper.h>
+#include <forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
 
 int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;

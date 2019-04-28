@@ -9,8 +9,7 @@
 extern "C" {
 #endif
 
-#include "MqttSnFixedSizeRingBuffer.h"
-#include "MqttSnClientNetworkInterface.h"
+#include <forwarder/MqttSnClientNetworkInterface.h>
 #include <sys/select.h>
 
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS 2

@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#include <global_defines.h>
+#include <forwarder/global_defines.h>
 
 typedef enum MQTT_SN_FORWARDER_NETWORK_ {
   MQTT_SN_FORWARDER_NETWORK_INVALID = -1,

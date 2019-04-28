@@ -3,10 +3,10 @@
 //
 
 #include "MqttSnIpNetworkHelper.h"
-#include <logging/MqttSnForwarderLoggingBasic.h>
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
+#include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
 
 #ifdef WITH_LOGGING
 int log_open_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {

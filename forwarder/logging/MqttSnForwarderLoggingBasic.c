@@ -3,7 +3,6 @@
 //
 
 #include "MqttSnForwarderLoggingBasic.h"
-#include <MqttSnMessageParser.h>
 #include <time.h>
 #include <stdio.h>
 #include <stdint.h>

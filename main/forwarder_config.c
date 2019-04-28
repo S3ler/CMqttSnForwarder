@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <linux/stderr/StderrLogging.h>
-#include <MqttSnForwarderLoggingBasic.h>
+#include <forwarder/logging/linux/stderr/StderrLogging.h>
+#include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
 
 int log_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
 int forwarder_config_init(forwarder_config *fcfg) {

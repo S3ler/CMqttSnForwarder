@@ -1,8 +1,8 @@
 
 
 #include "MqttSnClientUdpNetwork.h"
-#include <network/shared/ip/MqttSnIpNetworkHelper.h>
-#include <network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
+#include <forwarder/network/shared/ip/MqttSnIpNetworkHelper.h>
+#include <forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
 #include <string.h>
 
 int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context) {

@@ -3,12 +3,13 @@
 //
 
 #include "MqttSnUdpNetworkMessageParser.h"
-#include <MqttSnFixedSizeRingBuffer.h>
-#include <network/shared/ip/MqttSnIpNetworkHelper.h>
-#include <MqttSnMessageParser.h>
+#include <forwarder/MqttSnMessageParser.h>
+#include <forwarder/network/shared/ip/MqttSnIpNetworkHelper.h>
 #include <sys/select.h>
+#include <sys/socket.h>
 #include <errno.h>
 #include <string.h>
+#include <netinet/in.h>
 
 int save_udp_messages_into_receive_buffer(uint8_t *buffer,
                                           ssize_t read_bytes,

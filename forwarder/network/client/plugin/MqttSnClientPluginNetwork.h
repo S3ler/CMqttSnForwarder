@@ -10,8 +10,8 @@
 extern "C" {
 #endif
 
-#include <MqttSnClientNetworkInterface.h>
 #include "client_network_plugin_interface.h"
+#include <forwarder/MqttSnClientNetworkInterface.h>
 
 typedef struct MqttSnClientPluginContext_ {
   void *dl_handle;

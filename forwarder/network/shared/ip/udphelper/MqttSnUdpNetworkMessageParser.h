@@ -9,8 +9,9 @@
 extern "C" {
 #endif
 
-#include <global_defines.h>
-#include <MqttSnFixedSizeRingBuffer.h>
+#include <forwarder/global_defines.h>
+#include <forwarder/MqttSnFixedSizeRingBuffer.h>
+#include <stdint.h>
 #include <unistd.h>
 
 int save_udp_messages_into_receive_buffer(uint8_t *buffer,

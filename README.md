@@ -1,8 +1,12 @@
 Featurelist:
+* multicast in tcp and upd for linx
+* search gw for mqtt-sn-gateway
 * indicator for ctrl flag in encapsulated messages
 * fix tests
 * use network interface by address
-
+arduino
+* command line parser for arduino
+*
 
 // TODO mention: easily adeptable for other platforms like RTOS
 //  encapsulatedMessage->crtl = 0;

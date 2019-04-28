@@ -3,9 +3,8 @@
 //
 
 #include "MqttSnForwarderLogging.h"
-#include <logging/linux/stdout/StdoutLogging.h>
-#include <MqttSnForwarderLoggingBasic.h>
-#include <MqttSnForwarderLoggingMessages.h>
+#include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
+#include <forwarder/logging/MqttSnForwarderLoggingMessages.h>
 
 int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level, int (*log_init)(struct MqttSnLogger_ *logger)) {
   logger->log_level = log_level;

@@ -3,9 +3,8 @@
 //
 
 #include "MqttSnTcpNetworkMessageParser.h"
-#include <network/shared/ip/MqttSnIpNetworkHelper.h>
-#include <logging/MqttSnForwarderLoggingBasic.h>
-#include <MqttSnMessageParser.h>
+#include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
+#include <forwarder/MqttSnMessageParser.h>
 #include <string.h>
 #include <errno.h>
 

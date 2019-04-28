@@ -4,7 +4,6 @@
 
 #include "MqttSnForwarderLoggingMessages.h"
 #include "MqttSnForwarderLoggingBasic.h"
-#include <MqttSnMessageParser.h>
 #include <netinet/in.h>
 
 #define MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET 2

@@ -1,12 +1,11 @@
 #ifndef CMQTTSNFORWARDER_FORWARDER_CONFIG_H
 #define CMQTTSNFORWARDER_FORWARDER_CONFIG_H
 
-#include "MqttSnForwarderLogging.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <forwarder/MqttSnForwarderLogging.h>
 
-int print_usage(const MqttSnLogger *logger);
 
 #define MQTT_SN_PROTOCOL_V1 0x01
 
@@ -87,6 +86,8 @@ typedef struct forwarder_config_ {
 
 
 } forwarder_config;
+
+int print_usage(const MqttSnLogger *logger);
 
 int forwarder_config_init(forwarder_config *fcfg);
 

@@ -5,9 +5,9 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNIPNETWORKHELPER_H
 #define CMQTTSNFORWARDER_MQTTSNIPNETWORKHELPER_H
 
-#include <global_defines.h>
+#include <forwarder/global_defines.h>
+#include <forwarder/MqttSnForwarderLogging.h>
 #include <netdb.h>
-#include <MqttSnForwarderLogging.h>
 
 #ifdef WITH_LOGGING
 

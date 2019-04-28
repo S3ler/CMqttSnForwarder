@@ -5,8 +5,8 @@
 #ifndef CMQTTSNFORWARDER_FORWARDER_STARTER_H
 #define CMQTTSNFORWARDER_FORWARDER_STARTER_H
 
+#include <forwarder/MqttSnForwarder.h>
 #include "../forwarder_config.h"
-#include <MqttSnForwarder.h>
 
 typedef struct MqttSnForwarder_fcfg_ptr_ {
   MqttSnForwarder *mqttSnForwarder_ptr;

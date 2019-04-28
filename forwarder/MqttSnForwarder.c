@@ -6,11 +6,11 @@
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
 #include "MqttSnMessageParser.h"
-#include <MqttSnForwarderLoggingMessages.h>
 #include <memory.h>
 #include <stdio.h>
 #include <signal.h>
-#include <linux/stdout/StdoutLogging.h>
+#include <forwarder/logging/linux/stdout/StdoutLogging.h>
+#include <forwarder/logging/MqttSnForwarderLoggingMessages.h>
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         log_level_t log_level,

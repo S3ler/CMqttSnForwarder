@@ -5,10 +5,11 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNTCPNETWORKMESSAGEPARSER_H
 #define CMQTTSNFORWARDER_MQTTSNTCPNETWORKMESSAGEPARSER_H
 
-#include <MqttSnForwarderLogging.h>
-#include <MqttSnFixedSizeRingBuffer.h>
-#include <global_defines.h>
+#include <forwarder/global_defines.h>
+#include <forwarder/MqttSnFixedSizeRingBuffer.h>
+#include <forwarder/MqttSnForwarderLogging.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #ifndef CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH 1024
