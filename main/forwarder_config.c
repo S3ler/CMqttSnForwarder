@@ -85,7 +85,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
   for (int i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "-c") || !strcmp(argv[i], "--config-file")) {
       if (i == argc - 1) {
-        log_no_config_file_given(fcfg->logger, argv[i]);
+        log_argument_value_not_specified(fcfg->logger, argv[i], "config file");
         return 1;
       } else {
 #ifdef Arduino_h
@@ -591,14 +591,6 @@ int print_invalid_timeout_given(const MqttSnLogger *logger, long timeout) {
   return log_status(logger);
 }
 
-int log_no_config_file_given(const MqttSnLogger *logger, char *string) {
-  log_str(logger, "Error: ");
-  log_str(logger, string);
-  log_str(logger, " argument given but no config file specified.\n");
-  log_flush(logger);
-  return log_status(logger);
-}
-
 int log_could_not_read_config_file(const MqttSnLogger *logger, char *strerror) {
   log_str(logger, "Error: Could not read config file: ");
   log_str(logger, strerror);
@@ -612,7 +604,7 @@ int log_argument_value_not_specified(const MqttSnLogger *logger, const char *arg
   log_str(logger, argument);
   log_str(logger, " argument given but no ");
   log_str(logger, argument_name);
-  log_str(logger, "specified.\n");
+  log_str(logger, " specified.\n");
   log_flush(logger);
   return log_status(logger);
 }

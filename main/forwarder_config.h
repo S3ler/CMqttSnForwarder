@@ -102,7 +102,6 @@ void parse_argv_line(char **argv_line, char **argv, char *line_copy, int argc_li
 // logging
 int print_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
 int print_invalid_timeout_given(const MqttSnLogger *logger, long timeout);
-int log_no_config_file_given(const MqttSnLogger *logger, char *string);
 int log_could_not_read_config_file(const MqttSnLogger *logger, char *strerror);
 int log_argument_value_not_specified(const MqttSnLogger *logger, const char *argument, const char *argument_name);
 int log_unsupported_url_scheme(const MqttSnLogger *logger);
