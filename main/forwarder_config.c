@@ -11,6 +11,7 @@ int log_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
 int forwarder_config_init(forwarder_config *fcfg) {
   memset(fcfg, 0, sizeof(*fcfg));
 
+  fcfg->logger = &fcfg->strut_logger;
   if (MqttSnLoggerInit(fcfg->logger, LOG_LEVEL_VERBOSE, stderr_log_init)) {
     return -1;
   }

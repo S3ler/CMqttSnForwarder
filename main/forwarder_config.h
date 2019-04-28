@@ -46,6 +46,7 @@ int print_usage(const MqttSnLogger *logger);
 
 
 typedef struct forwarder_config_ {
+  MqttSnLogger strut_logger;
   MqttSnLogger *logger;
 
   char version[sizeof(VERSION)];
