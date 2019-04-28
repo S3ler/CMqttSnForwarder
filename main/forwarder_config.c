@@ -4,15 +4,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <forwarder/logging/linux/stderr/StderrLogging.h>
 #include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
+#include <CMqttSnForwarderArduino.h>
 
 int log_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
 int forwarder_config_init(forwarder_config *fcfg) {
   memset(fcfg, 0, sizeof(*fcfg));
 
   fcfg->logger = &fcfg->strut_logger;
-  if (MqttSnLoggerInit(fcfg->logger, LOG_LEVEL_VERBOSE, stderr_log_init)) {
+  if (MqttSnLoggerInit(fcfg->logger, LOG_LEVEL_VERBOSE, arduino_serial_log_init)) {//TODO
     return -1;
   }
 
@@ -89,16 +89,16 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         return 1;
       } else {
 #ifdef Arduino_h
-        File config_file = myFile = SD.open(argv[i + 1], FILE_READ);
+        File config_file = SD.open(argv[i + 1], FILE_READ);
         if (config_file) {
+          uint16_t nByte = 1024;
           if (config_file.size() > nByte) {
             while (config_file.available()) {
-              uint16_t nByte = 1024;
               char buf[1024] = {0};
 
               int len = config_file.read(&buf, nByte);
               char line_copy[len];
-              memcpy(line_copy, line, len);
+              memcpy(line_copy, &buf, len);
               int argc_line = get_arc_line_len(buf);
 
               char *argv_line[argc_line];
@@ -471,103 +471,106 @@ int get_arc_line_len(char *line) {
 }
 
 int print_usage(const MqttSnLogger *logger) {
-  log_str(logger,"cmqttsnforwarder is a simple mqtt-sn forwarder that will forward mqtt-sn messages\n");
-  log_str(logger,"                 from a client network over a gateway network to a mqtt-sn gateway.\n");
-  log_str(logger,"cmqttsnforwarder version ");
+  log_str(logger, "cmqttsnforwarder is a simple mqtt-sn forwarder that will forward mqtt-sn messages\n");
+  log_str(logger, "                 from a client network over a gateway network to a mqtt-sn gateway.\n");
+  log_str(logger, "cmqttsnforwarder version ");
   log_str(logger, VERSION);
-  log_str(logger," is ");
+  log_str(logger, " is ");
   log_uint64(logger, MAJOR);
-  log_str(logger,".");
+  log_str(logger, ".");
   log_uint64(logger, MINOR);
-  log_str(logger,".");
+  log_str(logger, ".");
   log_uint64(logger, TWEAK);
-  log_str(logger," (build date ");
-  log_str(logger,CMAKE_BUILD_TIMESTAMP);
-  log_str(logger,").");
+  log_str(logger, " (build date ");
+  log_str(logger, CMAKE_BUILD_TIMESTAMP);
+  log_str(logger, ").");
   log_flush(logger);
   log_flush(logger);
 
-  log_str(logger,"Usage: cmqttsnforwarder {[[-h mqtt_sn_gateway_host] [-p mqtt_sn_gateway_port]] | -L URL}\n");
-  log_str(logger,"                        {[[-gP gateway_network_protocol] [-gA gateway_network_bind_address]"
-         " [-gp gateway_network_bind_port]] | -gL URL}\n");
-  log_str(logger,"                        {[[-cP client_network_protocol] [-cA client_network_bind_address]"
-         " [-cp client_network_bind_port]] | -cL URL}\n");
-  log_str(logger,"                        {[[-gst gateway_send_timeout] [-grt gateway_receive_timeout]]"
-         " | --gt gateway_network_timeout}\n");
-  log_str(logger,"                        {[[-cst client_send_timeout] [-crt client_receive_timeout]]"
-         " | --ct client_network_timeout}\n");
+  log_str(logger, "Usage: cmqttsnforwarder {[[-h mqtt_sn_gateway_host] [-p mqtt_sn_gateway_port]] | -L URL}\n");
+  log_str(logger, "                        {[[-gP gateway_network_protocol] [-gA gateway_network_bind_address]"
+                  " [-gp gateway_network_bind_port]] | -gL URL}\n");
+  log_str(logger, "                        {[[-cP client_network_protocol] [-cA client_network_bind_address]"
+                  " [-cp client_network_bind_port]] | -cL URL}\n");
+  log_str(logger, "                        {[[-gst gateway_send_timeout] [-grt gateway_receive_timeout]]"
+                  " | --gt gateway_network_timeout}\n");
+  log_str(logger, "                        {[[-cst client_send_timeout] [-crt client_receive_timeout]]"
+                  " | --ct client_network_timeout}\n");
 #ifdef WITH_PLUGIN
-  log_str(logger,"                        [-gnp gateway_network_plugin]\n");
-  log_str(logger,"                        [-cnp client_network_plugin]\n");
+  log_str(logger, "                        [-gnp gateway_network_plugin]\n");
+  log_str(logger, "                        [-cnp client_network_plugin]\n");
 #endif
 #if defined(WITH_LOGGING)
 #if defined(WITH_DEBUG_LOGGING)
-  log_str(logger,"                        [[-q quiet] | [-d default] | [-v verbose] | [-db debug]]\n");
+  log_str(logger, "                        [[-q quiet] | [-d default] | [-v verbose] | [-db debug]]\n");
 #else
   log_str(logger,"                        [[-q quiet] | [-d default] | [-v verbose]]\n");
 #endif
 #endif
-  log_str(logger,"       [-c --config-file]\n");
-  log_str(logger,"       cmqttsnforwarder --help\n\n");
+  log_str(logger, "       [-c --config-file]\n");
+  log_str(logger, "       cmqttsnforwarder --help\n\n");
 
-  log_str(logger," -h : mqtt-sn gateway host to connect to. Defaults to localhost.\n");
-  log_str(logger," -p : mqtt-sn gateway network port to connect to. Defaults to 8888 for plain MQTT-SN.\n");
-  log_str(logger," -L : specify hostname, port as a URL in the form:\n");
-  log_str(logger,"      mqtt-sn(s)://host[:port]\n");
-  log_str(logger,"      mqtt-sn(s) uses the same protocol as the gateway network.\n");
+  log_str(logger, " -h : mqtt-sn gateway host to connect to. Defaults to localhost.\n");
+  log_str(logger, " -p : mqtt-sn gateway network port to connect to. Defaults to 8888 for plain MQTT-SN.\n");
+  log_str(logger, " -L : specify hostname, port as a URL in the form:\n");
+  log_str(logger, "      mqtt-sn(s)://host[:port]\n");
+  log_str(logger, "      mqtt-sn(s) uses the same protocol as the gateway network.\n");
 
-  log_str(logger," -gP : specify the protocol of the gateway network to use.\n");
-  log_str(logger,"       Can be udp, tcp. Defaults to udp.\n");
-  log_str(logger," -gA : bind the gateway network to the outgoing socket to this host/ip address.\n");
-  log_str(logger,"       Use to control which interface the network communicates over.\n");
-  log_str(logger," -gp : listening on the specific gateway network port. Defaults to 9999.\n");
-  log_str(logger," -gL : specify outgoing socket, port as a URL in the form: address[:port]\n");
+  log_str(logger, " -gP : specify the protocol of the gateway network to use.\n");
+  log_str(logger, "       Can be udp, tcp. Defaults to udp.\n");
+  log_str(logger, " -gA : bind the gateway network to the outgoing socket to this host/ip address.\n");
+  log_str(logger, "       Use to control which interface the network communicates over.\n");
+  log_str(logger, " -gp : listening on the specific gateway network port. Defaults to 9999.\n");
+  log_str(logger, " -gL : specify outgoing socket, port as a URL in the form: address[:port]\n");
 
-  log_str(logger," -cP : specify the protocol of the client network to use.\n");
-  log_str(logger,"       Can be udp, tcp. Defaults to udp.\n");
-  log_str(logger," -cA : bind the client network to the outgoing socket to this host/ip address.\n");
-  log_str(logger,"       Use to control which interface the network communicates over.\n");
-  log_str(logger," -cp : listening on the specific client network port. Defaults to 7777.\n");
-  log_str(logger," -cL : specify outgoing socket, port as a URL in the form: address[:port]\n");
+  log_str(logger, " -cP : specify the protocol of the client network to use.\n");
+  log_str(logger, "       Can be udp, tcp. Defaults to udp.\n");
+  log_str(logger, " -cA : bind the client network to the outgoing socket to this host/ip address.\n");
+  log_str(logger, "       Use to control which interface the network communicates over.\n");
+  log_str(logger, " -cp : listening on the specific client network port. Defaults to 7777.\n");
+  log_str(logger, " -cL : specify outgoing socket, port as a URL in the form: address[:port]\n");
 
-  log_str(logger," -gst : specify the gateway network send timeout in ms.\n");
-  log_str(logger,"       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
-  log_str(logger," -grt : specify the gateway network receive timeout in ms.\n");
-  log_str(logger,"       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
-  log_str(logger," -gt  : specify the gateway network send and receive timeout in ms. Defaults to 1000 ms.\n");
-  log_str(logger,"       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
-  log_str(logger," -cst : specify the client network send timeout in ms.\n");
-  log_str(logger,"       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
-  log_str(logger," -crt : specify the client network receive timeout in ms.\n");
-  log_str(logger,"       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
-  log_str(logger," -ct  : specify the client network send and receive timeout in ms. Defaults to 1000 ms.\n");
-  log_str(logger,"       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
+  log_str(logger, " -gst : specify the gateway network send timeout in ms.\n");
+  log_str(logger, "       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
+  log_str(logger, " -grt : specify the gateway network receive timeout in ms.\n");
+  log_str(logger, "       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
+  log_str(logger, " -gt  : specify the gateway network send and receive timeout in ms. Defaults to 1000 ms.\n");
+  log_str(logger, "       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
+  log_str(logger, " -cst : specify the client network send timeout in ms.\n");
+  log_str(logger, "       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
+  log_str(logger, " -crt : specify the client network receive timeout in ms.\n");
+  log_str(logger, "       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
+  log_str(logger, " -ct  : specify the client network send and receive timeout in ms. Defaults to 1000 ms.\n");
+  log_str(logger, "       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");
 
-  log_str(logger," -V : specify the version of the MQTT-SN protocol to use.\n");
-  log_str(logger,"      Can be mqttsnv1. Defaults to mqttsnv1.\n");
+  log_str(logger, " -V : specify the version of the MQTT-SN protocol to use.\n");
+  log_str(logger, "      Can be mqttsnv1. Defaults to mqttsnv1.\n");
 #ifdef WITH_PLUGIN
-  log_str(logger," -gnp : path to the gateway network plugin.\n");
-  log_str(logger,"       The gateway network protocol must match the short protocol name gained from the plugin.\n");
-  log_str(logger,"       A gateway bind address is saved to a device address and given to the gateway network plugin.\n");
-  log_str(logger,"       A port overwrites the two last bytes of the gateway network bind address. "
-         "You can set gateway port to -1 if you want to overwrite this behaviour\n");
-  log_str(logger," -cnp : absolute path to the client network plugin.\n");
-  log_str(logger,"       The client network protocol must match the short protocol name gained from the plugin.\n");
-  log_str(logger,"       A client bind address is saved to a device address and given to the gateway network plugin.\n");
-  log_str(logger,"       A client port overwrites the two last bytes of the gateway network bind address. "
-         "You can set gateway port to -1 if you want to overwrite this behaviour\n");
+  log_str(logger, " -gnp : path to the gateway network plugin.\n");
+  log_str(logger, "       The gateway network protocol must match the short protocol name gained from the plugin.\n");
+  log_str(logger,
+          "       A gateway bind address is saved to a device address and given to the gateway network plugin.\n");
+  log_str(logger, "       A port overwrites the two last bytes of the gateway network bind address. "
+                  "You can set gateway port to -1 if you want to overwrite this behaviour\n");
+  log_str(logger, " -cnp : absolute path to the client network plugin.\n");
+  log_str(logger, "       The client network protocol must match the short protocol name gained from the plugin.\n");
+  log_str(logger,
+          "       A client bind address is saved to a device address and given to the gateway network plugin.\n");
+  log_str(logger, "       A client port overwrites the two last bytes of the gateway network bind address. "
+                  "You can set gateway port to -1 if you want to overwrite this behaviour\n");
 #endif
 #if defined(WITH_LOGGING)
-  log_str(logger," -q : specify quiet logging. Don't print any log messages.\n");
-  log_str(logger," -d : specify default logging. Print network status changes, and the mqtt-sn messages: "
-         "PUBLISH, CONNECT, CONNACK, DISCONNECT.\n");
-  log_str(logger," -v : specify verbose logging. Print all default logging and all MQTT-SN messages.\n");
+  log_str(logger, " -q : specify quiet logging. Don't print any log messages.\n");
+  log_str(logger, " -d : specify default logging. Print network status changes, and the mqtt-sn messages: "
+                  "PUBLISH, CONNECT, CONNACK, DISCONNECT.\n");
+  log_str(logger, " -v : specify verbose logging. Print all default logging and all MQTT-SN messages.\n");
 #if defined(WITH_DEBUG_LOGGING)
-  log_str(logger," -db : specify debug logging. Print all mqtt-sn messages including payload and internal information.\n");
+  log_str(logger,
+          " -db : specify debug logging. Print all mqtt-sn messages including payload and internal information.\n");
 #endif
 #endif
-  log_str(logger," -c : specify the config file.\n");
-  log_str(logger," --help : display this message.\n");
+  log_str(logger, " -c : specify the config file.\n");
+  log_str(logger, " --help : display this message.\n");
   log_flush(logger);
   log_str(logger, "See ");
   log_str(logger, MANUAL_WEBSITE);

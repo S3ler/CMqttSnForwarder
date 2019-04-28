@@ -190,7 +190,16 @@ if (WITH_PLUGIN)
 endif ()
 
 if (NOT BUILD_TESTING)
+    add_executable(ArduinoCMqttSnForwarder
+            main/forwarder_config.h
+            main/forwarder_config.c)
     message("Bulding as C project")
+    target_compile_options(ArduinoCMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(ArduinoCMqttSnForwarder
+            lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    if (WITH_LOGGING)
+        target_link_libraries(ArduinoCMqttSnForwarder lib-mqtt-sn-logging)
+    endif ()
     add_executable(CMqttSnForwarder
             main/linux/main.c
             main/linux/forwarder_starter.h

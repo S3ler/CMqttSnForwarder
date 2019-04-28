@@ -43,6 +43,6 @@ int arduino_serial_log_char(char c) {
   if (!Serial) {
     return -1;
   }
-  Serial.print(str);
+  Serial.print(c);
   return 0;
 }
