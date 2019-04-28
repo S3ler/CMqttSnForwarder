@@ -5,6 +5,11 @@
 #include <stdio.h>
 
 int stdout_log_init(MqttSnLogger *logger) {
+  logger->log_init = stdout_log_init;
+  logger->log_deinit = stdout_log_deinit;
+  logger->log_flush = stdout_log_flush;
+  logger->log_str = stdout_log_str;
+  logger->log_char = stdout_log_char;
   return 0;
 }
 

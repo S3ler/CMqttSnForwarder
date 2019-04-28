@@ -7,13 +7,9 @@
 #include <MqttSnForwarderLoggingBasic.h>
 #include <MqttSnForwarderLoggingMessages.h>
 
-int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level) {
-  logger->log_init = stdout_log_init;
-  logger->log_deinit = stdout_log_deinit;
-  logger->log_flush = stdout_log_flush;
-  logger->log_str = stdout_log_str;
-  logger->log_char = stdout_log_char;
+int MqttSnLoggerInit(MqttSnLogger *logger, log_level_t log_level, int (*log_init)(struct MqttSnLogger_ *logger)) {
   logger->log_level = log_level;
+  logger->log_init = log_init;
   logger->status = -1;
   if (logger->log_init(logger) == 0) {
     logger->status = 0;

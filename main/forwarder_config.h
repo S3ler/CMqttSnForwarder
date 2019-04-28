@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-void print_usage(void);
+int print_usage(const MqttSnLogger *logger);
 
 #define MQTT_SN_PROTOCOL_V1 0x01
 
@@ -46,6 +46,8 @@ void print_usage(void);
 
 
 typedef struct forwarder_config_ {
+  MqttSnLogger *logger;
+
   char version[sizeof(VERSION)];
   int major;
   int minor;
@@ -82,12 +84,26 @@ typedef struct forwarder_config_ {
   int client_network_send_timeout;
   int client_network_receive_timeout;
 
+
 } forwarder_config;
 
-void forwarder_config_init(forwarder_config *fcfg);
+int forwarder_config_init(forwarder_config *fcfg);
 
 void forwarder_config_cleanup(forwarder_config *cfcg);
 
 int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]);
 
+// parsing
+int get_arc_line_len(char *line);
+
+void parse_argv_line(char **argv_line, char **argv, char *line_copy, int argc_line);
+
+// logging
+int print_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
+int print_invalid_timeout_given(const MqttSnLogger *logger, long timeout);
+int log_no_config_file_given(const MqttSnLogger *logger, char *string);
+int log_could_not_read_config_file(const MqttSnLogger *logger, char *strerror);
+int log_argument_value_not_specified(const MqttSnLogger *logger, const char *argument, const char *argument_name);
+int log_unsupported_url_scheme(const MqttSnLogger *logger);
+int log_invalid_protocol_version_given(const MqttSnLogger *logger);
 #endif //CMQTTSNFORWARDER_FORWARDER_CONFIG_H

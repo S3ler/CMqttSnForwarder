@@ -3,6 +3,7 @@
 //
 
 #include "MqttSnUdpNetworkMessageParser.h"
+#include <MqttSnFixedSizeRingBuffer.h>
 #include <network/shared/ip/MqttSnIpNetworkHelper.h>
 #include <MqttSnMessageParser.h>
 #include <sys/select.h>

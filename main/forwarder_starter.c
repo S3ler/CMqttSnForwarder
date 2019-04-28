@@ -16,6 +16,7 @@
 #include <bits/types/sig_atomic_t.h>
 #include <signal.h>
 #include <pthread.h>
+#include <linux/stdout/StdoutLogging.h>
 
 int convert_string_to_device_address(const char *string, device_address *address) {
   char *cp_string = strdup(string);
@@ -130,7 +131,7 @@ int start_gateway_plugin(const forwarder_config *fcfg,
 #ifdef WITH_LOGGING
   // logger only for ClientNetworkInit
   MqttSnLogger logger = {0};
-  if (MqttSnLoggerInit(&logger, fcfg->log_lvl) != 0) {
+  if (MqttSnLoggerInit(&logger, fcfg->log_lvl, stdout_log_init) != 0) {
     MqttSnLoggerDeinit(&logger);
     return -1;
   }
@@ -273,7 +274,7 @@ int start_client_plugin(const forwarder_config *fcfg,
 #ifdef WITH_LOGGING
   // logger only for ClientNetworkInit
   MqttSnLogger logger = {0};
-  if (MqttSnLoggerInit(&logger, fcfg->log_lvl) != 0) {
+  if (MqttSnLoggerInit(&logger, fcfg->log_lvl, stdout_log_init) != 0) {
     MqttSnLoggerDeinit(&logger);
     return -1;
   }
@@ -449,7 +450,7 @@ int start_forwarder(const forwarder_config *fcfg,
 #ifdef WITH_LOGGING
   // logger only for ClientNetworkInit
   MqttSnLogger logger = {0};
-  if (MqttSnLoggerInit(&logger, fcfg->log_lvl) != 0) {
+  if (MqttSnLoggerInit(&logger, fcfg->log_lvl, stdout_log_init) != 0) {
     MqttSnLoggerDeinit(&logger);
     return -1;
   }

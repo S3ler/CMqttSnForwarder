@@ -10,6 +10,7 @@
 #include <memory.h>
 #include <stdio.h>
 #include <signal.h>
+#include <linux/stdout/StdoutLogging.h>
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         log_level_t log_level,
@@ -17,7 +18,7 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         void *gatewayNetworkContext) {
 
 #ifdef WITH_LOGGING
-  if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level) != 0) {
+  if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, stdout_log_init) != 0) {
     MqttSnLoggerDeinit(&mqttSnForwarder->logger);
     return -1;
   }

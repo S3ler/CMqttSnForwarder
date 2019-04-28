@@ -54,11 +54,14 @@ if (WITH_LOGGING)
     set(STDOUT_LOGGING_FILES
             forwarder/logging/linux/stdout/StdoutLogging.c
             forwarder/logging/linux/stdout/StdoutLogging.h)
+    set(STDERR_LOGGING_FILES
+            forwarder/logging/linux/stderr/StderrLogging.c
+            forwarder/logging/linux/stderr/StderrLogging.h)
     #option(WITH_MQTT_SN_MESSAGE_LOGGING "Include MQTT_SN_MESSAGE_LOGGING support?" ON)
     #if (WITH_MQTT_SN_MESSAGE_LOGGING)
     #    set(MQTT_SN_LOGGING_FILES )
     #endif ()
-    set(LOGGING_FILES ${CORE_LOGGING_FILES} ${MQTT_SN_LOGGING_FILES} ${STDOUT_LOGGING_FILES})
+    set(LOGGING_FILES ${CORE_LOGGING_FILES} ${MQTT_SN_LOGGING_FILES} ${STDOUT_LOGGING_FILES} ${STDERR_LOGGING_FILES})
 
     add_library(lib-mqtt-sn-logging ${LOGGING_FILES})
     target_compile_options(lib-mqtt-sn-logging PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
