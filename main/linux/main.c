@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <linux/stdout/StdoutLogging.h>
-#include "forwarder_config.h"
+#include "../forwarder_config.h"
 #include "forwarder_starter.h"
 
 int main(int argc, char *argv[]) {

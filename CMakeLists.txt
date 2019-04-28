@@ -198,9 +198,9 @@ endif ()
 if (NOT BUILD_TESTING)
     message("Bulding as C project")
     add_executable(CMqttSnForwarder
-            main/main.c
-            main/forwarder_starter.h
-            main/forwarder_starter.c
+            main/linux/main.c
+            main/linux/forwarder_starter.h
+            main/linux/forwarder_starter.c
             main/forwarder_config.h
             main/forwarder_config.c)
     target_compile_options(CMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
