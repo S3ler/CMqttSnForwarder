@@ -449,7 +449,7 @@ void parse_argv_line(char **argv_line, char **argv, char *line_copy, int argc_li
 
   // parse argv_line
   int tk_count = 0;
-  *argv_line[tk_count++] = *argv[0];
+  argv_line[tk_count++] = argv[0];
   for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
     argv_line[tk_count++] = tk;
   }
