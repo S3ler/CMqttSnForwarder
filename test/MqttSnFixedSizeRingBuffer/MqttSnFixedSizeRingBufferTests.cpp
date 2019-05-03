@@ -131,6 +131,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutTwoIn_P
 
 }
 
+#if CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN > 2
 TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutThreeIn_PutReturnsZeroRepeatedly) {
   MqttSnMessageData mqttSnMessageData = {0};
   mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
@@ -139,9 +140,8 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutThreeIn
   ASSERT_EQ(put(&ringBuffer, &mqttSnMessageData), 0);
   ASSERT_EQ(put(&ringBuffer, &mqttSnMessageData), 0);
   EXPECT_EQ(put(&ringBuffer, &mqttSnMessageData), 0);
-
 }
-
+#endif
 TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENIn_PutReturnsZeroRepeatedly) {
   MqttSnMessageData mqttSnMessageData = {0};
   mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
@@ -194,6 +194,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENI
 
 }
 
+#if CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN > 2
 TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENInPopThree_PopReturnsZeroRepeatedly) {
   MqttSnMessageData mqttSnMessageData = {0};
   mqttSnMessageData.data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
@@ -207,8 +208,8 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENI
   ASSERT_EQ(pop(&ringBuffer, &popMqttSnMessageData), 0);
   ASSERT_EQ(pop(&ringBuffer, &popMqttSnMessageData), 0);
   EXPECT_EQ(pop(&ringBuffer, &popMqttSnMessageData), 0);
-
 }
+#endif
 
 TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENPopMAXLEN_PopReturnsZeroRepeatedly) {
   MqttSnMessageData mqttSnMessageData = {0};
@@ -301,6 +302,7 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutTwoPopT
 
 }
 
+#if CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN > 2
 TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutThreePopThree_DataAreEqual) {
   MqttSnFixedSizeRingBuffer ringBuffer;
   MqttSnFixedSizeRingBufferInit(&ringBuffer);
@@ -325,8 +327,8 @@ TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutThreePo
     ComparableMqttSnMessageData actual(popMqttSnMessageData);
     EXPECT_EQ(actual, expected);
   }
-
 }
+#endif
 
 TEST_F(MqttSnFixedSizeRingBufferTests, MqttSnFixedSizeRingBufferTests_PutMAXLENPopMAXLEN_DataAreEqual) {
   MqttSnFixedSizeRingBuffer ringBuffer;
