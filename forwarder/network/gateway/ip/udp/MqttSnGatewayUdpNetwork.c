@@ -9,12 +9,14 @@
 #include <string.h>
 #include <forwarder/network/shared/ip/MqttSnIpNetworkHelper.h>
 #include <forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
+#include <forwarder/network/shared/shared/IpHelper.h>
 
 int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
   memset(udpNetwork, 0, sizeof(MqttSnGatewayUdpNetwork));
   udpNetwork->my_socket = -1;
   strcpy(udpNetwork->protocol, "udp");
+  n->gateway_network_init = GatewayLinuxUdpInit;
   n->gateway_network_receive = GatewayLinuxUdpReceive;
   n->gateway_network_send = GatewayLinuxUdpSend;
   n->gateway_network_connect = GatewayLinuxUdpConnect;
@@ -22,14 +24,14 @@ int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   return 0;
 }
 
-int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void *context) {
+int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
 
-  if (networkInterface->mqtt_sn_gateway_address == NULL) {
+  if (n->mqtt_sn_gateway_address == NULL) {
     // FEATURE implement searching for gateway
     return -1;
   }
-  uint16_t port = get_port_from_device_address(networkInterface->gateway_network_address);
+  uint16_t port = get_port_from_device_address(n->gateway_network_address);
 
   udpNetwork->my_socket = initialize_udp_socket(port);
 
@@ -37,10 +39,10 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
     return -1;
   }
 #ifdef WITH_LOGGING
-  if (networkInterface->logger) {
-    log_open_socket(networkInterface->logger,
+  if (n->logger) {
+    log_open_socket(n->logger,
                     udpNetwork->protocol,
-                    networkInterface->gateway_network_address);
+                    n->gateway_network_address);
   }
 #endif
   return 0;

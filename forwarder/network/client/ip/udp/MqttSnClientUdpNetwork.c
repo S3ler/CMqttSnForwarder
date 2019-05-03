@@ -4,6 +4,7 @@
 #include <forwarder/network/shared/ip/MqttSnIpNetworkHelper.h>
 #include <forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
 #include <string.h>
+#include <forwarder/network/shared/shared/IpHelper.h>
 
 int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *clientUdpNetwork = (MqttSnClientUdpNetwork *) context;

@@ -4,7 +4,9 @@
 
 #include "MqttSnMessageParser.h"
 #include <string.h>
+#ifndef Arduino_h
 #include <netinet/in.h>
+#endif
 
 uint16_t get_message_length(const uint8_t *data) {
   MqttSnMessageHeaderThreeOctetsLengthField

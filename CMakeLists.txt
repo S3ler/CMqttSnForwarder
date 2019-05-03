@@ -32,10 +32,16 @@ endif ()
 set(CMQTTSNFORWADER_ERROR_COMPILE_FLAGS -Wall -Wextra -pedantic -Werror
         -Wno-unused-parameter -Wno-missing-field-initializers -Wno-unused-value -Wno-unused-but-set-variable)
 
+option(WITH_CONFIG_FILE "Include CONFIG_FILE support?" ON)
+if (WITH_CONFIG_FILE)
+    message("Building with CONFIG_FILE support")
+    add_definitions(-DWITH_CONFIG_FILE)
+endif ()
+
 option(WITH_LOGGING "Include LOGGING support?" ON)
 if (WITH_LOGGING)
-    message("Building with LOGGING support")
     add_definitions(-DWITH_LOGGING)
+    message("Building with LOGGING support")
     option(WITH_DEBUG_LOGGING "Include DEBUG_LOGGING support?" ON)
     if (WITH_DEBUG_LOGGING)
         message("Building with DEBUG_LOGGING support")
@@ -68,8 +74,8 @@ endif ()
 
 option(WITH_PLUGIN "Include PLUGIN support?" ON)
 if (WITH_PLUGIN)
-    message("Building with PLUGIN support")
     add_definitions(-DWITH_PLUGIN)
+    message("Building with PLUGIN support")
     set(PLUGIN_FILES
             forwarder/network/client/plugin/client_network_plugin_interface.c
             forwarder/network/client/plugin/client_network_plugin_interface.h
@@ -91,6 +97,7 @@ endif ()
 
 option(WITH_LINUX_TCP "Include LINUX_TCP support?" ON)
 if (WITH_LINUX_TCP)
+    add_definitions(-DWITH_TCP)
     message("Building with LINUX_TCP support")
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_TCP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_TCP)
@@ -99,6 +106,8 @@ if (WITH_LINUX_TCP)
             forwarder/network/gateway/ip/tcp/MqttSnGatewayTcpNetwork.c
             forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
             forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
+            forwarder/network/shared/shared/IpHelper.c
+            forwarder/network/shared/shared/IpHelper.h
             forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
             forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
     set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES} ${TCP_GATWAY_NETWORK_FILES})
@@ -108,6 +117,8 @@ if (WITH_LINUX_TCP)
             forwarder/network/client/ip/tcp/MqttSnClientTcpNetwork.c
             forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
             forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
+            forwarder/network/shared/shared/IpHelper.c
+            forwarder/network/shared/shared/IpHelper.h
             forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
             forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${TCP_CLIENT_NETWORK_FILES})
@@ -117,6 +128,7 @@ endif ()
 
 option(WITH_LINUX_UDP "Include LINUX_UDP support?" ON)
 if (WITH_LINUX_UDP)
+    add_definitions(-DWITH_UDP)
     message("Building with LINUX_UDP support")
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_UDP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_UDP)
@@ -125,6 +137,8 @@ if (WITH_LINUX_UDP)
             forwarder/network/gateway/ip/udp/MqttSnGatewayUdpNetwork.c
             forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
             forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
+            forwarder/network/shared/shared/IpHelper.h
+            forwarder/network/shared/shared/IpHelper.c
             forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
             forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
     set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES} ${UDP_GATWAY_NETWORK_FILES})
@@ -134,6 +148,8 @@ if (WITH_LINUX_UDP)
             forwarder/network/client/ip/udp/MqttSnClientUdpNetwork.h
             forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
             forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
+            forwarder/network/shared/shared/IpHelper.h
+            forwarder/network/shared/shared/IpHelper.c
             forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
             forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${UDP_CLIENT_NETWORK_FILES})
@@ -190,16 +206,8 @@ if (WITH_PLUGIN)
 endif ()
 
 if (NOT BUILD_TESTING)
-    add_executable(ArduinoCMqttSnForwarder
-            main/forwarder_config.h
-            main/forwarder_config.c)
     message("Bulding as C project")
-    target_compile_options(ArduinoCMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-    target_link_libraries(ArduinoCMqttSnForwarder
-            lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
-    if (WITH_LOGGING)
-        target_link_libraries(ArduinoCMqttSnForwarder lib-mqtt-sn-logging)
-    endif ()
+
     add_executable(CMqttSnForwarder
             main/linux/main.c
             main/linux/forwarder_starter.h
@@ -221,6 +229,34 @@ if (NOT BUILD_TESTING)
 
     add_executable(UdpCMqttSnForwarderTester testclients/udptestermain.c forwarder/global_defines.h)
     target_link_libraries(UdpCMqttSnForwarderTester pthread)
+
+    # This target only exists for Clion IDE support for the following files:
+    add_executable(ArduinoCMqttSnForwarder
+            main/forwarder_config.h
+            main/forwarder_config.c
+            forwarder/network/arduino/shared/ip/udp/UdpHelper.c
+            forwarder/network/arduino/shared/ip/udp/UdpHelper.h
+            forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.c
+            forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.h
+            forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.c
+            forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.h
+            forwarder/network/shared/shared/IpHelper.c
+            forwarder/network/shared/shared/IpHelper.h
+            forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.c
+            forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h
+            utility/arduino/eeprom/eeprom_config.c
+            utility/arduino/eeprom/eeprom_config.h
+            utility/arduino/system/system.c
+            utility/arduino/system/system.h
+            )
+    target_include_directories(ArduinoCMqttSnForwarder PRIVATE .)
+    target_compile_options(ArduinoCMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(ArduinoCMqttSnForwarder
+            lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    if (WITH_LOGGING)
+        target_link_libraries(ArduinoCMqttSnForwarder lib-mqtt-sn-logging)
+    endif ()
+
 else ()
     message("Bulding as C++ project")
 

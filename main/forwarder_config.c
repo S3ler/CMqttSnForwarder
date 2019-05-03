@@ -5,16 +5,13 @@
 #include <string.h>
 #include <stdint.h>
 #include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
-#include <CMqttSnForwarderArduino.h>
+#include <forwarder/logging/linux/stderr/StderrLogging.h>
 
-int log_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
-int forwarder_config_init(forwarder_config *fcfg) {
+// TODO remove strdup
+int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
   memset(fcfg, 0, sizeof(*fcfg));
 
-  fcfg->logger = &fcfg->strut_logger;
-  if (MqttSnLoggerInit(fcfg->logger, LOG_LEVEL_VERBOSE, arduino_serial_log_init)) {//TODO
-    return -1;
-  }
+  fcfg->logger = logger;
 
   memcpy(fcfg->version, VERSION, sizeof(VERSION));
   fcfg->major = MAJOR;
@@ -26,7 +23,7 @@ int forwarder_config_init(forwarder_config *fcfg) {
 
   fcfg->protocol_version = MQTT_SN_PROTOCOL_V1;
 
-  memcpy(fcfg->localhost, DEFAULT_LOCALHOST, sizeof(DEFAULT_LOCALHOST));
+  memcpy(fcfg->localhost, DEFAULT_MQTT_SN_GATEWAY_HOST, sizeof(DEFAULT_MQTT_SN_GATEWAY_HOST));
   fcfg->mqtt_sn_gateway_host = fcfg->localhost;
   fcfg->mqtt_sn_gateway_port = 8888;
   memcpy(fcfg->udp, DEFAULT_UDP, sizeof(DEFAULT_UDP));
@@ -80,36 +77,92 @@ static int parse_timeout(const forwarder_config *fcfg, char *timeout_str, int *d
   return 0;
 }
 
-int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]) {
+int process_forwarder_config_str(forwarder_config *fcfg, char *line, size_t len, char *argv_o) {
+  if (line == NULL) {
+    return -1;
+  }
+  if (len == 0) {
+    return -1;
+  }
 
+  if (strlen(line) + 1 != len) {
+    return -1;
+  }
+
+  if (strlen(line) == 0) {
+    return -1;
+  }
+
+  int tk_count = 0;
+  {
+    char line_copy[len];
+    memcpy(line_copy, line, len);
+    // estimates argc
+    for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
+      tk_count++;
+    }
+  }
+  char *argv[tk_count];
+  int argc = 0;
+  char line_copy[len];
+  {
+    memcpy(line_copy, line, len);
+    argv[argc++] = argv_o;
+    for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
+      argv[argc++] = tk;
+    }
+  }
+
+  // remove '\n' from tokens
+  for (uint16_t i = 1; i < argc; i++) {
+    if (argv[i][(strlen(argv[i]) - 1)] == '\n') {
+      argv[i][(strlen(argv[i]) - 1)] = '\0';
+    }
+  }
+
+#ifdef WITH_DEBUG_LOGGING
+  log_str(fcfg->logger, "argc: ");
+  log_uint64(fcfg->logger, argc);
+  log_str(fcfg->logger, " argv: ");
+  for (uint16_t i = 0; i < argc; i++) {
+    log_str(fcfg->logger, argv[i]);
+    if (i + 1 < argc) {
+      log_str(fcfg->logger, ", ");
+    }
+  }
+  log_flush(fcfg->logger);
+#endif
+  return process_forwarder_config_line(fcfg, argc, argv);
+}
+
+int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]) {
   for (int i = 1; i < argc; i++) {
+#if defined(WITH_CONFIG_FILE)
     if (!strcmp(argv[i], "-c") || !strcmp(argv[i], "--config-file")) {
       if (i == argc - 1) {
         log_argument_value_not_specified(fcfg->logger, argv[i], "config file");
         return 1;
       } else {
-#ifdef Arduino_h
+#if defined(Arduino_h) && defined(__SD_H__)
         File config_file = SD.open(argv[i + 1], FILE_READ);
-        if (config_file) {
-          uint16_t nByte = 1024;
-          if (config_file.size() > nByte) {
-            while (config_file.available()) {
-              char buf[1024] = {0};
-
-              int len = config_file.read(&buf, nByte);
-              char line_copy[len];
-              memcpy(line_copy, &buf, len);
-              int argc_line = get_arc_line_len(buf);
-
-              char *argv_line[argc_line];
-              parse_argv_line(argv_line, argv, line_copy, argc_line);
-
-              if (process_forwarder_config_line(fcfg, argc_line, argv_line)) {
-                config_file.close();
-                Serial.write("Error: Could not read config file.\n""");
-                return 1;
-              }
-            }
+        if (!config_file) {
+          log_could_not_read_config_file(fcfg->logger, "could not open file");
+          config_file.close();
+          return 1;
+        }
+        uint16_t len = 1024;
+        if (config_file.size() > len) {
+          log_could_not_read_config_file(fcfg->logger, "line too long");
+          config_file.close();
+          return 1;
+        }
+        while (config_file.available()) {
+          char line[1024] = {0};
+          int len = config_file.read(&line, len);
+          if (process_forwarder_config_str(fcfg, line, len, argv[0])) {
+            config_file.close();
+            log_could_not_read_config_file(fcfg->logger, "see above");
+            return 1;
           }
         }
         config_file.close();
@@ -117,21 +170,14 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         FILE *config_file = fopen(argv[i + 1], "r");
         if (!config_file) {
           log_could_not_read_config_file(fcfg->logger, strerror(errno));
+          fclose(config_file);
           return 1;
         }
         char *line;
         size_t len = 0;
         ssize_t read;
         while ((read = getline(&line, &len, config_file)) != -1) {
-          char line_copy[len];
-          memcpy(line_copy, line, len);
-
-          int argc_line = get_arc_line_len(line);
-
-          char *argv_line[argc_line];
-          parse_argv_line(argv_line, argv, line_copy, argc_line);
-
-          if (process_forwarder_config_line(fcfg, argc_line, argv_line)) {
+          if (process_forwarder_config_str(fcfg, line, len, argv[0])) {
             fclose(config_file);
             log_could_not_read_config_file(fcfg->logger, strerror(errno));
             if (line) {
@@ -147,12 +193,17 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #endif
       }
       i++;
-    } else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
+    } else
+#endif
+    if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
       if (i == argc - 1) {
         log_argument_value_not_specified(fcfg->logger, argv[i], "host");
         return 1;
       } else {
-        free(fcfg->mqtt_sn_gateway_host); // free default value
+        // TODO strdup
+        if (fcfg->mqtt_sn_gateway_host != fcfg->localhost) {
+          free(fcfg->mqtt_sn_gateway_host);
+        }
         fcfg->mqtt_sn_gateway_host = strdup(argv[i + 1]);
       }
       i++;
@@ -180,7 +231,11 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
           log_unsupported_url_scheme(fcfg->logger);
           return 1;
         }
-        free(fcfg->mqtt_sn_gateway_host);
+        // TODO strdup
+        if (fcfg->mqtt_sn_gateway_host != fcfg->localhost) {
+          free(fcfg->mqtt_sn_gateway_host);
+        }
+        //TODO check if next line works
         fcfg->mqtt_sn_gateway_host = url + 2;
         char *tmp = strchr(url, ':');
         if (tmp) {
@@ -196,6 +251,10 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         log_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
         return 1;
       } else {
+        // TODO strdup
+        if (fcfg->gateway_network_protocol != fcfg->udp) {
+          free(fcfg->gateway_network_protocol);
+        }
         fcfg->gateway_network_protocol = strdup(argv[i + 1]);
       }
       i++;
@@ -230,7 +289,10 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         char *null_token = strtok(NULL, "://");
 
         if (prot) {
-          free(fcfg->gateway_network_protocol);
+          // TODO strdup
+          if (fcfg->gateway_network_protocol != fcfg->udp) {
+            free(fcfg->gateway_network_protocol);
+          }
           fcfg->gateway_network_protocol = strdup(prot);
         } else {
           log_unsupported_url_scheme(fcfg->logger);
@@ -303,6 +365,10 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         log_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
         return 1;
       } else {
+        // TODO strdup
+        if (fcfg->client_network_protocol != fcfg->udp) {
+          free(fcfg->client_network_protocol);
+        }
         fcfg->client_network_protocol = strdup(argv[i + 1]);
       }
       i++;
@@ -370,7 +436,10 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         char *null_token = strtok(NULL, "://");
 
         if (prot) {
-          free(fcfg->client_network_protocol);
+          // TODO strdup
+          if (fcfg->client_network_protocol != fcfg->udp) {
+            free(fcfg->client_network_protocol);
+          }
           fcfg->client_network_protocol = strdup(prot);
         } else {
           log_unsupported_url_scheme(fcfg->logger);
@@ -435,7 +504,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #endif
 #endif
     else if (!strcmp(argv[i], "--help")) {
-      return 2;
+      return FORWARDER_CONFIG_HELP;
     } else {
       log_unknown_option(fcfg->logger, argv[i]);
       return 1;
@@ -443,31 +512,6 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
   }
 
   return 0;
-}
-
-void parse_argv_line(char **argv_line, char **argv, char *line_copy, int argc_line) {
-
-  // parse argv_line
-  int tk_count = 0;
-  argv_line[tk_count++] = argv[0];
-  for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
-    argv_line[tk_count++] = tk;
-  }
-  // remove '\n' from tokens
-  for (uint16_t i = 0; i < argc_line; i++) {
-    if (argv_line[i][(strlen(argv_line[i]) - 1)] == '\n') {
-      argv_line[i][(strlen(argv_line[i]) - 1)] = '\0';
-    }
-  }
-}
-int get_arc_line_len(char *line) {
-  int argc_line = 1;
-
-  // estimates argc_line
-  for (char *tk = strtok(line, " "); tk != NULL; tk = strtok(NULL, " ")) {
-    argc_line++;
-  }
-  return argc_line;
 }
 
 int print_usage(const MqttSnLogger *logger) {
@@ -507,10 +551,15 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger,"                        [[-q quiet] | [-d default] | [-v verbose]]\n");
 #endif
 #endif
-  log_str(logger, "       [-c --config-file]\n");
+#if defined(WITH_CONFIG_FILE)
+  log_str(logger, "                        [-c --config-file]\n");
+#endif
   log_str(logger, "       cmqttsnforwarder --help\n\n");
 
-  log_str(logger, " -h : mqtt-sn gateway host to connect to. Defaults to localhost.\n");
+  log_str(logger, " -h : mqtt-sn gateway host to connect to. Defaults to ");
+  log_str(logger, DEFAULT_MQTT_SN_GATEWAY_HOST);
+  log_str(logger, ".\n");
+
   log_str(logger, " -p : mqtt-sn gateway network port to connect to. Defaults to 8888 for plain MQTT-SN.\n");
   log_str(logger, " -L : specify hostname, port as a URL in the form:\n");
   log_str(logger, "      mqtt-sn(s)://host[:port]\n");
@@ -569,7 +618,9 @@ int print_usage(const MqttSnLogger *logger) {
           " -db : specify debug logging. Print all mqtt-sn messages including payload and internal information.\n");
 #endif
 #endif
+#if defined(WITH_CONFIG_FILE)
   log_str(logger, " -c : specify the config file.\n");
+#endif
   log_str(logger, " --help : display this message.\n");
   log_flush(logger);
   log_str(logger, "See ");

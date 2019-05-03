@@ -22,7 +22,7 @@ typedef struct MqttSnGatewayUdpNetwork_ {
 
 int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context);
 
-int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *networkInterface, void *context);
+int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *n, void *context);
 
 void GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context);
 

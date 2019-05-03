@@ -11,10 +11,11 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <arpa/inet.h>
-#include <MqttSnMessageParser.h>
-#include "global_defines.h"
+#include "../forwarder/MqttSnMessageParser.h"
+#include "../forwarder/global_defines.h"
 
-#define FORWARDER_IP "127.0.0.1"
+//#define FORWARDER_IP "127.0.0.1"
+#define FORWARDER_IP "192.168.178.82"
 #define FORWARDER_CLIENT_NETWORK_PORT 7777
 #define GATEWAY_PORT 8888
 #define CLIENT_PORT 11111

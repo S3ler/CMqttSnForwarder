@@ -18,7 +18,7 @@ int arduino_serial_log_init(MqttSnLogger *logger) {
 
 void arduino_serial_log_deinit(MqttSnLogger *logger) {
   Serial.flush();
-  Serial.end();
+  //Serial.end();
 }
 
 int arduino_serial_log_flush(const MqttSnLogger *logger) {

@@ -6,19 +6,26 @@
 #include "MqttSnFixedSizeRingBuffer.h"
 #include "MqttSnClientNetworkInterface.h"
 #include "MqttSnMessageParser.h"
-#include <memory.h>
+#include <string.h>
 #include <stdio.h>
 #include <signal.h>
-#include <forwarder/logging/linux/stdout/StdoutLogging.h>
 #include <forwarder/logging/MqttSnForwarderLoggingMessages.h>
-
+#ifdef Arduino_h
+#include <forwarder/logging/arduino/ArduinoSerial.h>
+#else
+#include <forwarder/logging/linux/stdout/StdoutLogging.h>
+#endif
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         log_level_t log_level,
                         void *clientNetworkContext,
                         void *gatewayNetworkContext) {
 
 #ifdef WITH_LOGGING
+#ifdef Arduino_h
+  if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, arduino_serial_log_init) != 0) {
+#else
   if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, stdout_log_init) != 0) {
+#endif
     MqttSnLoggerDeinit(&mqttSnForwarder->logger);
     return -1;
   }
@@ -43,6 +50,7 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
     MqttSnForwarderDeinit(mqttSnForwarder);
     return -1;
   }
+
 #ifdef WITH_LOGGING
   if (log_status(&mqttSnForwarder->logger)) {
     MqttSnForwarderDeinit(mqttSnForwarder);
@@ -63,7 +71,6 @@ void MqttSnForwarderDeinit(MqttSnForwarder *forwarder) {
 #ifdef WITH_LOGGING
   forwarder->logger.log_deinit(&forwarder->logger);
 #endif
-
 }
 
 int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
@@ -74,6 +81,9 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
                            forwarder->clientNetworkContext)) {
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
+#ifdef Arduino_h
+  yield();
+#endif
   {
     MqttSnMessageData clientMessageData = {0};
     MqttSnMessageData gatewayMessageData = {0};
@@ -82,21 +92,27 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
       GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
     }
   }
-
+#ifdef Arduino_h
+  yield();
+#endif
   if (GatewayNetworkSend(&forwarder->gatewayNetwork,
                          &forwarder->gatewayNetworkSendBuffer,
                          forwarder->gatewayNetworkSendTimeout,
                          forwarder->gatewayNetworkContext)) {
     GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
-
+#ifdef Arduino_h
+  yield();
+#endif
   if (GatewayNetworkReceive(&forwarder->gatewayNetwork,
                             &forwarder->gatewayNetworkReceiveBuffer,
                             forwarder->gatewayNetworkReceiveTimeout,
                             forwarder->gatewayNetworkContext)) {
     GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
-
+#ifdef Arduino_h
+  yield();
+#endif
   {
     MqttSnMessageData gatewayMessageData = {0};
     MqttSnMessageData clientMessageData = {0};
@@ -105,14 +121,18 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
       GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
     }
   }
-
+#ifdef Arduino_h
+  yield();
+#endif
   if (ClientNetworkSend(&forwarder->clientNetwork,
                         &forwarder->clientNetworkSendBuffer,
                         forwarder->clientNetworkSendTimeout,
                         forwarder->clientNetworkContext)) {
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
-
+#ifdef Arduino_h
+  yield();
+#endif
   if (forwarder->clientNetwork.status <= 0) {
     if (forwarder->gatewayNetwork.status <= 0) {
       // both networks down => end

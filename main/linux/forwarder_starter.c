@@ -18,41 +18,7 @@
 #include <forwarder/network/client/plugin/MqttSnClientPluginNetwork.h>
 #include <forwarder/network/client/ip/tcp/MqttSnClientTcpNetwork.h>
 #include <forwarder/network/client/ip/udp/MqttSnClientUdpNetwork.h>
-
-int convert_string_to_device_address(const char *string, device_address *address) {
-  char *cp_string = strdup(string);
-  char *token = strtok(cp_string, ".");
-  size_t i = 0;
-  int rc = 0;
-  while (token != NULL) {
-    char *end_prt;
-    long int n = strtol(token, &end_prt, 10);
-    if (errno == EOVERFLOW) {
-      rc = -1;
-      break;
-    }
-    if (*end_prt != '\0') {
-      // no conversion performed
-      rc = -1;
-      break;
-    }
-    if (n > UINT8_MAX || n < 0) {
-      rc = -1;
-      break;
-    }
-    // address->bytes[i++] = atoi(token);
-    if (i + 1 > sizeof(device_address)) {
-      // given string address is too long
-      rc = -1;
-      break;
-    }
-    address->bytes[i++] = n;
-    token = strtok(NULL, ".");
-  }
-
-  free(cp_string);
-  return rc;
-}
+#include <forwarder/network/shared/shared/IpHelper.h>
 
 int convert_hostname_port_to_device_address(const char *hostname,
                                             int port,
@@ -85,6 +51,11 @@ int start_gateway_plugin(const forwarder_config *fcfg,
                          MqttSnForwarder *mqttSnForwarder,
                          void *gatewayNetworkContext,
                          void *clientNetworkContext) {
+
+  mqttSnForwarder->clientNetworkSendTimeout = fcfg->client_network_send_timeout;
+  mqttSnForwarder->clientNetworkReceiveTimeout = fcfg->client_network_receive_timeout;
+  mqttSnForwarder->gatewayNetworkSendTimeout = fcfg->gateway_network_send_timeout;
+  mqttSnForwarder->gatewayNetworkReceiveTimeout = fcfg->gateway_network_receive_timeout;
 
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
@@ -424,7 +395,7 @@ int start_forwarder(const forwarder_config *fcfg,
       return start_gateway_tcp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
 #endif
-    fprintf(stderr, "Error init gateway network unknown protocol: %s\n", fcfg->client_network_protocol);
+    fprintf(stderr, "Error init gateway network unknown protocol: %s\n", fcfg->gateway_network_protocol);
     return EXIT_FAILURE;
   }
 

@@ -6,7 +6,6 @@
 #include <string.h>
 #include <forwarder/MqttSnForwarderLogging.h>
 
-
 #define MQTT_SN_PROTOCOL_V1 0x01
 
 #define CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT 1000
@@ -33,9 +32,16 @@
 #ifndef MANUAL_WEBSITE
 #define MANUAL_WEBSITE "N/D"
 #endif
-#ifndef DEFAULT_LOCALHOST
-#define DEFAULT_LOCALHOST "localhost"
+#ifdef Arduino_h
+#ifndef DEFAULT_MQTT_SN_GATEWAY_HOST
+#define DEFAULT_MQTT_SN_GATEWAY_HOST "arsmb.de"
 #endif
+#else
+#ifndef DEFAULT_MQTT_SN_GATEWAY_HOST
+#define DEFAULT_MQTT_SN_GATEWAY_HOST "localhost"
+#endif
+#endif
+
 #ifndef DEFAULT_UDP
 #define DEFAULT_UDP "udp"
 #endif
@@ -43,9 +49,9 @@
 #define DEFAULT_TCP "tcp"
 #endif
 
+#define FORWARDER_CONFIG_HELP 2
 
 typedef struct forwarder_config_ {
-  MqttSnLogger strut_logger;
   MqttSnLogger *logger;
 
   char version[sizeof(VERSION)];
@@ -55,10 +61,10 @@ typedef struct forwarder_config_ {
   char build_date[sizeof(CMAKE_BUILD_TIMESTAMP)];
 
   int protocol_version;
-  int log_lvl;
+  log_level_t log_lvl;
 
   // mqtt-sn gateway
-  char localhost[sizeof(DEFAULT_LOCALHOST)];
+  char localhost[sizeof(DEFAULT_MQTT_SN_GATEWAY_HOST)];
   char *mqtt_sn_gateway_host;
   int mqtt_sn_gateway_port;
   // gateway network config
@@ -84,21 +90,17 @@ typedef struct forwarder_config_ {
   int client_network_send_timeout;
   int client_network_receive_timeout;
 
-
 } forwarder_config;
 
 int print_usage(const MqttSnLogger *logger);
 
-int forwarder_config_init(forwarder_config *fcfg);
+int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger);
 
 void forwarder_config_cleanup(forwarder_config *cfcg);
 
 int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]);
 
-// parsing
-int get_arc_line_len(char *line);
-
-void parse_argv_line(char **argv_line, char **argv, char *line_copy, int argc_line);
+int process_forwarder_config_str(forwarder_config *fcfg, char *line, size_t len, char *argv_o);
 
 // logging
 int print_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
@@ -107,4 +109,5 @@ int log_could_not_read_config_file(const MqttSnLogger *logger, char *strerror);
 int log_argument_value_not_specified(const MqttSnLogger *logger, const char *argument, const char *argument_name);
 int log_unsupported_url_scheme(const MqttSnLogger *logger);
 int log_invalid_protocol_version_given(const MqttSnLogger *logger);
+int log_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
 #endif //CMQTTSNFORWARDER_FORWARDER_CONFIG_H

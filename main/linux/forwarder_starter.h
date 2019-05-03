@@ -6,14 +6,13 @@
 #define CMQTTSNFORWARDER_FORWARDER_STARTER_H
 
 #include <forwarder/MqttSnForwarder.h>
-#include "../forwarder_config.h"
+#include "main/forwarder_config.h"
 
 typedef struct MqttSnForwarder_fcfg_ptr_ {
   MqttSnForwarder *mqttSnForwarder_ptr;
   const forwarder_config *fcfg_ptr;
 } MqttSnForwarder_fcfg_ptr;
 
-int convert_string_to_device_address(const char *string, device_address *address);
 
 int convert_hostname_port_to_device_address(const char *hostname,
                                             int port,
