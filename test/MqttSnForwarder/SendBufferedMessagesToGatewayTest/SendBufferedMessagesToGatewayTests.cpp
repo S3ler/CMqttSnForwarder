@@ -2,8 +2,9 @@
 // Created by SomeDude on 07.03.2019.
 //
 
-#include <shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h>
+
 #include "SendBufferedMessagesToGatewayTests.h"
+#include <test/shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h>
 
 TEST_F(SendBufferedMessagesToGatewayTests,
        DISABLED_GatewayNetworkSendDoesNotEmptyGatewayNetworkSendBuffer_ProgrammStucks) {

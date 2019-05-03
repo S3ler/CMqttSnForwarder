@@ -6,11 +6,9 @@
 #define CMQTTSNFORWARDER_TEST_SHARED_MQTTSNTESTMESSAGEDATAGENERATOR_H_
 
 #include <cstdint>
-#include <global_defines.h>
 #include <vector>
-#include <MqttSnFixedSizeRingBuffer.h>
-#include <MqttSnMessageParser.h>
 #include <cstring>
+#include <forwarder/MqttSnMessageParser.h>
 
 class MqttSnMessageDataGenerator {
  public:

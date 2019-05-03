@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFERTESTS_H
 
 #include <gtest/gtest.h>
-#include <MqttSnFixedSizeRingBuffer.h>
+#include <forwarder/MqttSnFixedSizeRingBuffer.h>
 
 class MqttSnFixedSizeRingBufferTests : public ::testing::Test {
  protected:
@@ -17,7 +17,6 @@ class MqttSnFixedSizeRingBufferTests : public ::testing::Test {
   void TearDown() override {}
 
   MqttSnFixedSizeRingBuffer ringBuffer;
-
 
 };
 

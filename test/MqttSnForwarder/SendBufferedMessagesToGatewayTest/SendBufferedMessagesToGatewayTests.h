@@ -7,10 +7,10 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <MqttSnForwarder.h>
-#include <shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
-#include <shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
-#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
+#include <forwarder/MqttSnForwarder.h>
+#include <test/shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
+#include <test/shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
+#include <test/shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
 
 using ::testing::Return;
 using ::testing::AtLeast;

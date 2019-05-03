@@ -5,9 +5,8 @@
 #ifndef CMQTTSNFORWARDER_GATEWAYNETWORKMOCK_H
 #define CMQTTSNFORWARDER_GATEWAYNETWORKMOCK_H
 
-#include "GatewayNetworkMockInterface.h"
 #include <gmock/gmock.h>
-#include <cstdint>
+#include "GatewayNetworkMockInterface.h"
 
 class GatewayNetworkMock : public GatewayNetworkMockInterface {
  public:

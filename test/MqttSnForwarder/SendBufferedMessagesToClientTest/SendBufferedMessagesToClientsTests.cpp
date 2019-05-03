@@ -3,7 +3,7 @@
 //
 
 #include "SendBufferedMessagesToClientsTests.h"
-#include <shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h>
+#include <test/shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h>
 
 TEST_F(SendBufferedMessagesToClientsTests,
        DISABLED_ClientNetworkSendDoesNotEmptyClientNetworkSendBuffer_ProgrammStucks) {

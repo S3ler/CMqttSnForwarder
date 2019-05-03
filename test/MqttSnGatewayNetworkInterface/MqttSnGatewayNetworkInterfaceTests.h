@@ -7,10 +7,10 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <MqttSnFixedSizeRingBuffer.h>
-#include <MqttSnGatewayNetworkInterface.h>
-#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
-#include <shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
+#include <forwarder/MqttSnFixedSizeRingBuffer.h>
+#include <forwarder/MqttSnGatewayNetworkInterface.h>
+#include <test/shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
+#include <test/shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
 
 GatewayNetworkMock *globalGatewayNetworkMockObj = nullptr;
 

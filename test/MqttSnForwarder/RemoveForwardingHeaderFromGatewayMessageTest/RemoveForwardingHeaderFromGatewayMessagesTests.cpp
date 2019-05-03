@@ -2,8 +2,9 @@
 // Created by SomeDude on 06.03.2019.
 //
 
-#include <MqttSnMessageParser.h>
 #include "RemoveForwardingHeaderFromGatewayMessagesTests.h"
+#include <forwarder/MqttSnFixedSizeRingBuffer.h>
+#include <forwarder/MqttSnMessageParser.h>
 
 TEST_F(RemoveForwardingHeaderFromGatewayMessagesTests, GatewayNetworkReceiveBufferIsEmpty_ReturnsZero) {
 

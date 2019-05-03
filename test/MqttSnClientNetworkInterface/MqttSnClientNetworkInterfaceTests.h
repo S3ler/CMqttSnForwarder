@@ -7,11 +7,8 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <global_defines.h>
-#include <MqttSnClientNetworkInterface.h>
-#include <shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
-#include <shared/MockMqttSnClientNetwork/ClientNetworkMockInterface.h>
-#include <shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
+#include <test/shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
+#include <test/shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
 
 ClientNetworkMock *globalClientNetworkMockObj = nullptr;
 

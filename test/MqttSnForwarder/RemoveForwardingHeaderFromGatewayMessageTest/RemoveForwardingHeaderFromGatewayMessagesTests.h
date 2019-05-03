@@ -7,8 +7,8 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <MqttSnForwarder.h>
-#include <shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
+#include <forwarder/MqttSnForwarder.h>
+#include <test/shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
 
 using ::testing::Return;
 using ::testing::Invoke;

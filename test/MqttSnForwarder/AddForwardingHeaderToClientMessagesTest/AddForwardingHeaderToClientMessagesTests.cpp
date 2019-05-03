@@ -2,8 +2,8 @@
 // Created by SomeDude on 06.03.2019.
 //
 
-#include <shared/ComparableMqttSnForwaderStructures/ComparableMqttSnMessageData.h>
 #include "AddForwardingHeaderToClientMessagesTests.h"
+#include <test/shared/ComparableMqttSnForwaderStructures/ComparableMqttSnMessageData.h>
 
 TEST_F(AddForwardingHeaderToClientMessagesTests,
        AddForwardingHeaderTests_ClientNetworkReceiveBufferIsEmpty_ReturnsZero) {

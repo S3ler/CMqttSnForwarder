@@ -5,7 +5,6 @@
 #ifndef CMQTTSNFORWARDER_COMPARABLEMQTTSNMESSAGEDATA_H
 #define CMQTTSNFORWARDER_COMPARABLEMQTTSNMESSAGEDATA_H
 
-#include "MqttSnFixedSizeRingBuffer.h"
 #include "ComparableMqttSnDeviceAddress.h"
 #include <cstring>
 

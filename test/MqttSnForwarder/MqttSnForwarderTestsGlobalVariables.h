@@ -5,9 +5,9 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNFORWARDERTESTGLOBALVARIABLES_H
 #define CMQTTSNFORWARDER_MQTTSNFORWARDERTESTGLOBALVARIABLES_H
 
-#include <shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
-#include <shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
-#include <shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
+#include <test/shared/MockMqttSnClientNetwork/ClientNetworkMock.h>
+#include <test/shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
+#include <test/shared/MockMqttSnFixedSizeRingBuffer/MqttSnFixedSizeRingBufferMock.h>
 
 ClientNetworkMock *globalClientNetworkMockObj = nullptr;
 GatewayNetworkMock *globalGatewayNetworkMockObj = nullptr;
