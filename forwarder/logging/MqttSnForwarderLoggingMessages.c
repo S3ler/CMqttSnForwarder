@@ -4,6 +4,9 @@
 
 #include "MqttSnForwarderLoggingMessages.h"
 #include "MqttSnForwarderLoggingBasic.h"
+#ifndef Arduino_h
+#include <netinet/in.h>
+#endif
 
 #define MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET 2
 static const char *MQTT_SN_MESSAGE_TYPE_STRING[] = {
@@ -47,7 +50,7 @@ int log_radius(const MqttSnLogger *logger, uint8_t radius) {
 int log_gw_add(const MqttSnLogger *logger, const device_address *gwAdd, uint16_t gwAdd_len) {
   log_str(logger, "gwAdd");
   const char *dot = ".";
-  for (uint16_t i = 0; i < gwAdd_len; ++i) {
+  for (size_t i = 0; i < gwAdd_len; ++i) {
     if (log_uint8(logger, gwAdd->bytes[i])) {
       return -1;
     }
