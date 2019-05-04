@@ -4,7 +4,7 @@
 #include "MqttSnClientPluginNetwork.h"
 #include <dlfcn.h>
 #include <string.h>
-#include <forwarder/network/shared/plugin/MqttSnPluginLogger.h>
+#include <forwarder/network/linux/shared/plugin/MqttSnPluginLogger.h>
 
 int ClientLinuxPluginInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientPluginContext *pluginClientNetwork = (MqttSnClientPluginContext *) context;

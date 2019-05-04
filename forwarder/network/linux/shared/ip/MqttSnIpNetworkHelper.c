@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
-#include <forwarder/network/shared/shared/IpHelper.h>
+#include <forwarder/network/linux/shared/shared/IpHelper.h>
 
 int get_device_address_from_hostname(const char *hostname, device_address *dst) {
   memset(dst, 0, sizeof(device_address));

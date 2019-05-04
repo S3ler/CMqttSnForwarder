@@ -8,17 +8,17 @@
 #include <bits/types/sig_atomic_t.h>
 #include <signal.h>
 #include <pthread.h>
-#include <forwarder/network/shared/ip/MqttSnIpNetworkHelper.h>
-#include <forwarder/network/gateway/plugin/gateway_network_plugin_interface.h>
-#include <forwarder/network/gateway/plugin/MqttSnGatewayPluginNetwork.h>
+#include <forwarder/network/linux/shared/shared/IpHelper.h>
+#include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
+#include <forwarder/network/linux/gateway/plugin/gateway_network_plugin_interface.h>
+#include <forwarder/network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h>
 #include <forwarder/logging/linux/stdout/StdoutLogging.h>
-#include <forwarder/network/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
-#include <forwarder/network/gateway/ip/udp/MqttSnGatewayUdpNetwork.h>
-#include <forwarder/network/client/plugin/client_network_plugin_interface.h>
-#include <forwarder/network/client/plugin/MqttSnClientPluginNetwork.h>
-#include <forwarder/network/client/ip/tcp/MqttSnClientTcpNetwork.h>
-#include <forwarder/network/client/ip/udp/MqttSnClientUdpNetwork.h>
-#include <forwarder/network/shared/shared/IpHelper.h>
+#include <forwarder/network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
+#include <forwarder/network/linux/gateway/ip/udp/MqttSnGatewayUdpNetwork.h>
+#include <forwarder/network/linux/client/plugin/client_network_plugin_interface.h>
+#include <forwarder/network/linux/client/plugin/MqttSnClientPluginNetwork.h>
+#include <forwarder/network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h>
+#include <forwarder/network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
 
 int convert_hostname_port_to_device_address(const char *hostname,
                                             int port,

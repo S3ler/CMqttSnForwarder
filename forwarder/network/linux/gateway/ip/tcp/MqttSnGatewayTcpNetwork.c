@@ -7,9 +7,9 @@
 #include <sys/select.h>
 #include <unistd.h>
 #include <string.h>
-#include <forwarder/network/shared/ip/MqttSnIpNetworkHelper.h>
-#include <forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h>
-#include <forwarder/network/shared/shared/IpHelper.h>
+#include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
+#include <forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h>
+#include <forwarder/network/linux/shared/shared/IpHelper.h>
 
 int GatewayLinuxTcpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;

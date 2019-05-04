@@ -3,12 +3,12 @@
 //
 
 #include "MqttSnClientTcpNetwork.h"
-#include <forwarder/network/shared/ip/MqttSnIpNetworkHelper.h>
-#include <forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h>
+#include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
+#include <forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h>
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-#include <forwarder/network/shared/shared/IpHelper.h>
+#include <forwarder/network/linux/shared/shared/IpHelper.h>
 
 int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientTcpNetwork *clientTcpNetwork = (MqttSnClientTcpNetwork *) context;

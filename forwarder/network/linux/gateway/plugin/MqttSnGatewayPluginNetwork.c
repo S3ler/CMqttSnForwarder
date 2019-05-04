@@ -5,7 +5,7 @@
 #include "MqttSnGatewayPluginNetwork.h"
 #include <dlfcn.h>
 #include <string.h>
-#include <forwarder/network/shared/plugin/MqttSnPluginLogger.h>
+#include <forwarder/network/linux/shared/plugin/MqttSnPluginLogger.h>
 
 int GatewayLinuxPluginInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayPluginContext *pluginGatewayNetwork = (MqttSnGatewayPluginContext *) context;

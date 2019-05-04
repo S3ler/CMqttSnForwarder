@@ -4,7 +4,7 @@
 
 #include "MqttSnUdpNetworkMessageParser.h"
 #include <forwarder/MqttSnMessageParser.h>
-#include <forwarder/network/shared/ip/MqttSnIpNetworkHelper.h>
+#include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <errno.h>

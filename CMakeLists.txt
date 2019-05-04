@@ -77,20 +77,20 @@ if (WITH_PLUGIN)
     add_definitions(-DWITH_PLUGIN)
     message("Building with PLUGIN support")
     set(PLUGIN_FILES
-            forwarder/network/client/plugin/client_network_plugin_interface.c
-            forwarder/network/client/plugin/client_network_plugin_interface.h
-            forwarder/network/gateway/plugin/gateway_network_plugin_interface.c
-            forwarder/network/gateway/plugin/gateway_network_plugin_interface.h
+            forwarder/network/linux/client/plugin/client_network_plugin_interface.c
+            forwarder/network/linux/client/plugin/client_network_plugin_interface.h
+            forwarder/network/linux/gateway/plugin/gateway_network_plugin_interface.c
+            forwarder/network/linux/gateway/plugin/gateway_network_plugin_interface.h
 
-            forwarder/network/gateway/plugin/MqttSnGatewayPluginNetwork.h
-            forwarder/network/gateway/plugin/MqttSnGatewayPluginNetwork.c
-            forwarder/network/client/plugin/MqttSnClientPluginNetwork.h
-            forwarder/network/client/plugin/MqttSnClientPluginNetwork.c)
+            forwarder/network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h
+            forwarder/network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.c
+            forwarder/network/linux/client/plugin/MqttSnClientPluginNetwork.h
+            forwarder/network/linux/client/plugin/MqttSnClientPluginNetwork.c)
 
     if (WITH_LOGGING)
         set(PLUGIN_FILES ${PLUGIN_FILES}
-                forwarder/network/shared/plugin/MqttSnPluginLogger.h
-                forwarder/network/shared/plugin/MqttSnPluginLogger.c)
+                forwarder/network/linux/shared/plugin/MqttSnPluginLogger.h
+                forwarder/network/linux/shared/plugin/MqttSnPluginLogger.c)
     endif ()
 
 endif ()
@@ -102,25 +102,25 @@ if (WITH_LINUX_TCP)
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_TCP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_TCP)
     set(TCP_GATWAY_NETWORK_FILES
-            forwarder/network/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h
-            forwarder/network/gateway/ip/tcp/MqttSnGatewayTcpNetwork.c
-            forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
-            forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
-            forwarder/network/shared/shared/IpHelper.c
-            forwarder/network/shared/shared/IpHelper.h
-            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
+            forwarder/network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h
+            forwarder/network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.c
+            forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
+            forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
+            forwarder/network/linux/shared/shared/IpHelper.c
+            forwarder/network/linux/shared/shared/IpHelper.h
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
     set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES} ${TCP_GATWAY_NETWORK_FILES})
 
     set(TCP_CLIENT_NETWORK_FILES
-            forwarder/network/client/ip/tcp/MqttSnClientTcpNetwork.h
-            forwarder/network/client/ip/tcp/MqttSnClientTcpNetwork.c
-            forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
-            forwarder/network/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
-            forwarder/network/shared/shared/IpHelper.c
-            forwarder/network/shared/shared/IpHelper.h
-            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
+            forwarder/network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h
+            forwarder/network/linux/client/ip/tcp/MqttSnClientTcpNetwork.c
+            forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
+            forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
+            forwarder/network/linux/shared/shared/IpHelper.c
+            forwarder/network/linux/shared/shared/IpHelper.h
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${TCP_CLIENT_NETWORK_FILES})
 
 endif ()
@@ -133,25 +133,25 @@ if (WITH_LINUX_UDP)
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_UDP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_UDP)
     set(UDP_GATWAY_NETWORK_FILES
-            forwarder/network/gateway/ip/udp/MqttSnGatewayUdpNetwork.h
-            forwarder/network/gateway/ip/udp/MqttSnGatewayUdpNetwork.c
-            forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
-            forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
-            forwarder/network/shared/shared/IpHelper.h
-            forwarder/network/shared/shared/IpHelper.c
-            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
+            forwarder/network/linux/gateway/ip/udp/MqttSnGatewayUdpNetwork.h
+            forwarder/network/linux/gateway/ip/udp/MqttSnGatewayUdpNetwork.c
+            forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
+            forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
+            forwarder/network/linux/shared/shared/IpHelper.h
+            forwarder/network/linux/shared/shared/IpHelper.c
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
     set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES} ${UDP_GATWAY_NETWORK_FILES})
 
     set(UDP_CLIENT_NETWORK_FILES
-            forwarder/network/client/ip/udp/MqttSnClientUdpNetwork.c
-            forwarder/network/client/ip/udp/MqttSnClientUdpNetwork.h
-            forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
-            forwarder/network/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
-            forwarder/network/shared/shared/IpHelper.h
-            forwarder/network/shared/shared/IpHelper.c
-            forwarder/network/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/shared/ip/MqttSnIpNetworkHelper.c)
+            forwarder/network/linux/client/ip/udp/MqttSnClientUdpNetwork.c
+            forwarder/network/linux/client/ip/udp/MqttSnClientUdpNetwork.h
+            forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
+            forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
+            forwarder/network/linux/shared/shared/IpHelper.h
+            forwarder/network/linux/shared/shared/IpHelper.c
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${UDP_CLIENT_NETWORK_FILES})
 endif ()
 
