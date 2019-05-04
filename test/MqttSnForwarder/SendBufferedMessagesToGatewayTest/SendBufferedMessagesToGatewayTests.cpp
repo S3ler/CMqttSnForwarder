@@ -5,6 +5,9 @@
 
 #include "SendBufferedMessagesToGatewayTests.h"
 #include <test/shared/MqttSnMessageDataGenerator/MqttSnMessageDataGenerator.h>
+// TODO exchange clientNetworkReceiveBufferMqttSnMessageCounter for data generation with CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH
+// TODO tests only run with a minimal CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH of MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false)
+// TODO tests only run with a minimal CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN of 3
 
 TEST_F(SendBufferedMessagesToGatewayTests,
        DISABLED_GatewayNetworkSendDoesNotEmptyGatewayNetworkSendBuffer_ProgrammStucks) {

@@ -42,8 +42,9 @@ class MqttSnMessageDataGenerator {
   static MqttSnMessageData generateM1MqttSnPublishMqttSnMessageData(uint16_t data_length,
                                                                     std::vector<uint8_t> (*msgDataGenerator)(uint16_t)
                                                                     = defaultMessageDataGenerator) {
-    // TODO check why this generators strange errors:
-    // ASSERT_GT(data_length, CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH);
+    if (data_length > CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {
+      data_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
+    }
 
     std::vector<uint8_t> buffer;
     buffer.resize(data_length);
@@ -85,11 +86,16 @@ class MqttSnMessageDataGenerator {
   static MqttSnMessageData generateMqttSnMessageData(uint16_t data_length,
                                                      uint8_t *(*msgDataGenerator)(uint8_t *, uint16_t)
                                                      = defaultMessageDataGenerator) {
+    uint16_t headerLength = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false); // TODO akutell nur bis zu 255 daten
+    uint32_t generationDataLength = data_length + headerLength;
+    if (generationDataLength > CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH) {
+      generationDataLength = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH;
+    }
+
     MqttSnMessageData result = {0};
-    uint16_t a = MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(false); // TODO akutell nur bis zu 255 daten
-    result.data_length = a + data_length;
-    msgDataGenerator(&result.data[a], data_length);
-    result.data[0] = static_cast<uint8_t>(result.data_length);     // TODO akutell nur bis zu 255 daten
+    result.data_length = generationDataLength;
+    msgDataGenerator(&result.data[headerLength], static_cast<uint16_t>(generationDataLength));
+    result.data[0] = static_cast<uint8_t>(generationDataLength);     // TODO akutell nur bis zu 255 daten
     result.data[1] = ENCAPSULATED_MESSAGE;
     return result;
   }
