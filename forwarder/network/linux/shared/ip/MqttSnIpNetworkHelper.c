@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
 #include <forwarder/network/linux/shared/shared/IpHelper.h>
+#include <errno.h>
 
 int get_device_address_from_hostname(const char *hostname, device_address *dst) {
   memset(dst, 0, sizeof(device_address));
@@ -55,6 +56,7 @@ struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *dev
   sa_family_t family = AF_INET;
 
   struct sockaddr_in address;
+  memset(&address, 0, sizeof(address));
   address.sin_family = family;
   address.sin_port = htons(port);
   address.sin_addr.s_addr = htonl(ip);
@@ -84,12 +86,18 @@ int get_device_address_from_addrinfo(struct addrinfo *ai_addr, device_address *d
   }
   return 0;
 }
+struct sockaddr_in get_sockaddr_in_from_file_descriptor(int file_descriptor) {
+  struct sockaddr_in address = {0};
+  socklen_t addrlen = sizeof(address);
+  int rc = getpeername(file_descriptor, (struct sockaddr *) &address, &addrlen);
+  assert(rc != -1); // TODO handle
+  return address;
+}
 
 device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr) {
 
   device_address result = {0};
   uint32_t ip_as_number = ntohl(sockaddr->sin_addr.s_addr);
-  result.bytes[0] = (ip_as_number >> 24) & 0xFF;
   result.bytes[1] = (ip_as_number >> 16) & 0xFF;
   result.bytes[2] = (ip_as_number >> 8) & 0xFF;
   result.bytes[3] = (ip_as_number >> 0) & 0xFF;
@@ -102,8 +110,6 @@ device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr)
 }
 
 device_address get_device_address_from_file_descriptor(int file_descriptor) {
-  struct sockaddr_in address;
-  socklen_t addrlen = sizeof(address);
-  getpeername(file_descriptor, (struct sockaddr *) &address, &addrlen);
+  struct sockaddr_in address = get_sockaddr_in_from_file_descriptor(file_descriptor);
   return get_device_address_from_sockaddr_in(&address);
 }

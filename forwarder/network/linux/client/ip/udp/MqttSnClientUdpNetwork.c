@@ -69,9 +69,9 @@ int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
     return 0;
   }
 
-  int rc = receive_udp_message(clientUdpNetwork->master_socket,
-                               receiveBuffer,
-                               CMQTTSNFORWARDER_MQTTSNCLIENTUDPNETWORK_MAX_DATA_LENGTH);
+  int rc = receive_and_udp_message_into_receive_buffer(clientUdpNetwork->master_socket,
+                                                       receiveBuffer,
+                                                       CMQTTSNFORWARDER_MQTTSNCLIENTUDPNETWORK_MAX_DATA_LENGTH);
   if (rc < 0) {
     return -1;
   }

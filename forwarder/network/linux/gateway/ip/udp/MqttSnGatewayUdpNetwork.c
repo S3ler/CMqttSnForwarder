@@ -78,9 +78,9 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
     return 0;
   }
 
-  int rc = receive_udp_message(udpNetwork->my_socket,
-                               receiveBuffer,
-                               CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH);
+  int rc = receive_and_udp_message_into_receive_buffer(udpNetwork->my_socket,
+                                                       receiveBuffer,
+                                                       CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH);
   if (rc < 0) {
     return -1;
   }

@@ -81,23 +81,24 @@ int save_udp_message_into_receive_buffer(uint8_t *data,
 int initialize_udp_socket(uint16_t port) {
   int socket_fd;
 
+  // bind socket
   if ((socket_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     close(socket_fd);
     return -1;
   }
 
+  // allow multiple process to access socket
   int option = 1;
   if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char *) &option, sizeof(option)) < 0) {
     close(socket_fd);
     return -1;
   }
 
-  // type of socket created
+  // bind to any network interface //TODO make this via bind_address command
   struct sockaddr_in sockaddr;
   sockaddr.sin_family = AF_INET;
   sockaddr.sin_addr.s_addr = INADDR_ANY;
   sockaddr.sin_port = htons(port);
-
   if (bind(socket_fd, (struct sockaddr *) &sockaddr, sizeof(sockaddr)) < 0) {
     close(socket_fd);
     return -1;
@@ -150,39 +151,53 @@ int is_udp_message_received(int socket_fd, int timeout_ms) {
   return 1;
 }
 
-int receive_udp_message(int socket_fd, MqttSnFixedSizeRingBuffer *receiveBuffer, uint16_t max_data_length) {
-  uint8_t buffer[max_data_length];
-  memset(buffer, 0, max_data_length);
-  int buffer_length = max_data_length;
-  ssize_t read_bytes;
-
+int receive_udp_message(int socket_fd,
+                        uint8_t *buffer,
+                        ssize_t *read_bytes,
+                        uint16_t buffer_max_length,
+                        device_address *from) {
   struct sockaddr_in recv_sockaddr;
   memset(&recv_sockaddr, 0, sizeof(recv_sockaddr));
   socklen_t recv_sockaddr_socklen = sizeof(recv_sockaddr);
 
-  if ((read_bytes = recvfrom(socket_fd, buffer, buffer_length, MSG_PEEK,
-                             (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
+  if ((*read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_PEEK,
+                              (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
     return -1;
   }
 
-  if (read_bytes > max_data_length) {
+  if (*read_bytes > buffer_max_length) {
     // read bytes and discard
-    if ((read_bytes = recvfrom(socket_fd, buffer, buffer_length, MSG_WAITALL,
-                               (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
+    if ((*read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_WAITALL,
+                                (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
       return -1;
     }
     return 0;
   }
 
-  if ((read_bytes = recvfrom(socket_fd, buffer, buffer_length, MSG_WAITALL,
-                             (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
+  if ((*read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_WAITALL,
+                              (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
     return -1;
   }
 
-  device_address received_address = get_device_address_from_sockaddr_in(&recv_sockaddr);
+  *from = get_device_address_from_sockaddr_in(&recv_sockaddr);
+  return 0;
+}
+
+int receive_and_udp_message_into_receive_buffer(int socket_fd,
+                                                MqttSnFixedSizeRingBuffer *receiveBuffer,
+                                                uint16_t max_data_length) {
+  uint8_t buffer[max_data_length];
+  memset(buffer, 0, max_data_length);
+  ssize_t read_bytes;
+  device_address received_address = {0};
+
+  if (receive_udp_message(socket_fd, buffer, &read_bytes, max_data_length, &received_address)) {
+    return -1;
+  }
 
   return save_udp_messages_into_receive_buffer(buffer,
                                                read_bytes,
                                                received_address,
                                                receiveBuffer);
 }
+
