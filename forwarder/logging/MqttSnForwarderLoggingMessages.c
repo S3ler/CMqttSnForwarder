@@ -146,7 +146,54 @@ int log_close_braked_dot(const MqttSnLogger *logger) {
 int log_comma(const MqttSnLogger *logger) {
   return log_str(logger, ", ");
 }
+int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger *logger,
+                                          const device_address *from,
+                                          const uint8_t *data,
+                                          uint16_t data_len) {
+  return log_mqtt_sn_message_malformed(logger, MQTT_SN_FORWARDER_NETWORK_GATEWAY, from, data, data_len);
+}
+int log_client_mqtt_sn_message_malformed(const MqttSnLogger *logger,
+                                         const device_address *from,
+                                         const uint8_t *data,
+                                         uint16_t data_len) {
+  return log_mqtt_sn_message_malformed(logger, MQTT_SN_FORWARDER_NETWORK_CLIENT, from, data, data_len);
+}
+int log_mqtt_sn_message_malformed(const MqttSnLogger *logger,
+                                  MQTT_SN_FORWARDER_NETWORK network,
+                                  const device_address *from,
+                                  const uint8_t *data,
+                                  uint16_t data_len) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return log_status(logger);
+  }
+  log_msg_start(logger);
+  log_str(logger, "received malformed ");
+  if (network == MQTT_SN_FORWARDER_NETWORK_CLIENT) {
+    log_str(logger, "client");
+  }
+  if (network == MQTT_SN_FORWARDER_NETWORK_GATEWAY) {
+    log_str(logger, "gateway");
+  }
+  log_str(logger, " message");
+  if (from) {
+    log_str(logger, " from ");
+    log_device_address(logger, from);
+  }
+  log_str(logger, " ( len");
+  log_uint16(logger, data_len);
 
+#ifdef WITH_DEBUG_LOGGING
+  if (!shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {
+    log_str(logger, ", data( ");
+    log_uint8_array(logger, data, data_len);
+    log_str(logger, ")");
+  }
+#endif
+
+  log_close_braked_dot(logger);
+  log_flush(logger);
+  return log_status(logger);
+}
 int log_client_mqtt_sn_message(const MqttSnLogger *logger,
                                const device_address *from,
                                const uint8_t *data,
@@ -519,3 +566,5 @@ int log_encapsulated_message(const MqttSnLogger *logger, const ParsedMqttSnHeade
   log_close_braked_dot(logger);
   return log_flush(logger);
 }
+
+

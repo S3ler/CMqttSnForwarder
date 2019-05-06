@@ -285,7 +285,7 @@ int log_db_rec_gateway_message(const MqttSnLogger *logger,
     log_device_address(logger, to);
   }
   log_str(logger, braked_open_len);
-  log_uint32(logger, data_len);
+  log_uint16(logger, data_len);
   log_str(logger, comma_data_bracked_open);
   log_uint8_array(logger, data, data_len);
   log_str(logger, double_bracked_close_dot);

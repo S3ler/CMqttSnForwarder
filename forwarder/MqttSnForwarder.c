@@ -217,6 +217,12 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
   }
 
   if (RemoveMqttSnForwardingHeader(gatewayMessageData, clientMessageData) != 0) {
+#ifdef WITH_DEBUG_LOGGING
+    log_gateway_mqtt_sn_message_malformed(&forwarder->logger,
+                                          &gatewayMessageData->address,
+                                          gatewayMessageData->data,
+                                          gatewayMessageData->data_length);
+#endif
     return 0;
   }
 
@@ -259,6 +265,12 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
 #endif
 
   if (AddMqttSnForwardingHeader(clientMessageData, gatewayMessageData) != 0) {
+#ifdef WITH_DEBUG_LOGGING
+    log_client_mqtt_sn_message_malformed(&forwarder->logger,
+                                         &clientMessageData->address,
+                                         clientMessageData->data,
+                                         clientMessageData->data_length);
+#endif
     return 0;
   }
   if (put(&forwarder->gatewayNetworkSendBuffer, gatewayMessageData) != 0) {

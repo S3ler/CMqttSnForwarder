@@ -174,11 +174,13 @@ int receive_and_save_udp_multicast_message_into_receive_buffer(int socket_fd,
     return -1;
   }
 
-  return save_udp_messages_into_receive_buffer(buffer,
-                                               read_bytes,
-                                               broadcast_radius,
-                                               received_address,
-                                               receiveBuffer);
+  MqttSnMessageData receiveMessageData = {0};
+  receiveMessageData.broadcast_radius = broadcast_radius;
+  receiveMessageData.data_length = read_bytes;
+  memcpy(receiveMessageData.data, buffer, receiveMessageData.data_length);
+  receiveMessageData.address = received_address;
+  put(receiveBuffer, &receiveMessageData);
+  return 1;
 }
 
 #endif

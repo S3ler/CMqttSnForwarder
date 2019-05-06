@@ -11,7 +11,7 @@
 #include <arpa/inet.h>
 #include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 
-#define MQTT_SN_MULTICAST_IP     "224.1.1.100"
+#define MQTT_SN_MULTICAST_IP     "224.1.1.101"
 #define MQTT_SN_MULTICAST_PORT   5353
 //#define MQTT_SN_FORWARDER_CLIENT_NETWORK_PORT   7777
 #ifndef CLIENT_PORT
