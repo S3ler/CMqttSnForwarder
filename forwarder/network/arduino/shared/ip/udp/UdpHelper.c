@@ -48,7 +48,7 @@ int arduino_receive_udp(UDP *wiFiUdp,
                         device_address *from,
                         uint8_t *bytes,
                         uint16_t *bytes_len,
-                        uint8_t* signal_strength) {
+                        uint8_t *signal_strength) {
   IPAddress destination_IPAddress;
   uint16_t destination_port = 0;
 

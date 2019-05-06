@@ -8,8 +8,6 @@
 #include <string.h>
 #include <errno.h>
 
-
-
 int save_tcp_messages_into_receive_buffer(uint8_t *data,
                                           ssize_t data_length,
                                           device_address address,

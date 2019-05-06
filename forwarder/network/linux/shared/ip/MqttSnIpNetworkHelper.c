@@ -10,8 +10,6 @@
 #include <forwarder/network/linux/shared/shared/IpHelper.h>
 #include <errno.h>
 
-
-
 struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *deviceAddress) {
   uint32_t ip = 0;
   uint16_t port = 0;
@@ -28,12 +26,10 @@ struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *dev
   return address;
 }
 
-
 struct sockaddr_in get_sockaddr_in_from_tcp_file_descriptor(int file_descriptor) {
   struct sockaddr_in address = {0};
   socklen_t addrlen = sizeof(address);
-  int rc = getpeername(file_descriptor, (struct sockaddr *) &address, &addrlen);
-  assert(rc != -1); // TODO handle
+  getpeername(file_descriptor, (struct sockaddr *) &address, &addrlen);
   return address;
 }
 

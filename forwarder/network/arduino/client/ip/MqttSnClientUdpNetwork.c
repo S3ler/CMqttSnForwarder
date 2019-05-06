@@ -8,7 +8,6 @@
 #include <forwarder/network/arduino/shared/ip/udp/UdpHelper.h>
 #include <forwarder/network/shared/shared/IpHelper.h>
 
-
 int ClientArduinoUdpInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
   memset(udpContext, 0, sizeof(MqttSnClientUdpNetwork));

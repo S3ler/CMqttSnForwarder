@@ -128,7 +128,11 @@ int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
       if (multicast_rc > 0) {
         const MqttSnMessageData *msg = back(receiveBuffer);
-        log_db_rec_client_message(n->logger, &msg->address, n->client_network_broadcast_address, msg->data, msg->data_length);
+        log_db_rec_client_message(n->logger,
+                                  &msg->address,
+                                  n->client_network_broadcast_address,
+                                  msg->data,
+                                  msg->data_length);
       }
 #endif
     }

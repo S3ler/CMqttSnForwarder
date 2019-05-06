@@ -51,7 +51,6 @@ int log_open_braked(const MqttSnLogger *logger);
 int log_close_braked_dot(const MqttSnLogger *logger);
 int log_comma(const MqttSnLogger *logger);
 
-
 int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger *logger,
                                           const device_address *from,
                                           const uint8_t *data,

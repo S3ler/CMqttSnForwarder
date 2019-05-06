@@ -91,8 +91,7 @@ void close_udp_multicast_socket(int multicast_socket_fd) {
 struct sockaddr_in get_sockaddr_in_from_bind_file_descriptor(int file_descriptor) {
   struct sockaddr_in address = {0};
   socklen_t addrlen = sizeof(address);
-  int rc = getsockname(file_descriptor, (struct sockaddr *) &address, &addrlen);
-  assert(rc != -1); // TODO handle
+  getsockname(file_descriptor, (struct sockaddr *) &address, &addrlen);
   return address;
 }
 

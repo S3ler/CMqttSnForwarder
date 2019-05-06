@@ -7,7 +7,7 @@
 #include <IPAddress.h>
 #include <forwarder/network/shared/shared/IpHelper.h>
 
-void arduino_ipv4_and_port_to_device_address(IPAddress *src, uint16_t src_port, device_address *dst){
+void arduino_ipv4_and_port_to_device_address(IPAddress *src, uint16_t src_port, device_address *dst) {
   // IPAddress 0 - 3 bytes
   dst->bytes[0] = (*src)[0];
   dst->bytes[1] = (*src)[1];

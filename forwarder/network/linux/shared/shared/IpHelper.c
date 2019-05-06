@@ -284,5 +284,4 @@ int log_socket_failed(const MqttSnLogger *logger,
   return log_status(logger);
 }
 
-
 #endif //WITH_LOGGING

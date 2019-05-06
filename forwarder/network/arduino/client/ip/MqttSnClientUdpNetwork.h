@@ -12,7 +12,7 @@ extern "C" {
 #include <forwarder/MqttSnClientNetworkInterface.h>
 #include <Udp.h>
 
-extern UDP* clientUdp;
+extern UDP *clientUdp;
 
 typedef struct MqttSnClientUdpNetwork_ {
   uint16_t port;

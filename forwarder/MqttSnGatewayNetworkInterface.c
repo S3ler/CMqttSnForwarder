@@ -18,7 +18,7 @@ int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
   n->gateway_network_address = gateway_network_address;
   n->mqtt_sn_gateway_address = mqtt_sn_gateway_address;
   n->gateway_network_broadcast_address = gateway_network_broadcast_address,
-  n->gateway_network_init = gateway_network_init;
+      n->gateway_network_init = gateway_network_init;
   if (n->gateway_network_init(n, context) == 0) {
     assert(n->gateway_network_init != NULL);
     assert(n->gateway_network_connect != NULL);

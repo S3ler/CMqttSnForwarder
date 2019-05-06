@@ -137,7 +137,11 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
       if (multicast_rc > 0) {
         const MqttSnMessageData *msg = back(receiveBuffer);
-        log_db_rec_gateway_message(n->logger, n->gateway_network_broadcast_address, &msg->address, msg->data, msg->data_length);
+        log_db_rec_gateway_message(n->logger,
+                                   n->gateway_network_broadcast_address,
+                                   &msg->address,
+                                   msg->data,
+                                   msg->data_length);
       }
 #endif
     }
