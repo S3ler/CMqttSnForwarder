@@ -15,11 +15,7 @@
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH 1024
 #endif
 
-#ifdef WITH_LOGGING
 
-int log_select_error(const MqttSnLogger *logger);
-
-#endif //WITH_LOGGING
 
 int save_tcp_messages_into_receive_buffer(uint8_t *data,
                                           ssize_t data_length,

@@ -42,6 +42,14 @@
 #endif
 #endif
 
+#ifndef DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS
+#define DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS "224.1.1.100"
+#endif
+
+#ifndef DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS
+#define DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS "224.1.1.101"
+#endif
+
 #ifndef DEFAULT_UDP
 #define DEFAULT_UDP "udp"
 #endif
@@ -72,6 +80,10 @@ typedef struct forwarder_config_ {
   char *gateway_network_protocol;
   char *gateway_network_bind_address;
   int gateway_network_bind_port;
+  char gateway_network_default_broadcast_address[sizeof(DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS)];
+  char *gateway_network_broadcast_protocol;
+  char *gateway_network_broadcast_address;
+  int gateway_network_broadcast_bind_port;
 #ifdef WITH_PLUGIN
   char *gateway_network_plugin_path;
 #endif
@@ -81,6 +93,10 @@ typedef struct forwarder_config_ {
   char *client_network_protocol;
   char *client_network_bind_address;
   int client_network_bind_port;
+  char client_network_default_broadcast_address[sizeof(DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS)];
+  char *client_network_broadcast_protocol;
+  char *client_network_broadcast_address;
+  int client_network_broadcast_bind_port;
 #ifdef WITH_PLUGIN
   char *client_network_plugin_path;
 #endif

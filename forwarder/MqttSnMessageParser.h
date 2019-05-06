@@ -178,6 +178,7 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
 #define MQTT_SN_HEADER_LENGTH(indicator)                        (indicator ? 4 : 2)
 
 #define MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BYTE_LENGTH           1
+#define MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BROADCAST_RADIUS      1
 #define MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(indicator)   (MQTT_SN_HEADER_LENGTH(indicator) \
                                                                  + MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BYTE_LENGTH \
                                                                  + sizeof(device_address))

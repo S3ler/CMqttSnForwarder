@@ -8,18 +8,7 @@
 #include <string.h>
 #include <errno.h>
 
-#ifdef WITH_LOGGING
 
-int log_select_error(const MqttSnLogger *logger) {
-  const char *select_error_str = "select error - ";
-  log_msg_start(logger);
-  log_str(logger, select_error_str);
-  log_str(logger, strerror(errno));
-  log_flush(logger);
-  return log_status(logger);
-}
-
-#endif //WITH_LOGGING
 
 int save_tcp_messages_into_receive_buffer(uint8_t *data,
                                           ssize_t data_length,

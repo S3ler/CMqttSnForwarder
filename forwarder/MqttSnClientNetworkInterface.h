@@ -37,9 +37,11 @@ typedef struct MqttSnClientNetworkInterface_ {
 
   void (*client_network_disconnect)(struct MqttSnClientNetworkInterface_ *, void *context);
 
-  device_address *client_network_address;
+  device_address *client_network_address; // TODO where and how used? port mainly i guess
 
   device_address *mqtt_sn_gateway_address;
+
+  device_address *client_network_broadcast_address;
 
 #ifdef WITH_LOGGING
   MqttSnLogger *logger;
@@ -62,6 +64,7 @@ typedef struct MqttSnClientNetworkInterface_ {
 int ClientNetworkInit(MqttSnClientNetworkInterface *n,
                       device_address *mqtt_sn_gateway_address,
                       device_address *client_network_address,
+                      device_address *client_network_broadcast_address,
                       void *context,
                       int (*client_network_init)(MqttSnClientNetworkInterface *, void *));
 

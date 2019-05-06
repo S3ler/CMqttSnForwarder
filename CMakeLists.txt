@@ -38,6 +38,7 @@ if (WITH_CONFIG_FILE)
     add_definitions(-DWITH_CONFIG_FILE)
 endif ()
 
+
 option(WITH_LOGGING "Include LOGGING support?" ON)
 if (WITH_LOGGING)
     add_definitions(-DWITH_LOGGING)
@@ -99,6 +100,8 @@ option(WITH_LINUX_TCP "Include LINUX_TCP support?" ON)
 if (WITH_LINUX_TCP)
     add_definitions(-DWITH_TCP)
     message("Building with LINUX_TCP support")
+    option(WITH_TCP_BROADCAST "Include TCP_BROADCAST support?" ON)
+    add_definitions(-DWITH_TCP_BROADCAST)
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_TCP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_TCP)
     set(TCP_GATWAY_NETWORK_FILES
@@ -109,9 +112,12 @@ if (WITH_LINUX_TCP)
             forwarder/network/linux/shared/shared/IpHelper.c
             forwarder/network/linux/shared/shared/IpHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c
-            forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
-            forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
+    if (WITH_TCP_BROADCAST)
+        set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES}
+                forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
+                forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+    endif ()
     set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES} ${TCP_GATWAY_NETWORK_FILES})
 
     set(TCP_CLIENT_NETWORK_FILES
@@ -122,20 +128,23 @@ if (WITH_LINUX_TCP)
             forwarder/network/linux/shared/shared/IpHelper.c
             forwarder/network/linux/shared/shared/IpHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c
-            forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
-            forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
+    if (WITH_TCP_BROADCAST)
+        set(TCP_CLIENT_NETWORK_FILES ${TCP_CLIENT_NETWORK_FILES}
+                forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
+                forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+    endif ()
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${TCP_CLIENT_NETWORK_FILES})
 
 endif ()
-
-
 
 
 option(WITH_LINUX_UDP "Include LINUX_UDP support?" ON)
 if (WITH_LINUX_UDP)
     add_definitions(-DWITH_UDP)
     message("Building with LINUX_UDP support")
+    option(WITH_UDP_BROADCAST "Include UDP_BROADCAST support?" ON)
+    add_definitions(-DWITH_UDP_BROADCAST)
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_UDP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_UDP)
     set(UDP_GATWAY_NETWORK_FILES
@@ -146,9 +155,12 @@ if (WITH_LINUX_UDP)
             forwarder/network/linux/shared/shared/IpHelper.h
             forwarder/network/linux/shared/shared/IpHelper.c
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c
-            forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
-            forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
+    if (WITH_UDP_BROADCAST)
+        set(UDP_GATWAY_NETWORK_FILES ${UDP_GATWAY_NETWORK_FILES}
+                forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
+                forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+    endif ()
     set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES} ${UDP_GATWAY_NETWORK_FILES})
 
     set(UDP_CLIENT_NETWORK_FILES
@@ -159,9 +171,12 @@ if (WITH_LINUX_UDP)
             forwarder/network/linux/shared/shared/IpHelper.h
             forwarder/network/linux/shared/shared/IpHelper.c
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c
-            forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
-            forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
+    if (WITH_UDP_BROADCAST)
+        set(UDP_CLIENT_NETWORK_FILES ${UDP_CLIENT_NETWORK_FILES}
+                forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
+                forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+    endif ()
     set(CLIENT_NETWORK_FILES ${CLIENT_NETWORK_FILES} ${UDP_CLIENT_NETWORK_FILES})
 endif ()
 
@@ -240,12 +255,21 @@ if (NOT BUILD_TESTING)
     add_executable(UdpCMqttSnForwarderTester testclients/udptestermain.c forwarder/global_defines.h)
     target_link_libraries(UdpCMqttSnForwarderTester pthread)
 
-    add_executable(UdpMulticastTester
-            testclients/udpmulticastmain.c)
-    target_include_directories(UdpMulticastTester PRIVATE .)
-    target_link_libraries(UdpMulticastTester lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    add_executable(UdpMulticastTester11111 testclients/udpmulticastmain.c)
+    target_compile_definitions(UdpMulticastTester11111 PRIVATE CLIENT_PORT=11111)
+    target_include_directories(UdpMulticastTester11111 PRIVATE .)
+    target_link_libraries(UdpMulticastTester11111 lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
     if (WITH_LOGGING)
-        target_link_libraries(UdpMulticastTester lib-mqtt-sn-logging)
+        target_link_libraries(UdpMulticastTester11111 lib-mqtt-sn-logging)
+    endif ()
+
+
+    add_executable(UdpMulticastTester11112 testclients/udpmulticastmain.c)
+    target_compile_definitions(UdpMulticastTester11112 PRIVATE CLIENT_PORT=11112)
+    target_include_directories(UdpMulticastTester11112 PRIVATE .)
+    target_link_libraries(UdpMulticastTester11112 lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    if (WITH_LOGGING)
+        target_link_libraries(UdpMulticastTester11112 lib-mqtt-sn-logging)
     endif ()
 
     # This target only exists for Clion IDE support for the following files:
@@ -257,7 +281,6 @@ if (NOT BUILD_TESTING)
     #if (WITH_LOGGING)
     #    target_link_libraries(ArduinoCMqttSnForwarder lib-mqtt-sn-logging)
     #endif ()
-
 
 
 else ()

@@ -52,9 +52,9 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void
   }
 #ifdef WITH_LOGGING
   if (networkInterface->logger) {
-    log_open_socket(networkInterface->logger,
-                    tcpNetwork->protocol,
-                    networkInterface->mqtt_sn_gateway_address);
+    log_opening_unicast_socket(networkInterface->logger,
+                               tcpNetwork->protocol,
+                               networkInterface->mqtt_sn_gateway_address);
   }
 #endif
   return 0;
@@ -204,7 +204,7 @@ int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
   if (read_bytes == 0) {
     return -1;
   }
-  device_address gateway_address = get_device_address_from_file_descriptor(gateway_fd);
+  device_address gateway_address = get_device_address_from_tcp_file_descriptor(gateway_fd);
   return save_tcp_messages_into_receive_buffer(buffer,
                                                read_bytes,
                                                gateway_address,

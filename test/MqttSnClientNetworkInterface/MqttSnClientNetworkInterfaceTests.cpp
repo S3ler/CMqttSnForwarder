@@ -16,7 +16,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -32,7 +32,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -48,7 +48,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -63,7 +63,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -79,7 +79,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 }
@@ -92,7 +92,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
 
   EXPECT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 }
@@ -105,7 +105,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
 
   EXPECT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), -1);
 }
@@ -118,7 +118,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests, MqttSnClientNetworkInterfaceTests_Afte
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), -1);
   EXPECT_EQ(mqttSnClientNetworkInterface.status, -1);
@@ -133,7 +133,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -149,7 +149,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -165,7 +165,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -181,7 +181,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -197,7 +197,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -213,7 +213,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -236,7 +236,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -258,7 +258,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -282,7 +282,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -305,7 +305,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -384,7 +384,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 
@@ -404,7 +404,7 @@ TEST_F(MqttSnClientNetworkInterfaceTests,
 
   ASSERT_EQ(ClientNetworkInit(&mqttSnClientNetworkInterface,
                               &mqtt_sn_gateway_network_address,
-                              &forwarder_client_network_address,
+                              &forwarder_client_network_address, NULL,
                               clientNetworkContext,
                               mock_client_network_init), 0);
 

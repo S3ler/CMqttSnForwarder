@@ -37,6 +37,8 @@ typedef struct MqttSnGatewayNetworkInterface_ {
 
   device_address *mqtt_sn_gateway_address;
 
+  device_address *gateway_network_broadcast_address;
+
 #ifdef WITH_LOGGING
   MqttSnLogger *logger;
 #endif
@@ -46,8 +48,9 @@ typedef struct MqttSnGatewayNetworkInterface_ {
 int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
                        device_address *mqtt_sn_gateway_address,
                        device_address *gateway_network_address,
+                       device_address *gateway_network_broadcast_address,
                        void *context,
-                       int (*gateway_network_init)(MqttSnGatewayNetworkInterface *, void *context));
+                       int (*gateway_network_init)(MqttSnGatewayNetworkInterface *, void *));
 
 int GatewayNetworkConnect(MqttSnGatewayNetworkInterface *, void *context);
 

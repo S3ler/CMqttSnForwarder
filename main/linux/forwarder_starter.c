@@ -19,6 +19,7 @@
 #include <forwarder/network/linux/client/plugin/MqttSnClientPluginNetwork.h>
 #include <forwarder/network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h>
 #include <forwarder/network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
+#include <assert.h>
 
 int convert_hostname_port_to_device_address(const char *hostname,
                                             int port,
@@ -29,8 +30,7 @@ int convert_hostname_port_to_device_address(const char *hostname,
   } else {
     if (convert_string_to_device_address(hostname, address)) {
       if (get_device_address_from_hostname(hostname, address)) {
-        fprintf(stderr, "Cannot convert or resolve %s to %s network address.\n",
-                hostname, address_name);
+        fprintf(stderr, "Cannot convert or resolve %s to %s network address.\n", hostname, address_name);
         return EXIT_FAILURE;
       }
     }
@@ -46,19 +46,132 @@ int convert_hostname_port_to_device_address(const char *hostname,
   return EXIT_SUCCESS;
 }
 
+int convert_string_ip_port_to_device_address(const char *ip_str,
+                                             int port,
+                                             device_address *address,
+                                             const char *address_name) {
+  if (ip_str == NULL) {
+    memset(address, 0, sizeof(device_address));
+  } else {
+    if (convert_string_to_device_address(ip_str, address)) {
+      fprintf(stderr, "Cannot convert %s to %s network address.\n", ip_str, address_name);
+      return EXIT_FAILURE;
+    }
+  }
+
+  if (port < -1 || port > 65535) {
+    fprintf(stderr, "Error: Invalid port given: %d\n", port);
+    return EXIT_FAILURE;
+  }
+  if (port > -1) {
+    add_port_to_device_address(port, address);
+  }
+  return EXIT_SUCCESS;
+}
+int convert_string_to_device_address(const char *string, device_address *address) {
+  char *cp_string = strdup(string);
+  char *token = strtok(cp_string, ".");
+  size_t i = 0;
+  int rc = 0;
+  while (token != NULL) {
+    char *end_prt;
+    long int n = strtol(token, &end_prt, 10);
+    if (errno == EOVERFLOW) {
+      rc = -1;
+      break;
+    }
+    if (*end_prt != '\0') {
+      // no conversion performed
+      rc = -1;
+      break;
+    }
+    if (n > UINT8_MAX || n < 0) {
+      rc = -1;
+      break;
+    }
+    // address->bytes[i++] = atoi(token);
+    if (i + 1 > sizeof(device_address)) {
+      // given string address is too long
+      rc = -1;
+      break;
+    }
+    address->bytes[i++] = n;
+    token = strtok(NULL, ".");
+  }
+
+  free(cp_string);
+  return rc;
+}
+int get_device_address_from_hostname(const char *hostname, device_address *dst) {
+  memset(dst, 0, sizeof(device_address));
+
+  struct addrinfo hints = {0};
+
+  struct addrinfo *ainfo, *rp;
+  int rc = 0;
+
+  rc = getaddrinfo(hostname, NULL, &hints, &ainfo);
+  if (rc) {
+    return -1;
+  }
+  // prefer ip v4 address
+  for (rp = ainfo; rp != NULL; rp = rp->ai_next) {
+    if (rp->ai_family == AF_INET) {
+      if (get_device_address_from_addrinfo(rp, dst)) {
+        continue;
+      }
+      freeaddrinfo(ainfo);
+      return 0;
+    }
+  }
+
+  // no ip v4 address found use a ip v6
+  for (rp = ainfo; rp != NULL; rp = rp->ai_next) {
+    if (rp->ai_family == AF_INET6) {
+      if (get_device_address_from_addrinfo(rp, dst)) {
+        continue;
+      }
+      freeaddrinfo(ainfo);
+      return 0;
+    }
+  }
+
+  freeaddrinfo(ainfo);
+  return -1;
+}
+
+int get_device_address_from_addrinfo(struct addrinfo *ai_addr, device_address *dst) {
+  assert(ai_addr->ai_family == AF_INET || ai_addr->ai_family == AF_INET6);
+  assert(ai_addr->ai_family == AF_INET ? (sizeof(device_address) >= 4 + 2) : (sizeof(device_address) >= 16 + 2));
+
+  if (ai_addr->ai_family == AF_INET) {
+    struct sockaddr_in *sockaddr = (struct sockaddr_in *) ai_addr->ai_addr;
+    uint32_t ip_as_number = ntohl(sockaddr->sin_addr.s_addr);
+    dst->bytes[0] = (ip_as_number >> 24) & 0xFF;
+    dst->bytes[1] = (ip_as_number >> 16) & 0xFF;
+    dst->bytes[2] = (ip_as_number >> 8) & 0xFF;
+    dst->bytes[3] = (ip_as_number >> 0) & 0xFF;
+
+    add_port_to_device_address(ntohs(sockaddr->sin_port), dst);
+  }
+  if (ai_addr->ai_family == AF_INET6) {
+    struct sockaddr_in6 *sockaddr = (struct sockaddr_in6 *) ai_addr->ai_addr;
+    int ai_family_size = sizeof(sockaddr->sin6_addr.__in6_u.__u6_addr8);
+    memcpy(dst->bytes, sockaddr->sin6_addr.__in6_u.__u6_addr8, ai_family_size);
+    add_port_to_device_address(ntohs(sockaddr->sin6_port), dst);
+  }
+  return 0;
+}
+
 #ifdef WITH_PLUGIN
 int start_gateway_plugin(const forwarder_config *fcfg,
                          MqttSnForwarder *mqttSnForwarder,
                          void *gatewayNetworkContext,
                          void *clientNetworkContext) {
 
-  mqttSnForwarder->clientNetworkSendTimeout = fcfg->client_network_send_timeout;
-  mqttSnForwarder->clientNetworkReceiveTimeout = fcfg->client_network_receive_timeout;
-  mqttSnForwarder->gatewayNetworkSendTimeout = fcfg->gateway_network_send_timeout;
-  mqttSnForwarder->gatewayNetworkReceiveTimeout = fcfg->gateway_network_receive_timeout;
-
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkBroadcastAddress = {0};
 
   if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
                                               fcfg->mqtt_sn_gateway_port,
@@ -70,6 +183,12 @@ int start_gateway_plugin(const forwarder_config *fcfg,
                                               fcfg->gateway_network_bind_port,
                                               &forwarderGatewayNetworkAddress,
                                               "gateway")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_string_ip_port_to_device_address(fcfg->gateway_network_broadcast_address,
+                                               fcfg->gateway_network_broadcast_bind_port,
+                                               &forwarderGatewayNetworkBroadcastAddress,
+                                               "gateway broadcast")) {
     return EXIT_FAILURE;
   }
 
@@ -113,6 +232,7 @@ int start_gateway_plugin(const forwarder_config *fcfg,
   if (GatewayNetworkInit(&mqttSnForwarder->gatewayNetwork,
                          &mqttSnGatewayNetworkAddress,
                          &forwarderGatewayNetworkAddress,
+                         &forwarderGatewayNetworkBroadcastAddress,
                          &gatewayPluginContext,
                          GatewayLinuxPluginInit)) {
     fprintf(stderr, "Error init gateway network\n");
@@ -132,6 +252,7 @@ int start_gateway_tcp(const forwarder_config *fcfg,
 
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkBroadcastAddress = {0};
   MqttSnGatewayTcpNetwork tcpGatewayNetworkContext = {0};
 
   if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
@@ -146,10 +267,17 @@ int start_gateway_tcp(const forwarder_config *fcfg,
                                               "gateway")) {
     return EXIT_FAILURE;
   }
+  if (convert_string_ip_port_to_device_address(fcfg->gateway_network_broadcast_address,
+                                               fcfg->gateway_network_broadcast_bind_port,
+                                               &forwarderGatewayNetworkBroadcastAddress,
+                                               "gateway broadcast")) {
+    return EXIT_FAILURE;
+  }
 
   if (GatewayNetworkInit(&mqttSnForwarder->gatewayNetwork,
                          &mqttSnGatewayNetworkAddress,
                          &forwarderGatewayNetworkAddress,
+                         &forwarderGatewayNetworkBroadcastAddress,
                          &tcpGatewayNetworkContext,
                          GatewayLinuxTcpInit)) {
     fprintf(stderr, "Error init client network\n");
@@ -169,6 +297,7 @@ int start_gateway_udp(const forwarder_config *fcfg,
 
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkBroadcastAddress = {0};
   MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
 
   if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
@@ -180,13 +309,20 @@ int start_gateway_udp(const forwarder_config *fcfg,
   if (convert_hostname_port_to_device_address(fcfg->gateway_network_bind_address,
                                               fcfg->gateway_network_bind_port,
                                               &forwarderGatewayNetworkAddress,
-                                              "gateway")) {
+                                              "gateway unicast")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_string_ip_port_to_device_address(fcfg->gateway_network_broadcast_address,
+                                               fcfg->gateway_network_broadcast_bind_port,
+                                               &forwarderGatewayNetworkBroadcastAddress,
+                                               "gateway broadcast")) {
     return EXIT_FAILURE;
   }
 
   if (GatewayNetworkInit(&mqttSnForwarder->gatewayNetwork,
                          &mqttSnGatewayNetworkAddress,
                          &forwarderGatewayNetworkAddress,
+                         &forwarderGatewayNetworkBroadcastAddress,
                          &udpGatewayNetworkContext,
                          GatewayLinuxUdpInit)) {
     fprintf(stderr, "Error init gateway network\n");
@@ -206,6 +342,7 @@ int start_client_plugin(const forwarder_config *fcfg,
 
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderClientNetworkAddress = {0};
+  device_address forwarderClientNetworkBroadcastAddress = {0};
 
   if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
                                               fcfg->mqtt_sn_gateway_port,
@@ -218,6 +355,12 @@ int start_client_plugin(const forwarder_config *fcfg,
                                               fcfg->client_network_bind_port,
                                               &forwarderClientNetworkAddress,
                                               "client")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_string_ip_port_to_device_address(fcfg->client_network_broadcast_address,
+                                               fcfg->client_network_broadcast_bind_port,
+                                               &forwarderClientNetworkBroadcastAddress,
+                                               "client broadcast")) {
     return EXIT_FAILURE;
   }
 
@@ -256,6 +399,7 @@ int start_client_plugin(const forwarder_config *fcfg,
   if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
                         &mqttSnGatewayNetworkAddress,
                         &forwarderClientNetworkAddress,
+                        &forwarderClientNetworkBroadcastAddress,
                         &clientPluginContext,
                         ClientLinuxPluginInit)) {
     fprintf(stderr, "Error init client network\n");
@@ -276,6 +420,7 @@ int start_client_tcp(const forwarder_config *fcfg,
 
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderClientNetworkAddress = {0};
+  device_address forwarderClientNetworkBroadcastAddress = {0};
   MqttSnClientTcpNetwork tcpClientNetworkContext = {0};
 
   if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
@@ -291,10 +436,17 @@ int start_client_tcp(const forwarder_config *fcfg,
                                               "client")) {
     return EXIT_FAILURE;
   }
+  if (convert_string_ip_port_to_device_address(fcfg->client_network_broadcast_address,
+                                               fcfg->client_network_broadcast_bind_port,
+                                               &forwarderClientNetworkBroadcastAddress,
+                                               "client broadcast")) {
+    return EXIT_FAILURE;
+  }
 
   if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
                         &mqttSnGatewayNetworkAddress,
                         &forwarderClientNetworkAddress,
+                        &forwarderClientNetworkBroadcastAddress,
                         &tcpClientNetworkContext,
                         ClientLinuxTcpInit)) {
     fprintf(stderr, "Error init client network\n");
@@ -314,6 +466,7 @@ int start_client_udp(const forwarder_config *fcfg,
 
   device_address forwarderClientNetworkAddress = {0};
   device_address mqttSnGatewayNetworkAddress = {0};
+  device_address forwarderClientNetworkBroadcastAddress = {0};
   MqttSnClientUdpNetwork udpClientNetworkContext = {0};
 
   if (convert_hostname_port_to_device_address(fcfg->mqtt_sn_gateway_host,
@@ -326,13 +479,20 @@ int start_client_udp(const forwarder_config *fcfg,
   if (convert_hostname_port_to_device_address(fcfg->client_network_bind_address,
                                               fcfg->client_network_bind_port,
                                               &forwarderClientNetworkAddress,
-                                              "client")) {
+                                              "client unicast")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_string_ip_port_to_device_address(fcfg->client_network_broadcast_address,
+                                               fcfg->client_network_broadcast_bind_port,
+                                               &forwarderClientNetworkBroadcastAddress,
+                                               "client broadcast")) {
     return EXIT_FAILURE;
   }
 
   if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
                         &mqttSnGatewayNetworkAddress,
                         &forwarderClientNetworkAddress,
+                        &forwarderClientNetworkBroadcastAddress,
                         &udpClientNetworkContext,
                         ClientLinuxUdpInit)) {
     fprintf(stderr, "Error init client network\n");

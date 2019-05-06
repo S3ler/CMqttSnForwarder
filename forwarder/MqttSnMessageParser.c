@@ -125,7 +125,7 @@ int32_t parse_encapsulation_message(uint8_t *broadcast,
     return -1;
   }
   MqttSnEncapsulatedMessage *encapsulated_header = (MqttSnEncapsulatedMessage *) h.payload;
-  if (encapsulated_header->crtl >= 0x01) {
+  if (encapsulated_header->crtl >= MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BROADCAST_RADIUS) {
     return -1;
   }
   *broadcast = encapsulated_header->crtl;

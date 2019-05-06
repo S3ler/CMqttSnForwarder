@@ -11,13 +11,16 @@ extern "C" {
 
 #include <forwarder/MqttSnGatewayNetworkInterface.h>
 
+#define CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXUDPNETWORKPROTOCOL "udp"
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH 1024
 
+// TODO save delete
 typedef struct MqttSnGatewayUdpNetwork_ {
-  int my_socket;
+  int unicast_socket;
   char *ip;
   int port;
-  char protocol[4];
+  int multicast_socket;
+  char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXUDPNETWORKPROTOCOL)];
 } MqttSnGatewayUdpNetwork;
 
 int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context);

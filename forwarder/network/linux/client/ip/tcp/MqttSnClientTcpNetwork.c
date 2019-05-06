@@ -62,9 +62,9 @@ int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context) {
   clientTcpNetwork->master_socket = master_socket;
 #ifdef WITH_LOGGING
   if (n->logger) {
-    log_open_socket(n->logger,
-                    clientTcpNetwork->protocol,
-                    n->client_network_address);
+    log_opening_unicast_socket(n->logger,
+                               clientTcpNetwork->protocol,
+                               n->client_network_address);
   }
 #endif
   return 0;
@@ -79,7 +79,7 @@ void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
   for (int i = 0; i < clientTcpNetwork->max_clients; ++i) {
 #ifdef WITH_DEBUG_LOGGING
     if (n->logger && clientTcpNetwork->client_socket[i] >= 0) {
-      device_address address = get_device_address_from_file_descriptor(clientTcpNetwork->client_socket[i]);
+      device_address address = get_device_address_from_tcp_file_descriptor(clientTcpNetwork->client_socket[i]);
       log_close_connection(n->logger, clientTcpNetwork->protocol, &address);
     }
 #endif
@@ -168,7 +168,7 @@ int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
       continue;
     }
 
-    device_address peer_address = get_device_address_from_file_descriptor(clientTcpNetwork->client_socket[i]);
+    device_address peer_address = get_device_address_from_tcp_file_descriptor(clientTcpNetwork->client_socket[i]);
     if (memcmp(peer_address.bytes, clientSendMessage.address.bytes, sizeof(device_address)) != 0) {
       continue;
     }
@@ -197,7 +197,7 @@ int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
     if (rc < 0) {
 #ifdef WITH_DEBUG_LOGGING
       if (n->logger) {
-        device_address address = get_device_address_from_file_descriptor(clientTcpNetwork->client_socket[i]);
+        device_address address = get_device_address_from_tcp_file_descriptor(clientTcpNetwork->client_socket[i]);
         log_lost_connection(n->logger, clientTcpNetwork->protocol, &address);
       }
 #endif
@@ -239,7 +239,7 @@ int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNe
     return -1;
   }
 
-  device_address client_address = get_device_address_from_file_descriptor(client_fd);
+  device_address client_address = get_device_address_from_tcp_file_descriptor(client_fd);
   return save_tcp_messages_into_receive_buffer(buffer,
                                                read_bytes,
                                                client_address,
@@ -266,7 +266,8 @@ void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
       if (n->logger) {
         device_address
-            address = get_device_address_from_file_descriptor(clientTcpNetwork->client_socket[client_socket_position]);
+            address =
+            get_device_address_from_tcp_file_descriptor(clientTcpNetwork->client_socket[client_socket_position]);
         log_lost_connection(n->logger, clientTcpNetwork->protocol, &address);
       }
 #endif

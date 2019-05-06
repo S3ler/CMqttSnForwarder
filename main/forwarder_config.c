@@ -23,15 +23,32 @@ int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
 
   fcfg->protocol_version = MQTT_SN_PROTOCOL_V1;
 
+  // gateway network
   memcpy(fcfg->localhost, DEFAULT_MQTT_SN_GATEWAY_HOST, sizeof(DEFAULT_MQTT_SN_GATEWAY_HOST));
   fcfg->mqtt_sn_gateway_host = fcfg->localhost;
   fcfg->mqtt_sn_gateway_port = 8888;
   memcpy(fcfg->udp, DEFAULT_UDP, sizeof(DEFAULT_UDP));
   fcfg->gateway_network_protocol = fcfg->udp;
   fcfg->gateway_network_bind_port = 9999;
+  // gateway network broadcast
+  fcfg->gateway_network_broadcast_protocol = fcfg->udp;
+  memcpy(fcfg->gateway_network_default_broadcast_address,
+         DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS,
+         sizeof(DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS));
+  fcfg->gateway_network_broadcast_address = fcfg->gateway_network_default_broadcast_address;
+  fcfg->gateway_network_broadcast_bind_port = 5353;
+
+  // client network
   memcpy(fcfg->udp, DEFAULT_UDP, sizeof(DEFAULT_UDP));
   fcfg->client_network_protocol = fcfg->udp;
   fcfg->client_network_bind_port = 7777;
+  // client network broadcast
+  fcfg->client_network_broadcast_protocol = fcfg->udp;
+  memcpy(fcfg->client_network_default_broadcast_address,
+         DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS,
+         sizeof(DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS));
+  fcfg->client_network_broadcast_address = fcfg->client_network_default_broadcast_address;
+  fcfg->client_network_broadcast_bind_port = 5353;
 
   fcfg->gateway_network_send_timeout = GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT;
   fcfg->gateway_network_receive_timeout = GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT;
@@ -464,6 +481,134 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       }
       i++;
     }
+#if defined(WITH_TCP_BROADCAST) || defined(WITH_UDP_BROADCAST)
+    // gateway network broadcast
+    else if (!strcmp(argv[i], "-gbP") || !strcmp(argv[i], "--gateway_network_broadcast_protocol")) {
+      if (i == argc - 1) {
+        log_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
+        return 1;
+      } else {
+        fcfg->gateway_network_broadcast_protocol = argv[i + 1];
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-gbA") || !strcmp(argv[i], "--gateway_network_broadcast_address")) {
+      if (i == argc - 1) {
+        log_argument_value_not_specified(fcfg->logger, argv[i], "address");
+        return 1;
+      } else {
+        fcfg->gateway_network_broadcast_address = argv[i + 1];
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-gbp") || !strcmp(argv[i], "--gateway_network_broadcast_bind_port")) {
+      if (i == argc - 1) {
+        log_argument_value_not_specified(fcfg->logger, argv[i], "port");
+        return 1;
+      } else {
+        if (parse_port(fcfg, argv[i + 1], &fcfg->gateway_network_broadcast_bind_port)) {
+          return 1;
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-gbL") || !strcmp(argv[i], "--gateway_network_broadcast_url")) {
+      if (i == argc - 1) {
+        log_argument_value_not_specified(fcfg->logger, argv[i], "URL");
+        return 1;
+      } else {
+        char *url = argv[i + 1];
+
+        char *prot = strtok(url, "://");
+        char *addr = strtok(NULL, "://");
+        char *port = strtok(NULL, ":");
+        char *null_token = strtok(NULL, "://");
+
+        if (prot) {
+          fcfg->gateway_network_broadcast_protocol = prot;
+        } else {
+          log_unsupported_url_scheme(fcfg->logger);
+        }
+
+        if (addr) {
+          fcfg->gateway_network_broadcast_address = addr;
+        } else {
+          log_unsupported_url_scheme(fcfg->logger);
+        }
+
+        if (port) {
+          if (parse_port(fcfg, port, &fcfg->gateway_network_broadcast_bind_port)) {
+            return 1;
+          }
+        }
+
+        if (null_token) {
+          log_unsupported_url_scheme(fcfg->logger);
+        }
+      }
+      i++;
+    }
+    // client network broadcast
+    else if (!strcmp(argv[i], "-cbP") || !strcmp(argv[i], "--client_network_broadcast_protocol")) {
+      if (i == argc - 1) {
+        log_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
+        return 1;
+      } else {
+        fcfg->client_network_broadcast_protocol = argv[i + 1];
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-cbA") || !strcmp(argv[i], "--client_network_broadcast_address")) {
+      if (i == argc - 1) {
+        log_argument_value_not_specified(fcfg->logger, argv[i], "address");
+        return 1;
+      } else {
+        fcfg->client_network_broadcast_address = argv[i + 1];
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-cbp") || !strcmp(argv[i], "--client_network_broadcast_bind_port")) {
+      if (i == argc - 1) {
+        log_argument_value_not_specified(fcfg->logger, argv[i], "port");
+        return 1;
+      } else {
+        if (parse_port(fcfg, argv[i + 1], &fcfg->client_network_broadcast_bind_port)) {
+          return 1;
+        }
+      }
+      i++;
+    } else if (!strcmp(argv[i], "-cbL") || !strcmp(argv[i], "--client_network_broadcast_url")) {
+      if (i == argc - 1) {
+        log_argument_value_not_specified(fcfg->logger, argv[i], "URL");
+        return 1;
+      } else {
+        char *url = argv[i + 1];
+
+        char *prot = strtok(url, "://");
+        char *addr = strtok(NULL, "://");
+        char *port = strtok(NULL, ":");
+        char *null_token = strtok(NULL, "://");
+
+        if (prot) {
+          fcfg->client_network_broadcast_protocol = prot;
+        } else {
+          log_unsupported_url_scheme(fcfg->logger);
+        }
+
+        if (addr) {
+          fcfg->client_network_broadcast_address = addr;
+        } else {
+          log_unsupported_url_scheme(fcfg->logger);
+        }
+
+        if (port) {
+          if (parse_port(fcfg, port, &fcfg->client_network_broadcast_bind_port)) {
+            return 1;
+          }
+        }
+
+        if (null_token) {
+          log_unsupported_url_scheme(fcfg->logger);
+        }
+      }
+      i++;
+    }
+#endif
 #ifdef WITH_PLUGIN
     else if (!strcmp(argv[i], "-cnp") || !strcmp(argv[i], "--client_network_plugin")) {
       if (i == argc - 1) {
@@ -515,6 +660,8 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 }
 
 int print_usage(const MqttSnLogger *logger) {
+
+  // forwarder description, version an build date
   log_str(logger, "cmqttsnforwarder is a simple mqtt-sn forwarder that will forward mqtt-sn messages\n");
   log_str(logger, "                 from a client network over a gateway network to a mqtt-sn gateway.\n");
   log_str(logger, "cmqttsnforwarder version ");
@@ -531,19 +678,33 @@ int print_usage(const MqttSnLogger *logger) {
   log_flush(logger);
   log_flush(logger);
 
+  // usage and short command line descriptions
   log_str(logger, "Usage: cmqttsnforwarder {[[-h mqtt_sn_gateway_host] [-p mqtt_sn_gateway_port]] | -L URL}\n");
+
   log_str(logger, "                        {[[-gP gateway_network_protocol] [-gA gateway_network_bind_address]"
                   " [-gp gateway_network_bind_port]] | -gL URL}\n");
   log_str(logger, "                        {[[-cP client_network_protocol] [-cA client_network_bind_address]"
                   " [-cp client_network_bind_port]] | -cL URL}\n");
+
+#if defined(WITH_TCP_BROADCAST) || defined(WITH_UDP_BROADCAST)
+  log_str(logger,
+          "                        {[[-gbP gateway_network_broadcast_protocol] [-gbA gateway_network_broadcast_address]"
+          " [-gbp gateway_network_broadcast_bind_port]] | -gbL URL}\n");
+  log_str(logger,
+          "                        {[[-cbP client_network_broadcast_protocol] [-cbA client_network_broadcast_address]"
+          " [-cbp client_network_broadcast_bind_port]] | -cbL URL}\n");
+#endif
+
   log_str(logger, "                        {[[-gst gateway_send_timeout] [-grt gateway_receive_timeout]]"
                   " | --gt gateway_network_timeout}\n");
   log_str(logger, "                        {[[-cst client_send_timeout] [-crt client_receive_timeout]]"
                   " | --ct client_network_timeout}\n");
+
 #ifdef WITH_PLUGIN
   log_str(logger, "                        [-gnp gateway_network_plugin]\n");
   log_str(logger, "                        [-cnp client_network_plugin]\n");
 #endif
+
 #if defined(WITH_LOGGING)
 #if defined(WITH_DEBUG_LOGGING)
   log_str(logger, "                        [[-q quiet] | [-d default] | [-v verbose] | [-db debug]]\n");
@@ -551,16 +712,23 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger,"                        [[-q quiet] | [-d default] | [-v verbose]]\n");
 #endif
 #endif
+
 #if defined(WITH_CONFIG_FILE)
   log_str(logger, "                        [-c --config-file]\n");
 #endif
+
   log_str(logger, "       cmqttsnforwarder --help\n\n");
 
-  log_str(logger, " -h : mqtt-sn gateway host to connect to. Defaults to ");
+
+  // long command line description
+  log_str(logger, " -h : mqtt-sn gateway host to connect to.\n");
+  log_str(logger, "       Defaults to ");
   log_str(logger, DEFAULT_MQTT_SN_GATEWAY_HOST);
   log_str(logger, ".\n");
 
-  log_str(logger, " -p : mqtt-sn gateway network port to connect to. Defaults to 8888 for plain MQTT-SN.\n");
+  log_str(logger, " -p : mqtt-sn gateway network port to connect to.\n");
+  log_str(logger, "      Defaults to 8888 for plain MQTT-SN.\n");
+
   log_str(logger, " -L : specify hostname, port as a URL in the form:\n");
   log_str(logger, "      mqtt-sn(s)://host[:port]\n");
   log_str(logger, "      mqtt-sn(s) uses the same protocol as the gateway network.\n");
@@ -570,14 +738,36 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger, " -gA : bind the gateway network to the outgoing socket to this host/ip address.\n");
   log_str(logger, "       Use to control which interface the network communicates over.\n");
   log_str(logger, " -gp : listening on the specific gateway network port. Defaults to 9999.\n");
-  log_str(logger, " -gL : specify outgoing socket, port as a URL in the form: address[:port]\n");
+  log_str(logger, " -gL : specify protocol, broadcast address, port as a URL in the form: protocol://address[:port]\n");
 
   log_str(logger, " -cP : specify the protocol of the client network to use.\n");
   log_str(logger, "       Can be udp, tcp. Defaults to udp.\n");
   log_str(logger, " -cA : bind the client network to the outgoing socket to this host/ip address.\n");
   log_str(logger, "       Use to control which interface the network communicates over.\n");
   log_str(logger, " -cp : listening on the specific client network port. Defaults to 7777.\n");
-  log_str(logger, " -cL : specify outgoing socket, port as a URL in the form: address[:port]\n");
+  log_str(logger, " -cL : specify protocol, broadcast address, port as a URL in the form: protocol://address[:port]\n");
+
+#if defined(WITH_TCP_BROADCAST) || defined(WITH_UDP_BROADCAST)
+  log_str(logger, " -gbP : specify the protocol of the gateway network broadcast to use.\n");
+  log_str(logger, "        Can be udp. Defaults to udp.\n");
+  log_str(logger, " -gbA : specify the gateway network broadcast address.\n");
+  log_str(logger, "        Note: the gateway network broadcast binds to the gateway network bind interface.\n");
+  log_str(logger, "        Defaults to ");
+  log_str(logger, DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS);
+  log_str(logger, ".\n");
+  log_str(logger, " -gbp : listening on the specific gateway network broadcast port. Defaults to 5353.\n");
+  log_str(logger, " -gbL : specify protocol, address, port as a URL in the form: protocol://address[:port]\n");
+
+  log_str(logger, " -cbP : specify the protocol of the client network broadcast to use.\n");
+  log_str(logger, "        Can be udp. Defaults to udp.\n");
+  log_str(logger, " -cbA : specify the client network broadcast address.\n");
+  log_str(logger, "        Defaults to ");
+  log_str(logger, DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS);
+  log_str(logger, ".\n");
+  log_str(logger, "        Note: the client network broadcast binds to the client network bind interface.\n");
+  log_str(logger, " -cbp : listening on the specific client network broadcast port. Defaults to 5353.\n");
+  log_str(logger, " -cbL : specify protocol, address, port as a URL in the form: protocol://address[:port]\n");
+#endif
 
   log_str(logger, " -gst : specify the gateway network send timeout in ms.\n");
   log_str(logger, "       on 0 returns immediately, on -1 waits indefinitely for a message. Defaults to 1000 ms.\n");

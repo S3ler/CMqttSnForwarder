@@ -103,12 +103,12 @@ class MqttSnForwarderInitTests : public ::testing::Test {
         .WillOnce(Invoke(local_gateway_network_init));
 
     ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork, NULL,
-                                &client_network_address,
+                                &client_network_address, NULL,
                                 clientNetworkContext,
                                 mock_client_network_init), 0);
     EXPECT_EQ(GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
                                  &gateway_network_address,
-                                 &mqtt_sn_gateway_address,
+                                 &mqtt_sn_gateway_address, NULL,
                                  gatewayNetworkContext,
                                  mock_gateway_network_init), 0);
 

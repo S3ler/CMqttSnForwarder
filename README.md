@@ -1,12 +1,21 @@
 Featurelist:
 * multicast in tcp and upd for linx
-* search gw for mqtt-sn-gateway
+* search gw for mqtt-sn-gateway     // FEATURE implement searching for gateway
 * indicator for ctrl flag in encapsulated messages
 * fix tests
 * use network interface by address
+* filter out non-mqtt-sn-gateway address on gateway network interface
 arduino
-* command line parser for arduino
+* multicast in tcp and upd for linx
 *
+
+// TODO enable GW MQTT-SN message header check?
+
+// https://stackoverflow.com/questions/6688909/c-program-to-get-the-values-of-ip-header-fields-from-linux-ip-stack/6689064#6689064
+
+// TODO: how to fix the problem that we cannot find out own IP-Address of bind interface when using IN_ADDR_ANY
+// this leads to the problem that we cannot filter out own send message to multicast
+// and then we forward our own multicast messages in the client network to the gateway and vice versa
 
 // TODO mention: easily adeptable for other platforms like RTOS
 //  encapsulatedMessage->crtl = 0;

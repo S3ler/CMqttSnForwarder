@@ -10,12 +10,14 @@
 #include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 #include <forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
 #include <forwarder/network/linux/shared/shared/IpHelper.h>
+#include <forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h>
 
 int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
   memset(udpNetwork, 0, sizeof(MqttSnGatewayUdpNetwork));
-  udpNetwork->my_socket = -1;
-  strcpy(udpNetwork->protocol, "udp");
+  udpNetwork->unicast_socket = -1;
+  udpNetwork->multicast_socket = -1;
+  strcpy(udpNetwork->protocol, CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXUDPNETWORKPROTOCOL);
   n->gateway_network_init = GatewayLinuxUdpInit;
   n->gateway_network_receive = GatewayLinuxUdpReceive;
   n->gateway_network_send = GatewayLinuxUdpSend;
@@ -31,34 +33,58 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *n, void *context) {
     // FEATURE implement searching for gateway
     return -1;
   }
-  uint16_t port = get_port_from_device_address(n->gateway_network_address);
-
-  udpNetwork->my_socket = initialize_udp_socket(port);
-
-  if (udpNetwork->my_socket == -1) {
+  uint16_t unicast_port = get_port_from_device_address(n->gateway_network_address);
+  udpNetwork->unicast_socket = initialize_udp_socket(unicast_port);
+  if (udpNetwork->unicast_socket < -1) {
+#ifdef WITH_LOGGING
+    log_failed_opening_unicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_address);
+#endif
     return -1;
   }
 #ifdef WITH_LOGGING
-  if (n->logger) {
-    log_open_socket(n->logger,
-                    udpNetwork->protocol,
-                    n->gateway_network_address);
-  }
+  log_opening_unicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_address);
 #endif
+
+  if (n->gateway_network_broadcast_address) {
+    uint32_t multicast_ip = 0;
+    uint16_t multicast_port = 0;
+    if (get_ipv4_and_port_from_device_address(&multicast_ip, &multicast_port, n->gateway_network_broadcast_address)) {
+#ifdef WITH_LOGGING
+      log_failed_convert_device_address_to_ipv4_and_port(n->logger, n->gateway_network_broadcast_address);
+#endif
+      return -1;
+    }
+    udpNetwork->multicast_socket = initialize_udp_multicast_socket(udpNetwork->unicast_socket,
+                                                                   multicast_ip,
+                                                                   multicast_port);
+    if (udpNetwork->multicast_socket < 0) {
+#ifdef WITH_LOGGING
+      log_failed_opening_multicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_broadcast_address);
+#endif
+      return -1;
+    }
+#ifdef WITH_LOGGING
+    log_opening_multicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_broadcast_address);
+#endif
+  }
+
   return 0;
 }
 
 void GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
-  if (udpNetwork->my_socket != 0) {
-    close(udpNetwork->my_socket);
-    udpNetwork->my_socket = 0;
+  if (udpNetwork->unicast_socket > -1) {
+    close(udpNetwork->unicast_socket);
+    udpNetwork->unicast_socket = -1;
 #ifdef WITH_LOGGING
-    if (n->logger) {
-      log_close_socket(n->logger,
-                       udpNetwork->protocol,
-                       n->mqtt_sn_gateway_address);
-    }
+    log_close_unicast_socket(n->logger, udpNetwork->protocol, n->mqtt_sn_gateway_address);
+#endif
+  }
+  if (udpNetwork->multicast_socket > -1) {
+    close(udpNetwork->multicast_socket);
+    udpNetwork->multicast_socket = -1;
+#ifdef WITH_LOGGING
+    log_close_multicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_broadcast_address);
 #endif
   }
 }
@@ -69,31 +95,80 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
                            void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
 
-  int message_received = is_udp_message_received(udpNetwork->my_socket, timeout_ms);
-  if (message_received == -1) {
-    return -1;
+  if (n->gateway_network_broadcast_address) {
+    int message_received = is_multicast_or_unicast_message_receive(udpNetwork->unicast_socket,
+                                                                   udpNetwork->multicast_socket, timeout_ms);
+    if (message_received < 0) {
+#ifdef WITH_LOGGING
+      log_select_error(n->logger);
+#endif
+      return -1;
+    }
+    if (message_received == 0) {
+      return 0;
+    }
+    if (message_received == 1 || message_received == 3) {
+      int unicast_rc = receive_and_save_udp_message_into_receive_buffer(udpNetwork->unicast_socket,
+                                                                        receiveBuffer,
+                                                                        CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH);
+      if (unicast_rc < 0) {
+#ifdef WITH_LOGGING
+        log_unicast_socket_failed(n->logger, udpNetwork->protocol, n->gateway_network_address);
+#endif
+        return -1;
+      }
+#ifdef WITH_DEBUG_LOGGING
+      if (unicast_rc > 0) {
+        const MqttSnMessageData *msg = back(receiveBuffer);
+        log_db_rec_gateway_message(n->logger, n->gateway_network_address, &msg->address, msg->data, msg->data_length);
+      }
+#endif
+    }
+    if (message_received == 2 || message_received == 3) {
+      int multicast_rc = receive_and_save_udp_multicast_message_into_receive_buffer(udpNetwork->multicast_socket,
+                                                                                    receiveBuffer,
+                                                                                    CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH);
+      if (multicast_rc < 0) {
+#ifdef WITH_LOGGING
+        log_multicast_socket_failed(n->logger, udpNetwork->protocol, n->gateway_network_broadcast_address);
+#endif
+        return -1;
+      }
+#ifdef WITH_DEBUG_LOGGING
+      if (multicast_rc > 0) {
+        const MqttSnMessageData *msg = back(receiveBuffer);
+        log_db_rec_gateway_message(n->logger, n->gateway_network_broadcast_address, &msg->address, msg->data, msg->data_length);
+      }
+#endif
+    }
+    return 0;
   }
 
+  // only unicast
+  int message_received = is_udp_message_received(udpNetwork->unicast_socket, timeout_ms);
+  if (message_received < 0) {
+#ifdef WITH_LOGGING
+    log_select_error(n->logger);
+#endif
+    return -1;
+  }
   if (message_received == 0) {
     return 0;
   }
 
-  int rc = receive_and_udp_message_into_receive_buffer(udpNetwork->my_socket,
-                                                       receiveBuffer,
-                                                       CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH);
-  if (rc < 0) {
+  int unicast_rc = receive_and_save_udp_message_into_receive_buffer(udpNetwork->unicast_socket,
+                                                                    receiveBuffer,
+                                                                    CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH);
+  if (unicast_rc < 0) {
+#ifdef WITH_LOGGING
+    log_unicast_socket_failed(n->logger, udpNetwork->protocol, n->gateway_network_address);
+#endif
     return -1;
   }
 #ifdef WITH_DEBUG_LOGGING
-  if (rc > 0) {
-    if (n->logger) {
-      const MqttSnMessageData *msg = back(receiveBuffer);
-      log_db_rec_gateway_message(n->logger,
-                                 n->gateway_network_address,
-                                 &msg->address,
-                                 msg->data,
-                                 msg->data_length);
-    }
+  if (unicast_rc > 0) {
+    const MqttSnMessageData *msg = back(receiveBuffer);
+    log_db_rec_gateway_message(n->logger, n->gateway_network_address, &msg->address, msg->data, msg->data_length);
   }
 #endif
   return 0;
@@ -116,7 +191,7 @@ int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
                               gatewaySendMessageData.data,
                               gatewaySendMessageData.data_length);
 #endif
-  ssize_t send_bytes = send_udp_message(udpNetwork->my_socket,
+  ssize_t send_bytes = send_udp_message(udpNetwork->unicast_socket,
                                         n->mqtt_sn_gateway_address,
                                         gatewaySendMessageData.data,
                                         gatewaySendMessageData.data_length);

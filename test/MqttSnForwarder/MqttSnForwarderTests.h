@@ -97,12 +97,12 @@ class MqttSnForwarderTests : public ::testing::Test {
 
     ASSERT_EQ(ClientNetworkInit(&mqttSnForwarder.clientNetwork,
                                 &mqtt_sn_gateway_address,
-                                &client_network_address,
+                                &client_network_address, NULL,
                                 clientNetworkContext,
                                 mock_client_network_init), 0);
     EXPECT_EQ(GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
                                  &mqtt_sn_gateway_address,
-                                 &gateway_network_address,
+                                 &gateway_network_address, NULL,
                                  gatewayNetworkContext,
                                  mock_gateway_network_init), 0);
 

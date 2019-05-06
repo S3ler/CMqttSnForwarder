@@ -7,11 +7,13 @@ extern "C" {
 
 #include <forwarder/MqttSnClientNetworkInterface.h>
 
+#define CMQTTSNFORWARDER_MQTTSNCLIENTLINUXUDPNETWORKPROTOCOL "udp"
 #define CMQTTSNFORWARDER_MQTTSNCLIENTUDPNETWORK_MAX_DATA_LENGTH 1024
 
 typedef struct MqttSnClientUdpNetwork_ {
-  int master_socket;
-  char protocol[4];
+  int unicast_socket;
+  int multicast_socket;
+  char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNCLIENTLINUXUDPNETWORKPROTOCOL)];
 } MqttSnClientUdpNetwork;
 
 int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context);

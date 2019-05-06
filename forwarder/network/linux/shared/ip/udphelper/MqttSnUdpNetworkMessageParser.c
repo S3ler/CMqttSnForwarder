@@ -13,6 +13,7 @@
 
 int save_udp_messages_into_receive_buffer(uint8_t *buffer,
                                           ssize_t read_bytes,
+                                          uint8_t broadcast_radius,
                                           device_address gateway_address,
                                           MqttSnFixedSizeRingBuffer *receiveBuffer) {
 
@@ -27,6 +28,7 @@ int save_udp_messages_into_receive_buffer(uint8_t *buffer,
 
   if (save_complete_new_udp_message(buffer,
                                     read_bytes,
+                                    broadcast_radius,
                                     gateway_address,
                                     receiveBuffer) == 0) {
     return 1;
@@ -58,19 +60,26 @@ int isThreeBytesUdpHeader(uint8_t *data, ssize_t data_length) {
 
 int save_complete_new_udp_message(uint8_t *data,
                                   ssize_t data_length,
+                                  uint8_t broadcast_radius,
                                   device_address address,
                                   MqttSnFixedSizeRingBuffer *receiveBuffer) {
   if (data_length != get_udp_message_length(data)) {
     return -1;
   }
-  return save_udp_message_into_receive_buffer(data, (uint16_t) data_length, address, receiveBuffer);
+  return save_udp_message_into_receive_buffer(data,
+                                              (uint16_t) data_length,
+                                              broadcast_radius,
+                                              address,
+                                              receiveBuffer);
 }
 
 int save_udp_message_into_receive_buffer(uint8_t *data,
                                          uint16_t data_length,
+                                         uint8_t broadcast_radius,
                                          device_address address,
                                          MqttSnFixedSizeRingBuffer *receiveBuffer) {
   MqttSnMessageData receiveMessageData = {0};
+  receiveMessageData.broadcast_radius = broadcast_radius;
   receiveMessageData.data_length = data_length;
   memcpy(receiveMessageData.data, data, receiveMessageData.data_length);
   receiveMessageData.address = address;
@@ -183,20 +192,21 @@ int receive_udp_message(int socket_fd,
   return 0;
 }
 
-int receive_and_udp_message_into_receive_buffer(int socket_fd,
-                                                MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                                uint16_t max_data_length) {
+int receive_and_save_udp_message_into_receive_buffer(int socket_fd,
+                                                     MqttSnFixedSizeRingBuffer *receiveBuffer,
+                                                     uint16_t max_data_length) {
   uint8_t buffer[max_data_length];
   memset(buffer, 0, max_data_length);
   ssize_t read_bytes;
   device_address received_address = {0};
+  uint8_t broadcast_radius = 0;
 
   if (receive_udp_message(socket_fd, buffer, &read_bytes, max_data_length, &received_address)) {
     return -1;
   }
-
   return save_udp_messages_into_receive_buffer(buffer,
                                                read_bytes,
+                                               broadcast_radius,
                                                received_address,
                                                receiveBuffer);
 }
