@@ -98,6 +98,7 @@ device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr)
 
   device_address result = {0};
   uint32_t ip_as_number = ntohl(sockaddr->sin_addr.s_addr);
+  result.bytes[0] = (ip_as_number >> 24) & 0xFF;
   result.bytes[1] = (ip_as_number >> 16) & 0xFF;
   result.bytes[2] = (ip_as_number >> 8) & 0xFF;
   result.bytes[3] = (ip_as_number >> 0) & 0xFF;

@@ -14,7 +14,6 @@ int get_device_address_from_hostname(const char *hostname, device_address *dst);
 
 struct sockaddr_in get_sockaddr_in_from_file_descriptor(int file_descriptor);
 
-
 struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *deviceAddress);
 
 device_address get_device_address_from_file_descriptor(int file_descriptor);
