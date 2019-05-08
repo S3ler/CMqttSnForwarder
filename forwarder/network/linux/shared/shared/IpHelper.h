@@ -5,6 +5,10 @@
 #ifndef CMQTTSNFORWARDER_FORWARDER_NETWORK_SHARED_SHARED_IPHELPER_H_
 #define CMQTTSNFORWARDER_FORWARDER_NETWORK_SHARED_SHARED_IPHELPER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <forwarder/global_defines.h>
 #include <forwarder/MqttSnForwarderLogging.h>
@@ -67,5 +71,9 @@ int log_failed_convert_device_address_to_ipv4_and_port(const MqttSnLogger *logge
 int log_failed_convert_device_address_to(const MqttSnLogger *logger, const device_address *from, const char *to);
 
 #endif //WITH_LOGGING
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //CMQTTSNFORWARDER_FORWARDER_NETWORK_SHARED_SHARED_IPHELPER_H_

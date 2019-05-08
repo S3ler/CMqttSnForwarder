@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
 #include "MqttSnTcpNetworkHelper.h"
 
 int connect_to_tcp_host(uint32_t ip, uint16_t port) {
@@ -94,18 +95,26 @@ int listen_on_tcp_socket(uint32_t ip, uint16_t port, uint32_t max_pending_connec
   return socket_fd;
 }
 
-int is_new_connection_or_message_received(int listen_socket_fd,
+int new_connection_or_is_message_received(int listen_socket_fd,
                                           int *client_socket_fds,
                                           int client_socket_fds_len,
                                           int32_t timeout_ms,
-                                          fd_set *read_fds) {
-  int maximum_socket_descriptor = listen_socket_fd;
+                                          fd_set *read_fds,
+                                          int multicast_socket_fd) {
 
   FD_ZERO(read_fds);
 
+
   // add listen socket fd to set
   FD_SET(listen_socket_fd, read_fds);
+  int max_fd = listen_socket_fd;
 
+  if (multicast_socket_fd > -1) {
+    FD_SET(multicast_socket_fd, read_fds);
+    if (multicast_socket_fd > max_fd) {
+      max_fd = multicast_socket_fd;
+    }
+  }
   // add client socket fd to set
   for (int i = 0; i < client_socket_fds_len; i++) {
     // socket fd
@@ -117,17 +126,17 @@ int is_new_connection_or_message_received(int listen_socket_fd,
     }
 
     // determine highest fd
-    if (socket_fd > maximum_socket_descriptor) {
-      maximum_socket_descriptor = socket_fd;
+    if (socket_fd > max_fd) {
+      max_fd = socket_fd;
     }
   }
 
   int activity = 0;
   if (timeout_ms < 0) {
-    activity = select(maximum_socket_descriptor + 1, read_fds, NULL, NULL, NULL);
+    activity = select(max_fd + 1, read_fds, NULL, NULL, NULL);
   } else {
     struct timeval interval = {.tv_sec = timeout_ms / 1000, .tv_usec = (timeout_ms % 1000) * 1000};
-    activity = select(maximum_socket_descriptor + 1, read_fds, NULL, NULL, &interval);
+    activity = select(max_fd + 1, read_fds, NULL, NULL, &interval);
   }
 
   if ((activity < 0) && (errno != EINTR)) {
@@ -139,7 +148,19 @@ int is_new_connection_or_message_received(int listen_socket_fd,
 
   int rv = 0;
   if (FD_ISSET(listen_socket_fd, read_fds)) {
+    // listen only
     rv = 1;
+  }
+  if (multicast_socket_fd > -1) {
+    if (FD_ISSET(multicast_socket_fd, read_fds)) {
+      if (rv == 1) {
+        // listen and multicast
+        rv = 5;
+      } else {
+        // multicast only
+        rv = 3;
+      }
+    }
   }
   // add client socket fd to set
   for (int i = 0; i < client_socket_fds_len; i++) {
@@ -147,12 +168,21 @@ int is_new_connection_or_message_received(int listen_socket_fd,
     int socket_descriptor = client_socket_fds[i];
     if (FD_ISSET(socket_descriptor, read_fds)) {
       if (rv == 1) {
-        return 3;
+        // listen and client only
+        return 4;
+      } else if (rv == 3) {
+        // multicast and client only
+        return 6;
+      } else if (rv == 5) {
+        // all
+        return 7;
       } else {
+        // client only
         return 2;
       }
     }
   }
-  return 1;
+  // returns listen only or listen and client only
+  return rv;
 }
 

@@ -27,7 +27,7 @@ typedef struct MqttSnClientTcpNetwork_ {
   uint16_t client_buffer_bytes[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
   int max_clients;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNCLIENTLINUXTCPNETWORKPROTOCOL)];
-#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+#ifdef WITH_TCP_BROADCAST
   MqttSnClientUdpNetwork udp_multicast_network;
 #endif
 } MqttSnClientTcpNetwork;

@@ -18,7 +18,7 @@
 
 int GatewayLinuxTcpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
-#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+#ifdef WITH_TCP_BROADCAST
   if (GatewayLinuxUdpInit(n, &tcpNetwork->udp_multicast_network) < 0) {
     return -1;
   }
@@ -80,7 +80,7 @@ void GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) 
 #endif
   }
 
-#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+#ifdef WITH_TCP_BROADCAST
   if (n->gateway_network_broadcast_address) {
     GatewayLinuxUdpDisconnect(n, &tcpNetwork->udp_multicast_network);
   }
@@ -119,7 +119,7 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n,
 #endif
   }
 
-#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+#ifdef WITH_TCP_BROADCAST
   if (n->gateway_network_broadcast_address) {
     if (GatewayLinuxUdpReceive(n, receiveBuffer, 0, &tcpNetwork->udp_multicast_network) < 0) {
       return -1;
@@ -141,13 +141,12 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
     return 0;
   }
 
-#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+#ifdef WITH_TCP_BROADCAST
   // send message via udp if it is no encapsulation message
   if (n->gateway_network_broadcast_address) {
-    ParsedMqttSnHeader h = {0};
-    int32_t read_bytes = 0;
-    if (parse_encapsulation_header(&h, sendMessageData.data, sendMessageData.data_length, &read_bytes)) {
-      // is no valid encapsulation header => send via udp
+    if (sendMessageData.broadcast_radius &&
+        (memcmp(&sendMessageData.address, n->gateway_network_broadcast_address, sizeof(device_address)) == 0)) {
+      // is broadcast message => send via udp
       MqttSnFixedSizeRingBuffer tmp_sendQueue = {0};
       MqttSnFixedSizeRingBufferInit(&tmp_sendQueue);
       if (put(&tmp_sendQueue, &sendMessageData) < 0) {

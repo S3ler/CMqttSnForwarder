@@ -16,7 +16,9 @@
 #endif
 //#define MQTT_SN_MULTICAST_IP     "224.1.1.100" // gateway network
 //#define MQTT_SN_MULTICAST_IP     "224.1.1.101" // client network
+#ifndef MQTT_SN_MULTICAST_PORT
 #define MQTT_SN_MULTICAST_PORT   5353
+#endif
 //#define MQTT_SN_FORWARDER_CLIENT_NETWORK_PORT   7777
 #ifndef CLIENT_PORT
 //#define CLIENT_PORT 11100

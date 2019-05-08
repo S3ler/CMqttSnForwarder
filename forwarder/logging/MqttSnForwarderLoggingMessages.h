@@ -123,7 +123,12 @@ int log_pingresp_message(const MqttSnLogger *logger);
 int log_disconnect_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
 int log_encapsulated_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
-
+int log_could_not_generate_encapsulation_message(const MqttSnLogger *logger,
+                                                 const MQTT_SN_FORWARDER_NETWORK network,
+                                                 const device_address *from,
+                                                 const uint8_t *data,
+                                                 uint16_t data_len,
+                                                 uint8_t broadcast_radius);
 #ifdef __cplusplus
 }
 #endif

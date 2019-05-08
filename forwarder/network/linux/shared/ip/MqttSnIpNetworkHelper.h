@@ -5,6 +5,10 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNIPNETWORKHELPER_H
 #define CMQTTSNFORWARDER_MQTTSNIPNETWORKHELPER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <forwarder/global_defines.h>
 #include <forwarder/MqttSnForwarderLogging.h>
 #include <netdb.h>
@@ -22,5 +26,9 @@ device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr)
 int log_select_error(const MqttSnLogger *logger);
 
 #endif //WITH_LOGGING
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //CMQTTSNFORWARDER_MQTTSNIPNETWORKHELPER_H

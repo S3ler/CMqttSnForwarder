@@ -13,7 +13,7 @@
 
 int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientTcpNetwork *tcpNetwork = (MqttSnClientTcpNetwork *) context;
-#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+#ifdef WITH_TCP_BROADCAST
   if (ClientLinuxUdpInit(n, &tcpNetwork->udp_multicast_network) < 0) {
     return -1;
   }
@@ -81,12 +81,11 @@ void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
 #endif
     close_client_connection(n, tcpNetwork, i);
   }
-#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+#ifdef WITH_TCP_BROADCAST
   if (n->client_network_broadcast_address) {
     ClientLinuxUdpDisconnect(n, &tcpNetwork->udp_multicast_network);
   }
 #endif
-  // TODO necessary?: n->status = -1;
 }
 
 int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
@@ -96,29 +95,49 @@ int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
   MqttSnClientTcpNetwork *tcpNetwork = (MqttSnClientTcpNetwork *) context;
 
   fd_set read_fds;
-  int new_connection_or_message_received = is_new_connection_or_message_received(tcpNetwork->listen_socket_fd,
+#ifdef WITH_TCP_BROADCAST
+  int select_rc = new_connection_or_is_message_received(tcpNetwork->listen_socket_fd,
+                                                        tcpNetwork->client_socket_fds,
+                                                        tcpNetwork->max_clients,
+                                                        timeout_ms,
+                                                        &read_fds,
+                                                        tcpNetwork->udp_multicast_network.multicast_socket);
+#else
+  int new_connection_or_message_received = new_connection_or_is_message_received(tcpNetwork->listen_socket_fd,
                                                                                  tcpNetwork->client_socket_fds,
                                                                                  tcpNetwork->max_clients,
                                                                                  timeout_ms,
-                                                                                 &read_fds);
-  if (new_connection_or_message_received < 0) {
+                                                                                 &read_fds,
+                                                                                 -1);
+#endif
+  if (select_rc < 0) {
 #ifdef WITH_LOGGING
     log_select_error(n->logger);
 #endif
     return -1;
   }
 
-  if (new_connection_or_message_received == 1 || new_connection_or_message_received == 3) {
+  if (select_rc == 1 || select_rc == 4 || select_rc == 5 || select_rc == 7) {
     // if something happened on the master socket, then it is an incoming connection
     if (MqttSnClientHandleMasterSocket(n, tcpNetwork) != 0) {
       return -1;
     }
   }
 
-  if (new_connection_or_message_received == 2 || new_connection_or_message_received == 3) {
+  if (select_rc == 2 || select_rc == 4 || select_rc == 6 || select_rc == 7) {
     // some IO operation on some other socket
     MqttSnClientHandleClientSockets(n, tcpNetwork, receiveBuffer, &read_fds);
   }
+#ifdef WITH_TCP_BROADCAST
+  // TODO we also receive message on the multicast port and forward them
+  if (n->client_network_broadcast_address) {
+    if (select_rc == 3 || select_rc == 5 || select_rc == 6 || select_rc == 7) {
+      if (ClientLinuxUdpReceive(n, receiveBuffer, 0, &tcpNetwork->udp_multicast_network) < 0) {
+        return -1;
+      }
+    }
+  }
+#endif
 
   return 0;
 }
@@ -133,6 +152,25 @@ int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
   if (pop(sendBuffer, &clientSendMessage) != 0) {
     return 0;
   }
+
+#ifdef WITH_TCP_BROADCAST
+  if (n->client_network_broadcast_address) {
+    if (clientSendMessage.broadcast_radius &&
+        (memcmp(&clientSendMessage.address, n->client_network_broadcast_address, sizeof(device_address)) == 0)) {
+      // is broadcast message => send via udp
+      MqttSnFixedSizeRingBuffer tmp_sendQueue = {0};
+      MqttSnFixedSizeRingBufferInit(&tmp_sendQueue);
+      if (put(&tmp_sendQueue, &clientSendMessage) < 0) {
+        // error which should never happen
+        return -1;
+      }
+      if (ClientLinuxUdpSend(n, &tmp_sendQueue, 0, &clientTcpNetwork->udp_multicast_network) < 0) {
+        return -1;
+      }
+      return 0;
+    }
+  }
+#endif
 
   // convert device_address of clientSendMessage to IP and port
   for (int client_socket_fd_position = 0;

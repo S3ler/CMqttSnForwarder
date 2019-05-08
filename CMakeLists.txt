@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(CMqttSnForwarder C CXX)
-#TODO cmake option for WITH_BROADCAST
-#TODO cmake option for WITH_UDP_ANSWERING_FOR_TCP
+
 if (BUILD_TESTING)
     project(CMqttSnForwarder C CXX)
 else ()
     project(CMqttSnForwarder C)
     set(VERSION a1)
     set(MAJOR 0)
-    set(MINOR 0)
-    set(TWEAK 10)
+    set(MINOR 1)
+    set(TWEAK 0)
     string(TIMESTAMP CMAKE_BUILD_TIMESTAMP "%d-%m-%Y %H:%M:%S")
     set(MANUAL_WEBSITE https://github.com/S3ler/CMqttSnForwarder)
     add_definitions(-DVERSION=\"${VERSION}\"
@@ -104,16 +103,6 @@ if (WITH_LINUX_TCP)
     option(WITH_TCP_BROADCAST "Include TCP_BROADCAST support?" ON)
     if (WITH_TCP_BROADCAST)
         add_definitions(-DWITH_TCP_BROADCAST)
-        option(WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
-                "Include WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP support?" ON)
-        if (WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP)
-            add_definitions(-DWITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP)
-        endif ()
-        option(WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_TCP_CONNECTION
-                "Include WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_TCP_CONNECTION support?" OFF)
-        if (WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_TCP_CONNECTION)
-            message(FATAL_ERROR "WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_TCP_CONNECTION is not implemented yet.")
-        endif ()
     endif ()
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_TCP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_TCP)
@@ -125,7 +114,9 @@ if (WITH_LINUX_TCP)
             forwarder/network/linux/shared/shared/IpHelper.c
             forwarder/network/linux/shared/shared/IpHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h)
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c
+            forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c
+            forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h)
     if (WITH_TCP_BROADCAST)
         set(GATEWAY_NETWORK_FILES ${GATEWAY_NETWORK_FILES}
                 forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
@@ -141,7 +132,9 @@ if (WITH_LINUX_TCP)
             forwarder/network/linux/shared/shared/IpHelper.c
             forwarder/network/linux/shared/shared/IpHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
-            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h)
+            forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c
+            forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c
+            forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h)
     if (WITH_TCP_BROADCAST)
         set(TCP_CLIENT_NETWORK_FILES ${TCP_CLIENT_NETWORK_FILES}
                 forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
@@ -157,7 +150,9 @@ if (WITH_LINUX_UDP)
     add_definitions(-DWITH_UDP)
     message("Building with LINUX_UDP support")
     option(WITH_UDP_BROADCAST "Include UDP_BROADCAST support?" ON)
-    add_definitions(-DWITH_UDP_BROADCAST)
+    if (WITH_UDP_BROADCAST)
+        add_definitions(-DWITH_UDP_BROADCAST)
+    endif ()
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_UDP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_UDP)
     set(UDP_GATWAY_NETWORK_FILES
@@ -268,21 +263,21 @@ if (NOT BUILD_TESTING)
     add_executable(UdpCMqttSnForwarderTester testclients/udptestermain.c forwarder/global_defines.h)
     target_link_libraries(UdpCMqttSnForwarderTester pthread)
 
-    add_executable(UdpMulticastTester11110 testclients/udpmulticastmain.c)
-    target_compile_definitions(UdpMulticastTester11110 PRIVATE CLIENT_PORT=11110 MQTT_SN_MULTICAST_IP="224.1.1.100")
-    target_include_directories(UdpMulticastTester11110 PRIVATE .)
-    target_link_libraries(UdpMulticastTester11110 lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    add_executable(UdpGatewayMulticastTester testclients/udpmulticastmain.c)
+    target_compile_definitions(UdpGatewayMulticastTester PRIVATE CLIENT_PORT=11110 MQTT_SN_MULTICAST_IP="224.1.1.100" MQTT_SN_MULTICAST_PORT=5353)
+    target_include_directories(UdpGatewayMulticastTester PRIVATE .)
+    target_link_libraries(UdpGatewayMulticastTester lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
     if (WITH_LOGGING)
-        target_link_libraries(UdpMulticastTester11110 lib-mqtt-sn-logging)
+        target_link_libraries(UdpGatewayMulticastTester lib-mqtt-sn-logging)
     endif ()
 
 
-    add_executable(UdpMulticastTester11111 testclients/udpmulticastmain.c)
-    target_compile_definitions(UdpMulticastTester11111 PRIVATE CLIENT_PORT=11111 MQTT_SN_MULTICAST_IP="224.1.1.101")
-    target_include_directories(UdpMulticastTester11111 PRIVATE .)
-    target_link_libraries(UdpMulticastTester11111 lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    add_executable(UdpClientMulticastTester testclients/udpmulticastmain.c)
+    target_compile_definitions(UdpClientMulticastTester PRIVATE CLIENT_PORT=11111 MQTT_SN_MULTICAST_IP="224.1.1.101" MQTT_SN_MULTICAST_PORT=5353)
+    target_include_directories(UdpClientMulticastTester PRIVATE .)
+    target_link_libraries(UdpClientMulticastTester lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
     if (WITH_LOGGING)
-        target_link_libraries(UdpMulticastTester11111 lib-mqtt-sn-logging)
+        target_link_libraries(UdpClientMulticastTester lib-mqtt-sn-logging)
     endif ()
 
     # This target only exists for Clion IDE support for the following files:
@@ -440,7 +435,7 @@ else ()
         target_link_libraries(mqtt-sn-forwarder-test lib-mqtt-sn-logging)
     endif ()
 
-    option(WITH_LINE_COVERAGE "Include LINE COVERAGE?" ON)
+    option(WITH_LINE_COVERAGE "Include LINE COVERAGE?" OFF)
     if (WITH_LINE_COVERAGE)
         if (${CMAKE_VERSION} VERSION_GREATER "3.12.0" AND CMAKE_COMPILER_IS_GNUCXX)
             LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")

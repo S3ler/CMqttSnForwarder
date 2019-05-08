@@ -1,4 +1,3 @@
-
 #include "forwarder_config.h"
 #include <errno.h>
 #include <stdlib.h>

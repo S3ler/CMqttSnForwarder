@@ -264,13 +264,24 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
                              clientMessageData->data,
                              clientMessageData->data_length, NULL);
 #endif
-
-  if (AddMqttSnForwardingHeader(clientMessageData, gatewayMessageData) != 0) {
 #ifdef WITH_DEBUG_LOGGING
+  ParsedMqttSnHeader header = {0};
+  if (parse_message_tolerant(&header, ANY_MESSAGE_TYPE, clientMessageData->data, clientMessageData->data_length) < 0) {
     log_client_mqtt_sn_message_malformed(&forwarder->logger,
                                          &clientMessageData->address,
                                          clientMessageData->data,
-                                         clientMessageData->data_length, 0);
+                                         clientMessageData->data_length,
+                                         clientMessageData->broadcast_radius);
+  }
+#endif
+  if (AddMqttSnForwardingHeader(clientMessageData, gatewayMessageData) != 0) {
+#ifdef WITH_LOGGING
+    log_could_not_generate_encapsulation_message(&forwarder->logger,
+                                                 MQTT_SN_FORWARDER_NETWORK_GATEWAY,
+                                                 &clientMessageData->address,
+                                                 clientMessageData->data,
+                                                 clientMessageData->data_length,
+                                                 clientMessageData->broadcast_radius);
 #endif
     return 0;
   }

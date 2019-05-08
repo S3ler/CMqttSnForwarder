@@ -5,6 +5,10 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNTCPNETWORKMESSAGEPARSER_H
 #define CMQTTSNFORWARDER_MQTTSNTCPNETWORKMESSAGEPARSER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <forwarder/global_defines.h>
 #include <forwarder/MqttSnFixedSizeRingBuffer.h>
 #include <forwarder/MqttSnForwarderLogging.h>
@@ -74,5 +78,9 @@ int save_multiple_tcp_messages(uint8_t *data,
                                uint8_t *client_buffer,
                                uint16_t *client_buffer_bytes,
                                MqttSnFixedSizeRingBuffer *receiveBuffer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //CMQTTSNFORWARDER_MQTTSNTCPNETWORKMESSAGEPARSER_H

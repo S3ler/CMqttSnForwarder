@@ -20,7 +20,7 @@ typedef struct MqttSnGatewayTcpNetwork_ {
   uint8_t gateway_buffer[CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t gateway_buffer_bytes;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXTCPNETWORKPROTOCOL)];
-#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+#ifdef WITH_TCP_BROADCAST
   MqttSnGatewayUdpNetwork udp_multicast_network;
 #endif
 } MqttSnGatewayTcpNetwork;

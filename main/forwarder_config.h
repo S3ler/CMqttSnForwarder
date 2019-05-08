@@ -126,4 +126,5 @@ int log_argument_value_not_specified(const MqttSnLogger *logger, const char *arg
 int log_unsupported_url_scheme(const MqttSnLogger *logger);
 int log_invalid_protocol_version_given(const MqttSnLogger *logger);
 int log_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
+
 #endif //CMQTTSNFORWARDER_FORWARDER_CONFIG_H
