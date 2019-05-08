@@ -111,8 +111,8 @@ if (WITH_LINUX_TCP)
             forwarder/network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.c
             forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
             forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
-            forwarder/network/linux/shared/shared/IpHelper.c
-            forwarder/network/linux/shared/shared/IpHelper.h
+            forwarder/network/shared/ip/IpHelper.c
+            forwarder/network/shared/ip/IpHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c
             forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c
@@ -129,8 +129,8 @@ if (WITH_LINUX_TCP)
             forwarder/network/linux/client/ip/tcp/MqttSnClientTcpNetwork.c
             forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
             forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
-            forwarder/network/linux/shared/shared/IpHelper.c
-            forwarder/network/linux/shared/shared/IpHelper.h
+            forwarder/network/shared/ip/IpHelper.c
+            forwarder/network/shared/ip/IpHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c
             forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c
@@ -160,8 +160,8 @@ if (WITH_LINUX_UDP)
             forwarder/network/linux/gateway/ip/udp/MqttSnGatewayUdpNetwork.c
             forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
             forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
-            forwarder/network/linux/shared/shared/IpHelper.h
-            forwarder/network/linux/shared/shared/IpHelper.c
+            forwarder/network/shared/ip/IpHelper.h
+            forwarder/network/shared/ip/IpHelper.c
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
     if (WITH_UDP_BROADCAST)
@@ -176,8 +176,8 @@ if (WITH_LINUX_UDP)
             forwarder/network/linux/client/ip/udp/MqttSnClientUdpNetwork.h
             forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h
             forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.c
-            forwarder/network/linux/shared/shared/IpHelper.h
-            forwarder/network/linux/shared/shared/IpHelper.c
+            forwarder/network/shared/ip/IpHelper.h
+            forwarder/network/shared/ip/IpHelper.c
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h
             forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.c)
     if (WITH_UDP_BROADCAST)
@@ -281,7 +281,7 @@ if (NOT BUILD_TESTING)
     endif ()
 
     # This target only exists for Clion IDE support for the following files:
-    #add_executable(ArduinoCMqttSnForwarder main/forwarder_config.h main/forwarder_config.c forwarder/network/arduino/shared/ip/udp/UdpHelper.c forwarder/network/arduino/shared/ip/udp/UdpHelper.h forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.c forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.h forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.c forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.h forwarder/network/shared/shared/IpHelper.c forwarder/network/shared/shared/IpHelper.h forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.c forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h utility/arduino/eeprom/eeprom_config.c utility/arduino/eeprom/eeprom_config.h utility/arduino/system/system.c utility/arduino/system/system.h)
+    #add_executable(ArduinoCMqttSnForwarder main/forwarder_config.h main/forwarder_config.c forwarder/network/arduino/shared/ip/udp/UdpHelper.c forwarder/network/arduino/shared/ip/udp/UdpHelper.h forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.c forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.h forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.c forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.h forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.c forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h utility/arduino/eeprom/eeprom_config.c utility/arduino/eeprom/eeprom_config.h utility/arduino/system/system.c utility/arduino/system/system.h)
     #target_include_directories(ArduinoCMqttSnForwarder PRIVATE .)
     #target_compile_options(ArduinoCMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     #target_link_libraries(ArduinoCMqttSnForwarder

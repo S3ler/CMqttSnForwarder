@@ -29,6 +29,41 @@ int get_ipv4_and_port_from_device_address(uint32_t *dst_ip, uint16_t *dst_port, 
   return 0;
 }
 
+int convert_string_to_device_address(const char *string, device_address *address) {
+  char *cp_string = strdup(string);
+  char *token = strtok(cp_string, ".");
+  size_t i = 0;
+  int rc = 0;
+  while (token != NULL) {
+    char *end_prt;
+    long int n = strtol(token, &end_prt, 10);
+    if (errno == EOVERFLOW) {
+      rc = -1;
+      break;
+    }
+    if (*end_prt != '\0') {
+      // no conversion performed
+      rc = -1;
+      break;
+    }
+    if (n > UINT8_MAX || n < 0) {
+      rc = -1;
+      break;
+    }
+    // address->bytes[i++] = atoi(token);
+    if (i + 1 > sizeof(device_address)) {
+      // given string address is too long
+      rc = -1;
+      break;
+    }
+    address->bytes[i++] = n;
+    token = strtok(NULL, ".");
+  }
+
+  free(cp_string);
+  return rc;
+}
+
 #ifdef WITH_LOGGING
 int log_opening_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
   return log_opening_socket(logger, "unicast", protocol, address);

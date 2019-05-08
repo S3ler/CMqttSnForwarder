@@ -105,8 +105,8 @@
 #include "forwarder/MqttSnMessageParser.c"
 #include "forwarder/MqttSnMessageParser.h"
 
-#include "forwarder/network/shared/shared/IpHelper.c"
-#include "forwarder/network/shared/shared/IpHelper.h"
+#include "forwarder/network/shared/ip/IpHelper.c"
+#include "forwarder/network/shared/ip/IpHelper.h"
 
 #include "main/forwarder_config.c"
 #include "main/forwarder_config.h"

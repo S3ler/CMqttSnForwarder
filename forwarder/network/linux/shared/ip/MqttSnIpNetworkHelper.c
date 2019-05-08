@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
-#include <forwarder/network/linux/shared/shared/IpHelper.h>
+#include <forwarder/network/shared/ip/IpHelper.h>
 #include <errno.h>
 
 struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *deviceAddress) {

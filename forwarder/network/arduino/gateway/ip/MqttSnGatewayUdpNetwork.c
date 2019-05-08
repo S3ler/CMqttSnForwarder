@@ -6,7 +6,7 @@
 #include <string.h>
 #include <forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h>
 #include <forwarder/network/arduino/shared/ip/udp/UdpHelper.h>
-#include <forwarder/network/shared/shared/IpHelper.h>
+#include <forwarder/network/shared/ip/IpHelper.h>
 
 int GatewayArduinoUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpContext = (MqttSnGatewayUdpNetwork *) context;
@@ -32,11 +32,7 @@ int GatewayArduinoUdpConnect(MqttSnGatewayNetworkInterface *n, void *context) {
     return -1;
   }
 #ifdef WITH_LOGGING
-  if (n->logger) {
-    log_open_socket(n->logger,
-                    udpContext->protocol,
-                    n->gateway_network_address);
-  }
+  log_opening_unicast_socket(n->logger, udpContext->protocol, n->gateway_network_address);
 #endif
   return 0;
 }
@@ -45,11 +41,7 @@ void GatewayArduinoUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context
   MqttSnGatewayUdpNetwork *udpContext = (MqttSnGatewayUdpNetwork *) context;
   arduino_deinit_udp(udpContext->udp);
 #ifdef WITH_LOGGING
-  if (n->logger) {
-    log_close_socket(n->logger,
-                     udpContext->protocol,
-                     n->mqtt_sn_gateway_address);
-  }
+  log_close_unicast_socket(n->logger, udpContext->protocol, n->mqtt_sn_gateway_address);
 #endif
 }
 
@@ -77,14 +69,12 @@ int GatewayArduinoUdpReceive(MqttSnGatewayNetworkInterface *n,
   put(receiveBuffer, &toReceive);
 
 #ifdef WITH_DEBUG_LOGGING
-  if (n->logger) {
-    const MqttSnMessageData *msg = back(receiveBuffer);
-    log_db_rec_gateway_message(n->logger,
-                               n->gateway_network_address,
-                               &msg->address,
-                               msg->data,
-                               msg->data_length);
-  }
+  const MqttSnMessageData *msg = back(receiveBuffer);
+  log_db_rec_gateway_message(n->logger,
+                             n->gateway_network_address,
+                             &msg->address,
+                             msg->data,
+                             msg->data_length);
 #endif
   return 0;
 }

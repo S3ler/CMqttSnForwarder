@@ -6,7 +6,7 @@
 #include <string.h>
 #include <forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h>
 #include <forwarder/network/arduino/shared/ip/udp/UdpHelper.h>
-#include <forwarder/network/shared/shared/IpHelper.h>
+#include <forwarder/network/shared/ip/IpHelper.h>
 
 int ClientArduinoUdpInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
@@ -28,11 +28,7 @@ int ClientArduinoUdpConnect(MqttSnClientNetworkInterface *n, void *context) {
     return -1;
   }
 #ifdef WITH_LOGGING
-  if (n->logger) {
-    log_open_socket(n->logger,
-                    udpContext->protocol,
-                    n->client_network_address);
-  }
+  log_opening_unicast_socket(n->logger, udpContext->protocol, n->client_network_address);
 #endif
   return 0;
 }
@@ -41,11 +37,7 @@ void ClientArduinoUdpDisconnect(MqttSnClientNetworkInterface *n, void *context) 
   MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
   arduino_deinit_udp(udpContext->udp);
 #ifdef WITH_LOGGING
-  if (n->logger) {
-    log_close_socket(n->logger,
-                     udpContext->protocol,
-                     n->client_network_address);
-  }
+  log_close_unicast_socket(n->logger, udpContext->protocol, n->client_network_address);
 #endif
 }
 
@@ -73,14 +65,12 @@ int ClientArduinoUdpReceive(MqttSnClientNetworkInterface *n,
   put(receiveBuffer, &toReceive);
 
 #ifdef WITH_DEBUG_LOGGING
-  if (n->logger) {
-    const MqttSnMessageData *msg = back(receiveBuffer);
-    log_db_rec_client_message(n->logger,
-                              &msg->address,
-                              n->mqtt_sn_gateway_address,
-                              msg->data,
-                              msg->data_length);
-  }
+  const MqttSnMessageData *msg = back(receiveBuffer);
+  log_db_rec_client_message(n->logger,
+                            &msg->address,
+                            n->mqtt_sn_gateway_address,
+                            msg->data,
+                            msg->data_length);
 #endif
   return 0;
 }
@@ -97,14 +87,12 @@ int ClientArduinoUdpSend(MqttSnClientNetworkInterface *n,
   }
 
 #ifdef WITH_DEBUG_LOGGING
-  if (n->logger) {
-    if (log_db_send_client_message(n->logger,
-                                   n->mqtt_sn_gateway_address,
-                                   &toSend.address,
-                                   toSend.data,
-                                   toSend.data_length)) {
-      return -1;
-    }
+  if (log_db_send_client_message(n->logger,
+                                 n->mqtt_sn_gateway_address,
+                                 &toSend.address,
+                                 toSend.data,
+                                 toSend.data_length)) {
+    return -1;
   }
 #endif
 

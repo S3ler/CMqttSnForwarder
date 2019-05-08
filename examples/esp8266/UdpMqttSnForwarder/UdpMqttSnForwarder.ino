@@ -148,6 +148,7 @@ void setup() {
     if (GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
                            &mqttSnGatewayNetworkAddress,
                            &forwarderGatewayNetworkAddress,
+                           NULL,
                            &udpGatewayNetworkContext,
                            GatewayArduinoUdpInit)) {
       Serial.println("Error init gateway network\n");
@@ -160,6 +161,7 @@ void setup() {
     if (ClientNetworkInit(&mqttSnForwarder.clientNetwork,
                           &mqttSnGatewayNetworkAddress,
                           &forwarderClientNetworkAddress,
+                          NULL,
                           &udpClientNetworkContext,
                           ClientArduinoUdpInit)) {
       Serial.println("Error init client network\n");
@@ -233,4 +235,3 @@ void loop() {
     }
   }
 }
-//}

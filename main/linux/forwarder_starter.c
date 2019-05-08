@@ -8,7 +8,7 @@
 #include <bits/types/sig_atomic_t.h>
 #include <signal.h>
 #include <pthread.h>
-#include <forwarder/network/linux/shared/shared/IpHelper.h>
+#include <forwarder/network/shared/ip/IpHelper.h>
 #include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 #include <forwarder/network/linux/gateway/plugin/gateway_network_plugin_interface.h>
 #include <forwarder/network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h>
@@ -68,40 +68,7 @@ int convert_string_ip_port_to_device_address(const char *ip_str,
   }
   return EXIT_SUCCESS;
 }
-int convert_string_to_device_address(const char *string, device_address *address) {
-  char *cp_string = strdup(string);
-  char *token = strtok(cp_string, ".");
-  size_t i = 0;
-  int rc = 0;
-  while (token != NULL) {
-    char *end_prt;
-    long int n = strtol(token, &end_prt, 10);
-    if (errno == EOVERFLOW) {
-      rc = -1;
-      break;
-    }
-    if (*end_prt != '\0') {
-      // no conversion performed
-      rc = -1;
-      break;
-    }
-    if (n > UINT8_MAX || n < 0) {
-      rc = -1;
-      break;
-    }
-    // address->bytes[i++] = atoi(token);
-    if (i + 1 > sizeof(device_address)) {
-      // given string address is too long
-      rc = -1;
-      break;
-    }
-    address->bytes[i++] = n;
-    token = strtok(NULL, ".");
-  }
 
-  free(cp_string);
-  return rc;
-}
 int get_device_address_from_hostname(const char *hostname, device_address *dst) {
   memset(dst, 0, sizeof(device_address));
 

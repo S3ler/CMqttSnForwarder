@@ -4,7 +4,7 @@
 #include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 #include <forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
 #include <string.h>
-#include <forwarder/network/linux/shared/shared/IpHelper.h>
+#include <forwarder/network/shared/ip/IpHelper.h>
 #include <forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h>
 
 int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context) {

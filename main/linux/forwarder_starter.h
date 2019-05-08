@@ -23,7 +23,6 @@ int convert_string_ip_port_to_device_address(const char *ip_str,
                                              int port,
                                              device_address *address,
                                              const char *address_name);
-int convert_string_to_device_address(const char *string, device_address *address);
 int get_device_address_from_hostname(const char *hostname, device_address *dst);
 int get_device_address_from_addrinfo(struct addrinfo *ai_addr, device_address *dst);
 

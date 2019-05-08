@@ -6,7 +6,7 @@
 #include <forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
 #include <forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h>
 #include <string.h>
-#include <forwarder/network/linux/shared/shared/IpHelper.h>
+#include <forwarder/network/shared/ip/IpHelper.h>
 #include <forwarder/logging/linux/stdout/StdoutLogging.h>
 #include <arpa/inet.h>
 #include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>

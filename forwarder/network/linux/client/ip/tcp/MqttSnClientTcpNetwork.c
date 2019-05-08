@@ -5,7 +5,7 @@
 #include "MqttSnClientTcpNetwork.h"
 #include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 #include <forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h>
-#include <forwarder/network/linux/shared/shared/IpHelper.h>
+#include <forwarder/network/shared/ip/IpHelper.h>
 #include <forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h>
 #include <string.h>
 #include <errno.h>

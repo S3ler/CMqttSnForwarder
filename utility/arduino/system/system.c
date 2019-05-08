@@ -2,9 +2,9 @@
 // Created by SomeDude on 01.05.2019.
 //
 #include "system.h"
-#include <forwarder/network/shared/shared/IpHelper.h>
 #include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
 #include <forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h>
+#include <forwarder/network/shared/ip/IpHelper.h>
 #include <assert.h>
 
 int connect_wifi(EEPROM_cfg *ecfg, const MqttSnLogger *logger, uint32_t timeout_ms) {
