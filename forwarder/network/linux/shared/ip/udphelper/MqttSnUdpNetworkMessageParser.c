@@ -90,7 +90,7 @@ int save_udp_message_into_receive_buffer(uint8_t *data,
 int initialize_udp_socket(uint16_t port) {
   int socket_fd;
 
-  // bind socket
+  // create new udp socket
   if ((socket_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     close(socket_fd);
     return -1;

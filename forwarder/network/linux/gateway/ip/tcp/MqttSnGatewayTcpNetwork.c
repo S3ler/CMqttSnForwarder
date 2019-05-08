@@ -10,64 +10,81 @@
 #include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 #include <forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h>
 #include <forwarder/network/linux/shared/shared/IpHelper.h>
+#include <forwarder/network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h>
+#include <forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h>
+#include <forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
+#include <forwarder/network/linux/gateway/ip/udp/MqttSnGatewayUdpNetwork.h>
+#include <forwarder/MqttSnMessageParser.h>
 
 int GatewayLinuxTcpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
+#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+  if (GatewayLinuxUdpInit(n, &tcpNetwork->udp_multicast_network) < 0) {
+    return -1;
+  }
+#endif
   tcpNetwork->mqtt_sg_gateway_fd = -1;
-  strcpy(tcpNetwork->protocol, "tcp");
+  strcpy(tcpNetwork->protocol, CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXTCPNETWORKPROTOCOL);
   n->gateway_network_receive = GatewayLinuxTcpReceive;
   n->gateway_network_send = GatewayLinuxTcpSend;
   n->gateway_network_connect = GatewayLinuxTcpConnect;
   n->gateway_network_disconnect = GatewayLinuxTcpDisconnect;
+
   return 0;
 }
 
-int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void *context) {
+int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 
-  if (networkInterface->mqtt_sn_gateway_address == NULL) {
+  if (n->mqtt_sn_gateway_address == NULL) {
     // FEATURE implement searching for gateway
     return -1;
   }
   uint32_t gateway_ip = 0;
   uint16_t gateway_port = 0;
-  if (get_ipv4_and_port_from_device_address(&gateway_ip, &gateway_port, networkInterface->mqtt_sn_gateway_address)) {
+  if (get_ipv4_and_port_from_device_address(&gateway_ip, &gateway_port, n->mqtt_sn_gateway_address)) {
+#ifdef WITH_LOGGING
+    log_failed_convert_device_address_to_ipv4_and_port(n->logger, n->mqtt_sn_gateway_address);
+#endif
     return -1;
   }
 
-  struct sockaddr_in address;
-  address.sin_port = htons(gateway_port);
-  address.sin_family = AF_INET;
-  address.sin_addr.s_addr = htonl(gateway_ip);
-
-  int connect_result = 0;
-  tcpNetwork->mqtt_sg_gateway_fd = socket(AF_INET, SOCK_STREAM, 0);
+  tcpNetwork->mqtt_sg_gateway_fd = connect_to_tcp_host(gateway_ip, gateway_port);
   if (tcpNetwork->mqtt_sg_gateway_fd < 0) {
-    return -1;
-  }
-  connect_result = connect(tcpNetwork->mqtt_sg_gateway_fd, (struct sockaddr *) &address, sizeof(address));
-
-  if (connect_result < 0) {
+#ifdef WITH_LOGGING
+    log_failed_opening_unicast_socket(n->logger, tcpNetwork->protocol, n->mqtt_sn_gateway_address);
+#endif
     return -1;
   }
 #ifdef WITH_LOGGING
-  if (networkInterface->logger) {
-    log_opening_unicast_socket(networkInterface->logger,
-                               tcpNetwork->protocol,
-                               networkInterface->mqtt_sn_gateway_address);
-  }
+  log_opening_unicast_socket(n->logger, tcpNetwork->protocol, n->mqtt_sn_gateway_address);
 #endif
+
+  if (n->gateway_network_broadcast_address) {
+    if (GatewayLinuxUdpConnect(n, &tcpNetwork->udp_multicast_network) < 0) {
+      return -1;
+    }
+  }
   return 0;
 }
 
 void GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
-  if (tcpNetwork->mqtt_sg_gateway_fd >= 0) {
+  if (tcpNetwork->mqtt_sg_gateway_fd > -1) {
     close(tcpNetwork->mqtt_sg_gateway_fd);
     tcpNetwork->mqtt_sg_gateway_fd = -1;
     memset(tcpNetwork->gateway_buffer, 0, CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH);
     tcpNetwork->gateway_buffer_bytes = 0;
+#ifdef WITH_LOGGING
+    log_close_unicast_socket(n->logger, tcpNetwork->protocol, n->mqtt_sn_gateway_address);
+#endif
   }
+
+#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+  if (n->gateway_network_broadcast_address) {
+    GatewayLinuxUdpDisconnect(n, &tcpNetwork->udp_multicast_network);
+  }
+#endif
 }
 
 int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n,
@@ -76,50 +93,37 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n,
                            void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 
-  fd_set read_file_descriptor;
-  FD_ZERO(&read_file_descriptor);
-  // add master socket to set
-  FD_SET(tcpNetwork->mqtt_sg_gateway_fd, &read_file_descriptor);
-  int maximum_socket_descriptor = tcpNetwork->mqtt_sg_gateway_fd;
-
-  int activity = 0;
-  if (timeout_ms < 0) {
-    activity = select(maximum_socket_descriptor + 1, &read_file_descriptor, NULL, NULL, NULL);
-  } else {
-    struct timeval interval = {.tv_sec = timeout_ms / 1000, .tv_usec = (timeout_ms % 1000) * 1000};
-    activity = select(maximum_socket_descriptor + 1, &read_file_descriptor, NULL, NULL, &interval);
-  }
-
-  if ((activity < 0) && (errno != EINTR)) {
-    log_select_error(n->logger);
-    return -1;
-  }
-  if (activity == 0) {
-    return 0;
-  }
-
-  if (FD_ISSET(tcpNetwork->mqtt_sg_gateway_fd, &read_file_descriptor) == 0) {
-    return 0;
-  }
-
-  if (save_receive_gateway_message_from_tcp_socket_into_receive_buffer(tcpNetwork, receiveBuffer) != 0) {
+  int message_received = is_tcp_message_received(tcpNetwork->mqtt_sg_gateway_fd, timeout_ms);
+  if (message_received < 0) {
 #ifdef WITH_LOGGING
-    if (n->logger) {
-      log_gateway_lost_connection(n->logger,
-                                  tcpNetwork->protocol,
-                                  n->mqtt_sn_gateway_address);
-    }
+    log_select_error(n->logger);
 #endif
     return -1;
   }
+
+  if (message_received > 0) {
+    int unicast_rc = save_received_tcp_packet_into_receive_buffer(tcpNetwork, receiveBuffer);
+    if (unicast_rc < 0) {
+#ifdef WITH_LOGGING
+      log_gateway_lost_connection(n->logger, tcpNetwork->protocol, n->mqtt_sn_gateway_address);
+#endif
+      return -1;
+    }
 #ifdef WITH_DEBUG_LOGGING
-  if (n->logger) {
-    const MqttSnMessageData *msg = back(receiveBuffer);
-    log_db_rec_gateway_message(n->logger,
-                               n->mqtt_sn_gateway_address,
-                               NULL,
-                               msg->data,
-                               msg->data_length);
+    if (unicast_rc > 0) {
+      for (int32_t msg_counter = 0; msg_counter < unicast_rc; ++msg_counter) {
+        const MqttSnMessageData *msg = getBack(receiveBuffer, ((unicast_rc - 1) - msg_counter));
+        log_db_rec_gateway_message(n->logger, n->mqtt_sn_gateway_address, NULL, msg->data, msg->data_length);
+      }
+    }
+#endif
+  }
+
+#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+  if (n->gateway_network_broadcast_address) {
+    if (GatewayLinuxUdpReceive(n, receiveBuffer, 0, &tcpNetwork->udp_multicast_network) < 0) {
+      return -1;
+    }
   }
 #endif
 
@@ -136,6 +140,27 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
   if (pop(sendBuffer, &sendMessageData) != 0) {
     return 0;
   }
+
+#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+  // send message via udp if it is no encapsulation message
+  if (n->gateway_network_broadcast_address) {
+    ParsedMqttSnHeader h = {0};
+    int32_t read_bytes = 0;
+    if (parse_encapsulation_header(&h, sendMessageData.data, sendMessageData.data_length, &read_bytes)) {
+      // is no valid encapsulation header => send via udp
+      MqttSnFixedSizeRingBuffer tmp_sendQueue = {0};
+      MqttSnFixedSizeRingBufferInit(&tmp_sendQueue);
+      if (put(&tmp_sendQueue, &sendMessageData) < 0) {
+        // error which should never happen
+        return -1;
+      }
+      if (GatewayLinuxUdpSend(n, &tmp_sendQueue, 0, &tcpNetwork->udp_multicast_network) < 0) {
+        return -1;
+      }
+      return 0;
+    }
+  }
+#endif
 
   struct timeval interval;
   if (timeout_ms < 0) {
@@ -160,11 +185,7 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
   ssize_t rc = send(tcpNetwork->mqtt_sg_gateway_fd, sendMessageData.data, sendMessageData.data_length, 0);
   if (rc < 0) {
 #ifdef WITH_LOGGING
-    if (n->logger) {
-      log_gateway_lost_connection(n->logger,
-                                  tcpNetwork->protocol,
-                                  n->mqtt_sn_gateway_address);
-    }
+    log_gateway_lost_connection(n->logger, tcpNetwork->protocol, n->mqtt_sn_gateway_address);
 #endif
     return -1;
   }
@@ -189,7 +210,7 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
   return 0;
 }
 
-int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
+int save_received_tcp_packet_into_receive_buffer(
     MqttSnGatewayTcpNetwork *gatewayTcpNetwork,
     MqttSnFixedSizeRingBuffer *receiveBuffer) {
   int gateway_fd = gatewayTcpNetwork->mqtt_sg_gateway_fd;

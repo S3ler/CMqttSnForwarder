@@ -20,7 +20,7 @@
 int initialize_udp_multicast_socket(int unicast_socket_fd, uint32_t broadcast_ip, uint16_t broadcast_port) {
   int multicast_socket_fd;
 
-  // socket new udp socket
+  // create new udp socket
   if ((multicast_socket_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     close(multicast_socket_fd);
     return -1;
@@ -106,25 +106,26 @@ int is_multicast_or_unicast_message_receive(int unicast_socket_fd, int multicast
   struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
   if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
     interval.tv_sec = 0;
-    interval.tv_usec = 100;
+    interval.tv_usec = 100; // TODO 0 wait ignored
   }
 
-  fd_set readfds;
-  FD_ZERO(&readfds);
+  fd_set read_fds;
+  FD_ZERO(&read_fds);
 
-  FD_SET(unicast_socket_fd, &readfds);
-  FD_SET(multicast_socket_fd, &readfds);
+  FD_SET(unicast_socket_fd, &read_fds);
+  FD_SET(multicast_socket_fd, &read_fds);
 
-  int max_sd = unicast_socket_fd;
-  if (multicast_socket_fd > max_sd) {
-    max_sd = multicast_socket_fd;
+  int max_fd = unicast_socket_fd;
+  if (multicast_socket_fd > max_fd) {
+    max_fd = multicast_socket_fd;
   }
 
   int activity;
-  if (timeout_ms == -1) {
-    activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
+  if (timeout_ms < 0) {
+    activity = select(max_fd + 1, &read_fds, NULL, NULL, NULL);
   } else {
-    activity = select(max_sd + 1, &readfds, NULL, NULL, &interval);
+    // TODO rework timout see is_new_connection_or_message_received
+    activity = select(max_fd + 1, &read_fds, NULL, NULL, &interval);
   }
 
   if ((activity < 0) && (errno != EINTR)) {
@@ -134,13 +135,13 @@ int is_multicast_or_unicast_message_receive(int unicast_socket_fd, int multicast
     return 0;
   }
 
-  if (FD_ISSET(unicast_socket_fd, &readfds) && FD_ISSET(multicast_socket_fd, &readfds)) {
+  if (FD_ISSET(unicast_socket_fd, &read_fds) && FD_ISSET(multicast_socket_fd, &read_fds)) {
     return 3;
   }
-  if (FD_ISSET(unicast_socket_fd, &readfds)) {
+  if (FD_ISSET(unicast_socket_fd, &read_fds)) {
     return 1;
   }
-  if (FD_ISSET(multicast_socket_fd, &readfds)) {
+  if (FD_ISSET(multicast_socket_fd, &read_fds)) {
     return 2;
   }
 

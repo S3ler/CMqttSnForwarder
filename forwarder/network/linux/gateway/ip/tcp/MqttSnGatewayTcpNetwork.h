@@ -10,19 +10,24 @@ extern "C" {
 #endif
 
 #include <forwarder/MqttSnGatewayNetworkInterface.h>
+#include <forwarder/network/linux/gateway/ip/udp/MqttSnGatewayUdpNetwork.h>
 
+#define CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXTCPNETWORKPROTOCOL "tcp"
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH 1024
 
 typedef struct MqttSnGatewayTcpNetwork_ {
   int mqtt_sg_gateway_fd;
   uint8_t gateway_buffer[CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t gateway_buffer_bytes;
-  char protocol[4];
+  char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXTCPNETWORKPROTOCOL)];
+#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+  MqttSnGatewayUdpNetwork udp_multicast_network;
+#endif
 } MqttSnGatewayTcpNetwork;
 
 int GatewayLinuxTcpInit(MqttSnGatewayNetworkInterface *n, void *context);
 
-int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *networkInterface, void *context);
+int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *n, void *context);
 
 void GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *context);
 
@@ -36,7 +41,7 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
                         int32_t timeout_ms,
                         void *context);
 
-int save_receive_gateway_message_from_tcp_socket_into_receive_buffer(
+int save_received_tcp_packet_into_receive_buffer(
     MqttSnGatewayTcpNetwork *gatewayTcpNetwork,
     MqttSnFixedSizeRingBuffer *receiveBuffer);
 

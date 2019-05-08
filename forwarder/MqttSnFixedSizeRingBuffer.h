@@ -43,6 +43,8 @@ int pop(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData);
 const MqttSnMessageData *front(const MqttSnFixedSizeRingBuffer *queue);
 const MqttSnMessageData *back(const MqttSnFixedSizeRingBuffer *queue);
 
+const MqttSnMessageData *getBack(const MqttSnFixedSizeRingBuffer *queue, uint32_t pos);
+
 int isEmpty(const MqttSnFixedSizeRingBuffer *queue);
 int isFull(const MqttSnFixedSizeRingBuffer *queue);
 

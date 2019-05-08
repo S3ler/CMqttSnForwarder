@@ -11,20 +11,25 @@ extern "C" {
 
 #include <forwarder/MqttSnClientNetworkInterface.h>
 #include <sys/select.h>
+#include <forwarder/network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
 
+#define CMQTTSNFORWARDER_MQTTSNCLIENTLINUXTCPNETWORKPROTOCOL "tcp"
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS 2
 #define CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH 1024
 
 #define CMQTTSNFORWARDER_MAXIMUM_PENDING_CONNECTIONS 3
 
 typedef struct MqttSnClientTcpNetwork_ {
-  int master_socket;
-  int client_socket[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
+  int listen_socket_fd;
+  int client_socket_fds[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
   uint8_t client_buffer[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS]
   [CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t client_buffer_bytes[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
   int max_clients;
-  char protocol[4];
+  char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNCLIENTLINUXTCPNETWORKPROTOCOL)];
+#ifdef WITH_RECEIVE_TCP_BROADCAST_ANSWERS_BY_UDP
+  MqttSnClientUdpNetwork udp_multicast_network;
+#endif
 } MqttSnClientTcpNetwork;
 
 int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context);
@@ -43,22 +48,16 @@ int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
                        int32_t timeout_ms,
                        void *context);
 
-void MqttSnClientNetworkInitReadFdSet(const MqttSnClientTcpNetwork *clientTcpNetwork,
-                                      int *maximum_socket_descriptor,
-                                      fd_set *read_file_descriptor_set);
-
-int MqttSnClientHandleMasterSocket(MqttSnClientNetworkInterface *n,
-                                   MqttSnClientTcpNetwork *clientTcpNetwork,
-                                   fd_set *readfds);
+int MqttSnClientHandleMasterSocket(MqttSnClientNetworkInterface *n, MqttSnClientTcpNetwork *tcpNetwork);
 
 void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
                                      MqttSnClientTcpNetwork *clientTcpNetwork,
                                      MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                     fd_set *readfds);
+                                     fd_set *read_fds);
 
-void close_client_connection(MqttSnClientNetworkInterface *n, MqttSnClientTcpNetwork *clientTcpNetwork, int i);
+void close_client_connection(MqttSnClientNetworkInterface *n, MqttSnClientTcpNetwork *tcpNetwork, int i);
 
-int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNetwork *clientTcpNetwork,
+int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNetwork *tcpNetwork,
                                                                MqttSnFixedSizeRingBuffer *receiveBuffer,
                                                                int client_socket_position);
 

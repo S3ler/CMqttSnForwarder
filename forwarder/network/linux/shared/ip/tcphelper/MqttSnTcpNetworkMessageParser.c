@@ -8,6 +8,7 @@
 #include <string.h>
 #include <errno.h>
 
+// TODO rewrite: -1 on error 0 if nothing, else number of messages
 int save_tcp_messages_into_receive_buffer(uint8_t *data,
                                           ssize_t data_length,
                                           device_address address,

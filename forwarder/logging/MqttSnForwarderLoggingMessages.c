@@ -149,20 +149,23 @@ int log_comma(const MqttSnLogger *logger) {
 int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger *logger,
                                           const device_address *from,
                                           const uint8_t *data,
-                                          uint16_t data_len) {
-  return log_mqtt_sn_message_malformed(logger, MQTT_SN_FORWARDER_NETWORK_GATEWAY, from, data, data_len);
+                                          uint16_t data_len,
+                                          uint8_t bc_radius) {
+  return log_mqtt_sn_message_malformed(logger, MQTT_SN_FORWARDER_NETWORK_GATEWAY, from, data, data_len, bc_radius);
 }
 int log_client_mqtt_sn_message_malformed(const MqttSnLogger *logger,
                                          const device_address *from,
                                          const uint8_t *data,
-                                         uint16_t data_len) {
-  return log_mqtt_sn_message_malformed(logger, MQTT_SN_FORWARDER_NETWORK_CLIENT, from, data, data_len);
+                                         uint16_t data_len,
+                                         uint8_t bc_radius) {
+  return log_mqtt_sn_message_malformed(logger, MQTT_SN_FORWARDER_NETWORK_CLIENT, from, data, data_len, bc_radius);
 }
 int log_mqtt_sn_message_malformed(const MqttSnLogger *logger,
                                   MQTT_SN_FORWARDER_NETWORK network,
                                   const device_address *from,
                                   const uint8_t *data,
-                                  uint16_t data_len) {
+                                  uint16_t data_len,
+                                  uint8_t broadcast_radius) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return log_status(logger);
   }
@@ -173,6 +176,9 @@ int log_mqtt_sn_message_malformed(const MqttSnLogger *logger,
   }
   if (network == MQTT_SN_FORWARDER_NETWORK_GATEWAY) {
     log_str(logger, "gateway");
+  }
+  if (broadcast_radius) {
+    log_str(logger, " broadcast");
   }
   log_str(logger, " message");
   if (from) {

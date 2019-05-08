@@ -221,7 +221,8 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
     log_gateway_mqtt_sn_message_malformed(&forwarder->logger,
                                           &gatewayMessageData->address,
                                           gatewayMessageData->data,
-                                          gatewayMessageData->data_length);
+                                          gatewayMessageData->data_length,
+                                          gatewayMessageData->broadcast_radius);
 #endif
     return 0;
   }
@@ -269,7 +270,7 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
     log_client_mqtt_sn_message_malformed(&forwarder->logger,
                                          &clientMessageData->address,
                                          clientMessageData->data,
-                                         clientMessageData->data_length);
+                                         clientMessageData->data_length, 0);
 #endif
     return 0;
   }

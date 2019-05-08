@@ -11,11 +11,15 @@
 #include <arpa/inet.h>
 #include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 
-#define MQTT_SN_MULTICAST_IP     "224.1.1.101"
+#ifndef MQTT_SN_MULTICAST_IP
+#define MQTT_SN_MULTICAST_IP "224.1.1.103"
+#endif
+//#define MQTT_SN_MULTICAST_IP     "224.1.1.100" // gateway network
+//#define MQTT_SN_MULTICAST_IP     "224.1.1.101" // client network
 #define MQTT_SN_MULTICAST_PORT   5353
 //#define MQTT_SN_FORWARDER_CLIENT_NETWORK_PORT   7777
 #ifndef CLIENT_PORT
-//#define CLIENT_PORT 11110
+//#define CLIENT_PORT 11100
 #endif
 #define MAX_MSG_LEN 512
 
@@ -82,11 +86,11 @@ int main() {
   log_opening_unicast_socket(&logger, "unicast udp", &unicast_device_address);
 
   device_address multicast_device_address = {0};
-  multicast_device_address.bytes[0] = 224;
-  multicast_device_address.bytes[1] = 1;
-  multicast_device_address.bytes[2] = 1;
-  multicast_device_address.bytes[3] = 101;
-  add_port_to_device_address(MQTT_SN_MULTICAST_PORT, &multicast_device_address);
+  struct sockaddr_in sockaddr;
+  sockaddr.sin_family = AF_INET;
+  sockaddr.sin_addr.s_addr = inet_addr(MQTT_SN_MULTICAST_IP);
+  sockaddr.sin_port = htons(MQTT_SN_MULTICAST_PORT);
+  multicast_device_address = get_device_address_from_sockaddr_in(&sockaddr);
 
   uint32_t ip;
   uint16_t port;

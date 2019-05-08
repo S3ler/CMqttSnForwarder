@@ -24,11 +24,7 @@ int put(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
   if (isFull(queue)) {
     return -1;
   }
-  /*
-  if(next == queue->tail){ // if the head + 1 == tail, circular buffer is full
-      return false;
-  }
-  */
+
   queue->items[queue->head] = *messageData; // Load data and then move
   queue->head = next;                  // head to next data offset.
   queue->item_count++;
@@ -41,11 +37,6 @@ int pop(MqttSnFixedSizeRingBuffer *queue, MqttSnMessageData *messageData) {
   if (isEmpty(queue)) {
     return -1;
   }
-  /*
-  if(queue->head == queue->tail){ // if the head == tail, we don't have any dat
-      return false;
-  }
-  */
 
   next = queue->tail + 1; // next is where tail will point to after this read.
   if (next >= queue->maxlen) {
@@ -75,6 +66,22 @@ const MqttSnMessageData *front(const MqttSnFixedSizeRingBuffer *queue) {
   }
   return &queue->items[queue->head];
 }
+
 int isFull(const MqttSnFixedSizeRingBuffer *queue) {
   return queue->item_count == queue->maxlen;
 }
+
+const MqttSnMessageData *getBack(const MqttSnFixedSizeRingBuffer *queue, uint32_t pos) {
+  if (isEmpty(queue)) {
+    return NULL;
+  }
+  if (queue->item_count < pos) {
+    return NULL;
+  }
+  int64_t access_pos = queue->tail + pos;
+  if (access_pos >= queue->maxlen) {
+    access_pos = access_pos - queue->maxlen;
+  }
+  return &queue->items[access_pos];
+}
+

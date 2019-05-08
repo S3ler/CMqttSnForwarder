@@ -52,7 +52,9 @@ int log_close_socket(const MqttSnLogger *logger, const char *cast, const char *p
 
 int log_new_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 
-int log_close_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address);
+int log_closed_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address);
+
+int log_client_disconnected(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 
 int log_lost_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 

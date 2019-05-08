@@ -158,7 +158,26 @@ int log_new_connection(const MqttSnLogger *logger, const char *protocol, const d
   return log_status(logger);
 }
 
-int log_close_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
+int log_closed_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return 0;
+  }
+
+  const char *client_str = "Client ";
+  const char *space = " ";
+  const char *disconnected_dot = " closed.";
+
+  log_msg_start(logger);
+  log_str(logger, client_str);
+  log_str(logger, protocol);
+  log_str(logger, space);
+  log_device_address(logger, address);
+  log_str(logger, disconnected_dot);
+  log_flush(logger);
+  return log_status(logger);
+}
+
+int log_client_disconnected(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
