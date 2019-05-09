@@ -10,11 +10,12 @@ extern "C" {
 #endif
 
 #include <forwarder/MqttSnGatewayNetworkInterface.h>
-#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST)
+#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_GATEWAY)
 #include <WiFiUdp.h>
 extern WiFiUDP *gatewayUdp;
-#elif defined(WITH_UDP_BROADCAST)
-#error "Cannot use WITH_UDP_BROADCAST without WIFIUDP_H"
+extern WiFiUDP *gatewayBCUdp;
+#elif defined(WITH_UDP_BROADCAST_GATEWAY)
+#error "Cannot use WITH_UDP_BROADCAST_GATEWAY without WIFIUDP_H"
 #else
 #include <Udp.h>
 extern UDP *gatewayUdp;
@@ -24,10 +25,13 @@ extern UDP *gatewayUdp;
 
 typedef struct MqttSnGatewayUdpNetwork_ {
   uint16_t port;
-#ifdef WITH_UDP_BROADCAST
-  WiFiUDP *udp;
+#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_GATEWAY)
+  WiFiUDP *unicast_socket;
+  WiFiUDP *multicast_socket;
+#elif defined(WITH_UDP_BROADCAST_GATEWAY)
+#error "Cannot use WITH_UDP_BROADCAST_GATEWAY without WIFIUDP_H"
 #else
-  UDP *udp;
+  UDP *unicast_socket;
 #endif
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYARDUINOUDPNETWORKPROTOCOL)];
 } MqttSnGatewayUdpNetwork;

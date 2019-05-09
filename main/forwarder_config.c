@@ -35,7 +35,7 @@ int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
          DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS,
          sizeof(DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS));
   fcfg->gateway_network_broadcast_address = fcfg->gateway_network_default_broadcast_address;
-  fcfg->gateway_network_broadcast_bind_port = 5353;
+  fcfg->gateway_network_broadcast_bind_port = DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT;
 
   // client network
   memcpy(fcfg->udp, DEFAULT_UDP, sizeof(DEFAULT_UDP));
@@ -47,7 +47,7 @@ int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
          DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS,
          sizeof(DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS));
   fcfg->client_network_broadcast_address = fcfg->client_network_default_broadcast_address;
-  fcfg->client_network_broadcast_bind_port = 5353;
+  fcfg->client_network_broadcast_bind_port = DEFAULT_MQTT_SN_CLIENT_BROADCAST_BIND_PORT;
 
   fcfg->gateway_network_send_timeout = GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT;
   fcfg->gateway_network_receive_timeout = GATEWAY_NETWORK_DEFAULT_RECEIVE_TIMEOUT;
@@ -75,7 +75,7 @@ static int parse_port(const forwarder_config *fcfg, char *port_str, int *dst) {
   char *endprt;
   long int n = strtol(port_str, &endprt, 10);
   if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > 65535)) {
-    print_invalid_port_given(fcfg->logger, n);
+    print_fcfg_invalid_port_given(fcfg->logger, n);
     return -1;
   }
   *dst = n;
@@ -820,7 +820,7 @@ int print_usage(const MqttSnLogger *logger) {
   return log_status(logger);
 }
 
-int print_invalid_port_given(const MqttSnLogger *logger, long invalid_port) {
+int print_fcfg_invalid_port_given(const MqttSnLogger *logger, long invalid_port) {
   log_str(logger, "Error: Invalid port given: ");
   log_uint16(logger, invalid_port);
   log_flush(logger);

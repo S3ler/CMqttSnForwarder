@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <string.h>
 #include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
+#include <stdio.h>
 
 int add_port_to_device_address(uint32_t port, device_address *dst) { // TODO to uint16_t
   dst->bytes[sizeof(device_address) - 2] = (port >> 8) & 0xFF;
@@ -64,7 +65,52 @@ int convert_string_to_device_address(const char *string, device_address *address
   return rc;
 }
 
+int convert_string_ip_port_to_device_address(const MqttSnLogger *logger,
+                                             const char *ip_str,
+                                             int port,
+                                             device_address *address,
+                                             const char *address_name) {
+  if (ip_str == NULL) {
+    memset(address, 0, sizeof(device_address));
+  } else {
+    if (convert_string_to_device_address(ip_str, address)) {
 #ifdef WITH_LOGGING
+      print_cannot_convert_ip_str_to_network_address(logger, ip_str, address_name);
+#endif
+      return EXIT_FAILURE;
+    }
+  }
+
+  if (port < -1 || port > 65535) {
+#ifdef WITH_LOGGING
+    print_invalid_port_given(logger, port);
+#endif
+    return EXIT_FAILURE;
+  }
+  if (port > -1) {
+    add_port_to_device_address(port, address);
+  }
+  return EXIT_SUCCESS;
+}
+
+#ifdef WITH_LOGGING
+int print_cannot_convert_ip_str_to_network_address(const MqttSnLogger *logger,
+                                                   const char *ip_str,
+                                                   const char *address_name) {
+  log_str(logger, "Cannot convert ");
+  log_str(logger, ip_str);
+  log_str(logger, " to ");
+  log_str(logger, address_name);
+  log_str(logger, " network address.");
+  log_flush(logger);
+  return log_status(logger);
+}
+int print_invalid_port_given(const MqttSnLogger *logger, int32_t port) {
+  log_str(logger, "Error: Invalid port given: ");
+  log_int32(logger, port);
+  log_flush(logger);
+  return log_status(logger);
+}
 int log_opening_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
   return log_opening_socket(logger, "unicast", protocol, address);
 }

@@ -45,9 +45,15 @@
 #ifndef DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS
 #define DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS "224.1.1.100"
 #endif
+#ifndef DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT
+#define DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT 5353
+#endif
 
 #ifndef DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS
 #define DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS "224.1.1.101"
+#endif
+#ifndef DEFAULT_MQTT_SN_CLIENT_BROADCAST_BIND_PORT
+#define DEFAULT_MQTT_SN_CLIENT_BROADCAST_BIND_PORT 5353
 #endif
 
 #ifndef DEFAULT_UDP
@@ -61,7 +67,7 @@
 
 typedef struct forwarder_config_ {
   MqttSnLogger *logger;
-
+  // TODO replace int by int32_t
   char version[sizeof(VERSION)];
   int major;
   int minor;
@@ -119,7 +125,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 int process_forwarder_config_str(forwarder_config *fcfg, char *line, size_t len, char *argv_o);
 
 // logging
-int print_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
+int print_fcfg_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
 int print_invalid_timeout_given(const MqttSnLogger *logger, long timeout);
 int log_could_not_read_config_file(const MqttSnLogger *logger, char *strerror);
 int log_argument_value_not_specified(const MqttSnLogger *logger, const char *argument, const char *argument_name);

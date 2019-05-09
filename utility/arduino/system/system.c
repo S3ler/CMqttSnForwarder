@@ -45,7 +45,7 @@ int connect_wifi(EEPROM_cfg *ecfg, const MqttSnLogger *logger, uint32_t timeout_
     print_wifi_could_not_connect(logger);
     return 1;
   }
-  log_flush(logger);
+  print_wifi_connected(logger);
   return 0;
 }
 
@@ -318,6 +318,22 @@ int print_resolved_hostname_to(const MqttSnLogger *logger, const char *hostname,
 int print_wifi_could_not_connect(const MqttSnLogger *logger) {
   log_str(logger, "Could not connect to Wifi - configure with: --eeprom_wifi_name and --eeprom_wifi_password.");
   log_flush(logger);
+  return log_status(logger);
+}
+int print_wifi_connected(const MqttSnLogger *logger) {
+  log_str(logger, " Connected as: ");
+  IPAddress ownIp = WiFi.localIP();
+  print_arduino_IPAddress(logger, &ownIp);
+  log_flush(logger);
+  return log_status(logger);
+}
+int print_arduino_IPAddress(const MqttSnLogger *logger, const IPAddress *ipAddress) {
+  for (uint8_t i = 0; i < 4; i++) {
+    log_uint8(logger, (*ipAddress)[i]);
+    if (i + 1 < 4) {
+      log_str(logger, ".");
+    }
+  }
   return log_status(logger);
 }
 int print_wifi_connecting_to(const MqttSnLogger *logger, const char *ssid, const char *password) {

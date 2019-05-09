@@ -142,6 +142,7 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
                                    &msg->address,
                                    msg->data,
                                    msg->data_length);
+        //TODO check output here and everywhere alse in linux
       }
 #endif
     }

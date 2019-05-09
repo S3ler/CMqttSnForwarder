@@ -27,19 +27,26 @@ void* gatewayNetworkContext = nullptr;
 uint16_t mqtt_sn_gateway_port = 8888;
 device_address mqttSnGatewayNetworkAddress = {0};
 device_address forwarderClientNetworkAddress = {0};
+device_address forwarderClientNetworkBroadcastAddress = {0};
 device_address forwarderGatewayNetworkAddress = {0};
+device_address forwarderGatewayNetworkBroadcastAddress = {0};
 
 #ifdef WITH_ARDUINO_GATEWAY_NETWORK_UDP
 // udp gateway
 WiFiUDP gatewayWiFiUdp;
+WiFiUDP gatewayBCWiFiUdp;
 WiFiUDP* gatewayUdp = &gatewayWiFiUdp;
+WiFiUDP* gatewayBCUdp = &gatewayBCWiFiUdp;
 MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
 #endif
 
 #ifdef WITH_ARDUINO_CLIENT_NETWORK_UDP
 // udp client
 WiFiUDP clientWiFiUdp;
+WiFiUDP clientBCWiFiUdp;
 WiFiUDP* clientUdp = &clientWiFiUdp;
+WiFiUDP* clientBCUdp = &clientBCWiFiUdp;
+
 MqttSnClientUdpNetwork udpClientNetworkContext = {0};
 #endif
 
@@ -134,24 +141,52 @@ void setup() {
   WiFi.begin(ssid, password);
 #endif
 
+  // MQTT-SN Gateway Address
   if (convert_hostname_port_to_device_address(&fcfg_logger, fcfg.mqtt_sn_gateway_host, fcfg.mqtt_sn_gateway_port, &mqttSnGatewayNetworkAddress, "mqtt-sn gateway")) {
     Serial.println("Could not resolve MQTT-SN Gateway Host to device address - configure with: --mqtt_sn_gateway_host or --URL.");
     Serial.println("Use '--help' to see usage.");
     configureModeTimeout(30);
   }
 
+  // Gateway Network Address
   add_port_to_device_address(fcfg.gateway_network_bind_port, &forwarderGatewayNetworkAddress);
+#ifdef WITH_UDP_BROADCAST_GATEWAY
+  if (convert_string_ip_port_to_device_address(&fcfg_logger, fcfg.gateway_network_broadcast_address, fcfg.gateway_network_broadcast_bind_port, &forwarderGatewayNetworkBroadcastAddress, "gateway broadcast")) {
+    Serial.println("Could not convert gateway broadcast to device address - configure with: --gateway_network_broadcast_address and --gateway_network_broadcast_bind_port or --gateway_network_broadcast_url.");
+    Serial.println("Use '--help' to see usage.");
+    configureModeTimeout(30);
+  }
+#endif
+
+  // Client Network Address
   add_port_to_device_address(fcfg.client_network_bind_port, &forwarderClientNetworkAddress);
+#ifdef WITH_UDP_BROADCAST_CLIENT
+  if (convert_string_ip_port_to_device_address(&fcfg_logger, fcfg.client_network_broadcast_address, fcfg.client_network_broadcast_bind_port, &forwarderClientNetworkBroadcastAddress, "client broadcast")) {
+    Serial.println("Could not convert client broadcast to device address - configure with: --client_network_broadcast_address and --client_network_broadcast_bind_port or --client_network_broadcast_url.");
+    Serial.println("Use '--help' to see usage.");
+    configureModeTimeout(30);
+  }
+#endif
 
   if (!strcmp(fcfg.gateway_network_protocol, "udp")) {
     // Gateway Network is UDP
     gatewayNetworkContext = &udpGatewayNetworkContext;
+
+#ifdef WITH_UDP_BROADCAST_GATEWAY
+    if (GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
+                           &mqttSnGatewayNetworkAddress,
+                           &forwarderGatewayNetworkAddress,
+                           &forwarderGatewayNetworkBroadcastAddress,
+                           &udpGatewayNetworkContext,
+                           GatewayArduinoUdpInit)) {
+#else
     if (GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
                            &mqttSnGatewayNetworkAddress,
                            &forwarderGatewayNetworkAddress,
                            NULL,
                            &udpGatewayNetworkContext,
                            GatewayArduinoUdpInit)) {
+#endif
       Serial.println("Error init gateway network\n");
       configureModeTimeout(30);
     }
@@ -159,12 +194,21 @@ void setup() {
   if (!strcmp(fcfg.client_network_protocol, "udp")) {
     // Gateway Network is UDP
     clientNetworkContext = &udpClientNetworkContext;
+#ifdef WITH_UDP_BROADCAST_CLIENT
+    if (ClientNetworkInit(&mqttSnForwarder.clientNetwork,
+                          &mqttSnGatewayNetworkAddress,
+                          &forwarderClientNetworkAddress,
+                          &forwarderClientNetworkBroadcastAddress,
+                          &udpClientNetworkContext,
+                          ClientArduinoUdpInit)) {
+#else
     if (ClientNetworkInit(&mqttSnForwarder.clientNetwork,
                           &mqttSnGatewayNetworkAddress,
                           &forwarderClientNetworkAddress,
                           NULL,
                           &udpClientNetworkContext,
                           ClientArduinoUdpInit)) {
+#endif
       Serial.println("Error init client network\n");
       configureModeTimeout(30);
     }

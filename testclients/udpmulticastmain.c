@@ -103,6 +103,8 @@ int main() {
     perror("error multicast_socket");
     exit(EXIT_FAILURE);
   }
+  log_opening_unicast_socket(&logger, "multicast udp", &multicast_device_address);
+
   printf("Ready: %d", CLIENT_PORT);
   fflush(stdout);
 

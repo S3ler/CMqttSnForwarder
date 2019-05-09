@@ -44,6 +44,8 @@ int print_resolved_hostname_to(const MqttSnLogger *logger, const char *hostname,
 int print_wifi_not_configured(const MqttSnLogger *logger);
 int print_wifi_connecting_to(const MqttSnLogger *logger, const char *ssid, const char *password);
 int print_wifi_could_not_connect(const MqttSnLogger *logger);
+int print_wifi_connected(const MqttSnLogger *logger);
+int print_arduino_IPAddress(const MqttSnLogger *logger, const IPAddress *ipAddress);
 int connect_wifi(EEPROM_cfg *ecfg, const MqttSnLogger *logger, uint32_t timeout_ms);
 int print_cannot_convert_or_resolve_network_address(const MqttSnLogger *logger,
                                                     const char *hostname,

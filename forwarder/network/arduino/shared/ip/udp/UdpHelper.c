@@ -60,7 +60,8 @@ int arduino_receive_udp(UDP *wiFiUdp, device_address *from, uint8_t *bytes, uint
 
 #ifdef WITH_UDP_BROADCAST
 int arduino_join_multicast_udp(WiFiUDP *wiFiUdp, IPAddress bc_ip, uint16_t bc_port) {
-  if (wiFiUdp->beginMulticast(WiFi.localIP(), bc_ip, bc_port) == 1) {
+  IPAddress localIP = WiFi.localIP();
+  if (wiFiUdp->beginMulticast(localIP, bc_ip, bc_port) == 1) {
     return 0;
   }
   return -1;

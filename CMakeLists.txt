@@ -152,6 +152,8 @@ if (WITH_LINUX_UDP)
     option(WITH_UDP_BROADCAST "Include UDP_BROADCAST support?" ON)
     if (WITH_UDP_BROADCAST)
         add_definitions(-DWITH_UDP_BROADCAST)
+        add_definitions(-DWITH_UDP_BROADCAST_GATEWAY)
+        add_definitions(-DWITH_UDP_BROADCAST_CLIENT)
     endif ()
     add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_UDP)
     add_definitions(-DWITH_LINUX_CLIENT_NETWORK_UDP)
@@ -273,7 +275,7 @@ if (NOT BUILD_TESTING)
 
 
     add_executable(UdpClientMulticastTester testclients/udpmulticastmain.c)
-    target_compile_definitions(UdpClientMulticastTester PRIVATE CLIENT_PORT=11111 MQTT_SN_MULTICAST_IP="224.1.1.101" MQTT_SN_MULTICAST_PORT=5353)
+    target_compile_definitions(UdpClientMulticastTester PRIVATE CLIENT_PORT=11111 MQTT_SN_MULTICAST_IP="224.1.1.101" MQTT_SN_MULTICAST_PORT=5352)
     target_include_directories(UdpClientMulticastTester PRIVATE .)
     target_link_libraries(UdpClientMulticastTester lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
     if (WITH_LOGGING)
@@ -281,14 +283,14 @@ if (NOT BUILD_TESTING)
     endif ()
 
     # This target only exists for Clion IDE support for the following files:
-    #add_executable(ArduinoCMqttSnForwarder main/forwarder_config.h main/forwarder_config.c forwarder/network/arduino/shared/ip/udp/UdpHelper.c forwarder/network/arduino/shared/ip/udp/UdpHelper.h forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.c forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.h forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.c forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.h forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.c forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h utility/arduino/eeprom/eeprom_config.c utility/arduino/eeprom/eeprom_config.h utility/arduino/system/system.c utility/arduino/system/system.h)
-    #target_include_directories(ArduinoCMqttSnForwarder PRIVATE .)
-    #target_compile_options(ArduinoCMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-    #target_link_libraries(ArduinoCMqttSnForwarder
-    #        lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
-    #if (WITH_LOGGING)
-    #    target_link_libraries(ArduinoCMqttSnForwarder lib-mqtt-sn-logging)
-    #endif ()
+    add_executable(ArduinoCMqttSnForwarder main/forwarder_config.h main/forwarder_config.c forwarder/network/arduino/shared/ip/udp/UdpHelper.c forwarder/network/arduino/shared/ip/udp/UdpHelper.h forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.c forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.h forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.c forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.h forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.c forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h utility/arduino/eeprom/eeprom_config.c utility/arduino/eeprom/eeprom_config.h utility/arduino/system/system.c utility/arduino/system/system.h)
+    target_include_directories(ArduinoCMqttSnForwarder PRIVATE .)
+    target_compile_options(ArduinoCMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(ArduinoCMqttSnForwarder
+            lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
+    if (WITH_LOGGING)
+        target_link_libraries(ArduinoCMqttSnForwarder lib-mqtt-sn-logging)
+    endif ()
 
 
 else ()

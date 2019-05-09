@@ -46,29 +46,6 @@ int convert_hostname_port_to_device_address(const char *hostname,
   return EXIT_SUCCESS;
 }
 
-int convert_string_ip_port_to_device_address(const char *ip_str,
-                                             int port,
-                                             device_address *address,
-                                             const char *address_name) {
-  if (ip_str == NULL) {
-    memset(address, 0, sizeof(device_address));
-  } else {
-    if (convert_string_to_device_address(ip_str, address)) {
-      fprintf(stderr, "Cannot convert %s to %s network address.\n", ip_str, address_name);
-      return EXIT_FAILURE;
-    }
-  }
-
-  if (port < -1 || port > 65535) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", port);
-    return EXIT_FAILURE;
-  }
-  if (port > -1) {
-    add_port_to_device_address(port, address);
-  }
-  return EXIT_SUCCESS;
-}
-
 int get_device_address_from_hostname(const char *hostname, device_address *dst) {
   memset(dst, 0, sizeof(device_address));
 
@@ -152,7 +129,8 @@ int start_gateway_plugin(const forwarder_config *fcfg,
                                               "gateway")) {
     return EXIT_FAILURE;
   }
-  if (convert_string_ip_port_to_device_address(fcfg->gateway_network_broadcast_address,
+  if (convert_string_ip_port_to_device_address(fcfg->logger,
+                                               fcfg->gateway_network_broadcast_address,
                                                fcfg->gateway_network_broadcast_bind_port,
                                                &forwarderGatewayNetworkBroadcastAddress,
                                                "gateway broadcast")) {
@@ -234,7 +212,8 @@ int start_gateway_tcp(const forwarder_config *fcfg,
                                               "gateway")) {
     return EXIT_FAILURE;
   }
-  if (convert_string_ip_port_to_device_address(fcfg->gateway_network_broadcast_address,
+  if (convert_string_ip_port_to_device_address(fcfg->logger,
+                                               fcfg->gateway_network_broadcast_address,
                                                fcfg->gateway_network_broadcast_bind_port,
                                                &forwarderGatewayNetworkBroadcastAddress,
                                                "gateway broadcast")) {
@@ -279,7 +258,8 @@ int start_gateway_udp(const forwarder_config *fcfg,
                                               "gateway unicast")) {
     return EXIT_FAILURE;
   }
-  if (convert_string_ip_port_to_device_address(fcfg->gateway_network_broadcast_address,
+  if (convert_string_ip_port_to_device_address(fcfg->logger,
+                                               fcfg->gateway_network_broadcast_address,
                                                fcfg->gateway_network_broadcast_bind_port,
                                                &forwarderGatewayNetworkBroadcastAddress,
                                                "gateway broadcast")) {
@@ -324,7 +304,8 @@ int start_client_plugin(const forwarder_config *fcfg,
                                               "client")) {
     return EXIT_FAILURE;
   }
-  if (convert_string_ip_port_to_device_address(fcfg->client_network_broadcast_address,
+  if (convert_string_ip_port_to_device_address(fcfg->logger,
+                                               fcfg->client_network_broadcast_address,
                                                fcfg->client_network_broadcast_bind_port,
                                                &forwarderClientNetworkBroadcastAddress,
                                                "client broadcast")) {
@@ -403,7 +384,8 @@ int start_client_tcp(const forwarder_config *fcfg,
                                               "client")) {
     return EXIT_FAILURE;
   }
-  if (convert_string_ip_port_to_device_address(fcfg->client_network_broadcast_address,
+  if (convert_string_ip_port_to_device_address(fcfg->logger,
+                                               fcfg->client_network_broadcast_address,
                                                fcfg->client_network_broadcast_bind_port,
                                                &forwarderClientNetworkBroadcastAddress,
                                                "client broadcast")) {
@@ -449,7 +431,8 @@ int start_client_udp(const forwarder_config *fcfg,
                                               "client unicast")) {
     return EXIT_FAILURE;
   }
-  if (convert_string_ip_port_to_device_address(fcfg->client_network_broadcast_address,
+  if (convert_string_ip_port_to_device_address(fcfg->logger,
+                                               fcfg->client_network_broadcast_address,
                                                fcfg->client_network_broadcast_bind_port,
                                                &forwarderClientNetworkBroadcastAddress,
                                                "client broadcast")) {

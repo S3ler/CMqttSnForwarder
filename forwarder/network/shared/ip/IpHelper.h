@@ -21,7 +21,18 @@ int get_ipv4_and_port_from_device_address(uint32_t *dst_ip, uint16_t *dst_port, 
 
 int convert_string_to_device_address(const char *string, device_address *address);
 
+int convert_string_ip_port_to_device_address(const MqttSnLogger *logger,
+                                             const char *ip_str,
+                                             int port,
+                                             device_address *address,
+                                             const char *address_name);
+
 #ifdef WITH_LOGGING
+int print_cannot_convert_ip_str_to_network_address(const MqttSnLogger *logger,
+                                                   const char *ip_str,
+                                                   const char *address_name);
+
+int print_invalid_port_given(const MqttSnLogger *logger, int32_t port);
 
 int log_opening_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 
