@@ -17,7 +17,7 @@ void arduino_ipv4_and_port_to_device_address(IPAddress *src, uint16_t src_port, 
   add_port_to_device_address(src_port, dst);
 }
 
-void arduino_device_address_to_ipv4_and_port(device_address *src, IPAddress *dst, uint16_t *dst_port) {
+void arduino_device_address_to_IPAddress_and_port(device_address *src, IPAddress *dst, uint16_t *dst_port) {
   // IPAddress 0 - 3 bytes
   (*dst)[0] = src->bytes[0];
   (*dst)[1] = src->bytes[1];

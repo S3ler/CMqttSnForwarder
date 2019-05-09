@@ -3,8 +3,9 @@
 #include <WiFiUdp.h>
 #include <SD.h>
 #include <EEPROM.h>
+#ifdef madpilot_mDNSResolver
 #include <mDNSResolver.h>
-
+#endif
 #include <CMqttSnForwarderArduino.h>
 
 #ifdef WITH_EEPROM
@@ -31,14 +32,14 @@ device_address forwarderGatewayNetworkAddress = {0};
 #ifdef WITH_ARDUINO_GATEWAY_NETWORK_UDP
 // udp gateway
 WiFiUDP gatewayWiFiUdp;
-UDP* gatewayUdp = &gatewayWiFiUdp;
+WiFiUDP* gatewayUdp = &gatewayWiFiUdp;
 MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
 #endif
 
 #ifdef WITH_ARDUINO_CLIENT_NETWORK_UDP
 // udp client
 WiFiUDP clientWiFiUdp;
-UDP* clientUdp = &clientWiFiUdp;
+WiFiUDP* clientUdp = &clientWiFiUdp;
 MqttSnClientUdpNetwork udpClientNetworkContext = {0};
 #endif
 

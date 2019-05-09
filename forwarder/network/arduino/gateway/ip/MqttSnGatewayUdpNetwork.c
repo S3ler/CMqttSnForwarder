@@ -3,15 +3,16 @@
 //
 
 #include "MqttSnGatewayUdpNetwork.h"
-#include <string.h>
 #include <forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h>
 #include <forwarder/network/arduino/shared/ip/udp/UdpHelper.h>
 #include <forwarder/network/shared/ip/IpHelper.h>
+#include <forwarder/MqttSnMessageParser.h>
+#include <string.h>
 
 int GatewayArduinoUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpContext = (MqttSnGatewayUdpNetwork *) context;
   memset(udpContext, 0, sizeof(MqttSnGatewayUdpNetwork));
-  strcpy(udpContext->protocol, "udp");
+  strcpy(udpContext->protocol, CMQTTSNFORWARDER_MQTTSNGATEWAYARDUINOUDPNETWORKPROTOCOL);
   udpContext->udp = gatewayUdp;
   n->gateway_network_init = GatewayArduinoUdpInit;
   n->gateway_network_receive = GatewayArduinoUdpReceive;
@@ -43,6 +44,11 @@ void GatewayArduinoUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context
 #ifdef WITH_LOGGING
   log_close_unicast_socket(n->logger, udpContext->protocol, n->mqtt_sn_gateway_address);
 #endif
+#ifdef WITH_UDP_BROADCAST
+  if (n->gateway_network_broadcast_address) {
+    log_close_multicast_socket(n->logger, udpContext->protocol, n->gateway_network_broadcast_address);
+  }
+#endif
 }
 
 int GatewayArduinoUdpReceive(MqttSnGatewayNetworkInterface *n,
@@ -53,18 +59,24 @@ int GatewayArduinoUdpReceive(MqttSnGatewayNetworkInterface *n,
 
   MqttSnMessageData toReceive = {0};
 
-  uint8_t signal_strength = 0;
   int rc = arduino_receive_udp(udpContext->udp,
                                &toReceive.address,
                                toReceive.data,
-                               &toReceive.data_length,
-                               &signal_strength);
+                               &toReceive.data_length);
   if (rc < 0) {
     return -1;
   }
   if (rc == 0) {
     return 0;
   }
+
+#ifdef WITH_UDP_BROADCAST
+  if (n->gateway_network_broadcast_address) {
+    if (memcmp(&toReceive.address, n->gateway_network_broadcast_address, sizeof(device_address)) == 0) {
+      toReceive.broadcast_radius = MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BROADCAST_RADIUS;
+    }
+  }
+#endif
 
   put(receiveBuffer, &toReceive);
 
@@ -96,5 +108,14 @@ int GatewayArduinoUdpSend(MqttSnGatewayNetworkInterface *n,
                               toSend.data,
                               toSend.data_length);
 #endif
-  return arduino_send_udp(udpContext->udp, n->mqtt_sn_gateway_address, toSend.data, toSend.data_length, UINT8_MAX);
+
+#ifdef WITH_UDP_BROADCAST
+  if (n->gateway_network_broadcast_address) {
+    if (toSend.broadcast_radius &&
+        memcmp(&toSend.address, n->gateway_network_broadcast_address, sizeof(device_address)) == 0) {
+      return arduino_send_multicast_udp(udpContext->udp, &toSend.address, toSend.data, toSend.data_length);
+    }
+  }
+#endif
+  return arduino_send_udp(udpContext->udp, n->mqtt_sn_gateway_address, toSend.data, toSend.data_length);
 }

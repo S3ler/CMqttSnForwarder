@@ -5,7 +5,9 @@
 #error "no Arduino environment"
 #endif
 
+#ifdef madpilot_mDNSResolver
 #include <mDNSResolver.h>
+#endif
 
 #ifndef CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN 3

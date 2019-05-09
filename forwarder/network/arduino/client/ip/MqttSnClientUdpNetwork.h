@@ -10,14 +10,26 @@ extern "C" {
 #endif
 
 #include <forwarder/MqttSnClientNetworkInterface.h>
+#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST)
+#include <WiFiUdp.h>
+extern WiFiUDP *clientUdp;
+#elif defined(WITH_UDP_BROADCAST)
+#error "Cannot use WITH_UDP_BROADCAST without WIFIUDP_H"
+#else
 #include <Udp.h>
-
 extern UDP *clientUdp;
+#endif
+
+#define CMQTTSNFORWARDER_MQTTSNCLIENTARDUINOUDPNETWORKPROTOCOL "udp"
 
 typedef struct MqttSnClientUdpNetwork_ {
   uint16_t port;
+#ifdef WITH_UDP_BROADCAST
+  WiFiUDP *udp;
+#else
   UDP *udp;
-  char protocol[sizeof("udp")];
+#endif
+  char protocol[sizeof("CMQTTSNFORWARDER_MQTTSNCLIENTARDUINOUDPNETWORKPROTOCOL")];
 } MqttSnClientUdpNetwork;
 
 int ClientArduinoUdpInit(MqttSnClientNetworkInterface *n, void *context);

@@ -57,12 +57,13 @@ int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context) {
 #ifdef WITH_LOGGING
   log_opening_unicast_socket(n->logger, tcpNetwork->protocol, n->client_network_address);
 #endif
-
+#ifdef WITH_TCP_BROADCAST
   if (n->client_network_broadcast_address) {
     if (ClientLinuxUdpConnect(n, &tcpNetwork->udp_multicast_network) < 0) {
       return -1;
     }
   }
+#endif
   return 0;
 }
 

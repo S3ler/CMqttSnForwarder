@@ -3,7 +3,6 @@
 //
 
 #include "UdpHelper.h"
-#include <Udp.h>
 #include <stdint.h>
 #include <forwarder/global_defines.h>
 #include <forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h>
@@ -11,8 +10,6 @@
 #include <CMqttSnForwarderArduino.h>
 
 int arduino_init_udp(UDP *wiFiUdp, uint16_t port) {
-  // TODO multicast socket receive of advertisements
-  //  uint8_t beginMulticast(IPAddress interfaceAddr, IPAddress multicast, uint16_t port);
   if (wiFiUdp->begin(port) == 1) {
     return 0;
   }
@@ -20,19 +17,14 @@ int arduino_init_udp(UDP *wiFiUdp, uint16_t port) {
 }
 
 void arduino_deinit_udp(UDP *wiFiUdp) {
-  // TODO multicast socket receive of advertisements
   wiFiUdp->stop();
 }
 
-int arduino_send_udp(UDP *wiFiUdp,
-                     device_address *destination,
-                     uint8_t *bytes,
-                     uint16_t bytes_len,
-                     uint8_t signal_strength) {
+int arduino_send_udp(UDP *wiFiUdp, device_address *destination, uint8_t *bytes, uint16_t bytes_len) {
   IPAddress destination_IPAddress;
   uint16_t destination_port = 0;
 
-  arduino_device_address_to_ipv4_and_port(destination, &destination_IPAddress, &destination_port);
+  arduino_device_address_to_IPAddress_and_port(destination, &destination_IPAddress, &destination_port);
 
   if (wiFiUdp->beginPacket(destination_IPAddress, destination_port) == 1) {
     if (wiFiUdp->write(bytes, bytes_len) == bytes_len) {
@@ -44,13 +36,7 @@ int arduino_send_udp(UDP *wiFiUdp,
   return -1;
 }
 
-int arduino_receive_udp(UDP *wiFiUdp,
-                        device_address *from,
-                        uint8_t *bytes,
-                        uint16_t *bytes_len,
-                        uint8_t *signal_strength) {
-  IPAddress destination_IPAddress;
-  uint16_t destination_port = 0;
+int arduino_receive_udp(UDP *wiFiUdp, device_address *from, uint8_t *bytes, uint16_t *bytes_len) {
 
   if (wiFiUdp->parsePacket() > 0) {
     memset(from, 0x0, sizeof(device_address));
@@ -63,8 +49,6 @@ int arduino_receive_udp(UDP *wiFiUdp,
         IPAddress remoteIP = wiFiUdp->remoteIP();
         uint16_t remotePort = wiFiUdp->remotePort();
         arduino_ipv4_and_port_to_device_address(&remoteIP, remotePort, from);
-
-        *signal_strength = UINT8_MAX;
         return 1;
       }
     }
@@ -73,3 +57,28 @@ int arduino_receive_udp(UDP *wiFiUdp,
   }
   return 0;
 }
+
+#ifdef WITH_UDP_BROADCAST
+int arduino_join_multicast_udp(WiFiUDP *wiFiUdp, IPAddress bc_ip, uint16_t bc_port) {
+  if (wiFiUdp->beginMulticast(WiFi.localIP(), bc_ip, bc_port) == 1) {
+    return 0;
+  }
+  return -1;
+}
+
+int arduino_send_multicast_udp(WiFiUDP *wiFiUdp, device_address *destination, uint8_t *bytes, uint16_t bytes_len) {
+  IPAddress destination_IPAddress;
+  uint16_t destination_port = 0;
+
+  arduino_device_address_to_IPAddress_and_port(destination, &destination_IPAddress, &destination_port);
+
+  if (wiFiUdp->beginPacketMulticast(destination_IPAddress, destination_port, WiFi.localIP()) == 1) {
+    if (wiFiUdp->write(bytes, bytes_len) == bytes_len) {
+      if (wiFiUdp->endPacket() == 1) {
+        return 0;
+      }
+    }
+  }
+  return -1;
+}
+#endif

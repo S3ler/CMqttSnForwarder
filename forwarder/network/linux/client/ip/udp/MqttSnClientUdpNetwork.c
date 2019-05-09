@@ -11,7 +11,9 @@ int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *udpNetwork = (MqttSnClientUdpNetwork *) context;
   memset(udpNetwork, 0, sizeof(MqttSnClientUdpNetwork));
   udpNetwork->unicast_socket = -1;
+#ifdef WITH_UDP_BROADCAST
   udpNetwork->multicast_socket = -1;
+#endif
   strcpy(udpNetwork->protocol, CMQTTSNFORWARDER_MQTTSNCLIENTLINUXUDPNETWORKPROTOCOL);
   n->client_network_init = ClientLinuxUdpInit;
   n->client_network_connect = ClientLinuxUdpConnect;
@@ -36,6 +38,7 @@ int ClientLinuxUdpConnect(MqttSnClientNetworkInterface *n, void *context) {
   log_opening_unicast_socket(n->logger, udpNetwork->protocol, n->client_network_address);
 #endif
 
+#ifdef WITH_UDP_BROADCAST
   if (n->client_network_broadcast_address != NULL) {
     uint32_t multicast_ip = 0;
     uint16_t multicast_port = 0;
@@ -58,6 +61,7 @@ int ClientLinuxUdpConnect(MqttSnClientNetworkInterface *n, void *context) {
     log_opening_multicast_socket(n->logger, udpNetwork->protocol, n->client_network_broadcast_address);
 #endif
   }
+#endif
 
   return 0;
 }

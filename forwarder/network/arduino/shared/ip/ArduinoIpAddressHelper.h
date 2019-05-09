@@ -13,7 +13,7 @@ extern "C" {
 #include <IPAddress.h>
 
 void arduino_ipv4_and_port_to_device_address(IPAddress *src, uint16_t src_port, device_address *dst);
-void arduino_device_address_to_ipv4_and_port(device_address *src, IPAddress *dst, uint16_t *dst_port);
+void arduino_device_address_to_IPAddress_and_port(device_address *src, IPAddress *dst, uint16_t *dst_port);
 
 #ifdef __cplusplus
 }
