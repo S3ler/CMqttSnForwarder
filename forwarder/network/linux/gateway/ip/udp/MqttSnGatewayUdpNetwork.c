@@ -16,7 +16,9 @@ int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
   memset(udpNetwork, 0, sizeof(MqttSnGatewayUdpNetwork));
   udpNetwork->unicast_socket = -1;
+#ifdef WITH_UDP_BROADCAST
   udpNetwork->multicast_socket = -1;
+#endif
   strcpy(udpNetwork->protocol, CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXUDPNETWORKPROTOCOL);
   n->gateway_network_init = GatewayLinuxUdpInit;
   n->gateway_network_receive = GatewayLinuxUdpReceive;
@@ -45,6 +47,7 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *n, void *context) {
   log_opening_unicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_address);
 #endif
 
+#ifdef WITH_UDP_BROADCAST
   if (n->gateway_network_broadcast_address) {
     uint32_t multicast_ip = 0;
     uint16_t multicast_port = 0;
@@ -67,6 +70,7 @@ int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *n, void *context) {
     log_opening_multicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_broadcast_address);
 #endif
   }
+#endif
 
   return 0;
 }
@@ -80,13 +84,17 @@ void GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) 
     log_close_unicast_socket(n->logger, udpNetwork->protocol, n->mqtt_sn_gateway_address);
 #endif
   }
-  if (udpNetwork->multicast_socket > -1) {
-    close(udpNetwork->multicast_socket);
-    udpNetwork->multicast_socket = -1;
+#ifdef WITH_UDP_BROADCAST
+  if (n->gateway_network_broadcast_address) {
+    if (udpNetwork->multicast_socket > -1) {
+      close(udpNetwork->multicast_socket);
+      udpNetwork->multicast_socket = -1;
 #ifdef WITH_LOGGING
-    log_close_multicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_broadcast_address);
+      log_close_multicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_broadcast_address);
 #endif
+    }
   }
+#endif
 }
 
 int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
@@ -95,35 +103,41 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
                            void *context) {
   MqttSnGatewayUdpNetwork *udpNetwork = (MqttSnGatewayUdpNetwork *) context;
 
-  if (n->gateway_network_broadcast_address) {
-    int message_received = is_multicast_or_unicast_message_receive(udpNetwork->unicast_socket,
-                                                                   udpNetwork->multicast_socket, timeout_ms);
-    if (message_received < 0) {
+#ifdef WITH_UDP_BROADCAST
+  int message_received = is_multicast_or_unicast_message_receive(udpNetwork->unicast_socket,
+                                                                 udpNetwork->multicast_socket,
+                                                                 timeout_ms);
+#else
+  int message_received = is_udp_message_received(udpNetwork->unicast_socket, timeout_ms);
+#endif
+
+  if (message_received < 0) {
 #ifdef WITH_LOGGING
-      log_select_error(n->logger);
+    log_select_error(n->logger);
+#endif
+    return -1;
+  }
+
+  if (message_received == 1 || message_received == 3) {
+    int unicast_rc = receive_and_save_udp_message_into_receive_buffer(udpNetwork->unicast_socket,
+                                                                      receiveBuffer,
+                                                                      CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH);
+    if (unicast_rc < 0) {
+#ifdef WITH_LOGGING
+      log_unicast_socket_failed(n->logger, udpNetwork->protocol, n->gateway_network_address);
 #endif
       return -1;
     }
-    if (message_received == 0) {
-      return 0;
-    }
-    if (message_received == 1 || message_received == 3) {
-      int unicast_rc = receive_and_save_udp_message_into_receive_buffer(udpNetwork->unicast_socket,
-                                                                        receiveBuffer,
-                                                                        CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH);
-      if (unicast_rc < 0) {
-#ifdef WITH_LOGGING
-        log_unicast_socket_failed(n->logger, udpNetwork->protocol, n->gateway_network_address);
-#endif
-        return -1;
-      }
 #ifdef WITH_DEBUG_LOGGING
-      if (unicast_rc > 0) {
-        const MqttSnMessageData *msg = back(receiveBuffer);
-        log_db_rec_gateway_message(n->logger, n->gateway_network_address, &msg->address, msg->data, msg->data_length);
-      }
-#endif
+    if (unicast_rc > 0) {
+      const MqttSnMessageData *msg = back(receiveBuffer);
+      log_db_rec_gateway_message(n->logger, n->gateway_network_address, &msg->address, msg->data, msg->data_length);
     }
+#endif
+  }
+
+#ifdef WITH_UDP_BROADCAST
+  if (n->gateway_network_broadcast_address) {
     if (message_received == 2 || message_received == 3) {
       int multicast_rc = receive_and_save_udp_multicast_message_into_receive_buffer(udpNetwork->multicast_socket,
                                                                                     receiveBuffer,
@@ -146,36 +160,9 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
       }
 #endif
     }
-    return 0;
   }
+#endif
 
-  // only unicast
-  int message_received = is_udp_message_received(udpNetwork->unicast_socket, timeout_ms);
-  if (message_received < 0) {
-#ifdef WITH_LOGGING
-    log_select_error(n->logger);
-#endif
-    return -1;
-  }
-  if (message_received == 0) {
-    return 0;
-  }
-
-  int unicast_rc = receive_and_save_udp_message_into_receive_buffer(udpNetwork->unicast_socket,
-                                                                    receiveBuffer,
-                                                                    CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH);
-  if (unicast_rc < 0) {
-#ifdef WITH_LOGGING
-    log_unicast_socket_failed(n->logger, udpNetwork->protocol, n->gateway_network_address);
-#endif
-    return -1;
-  }
-#ifdef WITH_DEBUG_LOGGING
-  if (unicast_rc > 0) {
-    const MqttSnMessageData *msg = back(receiveBuffer);
-    log_db_rec_gateway_message(n->logger, n->gateway_network_address, &msg->address, msg->data, msg->data_length);
-  }
-#endif
   return 0;
 }
 

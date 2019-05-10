@@ -60,11 +60,13 @@ int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *n, void *context) {
   log_opening_unicast_socket(n->logger, tcpNetwork->protocol, n->mqtt_sn_gateway_address);
 #endif
 
+#ifdef WITH_TCP_BROADCAST
   if (n->gateway_network_broadcast_address) {
     if (GatewayLinuxUdpConnect(n, &tcpNetwork->udp_multicast_network) < 0) {
       return -1;
     }
   }
+#endif
   return 0;
 }
 
@@ -93,7 +95,14 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n,
                            void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 
+  // TODO is message received with gateway_fd AND multicast
+#ifdef WITH_TCP_BROADCAST
+  int message_received = is_multicast_or_unicast_message_receive(tcpNetwork->mqtt_sg_gateway_fd,
+                                                                 tcpNetwork->udp_multicast_network.multicast_socket,
+                                                                 timeout_ms);
+#else
   int message_received = is_tcp_message_received(tcpNetwork->mqtt_sg_gateway_fd, timeout_ms);
+#endif
   if (message_received < 0) {
 #ifdef WITH_LOGGING
     log_select_error(n->logger);
@@ -101,7 +110,7 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n,
     return -1;
   }
 
-  if (message_received > 0) {
+  if (message_received == 1 || message_received == 3) {
     int unicast_rc = save_received_tcp_packet_into_receive_buffer(tcpNetwork, receiveBuffer);
     if (unicast_rc < 0) {
 #ifdef WITH_LOGGING
@@ -136,16 +145,23 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
                         void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 
-  MqttSnMessageData sendMessageData = {0};
-  if (pop(sendBuffer, &sendMessageData) != 0) {
+  if (isEmpty(sendBuffer)) {
     return 0;
   }
 
 #ifdef WITH_TCP_BROADCAST
   // send message via udp if it is no encapsulation message
   if (n->gateway_network_broadcast_address) {
-    if (sendMessageData.broadcast_radius &&
-        (memcmp(&sendMessageData.address, n->gateway_network_broadcast_address, sizeof(device_address)) == 0)) {
+    const MqttSnMessageData *front_msg = front(sendBuffer);
+    if (!front_msg) {
+      return 0;
+    }
+    if (front_msg->broadcast_radius &&
+        (memcmp(&front_msg->address, n->gateway_network_broadcast_address, sizeof(device_address)) == 0)) {
+      MqttSnMessageData sendMessageData = {0};
+      if (pop(sendBuffer, &sendMessageData) != 0) {
+        return 0;
+      }
       // is broadcast message => send via udp
       MqttSnFixedSizeRingBuffer tmp_sendQueue = {0};
       MqttSnFixedSizeRingBufferInit(&tmp_sendQueue);
@@ -160,6 +176,11 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
     }
   }
 #endif
+
+  MqttSnMessageData gatewayMessage = {0};
+  if (pop(sendBuffer, &gatewayMessage) != 0) {
+    return 0;
+  }
 
   struct timeval interval;
   if (timeout_ms < 0) {
@@ -181,7 +202,7 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
     return -1;
   }
 
-  ssize_t rc = send(tcpNetwork->mqtt_sg_gateway_fd, sendMessageData.data, sendMessageData.data_length, 0);
+  ssize_t rc = send(tcpNetwork->mqtt_sg_gateway_fd, gatewayMessage.data, gatewayMessage.data_length, 0);
   if (rc < 0) {
 #ifdef WITH_LOGGING
     log_gateway_lost_connection(n->logger, tcpNetwork->protocol, n->mqtt_sn_gateway_address);
@@ -190,18 +211,18 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
   }
 #ifdef WITH_DEBUG_LOGGING
   log_db_send_gateway_message(n->logger,
-                              &sendMessageData.address,
+                              &gatewayMessage.address,
                               n->mqtt_sn_gateway_address,
-                              sendMessageData.data,
-                              sendMessageData.data_length);
+                              gatewayMessage.data,
+                              gatewayMessage.data_length);
 #endif
-  if (rc != sendMessageData.data_length) {
-    put(sendBuffer, &sendMessageData);
+  if (rc != gatewayMessage.data_length) {
+    put(sendBuffer, &gatewayMessage);
 #ifdef WITH_DEBUG_LOGGING
     log_incomplete_message(n->logger,
-                           &sendMessageData.address,
-                           sendMessageData.data,
-                           sendMessageData.data_length);
+                           &gatewayMessage.address,
+                           gatewayMessage.data,
+                           gatewayMessage.data_length);
 #endif
     return -1;
   }

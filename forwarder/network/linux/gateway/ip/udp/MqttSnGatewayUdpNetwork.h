@@ -17,10 +17,10 @@ extern "C" {
 // TODO save delete
 typedef struct MqttSnGatewayUdpNetwork_ {
   int unicast_socket;
-  char *ip;
-  int port;
-  int multicast_socket;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXUDPNETWORKPROTOCOL)];
+#ifdef WITH_UDP_BROADCAST
+  int multicast_socket;
+#endif
 } MqttSnGatewayUdpNetwork;
 
 int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context);

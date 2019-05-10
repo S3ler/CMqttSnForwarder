@@ -12,8 +12,10 @@ extern "C" {
 
 typedef struct MqttSnClientUdpNetwork_ {
   int unicast_socket;
-  int multicast_socket;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNCLIENTLINUXUDPNETWORKPROTOCOL)];
+#ifdef WITH_UDP_BROADCAST
+  int multicast_socket;
+#endif
 } MqttSnClientUdpNetwork;
 
 int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context);
