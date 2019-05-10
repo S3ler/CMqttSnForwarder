@@ -96,7 +96,7 @@ int listen_on_tcp_socket(uint32_t ip, uint16_t port, uint32_t max_pending_connec
 }
 
 int new_connection_or_is_message_received(int listen_socket_fd,
-                                          int *client_socket_fds,
+                                          const int client_socket_fds[],
                                           int client_socket_fds_len,
                                           int32_t timeout_ms,
                                           fd_set *read_fds,
@@ -121,7 +121,7 @@ int new_connection_or_is_message_received(int listen_socket_fd,
     int socket_fd = client_socket_fds[i];
 
     // if valid socket fd then add to read list
-    if (socket_fd > 0) {
+    if (socket_fd > -1) {
       FD_SET(socket_fd, read_fds);
     }
 
@@ -166,6 +166,9 @@ int new_connection_or_is_message_received(int listen_socket_fd,
   for (int i = 0; i < client_socket_fds_len; i++) {
     // socket descriptor
     int socket_descriptor = client_socket_fds[i];
+    if (socket_descriptor < 0) {
+      continue;
+    }
     if (FD_ISSET(socket_descriptor, read_fds)) {
       if (rv == 1) {
         // listen and client only

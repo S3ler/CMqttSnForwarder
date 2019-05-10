@@ -754,7 +754,9 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger, "        Defaults to ");
   log_str(logger, DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS);
   log_str(logger, ".\n");
-  log_str(logger, " -gbp : listening on the specific gateway network broadcast port. Defaults to 5353.\n");
+  log_str(logger, " -gbp : listening on the specific gateway network broadcast port. Defaults to ");
+  log_int32(logger, DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT);
+  log_str(logger, ".\n");
   log_str(logger, " -gbL : specify protocol, address, port as a URL in the form: protocol://address[:port]\n");
 
   log_str(logger, " -cbP : specify the protocol of the client network broadcast to use.\n");
@@ -764,7 +766,9 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger, DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS);
   log_str(logger, ".\n");
   log_str(logger, "        Note: the client network broadcast binds to the client network bind interface.\n");
-  log_str(logger, " -cbp : listening on the specific client network broadcast port. Defaults to 5353.\n");
+  log_str(logger, " -cbp : listening on the specific client network broadcast port. Defaults to ");
+  log_int32(logger, DEFAULT_MQTT_SN_CLIENT_BROADCAST_BIND_PORT);
+  log_str(logger, ".\n");
   log_str(logger, " -cbL : specify protocol, address, port as a URL in the form: protocol://address[:port]\n");
 #endif
 

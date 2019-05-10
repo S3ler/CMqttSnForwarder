@@ -152,11 +152,10 @@ int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
       if (multicast_rc > 0) {
         const MqttSnMessageData *msg = back(receiveBuffer);
         log_db_rec_gateway_message(n->logger,
-                                   n->gateway_network_broadcast_address,
                                    &msg->address,
+                                   n->gateway_network_broadcast_address,
                                    msg->data,
                                    msg->data_length);
-        //TODO check output here and everywhere alse in linux
       }
 #endif
     }

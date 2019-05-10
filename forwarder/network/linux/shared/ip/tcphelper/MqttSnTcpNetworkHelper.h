@@ -18,7 +18,7 @@ int listen_on_tcp_socket(uint32_t ip, uint16_t port, uint32_t max_pending_connec
 
 // TODO return: error -1, nothing received 0, listen only 1, client only 2, multicast only 3, listen and client only 4, listen and multicast only 5, client and multicast only 6, all 7
 int new_connection_or_is_message_received(int listen_socket_fd,
-                                          int *client_socket_fds,
+                                          const int client_socket_fds[],
                                           int client_socket_fds_len,
                                           int32_t timeout_ms,
                                           fd_set *read_fds,

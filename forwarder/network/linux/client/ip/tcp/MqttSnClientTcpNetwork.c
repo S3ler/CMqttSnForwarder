@@ -287,7 +287,9 @@ void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
        client_socket_fd_position < clientTcpNetwork->max_clients;
        client_socket_fd_position++) {
     int client_socket_fd = clientTcpNetwork->client_socket_fds[client_socket_fd_position];
-
+    if (client_socket_fd < 0) {
+      continue;
+    }
     if (FD_ISSET(client_socket_fd, read_fds) == 0) {
       continue;
     }
