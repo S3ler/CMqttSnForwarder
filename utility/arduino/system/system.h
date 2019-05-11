@@ -38,7 +38,7 @@ int EndsWithLocal(const char *str);
 int StartsWith(const char *pre, const char *str);
 
 #ifdef WITH_LOGGING
-int log_system_restarting(const MqttSnLogger* logger);
+int print_system_restarting(const MqttSnLogger *logger);
 int print_system_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
 int print_resolved_hostname_to(const MqttSnLogger *logger, const char *hostname, const device_address *address);
 int print_wifi_not_configured(const MqttSnLogger *logger);
@@ -53,6 +53,7 @@ int print_cannot_convert_or_resolve_network_address(const MqttSnLogger *logger,
 int log_init_gateway_network_unknown_protocol(const MqttSnLogger *logger, const char *protocol);
 int log_init_client_network_unknown_protocol(const MqttSnLogger *logger, const char *protocol);
 int log_init_network_unknown_protocol(const MqttSnLogger *logger, const char *network_name, const char *protocol);
+int print_argc_argv(const MqttSnLogger *logger, int argc, char *argv[]);
 #endif
 
 #ifdef __cplusplus

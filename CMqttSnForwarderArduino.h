@@ -3,6 +3,7 @@
 
 #ifndef Arduino_h
 #error "no Arduino environment"
+#define PSTR(str) ((str))
 #endif
 
 #ifdef madpilot_mDNSResolver

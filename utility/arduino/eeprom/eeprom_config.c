@@ -116,40 +116,40 @@ int eeprom_save_forwarder_config_line(EEPROM_cfg *ecfg, forwarder_config *fcfg, 
     print_usage(fcfg->logger);
   }
   if (fcfg_rc != 0 && fcfg_rc != FORWARDER_CONFIG_HELP) {
-    log_str(fcfg->logger, "Use 'cmqttsnforwarder --help' to see usage.");
+    log_str(fcfg->logger, PSTR("Use 'cmqttsnforwarder --help' to see usage."));
     log_flush(fcfg->logger);
   }
   return fcfg_rc;
 }
 
 int print_eeprom_config_usage(const MqttSnLogger *logger) {
-  log_str(logger, "EEPROM Usage:     [-es eeprom_show]\n");
-  log_str(logger, "                  [-ec eeprom_clear]\n");
-  log_str(logger, "                  [-el eeprom_lock]\n");
-  log_str(logger, "                  [-eu eeprom_unlock]\n");
-  log_str(logger, "                  [-efl eeprom_force_line]\n");
+  log_str(logger, PSTR("EEPROM Usage:     [-es eeprom_show]\n"));
+  log_str(logger, PSTR("                  [-ec eeprom_clear]\n"));
+  log_str(logger, PSTR("                  [-el eeprom_lock]\n"));
+  log_str(logger, PSTR("                  [-eu eeprom_unlock]\n"));
+  log_str(logger, PSTR("                  [-efl eeprom_force_line]\n"));
 #ifdef WITH_ARDUINO_WIFI
-  log_str(logger, "                  [-ews eeprom_wifi_show]\n");
-  log_str(logger, "                  [-ewc eeprom_wifi_clean]\n");
-  log_str(logger, "                  [-ewn eeprom_wifi_name]\n");
-  log_str(logger, "                  [-ewp eeprom_wifi_password]\n");
+  log_str(logger, PSTR("                  [-ews eeprom_wifi_show]\n"));
+  log_str(logger, PSTR("                  [-ewc eeprom_wifi_clean]\n"));
+  log_str(logger, PSTR("                  [-ewn eeprom_wifi_name]\n"));
+  log_str(logger, PSTR("                  [-ewp eeprom_wifi_password]\n"));
 #endif
-  log_str(logger, "                  --eeprom_help\n");
+  log_str(logger, PSTR("                  --eeprom_help\n"));
   log_flush(logger);
-  log_str(logger, " -es : show the current EEPROM configuration.\n");
-  log_str(logger, " -ec : clear the EEPROM configuration.\n");
-  log_str(logger, " -el : locks the EEPROM configuration to prevent clearing the EEPROM configuration.\n");
-  log_str(logger, "       Can be used to define a config-file which is used after flashing the firmware.\n");
-  log_str(logger, " -eu : unlocks the EEPROM configuration.\n");
-  log_str(logger, " -efl : write the input directly into the EEPROM configuration.\n");
-  log_str(logger, "        Can be used to circumvent the MQTT-SN Forwarder command line validation.\n");
+  log_str(logger, PSTR(" -es : show the current EEPROM configuration.\n"));
+  log_str(logger, PSTR(" -ec : clear the EEPROM configuration.\n"));
+  log_str(logger, PSTR(" -el : locks the EEPROM configuration to prevent clearing the EEPROM configuration.\n"));
+  log_str(logger, PSTR("       Can be used to define a config-file which is used after flashing the firmware.\n"));
+  log_str(logger, PSTR(" -eu : unlocks the EEPROM configuration.\n"));
+  log_str(logger, PSTR(" -efl : write the input directly into the EEPROM configuration.\n"));
+  log_str(logger, PSTR("        Can be used to circumvent the MQTT-SN Forwarder command line validation.\n"));
 #ifdef WITH_ARDUINO_WIFI
-  log_str(logger, " -ews : show the current WiFi configuration.\n");
-  log_str(logger, " -ewc : clear the WiFi configuration.\n");
-  log_str(logger, " -ewn : set the WiFi ssid aka name.\n");
-  log_str(logger, " -ewp : set the WiFi password.\n");
+  log_str(logger, PSTR(" -ews : show the current WiFi configuration.\n"));
+  log_str(logger, PSTR(" -ewc : clear the WiFi configuration.\n"));
+  log_str(logger, PSTR(" -ewn : set the WiFi ssid aka name.\n"));
+  log_str(logger, PSTR(" -ewp : set the WiFi password.\n"));
 #endif
-  log_str(logger, " --eeprom_help : display this message.\n");
+  log_str(logger, PSTR(" --eeprom_help : display this message.\n"));
   log_flush(logger);
   return log_status(logger);
 }
@@ -168,7 +168,7 @@ int process_eeprom_force_set_str(EEPROM_cfg *ecfg, const MqttSnLogger *logger, c
     return -1;
   }
   if (ecfg_line_len - strlen(efl) <= 1) {
-    log_argument_value_not_specified(logger, efl, "input");
+    log_argument_value_not_specified(logger, efl, PSTR("input"));
     return -2;
   }
   print_save_fcfg_to_eeprom(logger);
@@ -241,16 +241,7 @@ int process_eeprom_config_str(EEPROM_cfg *ecfg, const MqttSnLogger *logger, char
   }
 
 #ifdef WITH_DEBUG_LOGGING
-  log_str(logger, "argc: ");
-  log_uint64(logger, argc);
-  log_str(logger, " argv: ");
-  for (uint16_t i = 0; i < argc; i++) {
-    log_str(logger, argv[i]);
-    if (i + 1 < argc) {
-      log_str(logger, ", ");
-    }
-  }
-  log_flush(logger);
+  print_argc_argv(logger, argc, argv);
 #endif
 
   // process
@@ -273,25 +264,25 @@ int validate_eeprom_config_token(const MqttSnLogger *logger, int argc, char *arg
       i++;
     } else if (!strcmp(argv[i], "-ewn") || !strcmp(argv[i], "--eeprom_wifi_name")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(logger, argv[i], "eeprom_wifi_name");
+        log_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_name"));
         return 1;
       } else {
-
+        // validation only
       }
       i++;
     } else if (!strcmp(argv[i], "-ewp") || !strcmp(argv[i], "--eeprom_wifi_password")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(logger, argv[i], "eeprom_wifi_password");
+        log_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_password"));
         return 1;
       } else {
-
+        // validation only
       }
       i++;
     } else if (!strcmp(argv[i], "-ews") || !strcmp(argv[i], "--eeprom_wifi_show")) {
       i++;
     }
 #endif
-    else if (!strcmp(argv[i], "--eeprom_help")) {
+    else if (!strcmp(argv[i], "-eh") || !strcmp(argv[i], "--eeprom_help")) {
       return 2;
     } else {
 #ifdef WITH_DEBUG_LOGGING
@@ -335,7 +326,7 @@ int process_eeprom_config_token(EEPROM_cfg *ecfg, const MqttSnLogger *logger, in
       print_eeprom_wifi_cleared(logger);
     } else if (!strcmp(argv[i], "-ewn") || !strcmp(argv[i], "--eeprom_wifi_name")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(logger, argv[i], "eeprom_wifi_name");
+        log_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_name"));
         return -1;
       } else {
         if (strlen(argv[i + 1]) + 1 > sizeof(ecfg->WiFi_cfg.ssid)) {
@@ -348,7 +339,7 @@ int process_eeprom_config_token(EEPROM_cfg *ecfg, const MqttSnLogger *logger, in
       i++;
     } else if (!strcmp(argv[i], "-ewp") || !strcmp(argv[i], "--eeprom_wifi_password")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(logger, argv[i], "eeprom_wifi_password");
+        log_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_password"));
         return -1;
       } else {
         if (strlen(argv[i + 1]) + 1 > sizeof(ecfg->WiFi_cfg.password)) {
@@ -374,86 +365,86 @@ int process_eeprom_config_token(EEPROM_cfg *ecfg, const MqttSnLogger *logger, in
 
 #ifdef WITH_LOGGING
 int print_loading_fcfg_from_eeprom(const MqttSnLogger *logger) {
-  log_str(logger, "Loading MQTT-SN Forwarder Configuration from EEPROM.");
+  log_str(logger, PSTR("Loading MQTT-SN Forwarder Configuration from EEPROM."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_invalid_fcfg_clearing_eeprom(const MqttSnLogger *logger) {
-  log_str(logger, "Invalid MQTT-SN Forwarder Configuration in EEPROM - clearing EEPROM Configuration.");
+  log_str(logger, PSTR("Invalid MQTT-SN Forwarder Configuration in EEPROM - clearing EEPROM Configuration."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_save_fcfg_to_eeprom(const MqttSnLogger *logger) {
-  log_str(logger, "Saving MQTT-SN Forwarder Configuration to EEPROM.");
+  log_str(logger, PSTR("Saving MQTT-SN Forwarder Configuration to EEPROM."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_eeprom_line_parse_error(const MqttSnLogger *logger, const char *line, size_t line_len) {
-  log_str(logger, "Cannot tokenize: len: ");
+  log_str(logger, PSTR("Cannot tokenize: len: "));
   log_uint64(logger, line_len);
-  log_str(logger, ", line: ");
+  log_str(logger, PSTR(", line: "));
   log_str(logger, line);
   log_flush(logger);
   return log_status(logger);
 }
 int print_failed_to_save_fcfg_to_eeprom_input_too_long(const MqttSnLogger *logger) {
-  return print_failed_to_save_fcfg_to_eeprom(logger, "input is too long");
+  return print_failed_to_save_fcfg_to_eeprom(logger, PSTR("input is too long"));
 }
 int print_failed_to_save_fcfg_to_eeprom_locked(const MqttSnLogger *logger) {
-  return print_failed_to_save_fcfg_to_eeprom(logger, "EEPROM is locked");
+  return print_failed_to_save_fcfg_to_eeprom(logger, PSTR("EEPROM is locked"));
 }
 int print_failed_to_save_fcfg_to_eeprom(const MqttSnLogger *logger, const char *reason) {
-  log_str(logger, "Failed to save MQTT-SN Forwarder Configuration to EEPROM - ");
+  log_str(logger, PSTR("Failed to save MQTT-SN Forwarder Configuration to EEPROM - "));
   log_str(logger, reason);
-  log_str(logger, ".");
+  log_str(logger, PSTR("."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_failed_to_clear_eeprom_locked(const MqttSnLogger *logger) {
-  print_failed_to_clear_eeprom(logger, "EEPROM locked.");
+  print_failed_to_clear_eeprom(logger, PSTR("EEPROM locked."));
 }
 int print_failed_to_clear_eeprom(const MqttSnLogger *logger, const char *reason) {
-  log_str(logger, "Failed to clear EEPROM - ");
+  log_str(logger, PSTR("Failed to clear EEPROM - "));
   log_str(logger, reason);
-  log_str(logger, ".");
+  log_str(logger, PSTR("."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_eeprom_ecfg(const MqttSnLogger *logger, const EEPROM_cfg *ecfg) {
   log_str(logger, ecfg->fcfg_name);
-  log_str(logger, " EEPROM Configuration: ");
+  log_str(logger, PSTR(" EEPROM Configuration: "));
 
-  log_str(logger, "locked: ");
+  log_str(logger, PSTR("locked: "));
   if (ecfg->locked) {
-    log_str(logger, "true");
+    log_str(logger, PSTR("true"));
   } else {
-    log_str(logger, "false");
+    log_str(logger, PSTR("false"));
   }
 
-  log_str(logger, ", line: ");
+  log_str(logger, PSTR(", line: "));
   log_str(logger, ecfg->fcfg_line);
 
   log_flush(logger);
   return log_status(logger);
 }
 int print_eeprom_unknown_option(const MqttSnLogger *logger, const char *unknown_option) {
-  log_str(logger, "Error: Unknown EEPROM option ");
+  log_str(logger, PSTR("Error: Unknown EEPROM option "));
   log_str(logger, unknown_option);
-  log_str(logger, ".");
+  log_str(logger, PSTR("."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_eeprom_cleared(const MqttSnLogger *logger) {
-  log_str(logger, "EPPROM configuration cleared.");
+  log_str(logger, PSTR("EPPROM configuration cleared."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_eeprom_lock_status(const MqttSnLogger *logger, const EEPROM_cfg *ecfg) {
-  log_str(logger, "EPPROM configuration locked: ");
+  log_str(logger, PSTR("EPPROM configuration locked: "));
   if (ecfg->locked) {
-    log_str(logger, "true");
+    log_str(logger, PSTR("true"));
   } else {
-    log_str(logger, "false");
+    log_str(logger, PSTR("false"));
   }
   log_flush(logger);
   return log_status(logger);
@@ -462,52 +453,52 @@ int print_eeprom_lock_status(const MqttSnLogger *logger, const EEPROM_cfg *ecfg)
 #ifdef WITH_ARDUINO_WIFI
 int print_eeprom_wifi(const MqttSnLogger *logger, const EEPROM_cfg *ecfg) {
   log_str(logger, ecfg->fcfg_name);
-  log_str(logger, " in EEPROM WiFi Configuration: ");
+  log_str(logger, PSTR(" in EEPROM WiFi Configuration: "));
 
-  log_str(logger, "ssid: ");
+  log_str(logger, PSTR("ssid: "));
   log_str(logger, ecfg->WiFi_cfg.ssid);
-  log_str(logger, ", password: ");
+  log_str(logger, PSTR(", password: "));
 #ifdef WITH_DEBUG_LOGGING
   log_str(logger, ecfg->WiFi_cfg.password);
 #else
-  log_str(logger, "****");
+  log_str(logger, PSTR("****"));
 #endif
 
   log_flush(logger);
   return log_status(logger);
 }
 int print_eeprom_invalid_too_long_wifi_name(const MqttSnLogger *logger, const char *wifi_name) {
-  log_str(logger, "Error: WiFi SSID ");
+  log_str(logger, PSTR("Error: WiFi SSID "));
   log_str(logger, wifi_name);
-  log_str(logger, " is too long - maximum is 32 characters.");
+  log_str(logger, PSTR(" is too long - maximum is 32 characters."));
   log_flush(logger);
   return log_status(logger);
 }
 int log_eeprom_invalid_too_long_wifi_password(const MqttSnLogger *logger) {
-  log_str(logger, "Error: WiFi password is too long - maximum is 63 characters.");
+  log_str(logger, PSTR("Error: WiFi password is too long - maximum is 63 characters."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_eeprom_wifi_cleared(const MqttSnLogger *logger) {
-  log_str(logger, "WiFi configuration cleared.");
+  log_str(logger, PSTR("WiFi configuration cleared."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_eeprom_wifi_set_ssid(const MqttSnLogger *logger, const char *ssid) {
-  log_str(logger, "WiFi SSID set to: ");
+  log_str(logger, PSTR("WiFi SSID set to: "));
   log_str(logger, ssid);
-  log_str(logger, ".");
+  log_str(logger, PSTR("."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_eeprom_wifi_set_password(const MqttSnLogger *logger, const char *password) {
-  log_str(logger, "WiFi SSID set to: ");
+  log_str(logger, PSTR("WiFi SSID set to: "));
 #ifdef WITH_DEBUG_LOGGING
   log_str(logger, password);
 #else
-  log_str(logger, "****");
+  log_str(logger, PSTR("****"));
 #endif
-  log_str(logger, ".");
+  log_str(logger, PSTR("."));
   log_flush(logger);
   return log_status(logger);
 }
