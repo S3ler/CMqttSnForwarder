@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_GATEWAYNETWORKMOCKINTERFACE_H
 #define CMQTTSNFORWARDER_GATEWAYNETWORKMOCKINTERFACE_H
 
-#include <forwarder/MqttSnGatewayNetworkInterface.h>
+#include <network/MqttSnGatewayNetworkInterface.h>
 
 class GatewayNetworkMockInterface {
  public:

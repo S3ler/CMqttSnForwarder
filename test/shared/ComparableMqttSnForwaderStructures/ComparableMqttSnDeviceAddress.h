@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_COMPARABLEMQTTSNDEVICEADDRESS_H
 #define CMQTTSNFORWARDER_COMPARABLEMQTTSNDEVICEADDRESS_H
 
-#include <forwarder/global_defines.h>
+#include <platform/device_address.h>
 #include <vector>
 
 class ComparableMqttSnDeviceAddress {

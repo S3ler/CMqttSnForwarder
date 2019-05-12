@@ -11,8 +11,8 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <arpa/inet.h>
-#include "../forwarder/MqttSnMessageParser.h"
-#include "../forwarder/global_defines.h"
+#include <parser/MqttSnMessageParser.h>
+#include <platform/device_address.h>
 
 #define FORWARDER_IP "127.0.0.1"
 //#define FORWARDER_IP "192.168.178.82"

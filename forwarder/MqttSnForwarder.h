@@ -4,13 +4,12 @@
 
 #ifndef CMQTTSNFORWARDER_MQTTSNFORWARDER_H
 #define CMQTTSNFORWARDER_MQTTSNFORWARDER_H
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "MqttSnGatewayNetworkInterface.h"
-#include "MqttSnClientNetworkInterface.h"
+#include "network/MqttSnGatewayNetworkInterface.h"
+#include "network/MqttSnClientNetworkInterface.h"
 #include <stdint.h>
 
 typedef struct MqttSnForwarder_ {
@@ -60,5 +59,4 @@ int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData, MqttSnMe
 #ifdef __cplusplus
 }
 #endif
-
 #endif //CMQTTSNFORWARDER_MQTTSNFORWARDER_H

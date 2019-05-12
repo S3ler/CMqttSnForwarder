@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_GETPARAMETERMQTTSNGATEWAYNETWORKTESTTYPEPARAMETER_H
 #define CMQTTSNFORWARDER_GETPARAMETERMQTTSNGATEWAYNETWORKTESTTYPEPARAMETER_H
 
-#include "../../../../forwarder/global_defines.h"
+#include "../../../../platform/device_address.h"
 #include "MqttSnGatewayNetworkValueParameter.h"
 #include <vector>
 

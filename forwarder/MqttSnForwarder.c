@@ -3,18 +3,14 @@
 //
 
 #include "MqttSnForwarder.h"
-#include "MqttSnFixedSizeRingBuffer.h"
-#include "MqttSnClientNetworkInterface.h"
-#include "MqttSnMessageParser.h"
+#include "ringbuffer/MqttSnFixedSizeRingBuffer.h"
+#include "network/MqttSnClientNetworkInterface.h"
 #include <string.h>
 #include <stdio.h>
 #include <signal.h>
-#include <forwarder/logging/MqttSnForwarderLoggingMessages.h>
-#ifdef Arduino_h
-#include <forwarder/logging/arduino/ArduinoSerial.h>
-#else
-#include <forwarder/logging/linux/stdout/StdoutLogging.h>
-#endif
+#include <platform/platform_compatibility.h>
+#include <parser/logging/MqttSnForwarderLoggingMessages.h>
+
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         log_level_t log_level,
                         void *clientNetworkContext,
@@ -62,7 +58,7 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
 }
 
 /**
- * disconncts the gateway and client network
+ * disconnects the gateway and client network
  * @param forwarder
  */
 void MqttSnForwarderDeinit(MqttSnForwarder *forwarder) {
@@ -323,3 +319,5 @@ int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessag
 
   return 0;
 }
+
+

@@ -8,7 +8,7 @@
 #include <vector>
 #include <gtest/gtest.h>
 #include <network/tcphelper/MqttSnTcpNetworkMessageParser.h>
-#include "../../../../forwarder/global_defines.h"
+#include "../../../../platform/device_address.h"
 #include "../../../../forwarder/network/gateway/tcp/MqttSnGatewayTcpNetwork.h"
 #include "MockGatewayLinuxTcpNetworkImplementation.h"
 #include "../TestConfigurations/MqttSnGatewayNetworkValueParameter.h"

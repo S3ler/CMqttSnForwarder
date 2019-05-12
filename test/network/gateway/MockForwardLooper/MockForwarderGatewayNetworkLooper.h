@@ -7,7 +7,7 @@
 
 #include <atomic>
 #include <thread>
-#include "../../../../forwarder/MqttSnGatewayNetworkInterface.h"
+#include "../../../../network/MqttSnGatewayNetworkInterface.h"
 class MockForwarderGatewayNetworkLooper {
  public:
   bool startNetworkLoop(

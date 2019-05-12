@@ -3,7 +3,6 @@
 
 #ifndef Arduino_h
 #error "no Arduino environment"
-#define PSTR(str) ((str))
 #endif
 
 #ifdef madpilot_mDNSResolver
@@ -61,8 +60,8 @@
 #define WITH_ARDUINO_WIFI
 #endif
 
-#ifndef WITH_CONFIG_FILE
-#define WITH_CONFIG_FILE
+#ifndef WITH_MQTT_SN_FORWADER_CONFIG_FILE
+#define WITH_MQTT_SN_FORWADER_CONFIG_FILE
 #endif
 
 #ifndef WITH_EEPROM

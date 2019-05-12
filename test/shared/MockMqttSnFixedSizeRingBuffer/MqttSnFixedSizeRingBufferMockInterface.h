@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFERMOCKINTERFACE_H
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFERMOCKINTERFACE_H
 
-#include <forwarder/MqttSnFixedSizeRingBuffer.h>
+#include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
 
 class MqttSnFixedSizeRingBufferMockInterface {
  public:

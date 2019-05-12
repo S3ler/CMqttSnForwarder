@@ -9,8 +9,8 @@
 #include <gmock/gmock-nice-strict.h>
 #include <MqttSnFixedSizeRingBufferMock.h>
 #include "../TestConfigurations/MqttSnGatewayNetworkValueParameter.h"
-#include "../../../../forwarder/MqttSnFixedSizeRingBuffer.h"
-#include "../../../../forwarder/MqttSnGatewayNetworkInterface.h"
+#include "../../../../ringbuffer/MqttSnFixedSizeRingBuffer.h"
+#include "../../../../network/MqttSnGatewayNetworkInterface.h"
 #include "../TestConfigurations/MqttSnForwarderGatewayNetworkTestConfiguration.h"
 #include "TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.h"
 #include "../TestConfigurations/GetParameterMqttSnGatewayNetworkTestTypeParameter.cpp"

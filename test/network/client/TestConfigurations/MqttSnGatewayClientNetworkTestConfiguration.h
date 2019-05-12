@@ -6,8 +6,8 @@
 #define CMQTTSNFORWARDER_MQTTSNCLIENTNETWORKTESTFIXTURE_H
 
 #include <ostream>
-#include "../../../../forwarder/global_defines.h"
-#include "../../../../forwarder/MqttSnClientNetworkInterface.h"
+#include "platform/device_address.h"
+#include "network/MqttSnClientNetworkInterface.h"
 
 class MqttSnGatewayClientNetworkTestConfiguration {
  public:

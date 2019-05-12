@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_MOCKCLIENTIDENTIFIER_H
 #define CMQTTSNFORWARDER_MOCKCLIENTIDENTIFIER_H
 
-#include "../../../../forwarder/global_defines.h"
+#include "platform/device_address.h"
 #include "../MockClientNetwork/MockClient/MockClientNetworkInterface.h"
 
 class MockClientConfiguration {

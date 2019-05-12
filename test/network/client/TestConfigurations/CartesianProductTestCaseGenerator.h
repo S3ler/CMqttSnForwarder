@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_CARTESIANTESTGENERATOR_H
 
 
-#include "../../../../forwarder/global_defines.h"
+#include "../../../../platform/device_address.h"
 #include "MqttSnClientNetworkTestValueParameter.h"
 
 #define CMQTTSNFORWARDER_CARTESIANTESTGENERATOR_MIN_MESSAGE_LENGTH 3

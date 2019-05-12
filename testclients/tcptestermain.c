@@ -11,7 +11,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <arpa/inet.h>
-#include "../forwarder/global_defines.h"
+#include "platform/device_address.h"
 
 #define FORWARDER_CLIENT_NETWORK_PORT 7777
 #define GATEWAY_PORT 8888

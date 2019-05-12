@@ -8,7 +8,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock-nice-strict.h>
 
-#include "../../../../forwarder/MqttSnClientNetworkInterface.h"
+#include "../../../../network/MqttSnClientNetworkInterface.h"
 #include "../MockClientNetwork/MockClient/MockClient.h"
 #include "../MockClientNetwork/MockClient/MockClientNetworkReceiver.h"
 #include "MockClient/ComparableClientMqttSnMessageData.h"

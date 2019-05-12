@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_GETMQTTSNGATEWAYNETWORKTCPNETWORKDEFRAGMENTATIONTESTPARAMETER_H
 #define CMQTTSNFORWARDER_GETMQTTSNGATEWAYNETWORKTCPNETWORKDEFRAGMENTATIONTESTPARAMETER_H
 
-#include "../../../../forwarder/global_defines.h"
+#include "../../../../platform/device_address.h"
 #include "MqttSnGatewayNetworkValueParameter.h"
 #include "MqttSnGatewayNetworkTcpNetworkDefragmentationTestParameter.h"
 #include <vector>

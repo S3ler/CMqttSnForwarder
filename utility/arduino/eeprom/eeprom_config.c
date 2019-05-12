@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
 #include <CMqttSnForwarderArduino.h>
+#include <platform/platform_compatibility.h>
 
 void eeprom_config_init(EEPROM_cfg **ecfg) {
   assert(*ecfg == NULL);

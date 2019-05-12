@@ -7,8 +7,8 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <forwarder/MqttSnFixedSizeRingBuffer.h>
-#include <forwarder/MqttSnGatewayNetworkInterface.h>
+#include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
+#include <network/MqttSnGatewayNetworkInterface.h>
 #include <test/shared/PlaceholderNetworkContext/PlaceholderNetworkContext.h>
 #include <test/shared/MockMqttSnGatewayNetwork/GatewayNetworkMock.h>
 

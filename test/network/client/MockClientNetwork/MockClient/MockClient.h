@@ -9,7 +9,7 @@
 #include <atomic>
 #include "MockClientNetworkInterface.h"
 #include "MockClientNetworkReceiverInterface.h"
-#include "../../../../../forwarder/global_defines.h"
+#include "../../../../../platform/device_address.h"
 #include "ComparableClientMqttSnMessageData.h"
 #include "MockClientNetworkReceiver.h"
 #include <thread>

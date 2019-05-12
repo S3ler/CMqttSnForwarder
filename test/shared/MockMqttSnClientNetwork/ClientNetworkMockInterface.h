@@ -6,8 +6,8 @@
 #define CMQTTSNFORWARDER_CLIENTNETWORKMOCKINTERFACE_H
 
 #include <cstdint>
-#include <forwarder/MqttSnClientNetworkInterface.h>
-#include <forwarder/MqttSnFixedSizeRingBuffer.h>
+#include <network/MqttSnClientNetworkInterface.h>
+#include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
 
 class ClientNetworkMockInterface {
  public:

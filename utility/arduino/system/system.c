@@ -7,6 +7,7 @@
 #include <forwarder/network/shared/ip/IpHelper.h>
 #include <assert.h>
 #include <CMqttSnForwarderArduino.h>
+#include <platform/platform_compatibility.h>
 
 int connect_wifi(EEPROM_cfg *ecfg, const MqttSnLogger *logger, uint32_t timeout_ms) {
   if (strlen(ecfg->WiFi_cfg.ssid) == 0) {

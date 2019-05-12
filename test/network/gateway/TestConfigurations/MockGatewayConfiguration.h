@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_MOCKGATEWAYCONFIGURATION_H
 
 #include <cstdint>
-#include "../../../../forwarder/global_defines.h"
+#include "platform/device_address.h"
 #include "../MockGateway/MockGatewayNetworkInterface.h"
 
 class MockGatewayConfiguration {

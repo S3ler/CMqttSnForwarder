@@ -7,7 +7,7 @@
 
 #include <atomic>
 #include <thread>
-#include "../../../../forwarder/global_defines.h"
+#include "../../../../platform/device_address.h"
 #include "ComparableGatewayMqttSnMessageData.h"
 #include "MockGatewayNetworkReceiver.h"
 #include "MockGatewayNetworkInterface.h"
