@@ -2,23 +2,26 @@
 // Created by SomeDude on 01.05.2019.
 //
 #include "system.h"
-#include <forwarder/logging/MqttSnForwarderLoggingBasic.h>
-#include <forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h>
-#include <forwarder/network/shared/ip/IpHelper.h>
+#include "system_logging.h"
 #include <assert.h>
-#include <CMqttSnForwarderArduino.h>
 #include <platform/platform_compatibility.h>
+#include <string.h>
+#include <utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.h>
+#include <network/shared/ip/IpHelper.h>
+#include <network/shared/ip/IpHelperLogging.h>
+#include <network/arduino/shared/ip/ArduinoIpAddressHelper.h>
+#include <forwarder/config/forwarder_config_logger.h>
 
-int connect_wifi(EEPROM_cfg *ecfg, const MqttSnLogger *logger, uint32_t timeout_ms) {
-  if (strlen(ecfg->WiFi_cfg.ssid) == 0) {
+int connect_wifi(const char *ssid, const char *password, const MqttSnLogger *logger, uint32_t timeout_ms) {
+  if (strlen(ssid) == 0) {
     // WiFi not configured
     print_wifi_not_configured(logger);
     return -1;
   }
 #ifdef WITH_DEBUG_LOGGING
-  print_wifi_connecting_to(logger, ecfg->WiFi_cfg.ssid, ecfg->WiFi_cfg.password);
+  print_wifi_connecting_to(logger, ssid, password);
 #else
-  log_wifi_connecting_to(logger, ecfg->WiFi_cfg.ssid, NULL);
+  log_wifi_connecting_to(logger, ssid, NULL);
 #endif
   if (WiFi.status() == WL_CONNECTED) {
     WiFi.disconnect();
@@ -28,7 +31,7 @@ int connect_wifi(EEPROM_cfg *ecfg, const MqttSnLogger *logger, uint32_t timeout_
   uint32_t started = millis();
 
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ecfg->WiFi_cfg.ssid, ecfg->WiFi_cfg.password);
+  WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(250);
@@ -170,23 +173,10 @@ int StartsWith(const char *pre, const char *str) {
   return lenstr < lenpre ? false : strncmp(pre, str, lenpre) == 0;
 }
 
-int print_system_config_usage(const MqttSnLogger *logger) {
-  log_str(logger, PSTR("EEPROM Usage:     [-sr system_restart]\n"));
-  log_str(logger, PSTR("                  --system_help\n"));
-  log_flush(logger);
-  log_str(logger, PSTR(" -sr : restarts the system.\n"));
-#ifdef WITH_EEPROM
-  log_str(logger, PSTR("       EEPROM is not automatically saved.\n"));
-#endif
-  log_str(logger, PSTR(" --system_help : display this message.\n"));
-  log_flush(logger);
-  return log_status(logger);
-}
-
 int process_system_config_str(const MqttSnLogger *logger, char *ecfg_line, size_t ecfg_line_len) {
   assert(logger != NULL);
 
-  char *argv_0 = "ecfg_line";
+  const char *argv_0 = "ecfg_line";
 
   if (ecfg_line == NULL) {
     return -1;
@@ -195,6 +185,9 @@ int process_system_config_str(const MqttSnLogger *logger, char *ecfg_line, size_
     return -1;
   }
 
+  if (ecfg_line_len > EEPROM_LINE_SIZE) {
+    return -1;
+  }
   if (strlen(ecfg_line) + 1 != ecfg_line_len) {
     return -1;
   }
@@ -202,23 +195,22 @@ int process_system_config_str(const MqttSnLogger *logger, char *ecfg_line, size_
     return -1;
   }
 
-  size_t len = ecfg_line_len;
   int tk_count = 0;
   {
-    char line_copy[len];
-    memcpy(line_copy, ecfg_line, len);
+    char line_copy[EEPROM_LINE_SIZE];
+    memcpy(line_copy, ecfg_line, ecfg_line_len);
     // estimates argc
     for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
       tk_count++;
     }
   }
 
-  char *argv[tk_count];
+  char *argv[EEPROM_LINE_SIZE];
   int argc = 0;
-  char line_copy[len];
+  char line_copy[EEPROM_LINE_SIZE];
   {
-    memcpy(line_copy, ecfg_line, len);
-    argv[argc++] = argv_0;
+    memcpy(line_copy, ecfg_line, ecfg_line_len);
+    argv[argc++] = (char *) argv_0;
     for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
       argv[argc++] = tk;
     }
@@ -276,102 +268,3 @@ int process_system_config_token(const MqttSnLogger *logger, int argc, char *argv
   return 0;
 }
 
-#ifdef WITH_LOGGING
-int print_system_restarting(const MqttSnLogger *logger) {
-  log_str(logger, PSTR("Restarting system ..."));
-  log_flush(logger);
-  return log_status(logger);
-}
-int print_system_unknown_option(const MqttSnLogger *logger, const char *unknown_option) {
-  log_str(logger, PSTR("Error: Unknown system option "));
-  log_str(logger, unknown_option);
-  log_str(logger, PSTR("."));
-  log_flush(logger);
-  return log_status(logger);
-}
-int print_cannot_convert_or_resolve_network_address(const MqttSnLogger *logger,
-                                                    const char *hostname,
-                                                    const char *address_name) {
-  log_str(logger, PSTR("Cannot convert or resolve "));
-  log_str(logger, hostname);
-  log_str(logger, PSTR(" to "));
-  log_str(logger, address_name);
-  log_str(logger, PSTR(" network address."));
-  log_flush(logger);
-  return log_status(logger);
-}
-int print_resolved_hostname_to(const MqttSnLogger *logger, const char *hostname, const device_address *address) {
-  log_str(logger, PSTR("Resolved "));
-  log_str(logger, hostname);
-  log_str(logger, PSTR(" to "));
-  log_device_address(logger, address);
-  log_str(logger, PSTR("."));
-  log_flush(logger);
-  return log_status(logger);
-}
-int print_wifi_could_not_connect(const MqttSnLogger *logger) {
-  log_str(logger, PSTR("Could not connect to Wifi - configure with: --eeprom_wifi_name and --eeprom_wifi_password."));
-  log_flush(logger);
-  return log_status(logger);
-}
-int print_wifi_connected(const MqttSnLogger *logger) {
-  log_str(logger, PSTR(" Connected as: "));
-  IPAddress ownIp = WiFi.localIP();
-  print_arduino_IPAddress(logger, &ownIp);
-  log_flush(logger);
-  return log_status(logger);
-}
-int print_arduino_IPAddress(const MqttSnLogger *logger, const IPAddress *ipAddress) {
-  for (uint8_t i = 0; i < 4; i++) {
-    log_uint8(logger, (*ipAddress)[i]);
-    if (i + 1 < 4) {
-      log_str(logger, PSTR("."));
-    }
-  }
-  return log_status(logger);
-}
-int print_wifi_connecting_to(const MqttSnLogger *logger, const char *ssid, const char *password) {
-  log_str(logger, PSTR("Connecting to WiFi: "));
-  log_str(logger, ssid);
-  log_str(logger, PSTR(" , password: "));
-#ifdef WITH_DEBUG_LOGGING
-  log_str(logger, password);
-#else
-  log_str(logger, PSTR("****"));
-#endif
-  log_str(logger, PSTR(" "));
-  return log_status(logger);
-}
-int print_wifi_not_configured(const MqttSnLogger *logger) {
-  log_str(logger, PSTR("No WiFi Configuration found - configure with: --eeprom_wifi_name and --eeprom_wifi_password."));
-  log_flush(logger);
-  return log_status(logger);
-}
-int log_init_gateway_network_unknown_protocol(const MqttSnLogger *logger, const char *protocol) {
-  return log_init_network_unknown_protocol(logger, PSTR("gateway"), protocol);
-}
-int log_init_client_network_unknown_protocol(const MqttSnLogger *logger, const char *protocol) {
-  return log_init_network_unknown_protocol(logger, PSTR("client"), protocol);
-}
-int log_init_network_unknown_protocol(const MqttSnLogger *logger, const char *network_name, const char *protocol) {
-  log_str(logger, PSTR("Error init "));
-  log_str(logger, network_name);
-  log_str(logger, PSTR(" network unknown protocol: "));
-  log_str(logger, protocol);
-  log_flush(logger);
-  return log_status(logger);
-}
-int print_argc_argv(const MqttSnLogger *logger, int argc, char **argv) {
-  log_str(logger, PSTR("argc: "));
-  log_uint64(logger, argc);
-  log_str(logger, PSTR(" argv: "));
-  for (uint16_t i = 0; i < argc; i++) {
-    log_str(logger, argv[i]);
-    if (i + 1 < argc) {
-      log_str(logger, PSTR(", "));
-    }
-  }
-  log_flush(logger);
-  return log_status(logger);
-}
-#endif

@@ -17,7 +17,13 @@ extern "C" {
 #include <netinet/in.h>
 #include <logging/linux/stdout/StdoutLogging.h>
 #endif
+
 #define PSTR(str) (str)
+#if defined(WITH_LINUX_FAKE_ARDUINO_CLASSES)
+#include <digital.h>
+#include <ESPClass.h>
+#include <SerialClass.h>
+#endif
 #endif
 
 #ifdef __cplusplus

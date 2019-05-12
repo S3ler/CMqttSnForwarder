@@ -20,7 +20,6 @@ device_address get_device_address_from_tcp_file_descriptor(int file_descriptor);
 
 device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr);
 
-
 #ifdef __cplusplus
 }
 #endif

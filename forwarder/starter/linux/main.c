@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "forwarder_starter.h"
 #include <platform/platform_compatibility.h>
+#include <forwarder/config/forwarder_config_logger.h>
 
 int main(int argc, char *argv[]) {
   MqttSnLogger fcfg_logger = {0};

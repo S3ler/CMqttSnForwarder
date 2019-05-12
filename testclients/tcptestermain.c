@@ -99,7 +99,7 @@ int main() {
 
     { // FAKE MQTT-SN Gateway ping-pong
       if (is_fd_set(connected_forwarder_fd)) {
-        uint8_t  gateway_rec_buf[MAX_MSG_LEN + FORWARDER_HEADER_LEN + sizeof(device_address)] = {0};
+        uint8_t gateway_rec_buf[MAX_MSG_LEN + FORWARDER_HEADER_LEN + sizeof(device_address)] = {0};
         int gateway_rec_buf_len = recv_fd(connected_forwarder_fd, gateway_rec_buf,
                                           MAX_MSG_LEN + FORWARDER_HEADER_LEN + sizeof(device_address));
         if (gateway_rec_buf_len < 0) {

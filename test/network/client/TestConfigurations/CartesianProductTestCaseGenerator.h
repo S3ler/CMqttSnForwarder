@@ -5,7 +5,6 @@
 #ifndef CMQTTSNFORWARDER_CARTESIANTESTGENERATOR_H
 #define CMQTTSNFORWARDER_CARTESIANTESTGENERATOR_H
 
-
 #include "../../../../platform/device_address.h"
 #include "MqttSnClientNetworkTestValueParameter.h"
 
@@ -16,8 +15,6 @@ template<MockClientNetworkAddressGenerator generateNetworkAddress, class MockCli
 ::std::vector<MqttSnClientNetworkTestValueParameter> getParameterMqttSnClientNetworkTestTypeParameter(
     MqttSnGatewayClientNetworkTestConfiguration &mqttSnClientNetworkTestFixture,
     std::vector<std::shared_ptr<MockClientNetworkInterfaceType>> &mockClientNetworkInterfaces);
-
-
 
 typedef device_address(*MockClientNetworkAddressGenerator)(uint16_t);
 template<MockClientNetworkAddressGenerator generateNetworkAddress, class MockClientNetworkInterfaceType>

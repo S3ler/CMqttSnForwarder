@@ -5,6 +5,9 @@
 #ifndef CMQTTSNFORWARDER_UTILITY_ARDUINO_SYSTEM_H_
 #define CMQTTSNFORWARDER_UTILITY_ARDUINO_SYSTEM_H_
 
+#include <utility/arduino/eeprom/eeprom_config.h>
+#include <forwarder/config/forwarder_config.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,9 +16,15 @@ extern "C" {
 #include <WiFiUdp.h>
 #include <mDNSResolver.h>
 #endif
-#include <utility/arduino/eeprom/eeprom_config.h>
 
-int connect_wifi(EEPROM_cfg *ecfg, const MqttSnLogger *logger, uint32_t timeout_ms);
+#ifndef EXIT_FAILURE
+#define EXIT_FAILURE -1
+#endif
+#ifndef EXIT_SUCCESS
+#define EXIT_SUCCESS 0
+#endif
+
+int connect_wifi(const char *ssid, const char *password, const MqttSnLogger *logger, uint32_t timeout_ms);
 
 int parse_arduino_serial_line(char *line, size_t *line_pos, size_t line_max);
 
@@ -27,7 +36,6 @@ int convert_hostname_port_to_device_address(const MqttSnLogger *logger,
                                             device_address *address,
                                             const char *address_name);
 
-int print_system_config_usage(const MqttSnLogger *logger);
 int process_system_config_str(const MqttSnLogger *logger, char *ecfg_line, size_t ecfg_line_len);
 int validate_system_config_token(const MqttSnLogger *logger, int argc, char *argv[]);
 int process_system_config_token(const MqttSnLogger *logger, int argc, char *argv[]);
@@ -37,27 +45,7 @@ int EndsWith(const char *str, const char *suffix);
 int EndsWithLocal(const char *str);
 int StartsWith(const char *pre, const char *str);
 
-#ifdef WITH_LOGGING
-int print_system_restarting(const MqttSnLogger *logger);
-int print_system_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
-int print_resolved_hostname_to(const MqttSnLogger *logger, const char *hostname, const device_address *address);
-int print_wifi_not_configured(const MqttSnLogger *logger);
-int print_wifi_connecting_to(const MqttSnLogger *logger, const char *ssid, const char *password);
-int print_wifi_could_not_connect(const MqttSnLogger *logger);
-int print_wifi_connected(const MqttSnLogger *logger);
-int print_arduino_IPAddress(const MqttSnLogger *logger, const IPAddress *ipAddress);
-int connect_wifi(EEPROM_cfg *ecfg, const MqttSnLogger *logger, uint32_t timeout_ms);
-int print_cannot_convert_or_resolve_network_address(const MqttSnLogger *logger,
-                                                    const char *hostname,
-                                                    const char *address_name);
-int log_init_gateway_network_unknown_protocol(const MqttSnLogger *logger, const char *protocol);
-int log_init_client_network_unknown_protocol(const MqttSnLogger *logger, const char *protocol);
-int log_init_network_unknown_protocol(const MqttSnLogger *logger, const char *network_name, const char *protocol);
-int print_argc_argv(const MqttSnLogger *logger, int argc, char *argv[]);
-#endif
-
 #ifdef __cplusplus
 }
 #endif
-
 #endif //CMQTTSNFORWARDER_UTILITY_ARDUINO_SYSTEM_H_

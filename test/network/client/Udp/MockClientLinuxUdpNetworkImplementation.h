@@ -10,7 +10,7 @@
 
 #define MockClientLinuxUdpNetworkImplementation_BUFFER_SIZE 1024
 
-class MockClientLinuxUdpNetworkImplementation  : public MockClientNetworkInterface {
+class MockClientLinuxUdpNetworkImplementation : public MockClientNetworkInterface {
  private:
   int master_socket_fd = -1;
   device_address forwarderDeviceAddress;

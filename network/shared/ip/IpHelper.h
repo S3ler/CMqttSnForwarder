@@ -27,8 +27,6 @@ int convert_string_ip_port_to_device_address(const MqttSnLogger *logger,
                                              device_address *address,
                                              const char *address_name);
 
-
-
 #ifdef __cplusplus
 }
 #endif

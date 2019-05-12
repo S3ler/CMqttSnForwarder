@@ -13,7 +13,7 @@ class MockGatewayLinuxTcpNetworkImplementation : public MockGatewayNetworkInterf
  private:
   int master_socket_fd = -1;
   int forwarder_socket_fd = -1;
-  device_address* gatewayDeviceAddress;
+  device_address *gatewayDeviceAddress;
  public:
   bool isNetworkConnected() override;
 

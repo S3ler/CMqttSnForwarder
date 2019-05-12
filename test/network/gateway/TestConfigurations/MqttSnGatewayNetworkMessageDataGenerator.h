@@ -9,5 +9,4 @@
 
 uint8_t *defaultMessageDataGenerator(uint8_t *arr, uint16_t len);
 
-
 #endif //CMQTTSNFORWARDER_MQTTSNGATEWAYNETWORKMESSAGEDATAGENERATOR_H

@@ -5,6 +5,7 @@
 
 #include "ArduinoIpAddressHelper.h"
 #include <IPAddress.h>
+#include <platform/device_address.h>
 #include <network/shared/ip/IpHelper.h>
 
 void arduino_ipv4_and_port_to_device_address(IPAddress *src, uint16_t src_port, device_address *dst) {

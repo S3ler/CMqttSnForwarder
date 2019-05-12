@@ -15,7 +15,6 @@
 #include "MockLinuxUdpDatagram.h"
 #include <network/iphelper/MqttSnIpNetworkHelper.h>
 
-
 class MockLinuxUdpHelper {
  public:
   static int initializeUdpSocket(uint16_t port);

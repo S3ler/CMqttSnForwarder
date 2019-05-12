@@ -25,7 +25,6 @@
 
 #define FORWARDER_HEADER_LEN 3
 
-
 #pragma pack(push, 1)
 typedef struct MQTT_SN_PUBLISH {
   uint8_t length;
@@ -79,11 +78,11 @@ int main() {
     if (numRead > 0) {
       printf("You said: %s", buf);
 
-      if (strcmp((char*)buf, "exit\n") == 0) {
+      if (strcmp((char *) buf, "exit\n") == 0) {
         break;
       }
       MQTT_SN_PUBLISH publish = {0};
-      MqttSnPublishInit(&publish, buf, strlen((char*)buf));
+      MqttSnPublishInit(&publish, buf, strlen((char *) buf));
 
       struct sockaddr_in to_address;
       to_address.sin_family = AF_INET;

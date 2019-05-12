@@ -1,23 +1,27 @@
 cmake_minimum_required(VERSION 3.10)
 project(CMqttSnForwarder C CXX)
 
-if (BUILD_TESTING)
-    project(CMqttSnForwarder C CXX)
-else ()
+option(WITH_ARDUINO "Include WITH_ARDUINO support?" ON)
+if (NOT WITH_TESTING AND NOT WITH_ARDUINO)
     project(CMqttSnForwarder C)
-    set(VERSION a1)
-    set(MAJOR 0)
-    set(MINOR 1)
-    set(TWEAK 0)
-    string(TIMESTAMP CMAKE_BUILD_TIMESTAMP "%d-%m-%Y %H:%M:%S")
-    set(MANUAL_WEBSITE https://github.com/S3ler/CMqttSnForwarder)
-    add_definitions(-DVERSION=\"${VERSION}\"
-            -DMAJOR=${MAJOR}
-            -DMINOR=${MINOR}
-            -DTWEAK=${TWEAK}
-            -DCMAKE_BUILD_TIMESTAMP=\"${CMAKE_BUILD_TIMESTAMP}\"
-            -DMANUAL_WEBSITE=\"${MANUAL_WEBSITE}\")
-endif (BUILD_TESTING)
+elseif (WITH_TESTING)
+    project(CMqttSnForwarder C CXX)
+elseif (WITH_ARDUINO)
+    project(CMqttSnForwarder C CXX)
+endif ()
+
+set(VERSION a1)
+set(MAJOR 0)
+set(MINOR 1)
+set(TWEAK 0)
+string(TIMESTAMP CMAKE_BUILD_TIMESTAMP "%d-%m-%Y %H:%M:%S")
+set(MANUAL_WEBSITE https://github.com/S3ler/CMqttSnForwarder)
+add_definitions(-DVERSION=\"${VERSION}\"
+        -DMAJOR=${MAJOR}
+        -DMINOR=${MINOR}
+        -DTWEAK=${TWEAK}
+        -DCMAKE_BUILD_TIMESTAMP=\"${CMAKE_BUILD_TIMESTAMP}\"
+        -DMANUAL_WEBSITE=\"${MANUAL_WEBSITE}\")
 
 if (DEFINED CMAKE_CXX_COMPILER_ENV_VAR)
     set(CMAKE_CXX_STANDARD 11)
@@ -362,8 +366,13 @@ target_compile_options(lib-mqtt-sn-linux-forwarder-starter PUBLIC ${CMQTTSNFORWA
 target_link_libraries(lib-mqtt-sn-linux-forwarder-starter lib-mqtt-sn-forwarder pthread)
 
 set(MQTT_SN_FORWADER_CONFIG_FILES
-        forwarder/config/forwarder_config.h
-        forwarder/config/forwarder_config.c)
+        forwarder/config/forwarder_config.c
+        forwarder/config/forwarder_config.h)
+if (WITH_LOGGING)
+    set(MQTT_SN_FORWADER_CONFIG_FILES ${MQTT_SN_FORWADER_CONFIG_FILES}
+            forwarder/config/forwarder_config_logger.c
+            forwarder/config/forwarder_config_logger.h)
+endif ()
 add_library(lib-mqtt-sn-forwarder-config ${MQTT_SN_FORWADER_CONFIG_FILES})
 target_include_directories(lib-mqtt-sn-forwarder-config PRIVATE .)
 target_compile_options(lib-mqtt-sn-forwarder-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
@@ -374,9 +383,27 @@ if (WITH_MQTT_SN_FORWADER_CONFIG_FILE)
     add_definitions(-DWITH_MQTT_SN_FORWADER_CONFIG_FILE)
 endif ()
 
-if (NOT BUILD_TESTING)
-    message("Bulding as C project")
 
+add_executable(MqttSnForwarder forwarder/starter/linux/main.c)
+target_include_directories(MqttSnForwarder PRIVATE .)
+target_compile_options(MqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(MqttSnForwarder lib-mqtt-sn-forwarder lib-mqtt-sn-forwarder-config lib-mqtt-sn-linux-forwarder-starter)
+
+add_executable(TcpCMqttSnForwarderTester testclients/tcptestermain.c platform/device_address.h)
+target_include_directories(TcpCMqttSnForwarderTester PRIVATE .)
+target_link_libraries(TcpCMqttSnForwarderTester pthread)
+
+add_executable(UdpCMqttSnForwarderTester testclients/udptestermain.c platform/device_address.h)
+target_include_directories(UdpCMqttSnForwarderTester PRIVATE .)
+target_link_libraries(UdpCMqttSnForwarderTester pthread)
+
+option(WITH_HIREDIS_PLUGIN "Include HIREDIS_PLUGIN support?" OFF)
+if (WITH_HIREDIS_PLUGIN)
+    add_subdirectory(plugins)
+endif ()
+
+if (NOT WITH_TESTING AND NOT WITH_ARDUINO)
+    message("Bulding as C project")
     add_executable(CMqttSnForwarder forwarder/starter/linux/main.c)
     target_include_directories(CMqttSnForwarder PRIVATE .)
     target_compile_options(CMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
@@ -412,18 +439,7 @@ if (NOT BUILD_TESTING)
     #        target_link_libraries(UdpClientMulticastTester lib-mqtt-sn-logging)
     #    endif ()
 
-    # This target only exists for Clion IDE support for the following files:
-    #add_executable(ArduinoCMqttSnForwarder main/forwarder_config.h main/forwarder_config.c forwarder/network/arduino/shared/ip/udp/UdpHelper.c forwarder/network/arduino/shared/ip/udp/UdpHelper.h forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.c forwarder/network/arduino/client/ip/MqttSnClientUdpNetwork.h forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.c forwarder/network/arduino/gateway/ip/MqttSnGatewayUdpNetwork.h forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.c forwarder/network/arduino/shared/ip/ArduinoIpAddressHelper.h utility/arduino/eeprom/eeprom_config.c utility/arduino/eeprom/eeprom_config.h utility/arduino/system/system.c utility/arduino/system/system.h)
-    #target_include_directories(ArduinoCMqttSnForwarder PRIVATE .)
-    #target_compile_options(ArduinoCMqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-    #target_link_libraries(ArduinoCMqttSnForwarder
-    #        lib-mqtt-sn-forwarder lib-mqtt-sn-gateway-network lib-mqtt-sn-client-network)
-    #if (WITH_LOGGING)
-    #    target_link_libraries(ArduinoCMqttSnForwarder lib-mqtt-sn-logging)
-    #endif ()
-
-
-else ()
+elseif (WITH_TESTING)
     message("Bulding as C++ project")
 
     if (${CMAKE_CXX_STANDARD} LESS 11)
@@ -597,5 +613,94 @@ else ()
         endif ()
     endif ()
 
+elseif (WITH_ARDUINO)
+    message("Bulding as C++ project for Arduino")
+    if (${CMAKE_CXX_STANDARD} LESS 11)
+        message(FATAL_ERROR "Cannot build with less than C++11")
+    endif ()
 
+    if (WITH_ARDUINO)
+        option(WITH_LINUX_FAKE_ARDUINO_CLASSES "Include WITH_LINUX_FAKE_ARDUINO_CLASSES support?" ON)
+        if (WITH_LINUX_FAKE_ARDUINO_CLASSES)
+            #target_compile_definitions(-DWITH_LINUX_FAKE_ARDUINO_CLASSES)
+            #add_definitions(-DWITH_LINUX_FAKE_ARDUINO_CLASSES)
+            set(LINUX_FAKE_ARDUINO_CLASSES_FILES
+                    utility/linux/digital_fake/digital.c
+                    utility/linux/digital_fake/digital.h
+                    utility/linux/eeprom_fake/EEPROM.cpp
+                    utility/linux/eeprom_fake/EEPROM.h
+                    utility/linux/esp_fake/ESPClass.cpp
+                    utility/linux/esp_fake/ESPClass.h
+                    utility/linux/ipaddress_fake/IPAddress.cpp
+                    utility/linux/ipaddress_fake/IPAddress.h
+                    utility/linux/serial_fake/SerialClass.cpp
+                    utility/linux/serial_fake/SerialClass.h
+                    utility/linux/wifi_fake/ESP8266WiFi.cpp
+                    utility/linux/wifi_fake/ESP8266WiFi.h)
+            SET_SOURCE_FILES_PROPERTIES(${LINUX_FAKE_ARDUINO_CLASSES_FILES} PROPERTIES LANGUAGE CXX)
+                set(Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES
+                        .
+                        utility/linux/digital_fake
+                        utility/linux/eeprom_fake
+                        utility/linux/esp_fake
+                        utility/linux/ipaddress_fake
+                        utility/linux/serial_fake
+                        utility/linux/wifi_fake)
+            add_library(lib-arduino-linux-fake ${LINUX_FAKE_ARDUINO_CLASSES_FILES})
+            target_include_directories(lib-arduino-linux-fake PRIVATE ${Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES})
+        endif ()
+        set(MQTT_SN_ARDUINO_ESP8266_EEPROM_CONFIG_LINE_LOADER_FILES
+                utility/arduino/eeprom/eeprom_config.h
+                utility/arduino/eeprom/eeprom_config.c)
+        if (WITH_LOGGING)
+            set(MQTT_SN_ARDUINO_ESP8266_EEPROM_CONFIG_LINE_LOADER_FILES ${MQTT_SN_ARDUINO_ESP8266_EEPROM_CONFIG_LINE_LOADER_FILES}
+                    utility/arduino/eeprom/eeprom_config_logging.c
+                    utility/arduino/eeprom/eeprom_config_logging.h)
+        endif ()
+        add_library(lib-mqtt-sn-arduino-esp8266-eeprom-config-line-loader ${MQTT_SN_ARDUINO_ESP8266_EEPROM_CONFIG_LINE_LOADER_FILES})
+        target_include_directories(lib-mqtt-sn-arduino-esp8266-eeprom-config-line-loader PRIVATE .)
+        target_compile_options(lib-mqtt-sn-arduino-esp8266-eeprom-config-line-loader PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+        if (WITH_LINUX_FAKE_ARDUINO_CLASSES)
+            SET_SOURCE_FILES_PROPERTIES(${MQTT_SN_ARDUINO_ESP8266_EEPROM_CONFIG_LINE_LOADER_FILES} PROPERTIES LANGUAGE CXX)
+            target_compile_definitions(lib-mqtt-sn-arduino-esp8266-eeprom-config-line-loader PRIVATE WITH_LINUX_FAKE_ARDUINO_CLASSES)
+            target_include_directories(lib-mqtt-sn-arduino-esp8266-eeprom-config-line-loader PRIVATE ${Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES})
+        endif ()
+
+        set(MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES
+                utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.c
+                utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.h)
+        if (WITH_LOGGING)
+            set(MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES ${MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES}
+                    utility/arduino/eeprom/forwarder/forwarder_eeprom_loader_logging.c
+                    utility/arduino/eeprom/forwarder/forwarder_eeprom_loader_logging.h)
+        endif ()
+        add_library(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader ${MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES})
+        target_include_directories(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader PRIVATE .)
+        target_compile_options(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+        if (WITH_LINUX_FAKE_ARDUINO_CLASSES)
+            SET_SOURCE_FILES_PROPERTIES(${MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES} PROPERTIES LANGUAGE CXX)
+            target_compile_definitions(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader PRIVATE WITH_LINUX_FAKE_ARDUINO_CLASSES)
+            target_include_directories(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader PRIVATE ${Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES})
+        endif ()
+
+
+        set(MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES
+                utility/arduino/system/system.c
+                utility/arduino/system/system.h
+                network/arduino/shared/ip/ArduinoIpAddressHelper.c
+                network/arduino/shared/ip/ArduinoIpAddressHelper.h)
+        if (WITH_LOGGING)
+            set(MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES ${MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES}
+                    utility/arduino/system/system_logging.c
+                    utility/arduino/system/system_logging.h)
+        endif ()
+        add_library(lib-mqtt-sn-arduino-esp8266-system ${MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES})
+        target_include_directories(lib-mqtt-sn-arduino-esp8266-system PRIVATE .)
+        target_compile_options(lib-mqtt-sn-arduino-esp8266-system PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+        if (WITH_LINUX_FAKE_ARDUINO_CLASSES)
+            SET_SOURCE_FILES_PROPERTIES(${MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES} PROPERTIES LANGUAGE CXX)
+            target_compile_definitions(lib-mqtt-sn-arduino-esp8266-system PRIVATE WITH_LINUX_FAKE_ARDUINO_CLASSES)
+            target_include_directories(lib-mqtt-sn-arduino-esp8266-system PRIVATE ${Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES})
+        endif ()
+    endif ()
 endif ()

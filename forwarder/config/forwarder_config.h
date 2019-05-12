@@ -1,5 +1,8 @@
 #ifndef CMQTTSNFORWARDER_FORWARDER_CONFIG_H
 #define CMQTTSNFORWARDER_FORWARDER_CONFIG_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -114,23 +117,15 @@ typedef struct forwarder_config_ {
 
 } forwarder_config;
 
-int print_usage(const MqttSnLogger *logger);
-
 int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger);
 
 void forwarder_config_cleanup(forwarder_config *cfcg);
 
 int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]);
 
-int process_forwarder_config_str(forwarder_config *fcfg, char *line, size_t len, char *argv_o);
+int process_forwarder_config_str(forwarder_config *fcfg, char *line, size_t len, const char *argv_o);
 
-// logging
-int print_fcfg_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
-int print_invalid_timeout_given(const MqttSnLogger *logger, long timeout);
-int log_could_not_read_config_file(const MqttSnLogger *logger, char *strerror);
-int log_argument_value_not_specified(const MqttSnLogger *logger, const char *argument, const char *argument_name);
-int log_unsupported_url_scheme(const MqttSnLogger *logger);
-int log_invalid_protocol_version_given(const MqttSnLogger *logger);
-int log_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
-
+#ifdef __cplusplus
+}
+#endif
 #endif //CMQTTSNFORWARDER_FORWARDER_CONFIG_H

@@ -10,7 +10,11 @@
 
 class MockClientNetworkReceiver : public MockClientNetworkReceiverInterface {
  public:
-  MOCK_METHOD3(receive_any_message, void(device_address *address, uint8_t *data, uint16_t length));
+  MOCK_METHOD3(receive_any_message,
+  void(device_address
+  *address,
+  uint8_t *data, uint16_t
+  length));
 };
 
 #endif //CMQTTSNFORWARDER_MOCKCLIENTNETWORKRECEIVER_H

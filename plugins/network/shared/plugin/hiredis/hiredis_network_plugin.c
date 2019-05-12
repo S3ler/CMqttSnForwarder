@@ -61,7 +61,7 @@ void hiredis_plugin_network_deinit(void **plugin_context) {
   *plugin_context = NULL;
 }
 
-int hiredis_plugin_network_connect(const uint8_t* address,
+int hiredis_plugin_network_connect(const uint8_t *address,
                                    uint16_t address_len,
                                    uint16_t network_max_device_address_length,
                                    void *plugin_context) {
