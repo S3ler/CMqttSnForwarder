@@ -496,7 +496,7 @@ volumes:
 
 ---
 kind: pipeline
-name: LinuxCMqttSnForwarder
+name: LinuxMqttSnForwarder
 
 platform:
   os: linux
@@ -562,20 +562,20 @@ steps:
         path: /var/local/drone/reports
     commands:
       - cmake -DCMAKE_BUILD_TYPE=MinSizeRel 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp MqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/MqttSnForwarder
       - cmake -DCMAKE_BUILD_TYPE=Release 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp MqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/MqttSnForwarder
       - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp MqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/MqttSnForwarder
       - cmake -DCMAKE_BUILD_TYPE=MinSizeRel 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp MqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/MqttSnForwarder
       - cmake -DCMAKE_BUILD_TYPE= 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - cp CMqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/CMqttSnForwarder
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - cp MqttSnForwarder /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}/artifacts/MqttSnForwarder
 
   - name: GatherBuildReports
     image: ubuntu

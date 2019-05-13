@@ -286,7 +286,7 @@ volumes:
 
 ---
 kind: pipeline
-name: LinuxCMqttSnForwarder
+name: LinuxMqttSnForwarder
 
 platform:
   os: linux
@@ -359,20 +359,20 @@ steps:
       REPORT_PATH: /var/local/drone/reports/${DRONE_REPO}/${DRONE_BUILD_NUMBER}/${DRONE_RUNNER_PLATFORM}
     commands:
       - cmake -DCMAKE_BUILD_TYPE=MinSizeRel 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - mv CMqttSnForwarder $REPORT_PATH/$TARGET/CMqttSnForwarderMinSizeRel
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - mv MqttSnForwarder $REPORT_PATH/$TARGET/MqttSnForwarderMinSizeRel
       - cmake -DCMAKE_BUILD_TYPE=Release 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - mv CMqttSnForwarder $REPORT_PATH/$TARGET/CMqttSnForwarderRelease
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - mv MqttSnForwarder $REPORT_PATH/$TARGET/MqttSnForwarderRelease
       - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - mv CMqttSnForwarder $REPORT_PATH/$TARGET/CMqttSnForwarderRelWithDebInfo
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - mv MqttSnForwarder $REPORT_PATH/$TARGET/MqttSnForwarderRelWithDebInfo
       - cmake -DCMAKE_BUILD_TYPE=MinSizeRel 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - mv CMqttSnForwarder $REPORT_PATH/$TARGET/CMqttSnForwarderMinSizeRel
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - mv MqttSnForwarder $REPORT_PATH/$TARGET/MqttSnForwarderMinSizeRel
       - cmake -DCMAKE_BUILD_TYPE= 2>&1 | tee cmake_report
-      - cmake --build . --target CMqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
-      - mv CMqttSnForwarder $REPORT_PATH/$TARGET/CMqttSnForwarder
+      - cmake --build . --target MqttSnForwarder -- -j $(nproc)  2>&1 | tee make_report
+      - mv MqttSnForwarder $REPORT_PATH/$TARGET/MqttSnForwarder
 
 
   - name: GatherBuildReports
