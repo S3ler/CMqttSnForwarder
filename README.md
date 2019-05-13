@@ -1,13 +1,11 @@
 Featurelist:
-* multicast in tcp and upd for linx
 * search gw for mqtt-sn-gateway     // FEATURE implement searching for gateway
-* indicator for ctrl flag in encapsulated messages
 * fix tests
 * use network interface by address
 * filter out non-mqtt-sn-gateway address on gateway network interface
 arduino
-* multicast in tcp and upd for linx
-*
+* multicast in tcp  for
+* default configuration on error
 
 // TODO enable GW MQTT-SN message header check?
 

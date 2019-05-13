@@ -17,7 +17,9 @@ extern "C" {
 #include <netinet/in.h>
 #include <logging/linux/stdout/StdoutLogging.h>
 #endif
-
+#include <string.h>
+//#define strcmp_P(str, pstr) strcmp(str, pstr)
+int strcmp_P(const char *a, const char *b);
 #define PSTR(str) (str)
 #if defined(WITH_LINUX_FAKE_ARDUINO_CLASSES)
 #include <digital.h>

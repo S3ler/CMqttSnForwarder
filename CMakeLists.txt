@@ -387,7 +387,7 @@ endif ()
 add_executable(MqttSnForwarder forwarder/starter/linux/main.c)
 target_include_directories(MqttSnForwarder PRIVATE .)
 target_compile_options(MqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-target_link_libraries(MqttSnForwarder lib-mqtt-sn-forwarder lib-mqtt-sn-forwarder-config lib-mqtt-sn-linux-forwarder-starter)
+target_link_libraries(MqttSnForwarder lib-mqtt-sn-forwarder lib-mqtt-sn-forwarder-config lib-mqtt-sn-linux-forwarder-starter lib-mqtt-sn-platform-abstraction-layer)
 
 add_executable(TcpCMqttSnForwarderTester testclients/tcptestermain.c platform/device_address.h)
 target_include_directories(TcpCMqttSnForwarderTester PRIVATE .)
@@ -638,14 +638,14 @@ elseif (WITH_ARDUINO)
                     utility/linux/wifi_fake/ESP8266WiFi.cpp
                     utility/linux/wifi_fake/ESP8266WiFi.h)
             SET_SOURCE_FILES_PROPERTIES(${LINUX_FAKE_ARDUINO_CLASSES_FILES} PROPERTIES LANGUAGE CXX)
-                set(Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES
-                        .
-                        utility/linux/digital_fake
-                        utility/linux/eeprom_fake
-                        utility/linux/esp_fake
-                        utility/linux/ipaddress_fake
-                        utility/linux/serial_fake
-                        utility/linux/wifi_fake)
+            set(Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES
+                    .
+                    utility/linux/digital_fake
+                    utility/linux/eeprom_fake
+                    utility/linux/esp_fake
+                    utility/linux/ipaddress_fake
+                    utility/linux/serial_fake
+                    utility/linux/wifi_fake)
             add_library(lib-arduino-linux-fake ${LINUX_FAKE_ARDUINO_CLASSES_FILES})
             target_include_directories(lib-arduino-linux-fake PRIVATE ${Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES})
         endif ()

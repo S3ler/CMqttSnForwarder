@@ -651,7 +651,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
     }
 #endif
 #endif
-    else if (!strcmp(argv[i], "--help")) {
+    else if (!strcmp_P(argv[i], "--help")) {
       return FORWARDER_CONFIG_HELP;
     } else {
       log_unknown_option(fcfg->logger, argv[i]);

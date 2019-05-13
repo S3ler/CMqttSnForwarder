@@ -159,7 +159,7 @@ int process_eeprom_config_str(EEPROM_cfg *ecfg, const MqttSnLogger *logger, char
 }
 int validate_eeprom_config_token(const MqttSnLogger *logger, int argc, char *argv[]) {
   for (int i = 1; i < argc; i++) {
-    if (!strcmp(argv[i], "-el") || !strcmp(argv[i], "--eeprom_lock")) {
+    if (!strcmp_P(argv[i], "-el") || !strcmp_P(argv[i], "--eeprom_lock")) {
       i++;
     } else if (!strcmp(argv[i], "-eu") || !strcmp(argv[i], "--eeprom_unlock")) {
       i++;
