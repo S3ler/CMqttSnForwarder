@@ -14,31 +14,37 @@ extern "C" {
 #include <logging/MqttSnLoggingInterface.h>
 #endif
 
+typedef enum MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_ {
+  MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DEINITIALIZED = 0,
+  MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_INITIALIZED = 1,
+  MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED = 2,
+  MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED = 3
+} MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS;
+
 typedef struct MqttSnGatewayNetworkInterface_ {
-
-  int status;
-
-  int (*gateway_network_receive)(struct MqttSnGatewayNetworkInterface_ *,
-                                 MqttSnFixedSizeRingBuffer *,
-                                 int32_t,
-                                 void *context);
-
-  int (*gateway_network_send)(struct MqttSnGatewayNetworkInterface_ *,
-                              MqttSnFixedSizeRingBuffer *,
-                              int32_t,
-                              void *context);
-
-  int (*gateway_network_init)(struct MqttSnGatewayNetworkInterface_ *, void *context);
-
-  int (*gateway_network_connect)(struct MqttSnGatewayNetworkInterface_ *, void *context);
-
-  void (*gateway_network_disconnect)(struct MqttSnGatewayNetworkInterface_ *, void *context);
-
-  device_address *gateway_network_address;
+  MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS status;
+  uint16_t max_data_length;
 
   device_address *mqtt_sn_gateway_address;
-
+  device_address *gateway_network_address;
   device_address *gateway_network_broadcast_address;
+
+  int32_t (*initialize)(struct MqttSnGatewayNetworkInterface_ *, void *context);
+  int32_t (*deinitialize)(struct MqttSnGatewayNetworkInterface_ *, void *context);
+
+  int32_t (*connect)(struct MqttSnGatewayNetworkInterface_ *, void *context);
+  int32_t (*disconnect)(struct MqttSnGatewayNetworkInterface_ *, void *context);
+
+  int32_t (*send)(struct MqttSnGatewayNetworkInterface_ *,
+                  const device_address *, const uint8_t *, uint16_t, uint16_t *,
+                  uint8_t,
+                  int32_t,
+                  void *context);
+  int32_t (*receive)(struct MqttSnGatewayNetworkInterface_ *,
+                     device_address *, uint8_t *, uint16_t *, uint16_t,
+                     uint8_t *,
+                     int32_t,
+                     void *context);
 
 #ifdef WITH_LOGGING
   MqttSnLogger *logger;
@@ -46,26 +52,29 @@ typedef struct MqttSnGatewayNetworkInterface_ {
 
 } MqttSnGatewayNetworkInterface;
 
-int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
-                       device_address *mqtt_sn_gateway_address,
-                       device_address *gateway_network_address,
-                       device_address *gateway_network_broadcast_address,
-                       void *context,
-                       int (*gateway_network_init)(MqttSnGatewayNetworkInterface *, void *));
+int32_t GatewayNetworkInitialize(MqttSnGatewayNetworkInterface *n,
+                                 uint16_t max_data_length,
+                                 device_address *mqtt_sn_gateway_address,
+                                 device_address *gateway_network_address,
+                                 device_address *gateway_network_broadcast_address,
+                                 void *context,
+                                 int (*gateway_network_initialize)(MqttSnGatewayNetworkInterface *, void *));
 
-int GatewayNetworkConnect(MqttSnGatewayNetworkInterface *, void *context);
+int32_t GatewayNetworkDeinitialize(MqttSnGatewayNetworkInterface *n, void *context);
 
-void GatewayNetworkDisconnect(MqttSnGatewayNetworkInterface *, void *context);
+int32_t GatewayNetworkConnect(MqttSnGatewayNetworkInterface *n, void *context);
 
-int GatewayNetworkSend(MqttSnGatewayNetworkInterface *n,
-                       MqttSnFixedSizeRingBuffer *sendBuffer,
-                       int timeout_ms,
-                       void *context);
+int32_t GatewayNetworkDisconnect(MqttSnGatewayNetworkInterface *n, void *context);
 
-int GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
-                          MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          int timeout_ms,
-                          void *context);
+int32_t GatewayNetworkSend(MqttSnGatewayNetworkInterface *n,
+                           MqttSnFixedSizeRingBuffer *sendBuffer,
+                           int timeout_ms,
+                           void *context);
+
+int32_t GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
+                              MqttSnFixedSizeRingBuffer *receiveBuffer,
+                              int timeout_ms,
+                              void *context);
 
 #ifdef __cplusplus
 }

@@ -6,95 +6,181 @@
 #include <assert.h>
 #include <stdio.h>
 
-int GatewayNetworkInit(MqttSnGatewayNetworkInterface *n,
-                       device_address *mqtt_sn_gateway_address,
-                       device_address *gateway_network_address,
-                       device_address *gateway_network_broadcast_address,
-                       void *context,
-                       int (*gateway_network_init)(MqttSnGatewayNetworkInterface *, void *)) {
-  assert(gateway_network_init != NULL);
-
-  n->status = 0;
+int32_t GatewayNetworkInitialize(MqttSnGatewayNetworkInterface *n,
+                                 uint16_t max_data_length,
+                                 device_address *mqtt_sn_gateway_address,
+                                 device_address *gateway_network_address,
+                                 device_address *gateway_network_broadcast_address,
+                                 void *context,
+                                 int (*gateway_network_init)(MqttSnGatewayNetworkInterface *, void *)) {
+  if (!(n->status == MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DEINITIALIZED
+      || n->status == MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_INITIALIZED)) {
+    return -1;
+  }
+  if (gateway_network_init == NULL) {
+    return -1;
+  }
+  n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DEINITIALIZED;
+  n->max_data_length = max_data_length;
   n->gateway_network_address = gateway_network_address;
   n->mqtt_sn_gateway_address = mqtt_sn_gateway_address;
-  n->gateway_network_broadcast_address = gateway_network_broadcast_address,
-      n->gateway_network_init = gateway_network_init;
-  if (n->gateway_network_init(n, context) == 0) {
-    assert(n->gateway_network_init != NULL);
-    assert(n->gateway_network_connect != NULL);
-    assert(n->gateway_network_disconnect != NULL);
-    assert(n->gateway_network_send != NULL);
-    assert(n->gateway_network_receive != NULL);
-    n->status = 1;
+  n->gateway_network_broadcast_address = gateway_network_broadcast_address;
+  n->initialize = gateway_network_init;
+  if (n->initialize(n, context) == 0) {
+    if (n->initialize == NULL) {
+      return -1;
+    }
+    if (n->deinitialize == NULL) {
+      return -1;
+    }
+    if (n->connect == NULL) {
+      return -1;
+    }
+    if (n->disconnect == NULL) {
+      return -1;
+    }
+    if (n->send == NULL) {
+      return -1;
+    }
+    if (n->receive == NULL) {
+      return -1;
+    }
+
+    n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_INITIALIZED;
   } else {
-    n->status = -1;
+    n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DEINITIALIZED;
   }
 
-  if (n->status != 1) {
+  if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_INITIALIZED) {
     return -1;
   }
   return 0;
 }
 
-int GatewayNetworkConnect(MqttSnGatewayNetworkInterface *n, void *context) {
-  if (n->status != 1) {
+int32_t GatewayNetworkDeinitialize(MqttSnGatewayNetworkInterface *n, void *context) {
+  if (!(n->status == MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED
+      || n->status == MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DEINITIALIZED)) {
     return -1;
   }
-  assert(n->gateway_network_connect != NULL);
-  if (n->status == 1 &&
-      n->gateway_network_connect != NULL &&
-      n->gateway_network_connect(n, context) == 0) {
-    n->status = 2;
-  } else {
-    n->status = -1;
+  if (n->deinitialize == NULL) {
+    return -1;
   }
-
-  if (n->status != 2) {
+  n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DEINITIALIZED;
+  if (n->deinitialize(n, context) < 0) {
     return -1;
   }
   return 0;
 }
 
-void GatewayNetworkDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
-  if (n->gateway_network_disconnect != NULL) {
-    n->gateway_network_disconnect(n, context);
-  }
-  n->status = -1;
-}
-
-int GatewayNetworkSend(MqttSnGatewayNetworkInterface *n,
-                       MqttSnFixedSizeRingBuffer *sendBuffer,
-                       int timeout_ms,
-                       void *context) {
-  if (n->status != 2) {
+int32_t GatewayNetworkConnect(MqttSnGatewayNetworkInterface *n, void *context) {
+  if (!(n->status == MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_INITIALIZED
+      || n->status == MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED)) {
     return -1;
   }
-  assert(n->gateway_network_send != NULL);
-  if (n->gateway_network_send(n, sendBuffer, timeout_ms, context)) {
-    n->status = -1;
+  if (n->connect == NULL) {
+    return -1;
   }
 
-  if (n->status != 2) {
+  if (n->connect(n, context) < 0) {
+    n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED;
+  }
+  n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED;
+
+  if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED) {
     return -1;
   }
   return 0;
 }
 
-int GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
-                          MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          int timeout_ms,
-                          void *context) {
-  if (n->status != 2) {
+int32_t GatewayNetworkDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
+  if (!(n->status == MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED
+      || n->status == MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED)) {
     return -1;
   }
-  assert(n->gateway_network_receive != NULL);
-  if (n->gateway_network_receive(n, receiveBuffer, timeout_ms, context)) {
-    n->status = -1;
+  if (n->disconnect == NULL) {
+    return -1;
   }
 
-  if (n->status != 2) {
+  n->disconnect(n, context);
+  n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED;
+
+  return 0;
+}
+
+int32_t GatewayNetworkSend(MqttSnGatewayNetworkInterface *n,
+                           MqttSnFixedSizeRingBuffer *sendBuffer,
+                           int timeout_ms,
+                           void *context) {
+  if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED) {
+    return -1;
+  }
+  if (n->send == NULL) {
+    return -1;
+  }
+
+  MqttSnMessageData msg = {0};
+  if (pop(sendBuffer, &msg) != 0) {
+    return 0;
+  }
+
+  uint16_t send_data_len = 0;
+  if (n->send(n,
+              &msg.address,
+              msg.data,
+              msg.data_length,
+              &send_data_len,
+              msg.broadcast_radius,
+              timeout_ms,
+              context) < 0) {
+    n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED;
+  }
+
+  if (msg.data_length != send_data_len) {
+    if (put(sendBuffer, &msg) < 0) {
+      return -1;
+    }
+  }
+
+  if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED) {
     return -1;
   }
   return 0;
 }
 
+int32_t GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
+                              MqttSnFixedSizeRingBuffer *receiveBuffer,
+                              int timeout_ms,
+                              void *context) {
+  if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED) {
+    return -1;
+  }
+  if (n->receive == NULL) {
+    return -1;
+  }
+
+  if (isFull(receiveBuffer)) {
+    return 0;
+  }
+  MqttSnMessageData msg = {0};
+  if (n->receive(n,
+                 &msg.address,
+                 msg.data,
+                 &msg.data_length,
+                 n->max_data_length,
+                 &msg.broadcast_radius,
+                 timeout_ms,
+                 context) < 0) {
+    n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED;
+  }
+
+  if (msg.data_length > 0) {
+    if (put(receiveBuffer, &msg) < 0) {
+      // ignored
+    }
+  }
+
+  if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED) {
+    return -1;
+  }
+  return 0;
+}

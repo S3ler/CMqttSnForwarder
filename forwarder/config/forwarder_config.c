@@ -30,7 +30,13 @@ int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
   fcfg->gateway_network_protocol = fcfg->udp;
   fcfg->gateway_network_bind_port = 9999;
   // gateway network broadcast
+#if defined(WITH_LINUX_UDP_GATEWAY_NETWORK) && defined(WITH_LINUX_TCP_GATEWAY_NETWORK)
   fcfg->gateway_network_broadcast_protocol = fcfg->udp;
+#elif defined(WITH_LINUX_UDP_GATEWAY_NETWORK)
+  fcfg->gateway_network_broadcast_protocol = fcfg->udp;
+#elif defined(WITH_LINUX_TCP_GATEWAY_NETWORK)
+  fcfg->gateway_network_broadcast_protocol = fcfg->tcp;
+#endif
   memcpy(fcfg->gateway_network_default_broadcast_address,
          DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS,
          sizeof(DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS));
@@ -42,7 +48,13 @@ int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
   fcfg->client_network_protocol = fcfg->udp;
   fcfg->client_network_bind_port = 7777;
   // client network broadcast
+#if defined(WITH_LINUX_UDP_CLIENT_NETWORK) && defined(WITH_LINUX_TCP_CLIENT_NETWORK)
   fcfg->client_network_broadcast_protocol = fcfg->udp;
+#elif defined(WITH_LINUX_UDP_CLIENT_NETWORK)
+  fcfg->client_network_broadcast_protocol = fcfg->udp;
+#elif defined(WITH_LINUX_TCP_CLIENT_NETWORK)
+  fcfg->client_network_broadcast_protocol = fcfg->tcp;
+#endif
   memcpy(fcfg->client_network_default_broadcast_address,
          DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS,
          sizeof(DEFAULT_MQTT_SN_CLIENT_BROADCAST_ADDRESS));
@@ -366,15 +378,15 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     }
 #ifdef WITH_LINUX_PLUGIN_NETWORK
-    else if (!strcmp(argv[i], "-gnp") || !strcmp(argv[i], "--gateway_network_plugin")) {
-      if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "path");
-        return 1;
-      } else {
-        fcfg->gateway_network_plugin_path = strdup(argv[i + 1]);
+      else if (!strcmp(argv[i], "-gnp") || !strcmp(argv[i], "--gateway_network_plugin")) {
+        if (i == argc - 1) {
+          log_argument_value_not_specified(fcfg->logger, argv[i], "path");
+          return 1;
+        } else {
+          fcfg->gateway_network_plugin_path = strdup(argv[i + 1]);
+        }
+        i++;
       }
-      i++;
-    }
 #endif
     else if (!strcmp(argv[i], "-cP") || !strcmp(argv[i], "--client_network_protocol")) {
       if (i == argc - 1) {
@@ -613,15 +625,15 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #endif
 #endif
 #ifdef WITH_LINUX_PLUGIN_NETWORK
-    else if (!strcmp(argv[i], "-cnp") || !strcmp(argv[i], "--client_network_plugin")) {
-      if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "path");
-        return 1;
-      } else {
-        fcfg->client_network_plugin_path = strdup(argv[i + 1]);
+      else if (!strcmp(argv[i], "-cnp") || !strcmp(argv[i], "--client_network_plugin")) {
+        if (i == argc - 1) {
+          log_argument_value_not_specified(fcfg->logger, argv[i], "path");
+          return 1;
+        } else {
+          fcfg->client_network_plugin_path = strdup(argv[i + 1]);
+        }
+        i++;
       }
-      i++;
-    }
 #endif
     else if (!strcmp(argv[i], "-V") || !strcmp(argv[i], "--protocol-version")) {
       if (i == argc - 1) {

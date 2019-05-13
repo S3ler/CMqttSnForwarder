@@ -15,11 +15,11 @@ int ClientLinuxPluginInit(MqttSnClientNetworkInterface *n, void *context) {
   pluginClientNetwork->dl_handle = NULL;
   pluginClientNetwork->plugin_context = NULL;
 
-  n->client_network_init = ClientLinuxPluginInit;
-  n->client_network_receive = ClientLinuxPluginReceive;
-  n->client_network_send = ClientLinuxPluginSend;
-  n->client_network_connect = ClientLinuxPluginConnect;
-  n->client_network_disconnect = ClientLinuxPluginDisconnect;
+  n->init = ClientLinuxPluginInit;
+  n->receive = ClientLinuxPluginReceive;
+  n->send = ClientLinuxPluginSend;
+  n->connect = ClientLinuxPluginConnect;
+  n->disconnect = ClientLinuxPluginDisconnect;
 
   char *error = NULL;
 

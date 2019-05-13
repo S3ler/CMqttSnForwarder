@@ -32,11 +32,11 @@ int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
     tcpNetwork->client_buffer_bytes[i] = 0;
   }
 
-  n->client_network_init = ClientLinuxTcpInit;
-  n->client_network_connect = ClientLinuxTcpConnect;
-  n->client_network_disconnect = ClientLinuxTcpDisconnect;
-  n->client_network_receive = ClientLinuxTcpReceive;
-  n->client_network_send = ClientLinuxTcpSend;
+  n->init = ClientLinuxTcpInit;
+  n->connect = ClientLinuxTcpConnect;
+  n->disconnect = ClientLinuxTcpDisconnect;
+  n->receive = ClientLinuxTcpReceive;
+  n->send = ClientLinuxTcpSend;
   return 0;
 }
 

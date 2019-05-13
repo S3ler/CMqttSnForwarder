@@ -64,6 +64,8 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
 void MqttSnForwarderDeinit(MqttSnForwarder *forwarder) {
   GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
+  GatewayNetworkDeinitialize(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
+  ClientNetworkDeinitialize(&forwarder->clientNetwork, forwarder->clientNetworkContext);
 #ifdef WITH_LOGGING
   forwarder->logger.log_deinit(&forwarder->logger);
 #endif
@@ -164,19 +166,20 @@ void sendBufferedMessagesToClients(MqttSnForwarder *forwarder) {
     {
       MqttSnMessageData gatewayMessageData = {0};
       MqttSnMessageData clientMessageData = {0};
-      if (RemoveForwardingHeaderFromGatewayMessages(forwarder, &gatewayMessageData, &clientMessageData) != 0) {
+      if (RemoveForwardingHeaderFromGatewayMessages(forwarder, &gatewayMessageData, &clientMessageData) < 0) {
         break;
       }
     }
-    if (forwarder->clientNetwork.client_network_send(
-        &forwarder->clientNetwork,
-        &forwarder->clientNetworkSendBuffer,
-        forwarder->clientNetworkSendTimeout,
-        forwarder->clientNetworkContext) != 0) {
+    if (ClientNetworkSend(&forwarder->clientNetwork,
+                          &forwarder->clientNetworkSendBuffer,
+                          forwarder->clientNetworkSendTimeout,
+                          forwarder->clientNetworkContext) < 0) {
+      // TODO add Timeout or starvation detection
       break;
     }
   }
 }
+
 void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder) {
   while (!isEmpty(&forwarder->clientNetworkReceiveBuffer) |
       !isEmpty(&forwarder->gatewayNetworkSendBuffer)) {
@@ -187,12 +190,11 @@ void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder) {
         break;
       }
     }
-
-    if (forwarder->gatewayNetwork.gateway_network_send(
-        &forwarder->gatewayNetwork,
-        &forwarder->gatewayNetworkSendBuffer,
-        forwarder->gatewayNetworkSendTimeout,
-        forwarder->gatewayNetworkContext) != 0) {
+    if (GatewayNetworkSend(&forwarder->gatewayNetwork,
+                           &forwarder->gatewayNetworkSendBuffer,
+                           forwarder->gatewayNetworkSendTimeout,
+                           forwarder->gatewayNetworkContext) < 0) {
+      // TODO add Timeout or starvation detection
       break;
     }
   }

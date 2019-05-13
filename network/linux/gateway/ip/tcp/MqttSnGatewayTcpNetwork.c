@@ -22,16 +22,16 @@
 int GatewayLinuxTcpInit(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayTcpNetwork *tcpNetwork = (MqttSnGatewayTcpNetwork *) context;
 #ifdef WITH_TCP_BROADCAST
-  if (GatewayLinuxUdpInit(n, &tcpNetwork->udp_multicast_network) < 0) {
+  if (GatewayLinuxUdpInitialize(n, &tcpNetwork->udp_multicast_network) < 0) {
     return -1;
   }
 #endif
   tcpNetwork->mqtt_sg_gateway_fd = -1;
   strcpy(tcpNetwork->protocol, CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXTCPNETWORKPROTOCOL);
-  n->gateway_network_receive = GatewayLinuxTcpReceive;
-  n->gateway_network_send = GatewayLinuxTcpSend;
-  n->gateway_network_connect = GatewayLinuxTcpConnect;
-  n->gateway_network_disconnect = GatewayLinuxTcpDisconnect;
+  n->receive = GatewayLinuxTcpReceive;
+  n->send = GatewayLinuxTcpSend;
+  n->connect = GatewayLinuxTcpConnect;
+  n->disconnect = GatewayLinuxTcpDisconnect;
 
   return 0;
 }
@@ -133,7 +133,7 @@ int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n,
 
 #ifdef WITH_TCP_BROADCAST
   if (n->gateway_network_broadcast_address) {
-    if (GatewayLinuxUdpReceive(n, receiveBuffer, 0, &tcpNetwork->udp_multicast_network) < 0) {
+    if (GatewayLinuxUdpReceive(n, NULL, receiveBuffer, 0, &tcpNetwork->udp_multicast_network, NULL, 0, NULL) < 0) {
       return -1;
     }
   }
@@ -172,7 +172,7 @@ int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
         // error which should never happen
         return -1;
       }
-      if (GatewayLinuxUdpSend(n, &tmp_sendQueue, 0, &tcpNetwork->udp_multicast_network) < 0) {
+      if (GatewayLinuxUdpSend(n, NULL, &tmp_sendQueue, 0, &tcpNetwork->udp_multicast_network, 0, 0, NULL) < 0) {
         return -1;
       }
       return 0;

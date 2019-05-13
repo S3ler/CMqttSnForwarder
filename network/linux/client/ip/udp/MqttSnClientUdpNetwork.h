@@ -8,32 +8,52 @@ extern "C" {
 #include <network/MqttSnClientNetworkInterface.h>
 
 #define CMQTTSNFORWARDER_MQTTSNCLIENTLINUXUDPNETWORKPROTOCOL "udp"
-#define CMQTTSNFORWARDER_MQTTSNCLIENTUDPNETWORK_MAX_DATA_LENGTH 1024
 
 typedef struct MqttSnClientUdpNetwork_ {
   int unicast_socket;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNCLIENTLINUXUDPNETWORKPROTOCOL)];
+  uint64_t received_messages;
 #ifdef WITH_UDP_BROADCAST
   int multicast_socket;
 #endif
 } MqttSnClientUdpNetwork;
 
-int ClientLinuxUdpInit(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxUdpInitialize(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxUdpDeinitialize(MqttSnClientNetworkInterface *n, void *context);
 
-int ClientLinuxUdpConnect(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxUdpConnect(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxUdpDisconnect(MqttSnClientNetworkInterface *n, void *context);
 
-void ClientLinuxUdpDisconnect(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
+                           const device_address *from,
+                           const uint8_t *data,
+                           uint16_t data_length,
+                           uint16_t *send_data_length,
+                           uint8_t signal_strength,
+                           int32_t timeout_ms,
+                           void *context);
+int32_t ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
+                              device_address *from,
+                              uint8_t *data,
+                              uint16_t *data_length,
+                              uint16_t max_data_length,
+                              uint8_t *signal_strength,
+                              int32_t timeout_ms,
+                              void *context);
 
-int ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
-                          MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          int32_t timeout_ms,
-                          void *context);
-
-int ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
-                       MqttSnFixedSizeRingBuffer *sendBuffer,
-                       int32_t timeout_ms,
-                       void *context);
-
+int32_t ClientLinuxUdpReceiveUnicast(MqttSnClientNetworkInterface *n,
+                                     device_address *from,
+                                     uint8_t *data,
+                                     uint16_t *data_length,
+                                     uint16_t max_data_length,
+                                     MqttSnClientUdpNetwork *udpNetwork);
+int32_t ClientLinuxUdpReceiveMulticast(MqttSnClientNetworkInterface *n,
+                                       device_address *from,
+                                       uint8_t *data,
+                                       uint16_t *data_length,
+                                       uint16_t max_data_length,
+                                       uint8_t *signal_strength,
+                                       MqttSnClientUdpNetwork *udpNetwork);
 #ifdef __cplusplus
 }
 #endif

@@ -267,12 +267,13 @@ int start_gateway_udp(const forwarder_config *fcfg,
     return EXIT_FAILURE;
   }
 
-  if (GatewayNetworkInit(&mqttSnForwarder->gatewayNetwork,
-                         &mqttSnGatewayNetworkAddress,
-                         &forwarderGatewayNetworkAddress,
-                         &forwarderGatewayNetworkBroadcastAddress,
-                         &udpGatewayNetworkContext,
-                         GatewayLinuxUdpInit)) {
+  if (GatewayNetworkInitialize(&mqttSnForwarder->gatewayNetwork,
+                               CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                               &mqttSnGatewayNetworkAddress,
+                               &forwarderGatewayNetworkAddress,
+                               &forwarderGatewayNetworkBroadcastAddress,
+                               &udpGatewayNetworkContext,
+                               GatewayLinuxUdpInitialize)) {
     fprintf(stderr, "Error init gateway network\n");
     return EXIT_FAILURE;
   }
@@ -440,12 +441,13 @@ int start_client_udp(const forwarder_config *fcfg,
     return EXIT_FAILURE;
   }
 
-  if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
-                        &mqttSnGatewayNetworkAddress,
-                        &forwarderClientNetworkAddress,
-                        &forwarderClientNetworkBroadcastAddress,
-                        &udpClientNetworkContext,
-                        ClientLinuxUdpInit)) {
+  if (ClientNetworkInitialize(&mqttSnForwarder->clientNetwork,
+                              CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                              &mqttSnGatewayNetworkAddress,
+                              &forwarderClientNetworkAddress,
+                              &forwarderClientNetworkBroadcastAddress,
+                              &udpClientNetworkContext,
+                              ClientLinuxUdpInitialize)) {
     fprintf(stderr, "Error init client network\n");
     return EXIT_FAILURE;
   }

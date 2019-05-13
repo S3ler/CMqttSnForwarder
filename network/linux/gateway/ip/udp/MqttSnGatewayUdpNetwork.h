@@ -12,32 +12,54 @@ extern "C" {
 #include <network/MqttSnGatewayNetworkInterface.h>
 
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXUDPNETWORKPROTOCOL "udp"
-#define CMQTTSNFORWARDER_MQTTSNGATEWAYUDPNETWORK_MAX_DATA_LENGTH 1024
 
-// TODO save delete
 typedef struct MqttSnGatewayUdpNetwork_ {
   int unicast_socket;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXUDPNETWORKPROTOCOL)];
+  uint64_t received_messages;
 #ifdef WITH_UDP_BROADCAST
   int multicast_socket;
 #endif
 } MqttSnGatewayUdpNetwork;
 
-int GatewayLinuxUdpInit(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxUdpInitialize(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxUdpDeinitialize(MqttSnGatewayNetworkInterface *n, void *context);
 
-int GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxUdpConnect(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context);
 
-void GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
+                            const device_address *from,
+                            const uint8_t *data,
+                            uint16_t data_length,
+                            uint16_t *send_data_length,
+                            uint8_t signal_strength,
+                            int32_t timeout_ms,
+                            void *context);
+int32_t GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
+                               device_address *from,
+                               uint8_t *data,
+                               uint16_t *data_length,
+                               uint16_t max_data_length,
+                               uint8_t *signal_strength,
+                               int32_t timeout_ms,
+                               void *context);
 
-int GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
-                           MqttSnFixedSizeRingBuffer *receiveBuffer,
-                           int32_t timeout_ms,
-                           void *context);
-
-int GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
-                        MqttSnFixedSizeRingBuffer *sendBuffer,
-                        int32_t timeout_ms,
-                        void *context);
+int32_t GatewayLinuxUdpReceiveUnicast(MqttSnGatewayNetworkInterface *n,
+                                      device_address *from,
+                                      uint8_t *data,
+                                      uint16_t *data_length,
+                                      uint16_t max_data_length,
+                                      MqttSnGatewayUdpNetwork *udpNetwork);
+#ifdef WITH_UDP_BROADCAST
+int32_t GatewayLinuxUdpReceiveMulticast(MqttSnGatewayNetworkInterface *n,
+                                        device_address *from,
+                                        uint8_t *data,
+                                        uint16_t *data_length,
+                                        uint16_t max_data_length,
+                                        uint8_t *signal_strength,
+                                        MqttSnGatewayUdpNetwork *udpNetwork);
+#endif
 
 #ifdef __cplusplus
 }

@@ -8,39 +8,47 @@
 extern "C" {
 #endif
 
-#include <logging/MqttSnLoggingInterface.h>
-#include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
 #include <stdint.h>
+#include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
+#ifdef WITH_LOGGING
+#include <logging/MqttSnLoggingInterface.h>
+#endif
+
+typedef enum MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS_ {
+  MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS_DEINITIALIZED = 0,
+  MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS_INITIALIZED = 1,
+  MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS_DISCONNECTED = 2,
+  MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS_CONNECTED = 3
+} MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS;
 
 /**
  * MqttSnClientNetworkInterface provides an interface for to glue different kind of network implementations to the
  * MqttSnForwarder.
  */
 typedef struct MqttSnClientNetworkInterface_ {
-
-  int status;
-
-  int (*client_network_receive)(struct MqttSnClientNetworkInterface_ *,
-                                MqttSnFixedSizeRingBuffer *,
-                                int32_t,
-                                void *context);
-
-  int (*client_network_send)(struct MqttSnClientNetworkInterface_ *,
-                             MqttSnFixedSizeRingBuffer *,
-                             int32_t,
-                             void *context);
-
-  int (*client_network_init)(struct MqttSnClientNetworkInterface_ *, void *context);
-
-  int (*client_network_connect)(struct MqttSnClientNetworkInterface_ *, void *context);
-
-  void (*client_network_disconnect)(struct MqttSnClientNetworkInterface_ *, void *context);
+  MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS status;
+  uint16_t max_data_length;
 
   device_address *client_network_address;
-
   device_address *mqtt_sn_gateway_address;
-
   device_address *client_network_broadcast_address;
+
+  int32_t (*initialize)(struct MqttSnClientNetworkInterface_ *, void *context);
+  int32_t (*deinitialize)(struct MqttSnClientNetworkInterface_ *, void *context);
+
+  int32_t (*connect)(struct MqttSnClientNetworkInterface_ *, void *context);
+  int32_t (*disconnect)(struct MqttSnClientNetworkInterface_ *, void *context);
+
+  int32_t (*send)(struct MqttSnClientNetworkInterface_ *,
+                  const device_address *, const uint8_t *, uint16_t, uint16_t *,
+                  uint8_t,
+                  int32_t,
+                  void *context);
+  int32_t (*receive)(struct MqttSnClientNetworkInterface_ *,
+                     device_address *, uint8_t *, uint16_t *, uint16_t,
+                     uint8_t *,
+                     int32_t,
+                     void *context);
 
 #ifdef WITH_LOGGING
   MqttSnLogger *logger;
@@ -60,20 +68,15 @@ typedef struct MqttSnClientNetworkInterface_ {
  * The client_network_init function is called within this function.
  * @return -1 in case of an error, 0 otherwise.
  */
-int ClientNetworkInit(MqttSnClientNetworkInterface *n,
-                      device_address *mqtt_sn_gateway_address,
-                      device_address *client_network_address,
-                      device_address *client_network_broadcast_address,
-                      void *context,
-                      int (*client_network_init)(MqttSnClientNetworkInterface *, void *));
+int ClientNetworkInitialize(MqttSnClientNetworkInterface *n,
+                            uint16_t max_data_length,
+                            device_address *mqtt_sn_gateway_address,
+                            device_address *client_network_address,
+                            device_address *client_network_broadcast_address,
+                            void *context,
+                            int (*client_network_init)(MqttSnClientNetworkInterface *, void *));
 
-/**
- * De-initialize local data structures, close open connections and free resources here.
- * Is called after either client or gateway network returned -1 from any other method.
- *
- * @param context is the given client network context during ClientNetworkInit().
- */
-void ClientNetworkDisconnect(MqttSnClientNetworkInterface *, void *context);
+int32_t ClientNetworkDeinitialize(MqttSnClientNetworkInterface *n, void *context);
 
 /**
  * Connect to the network. E.g. in TCP open a socket for incoming connections, in UDP you can open a socket for incoming
@@ -83,17 +86,26 @@ void ClientNetworkDisconnect(MqttSnClientNetworkInterface *, void *context);
  * @param context is the given client network context during ClientNetworkInit().
  * @return -1 in case of an error, 0 otherwise.
  */
-int ClientNetworkConnect(MqttSnClientNetworkInterface *, void *context);
+int32_t ClientNetworkConnect(MqttSnClientNetworkInterface *, void *context);
 
-int ClientNetworkSend(MqttSnClientNetworkInterface *n,
-                      MqttSnFixedSizeRingBuffer *sendBuffer,
-                      int timeout_ms,
-                      void *context);
+/**
+ * De-initialize local data structures, close open connections and free resources here.
+ * Is called after either client or gateway network returned -1 from any other method.
+ *
+ * @param context is the given client network context during ClientNetworkInit().
+ */
+int32_t ClientNetworkDisconnect(MqttSnClientNetworkInterface *, void *context);
 
-int ClientNetworkReceive(MqttSnClientNetworkInterface *n,
-                         MqttSnFixedSizeRingBuffer *receiveBuffer,
-                         int timeout_ms,
-                         void *context);
+int32_t ClientNetworkSend(MqttSnClientNetworkInterface *n,
+                          MqttSnFixedSizeRingBuffer *sendBuffer,
+                          int timeout_ms,
+                          void *context);
+
+int32_t ClientNetworkReceive(MqttSnClientNetworkInterface *n,
+                             MqttSnFixedSizeRingBuffer *receiveBuffer,
+                             int timeout_ms,
+                             void *context);
+
 #ifdef __cplusplus
 }
 #endif

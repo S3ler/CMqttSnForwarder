@@ -13,11 +13,11 @@ int GatewayLinuxPluginInit(MqttSnGatewayNetworkInterface *n, void *context) {
   pluginGatewayNetwork->dl_handle = NULL;
   pluginGatewayNetwork->plugin_context = NULL;
 
-  n->gateway_network_init = GatewayLinuxPluginInit;
-  n->gateway_network_receive = GatewayLinuxPluginReceive;
-  n->gateway_network_send = GatewayLinuxPluginSend;
-  n->gateway_network_connect = GatewayLinuxPluginConnect;
-  n->gateway_network_disconnect = GatewayLinuxPluginDisconnect;
+  n->initialize = GatewayLinuxPluginInit;
+  n->receive = GatewayLinuxPluginReceive;
+  n->send = GatewayLinuxPluginSend;
+  n->connect = GatewayLinuxPluginConnect;
+  n->disconnect = GatewayLinuxPluginDisconnect;
 
   char *error = NULL;
 

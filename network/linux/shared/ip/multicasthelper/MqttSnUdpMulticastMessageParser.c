@@ -113,7 +113,9 @@ int is_multicast_or_unicast_message_receive(int unicast_socket_fd, int multicast
   FD_ZERO(&read_fds);
 
   FD_SET(unicast_socket_fd, &read_fds);
-  FD_SET(multicast_socket_fd, &read_fds);
+  if (multicast_socket_fd > -1) {
+    FD_SET(multicast_socket_fd, &read_fds);
+  }
 
   int max_fd = unicast_socket_fd;
   if (multicast_socket_fd > max_fd) {
@@ -135,16 +137,17 @@ int is_multicast_or_unicast_message_receive(int unicast_socket_fd, int multicast
     return 0;
   }
 
-  if (FD_ISSET(unicast_socket_fd, &read_fds) && FD_ISSET(multicast_socket_fd, &read_fds)) {
-    return 3;
+  if (multicast_socket_fd > -1) {
+    if (FD_ISSET(unicast_socket_fd, &read_fds) && FD_ISSET(multicast_socket_fd, &read_fds)) {
+      return 3;
+    }
+    if (FD_ISSET(multicast_socket_fd, &read_fds)) {
+      return 2;
+    }
   }
   if (FD_ISSET(unicast_socket_fd, &read_fds)) {
     return 1;
   }
-  if (FD_ISSET(multicast_socket_fd, &read_fds)) {
-    return 2;
-  }
-
   return -1;
 }
 

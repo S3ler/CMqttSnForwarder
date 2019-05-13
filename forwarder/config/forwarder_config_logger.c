@@ -95,20 +95,33 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger, "      mqtt-sn(s) uses the same protocol as the gateway network.\n");
 
   log_str(logger, " -gP : specify the protocol of the gateway network to use.\n");
+#if defined(WITH_LINUX_UDP_GATEWAY_NETWORK) && defined(WITH_LINUX_TCP_GATEWAY_NETWORK)
   log_str(logger, "       Can be udp, tcp. Defaults to udp.\n");
+#elif defined(WITH_LINUX_UDP_GATEWAY_NETWORK)
+  log_str(logger, "       Can be udp. Defaults to udp.\n");
+#elif defined(WITH_LINUX_TCP_GATEWAY_NETWORK)
+  log_str(logger, "       Can be tcp. Defaults to tcp.\n");
+#endif
   log_str(logger, " -gA : bind the gateway network to the outgoing socket to this host/ip address.\n");
   log_str(logger, "       Use to control which interface the network communicates over.\n");
   log_str(logger, " -gp : listening on the specific gateway network port. Defaults to 9999.\n");
   log_str(logger, " -gL : specify protocol, broadcast address, port as a URL in the form: protocol://address[:port]\n");
 
   log_str(logger, " -cP : specify the protocol of the client network to use.\n");
+#if defined(WITH_LINUX_UDP_CLIENT_NETWORK) && defined(WITH_LINUX_TCP_CLIENT_NETWORK)
+  log_str(logger, "       Can be udp, tcp. Defaults to udp.\n");
+#elif defined(WITH_LINUX_UDP_CLIENT_NETWORK)
+  log_str(logger, "       Can be udp. Defaults to udp.\n");
+#elif defined(WITH_LINUX_TCP_CLIENT_NETWORK)
+  log_str(logger, "       Can be tcp. Defaults to tcp.\n");
+#endif
   log_str(logger, "       Can be udp, tcp. Defaults to udp.\n");
   log_str(logger, " -cA : bind the client network to the outgoing socket to this host/ip address.\n");
   log_str(logger, "       Use to control which interface the network communicates over.\n");
   log_str(logger, " -cp : listening on the specific client network port. Defaults to 7777.\n");
   log_str(logger, " -cL : specify protocol, broadcast address, port as a URL in the form: protocol://address[:port]\n");
 
-#if defined(WITH_TCP_BROADCAST) || defined(WITH_UDP_BROADCAST)
+#if defined(WITH_LINUX_UDP_GATEWAY_NETWORK_BROADCAST) || defined(WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST)
   log_str(logger, " -gbP : specify the protocol of the gateway network broadcast to use.\n");
   log_str(logger, "        Can be udp. Defaults to udp.\n");
   log_str(logger, " -gbA : specify the gateway network broadcast address.\n");
@@ -120,7 +133,9 @@ int print_usage(const MqttSnLogger *logger) {
   log_int32(logger, DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT);
   log_str(logger, ".\n");
   log_str(logger, " -gbL : specify protocol, address, port as a URL in the form: protocol://address[:port]\n");
+#endif
 
+#if defined(WITH_LINUX_UDP_CLIENT_NETWORK_BROADCAST) || defined(WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
   log_str(logger, " -cbP : specify the protocol of the client network broadcast to use.\n");
   log_str(logger, "        Can be udp. Defaults to udp.\n");
   log_str(logger, " -cbA : specify the client network broadcast address.\n");
