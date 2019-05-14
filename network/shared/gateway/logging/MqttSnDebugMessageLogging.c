@@ -65,6 +65,9 @@ int log_incomplete_gateway_message(const MqttSnLogger *logger,
     return 0;
   }
 
-  const char *description = "could not send message completely - try again later: ";
-  return log_gateway_mqtt_sn_message(logger, address, data, data_len, description);
+  return log_gateway_mqtt_sn_message(logger,
+                                     address,
+                                     data,
+                                     data_len,
+                                     PSTR("could not send message completely - try again later: "));
 }

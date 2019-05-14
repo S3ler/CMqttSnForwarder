@@ -42,13 +42,13 @@ int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags) {
   return log_status(logger);
 }
 int log_gateway_id(const MqttSnLogger *logger, uint8_t gwId) {
-  return log_str_key_uint8_value(logger, "gw", gwId);
+  return log_str_key_uint8_value(logger, PSTR("gw"), gwId);
 }
 int log_radius(const MqttSnLogger *logger, uint8_t radius) {
   return log_char_key_uint8_value(logger, 'r', radius);
 }
 int log_gw_add(const MqttSnLogger *logger, const device_address *gwAdd, uint16_t gwAdd_len) {
-  log_str(logger, "gwAdd");
+  log_str(logger, PSTR("gwAdd"));
   const char *dot = ".";
   for (size_t i = 0; i < gwAdd_len; ++i) {
     if (log_uint8(logger, gwAdd->bytes[i])) {
@@ -78,16 +78,16 @@ int log_topic_name(const MqttSnLogger *logger, const char *topicName) {
   return log_str(logger, topicName);
 }
 int log_topic_id_type_flag(const MqttSnLogger *logger, uint8_t topicIdType) {
-  return log_str_key_uint8_value(logger, "tt", topicIdType);
+  return log_str_key_uint8_value(logger, PSTR("tt"), topicIdType);
 }
 int log_retain_flag(const MqttSnLogger *logger, uint8_t retain) {
   return log_char_key_uint8_value(logger, 'r', retain);
 }
 int log_return_code(const MqttSnLogger *logger, uint8_t returnCode) {
-  return log_str_key_uint8_value(logger, "rc", returnCode);
+  return log_str_key_uint8_value(logger, PSTR("rc"), returnCode);
 }
 int log_duration(const MqttSnLogger *logger, uint16_t duration) {
-  return log_str_key_uint16_value(logger, "dur", duration);
+  return log_str_key_uint16_value(logger, PSTR("dur"), duration);
 }
 int log_protocol_id(const MqttSnLogger *logger, uint8_t protocolId) {
   return log_char_key_uint8_value(logger, 'p', protocolId);
@@ -116,10 +116,9 @@ int log_msg_from(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type, cons
   }
   const char *msg_type_str = MQTT_SN_MESSAGE_TYPE_STRING[msg_type + MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET];
   log_str(logger, msg_type_str);
-  const char *publish_from = " from ";
-  log_str(logger, publish_from);
+  log_str(logger, PSTR(" from "));
   log_device_address(logger, from);
-  log_char(logger, ' ');
+  log_str(logger, PSTR(" "));
   return log_status(logger);
 }
 
@@ -129,22 +128,21 @@ int log_msg_to(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type, const 
   }
   const char *msg_type_str = MQTT_SN_MESSAGE_TYPE_STRING[msg_type + MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET];
   log_str(logger, msg_type_str);
-  const char *publish_to = " to ";
-  log_str(logger, publish_to);
+  log_str(logger, PSTR(" to "));
   log_device_address(logger, from);
   log_char(logger, ' ');
   return log_status(logger);
 }
 
 int log_open_braked(const MqttSnLogger *logger) {
-  return log_str(logger, "( ");
+  return log_str(logger, PSTR("( "));
 }
 int log_close_braked_dot(const MqttSnLogger *logger) {
-  return log_str(logger, ").");
+  return log_str(logger, PSTR(")."));
 }
 
 int log_comma(const MqttSnLogger *logger) {
-  return log_str(logger, ", ");
+  return log_str(logger, PSTR(", "));
 }
 int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger *logger,
                                           const device_address *from,
@@ -175,30 +173,30 @@ int log_mqtt_sn_message_malformed(const MqttSnLogger *logger,
     return log_status(logger);
   }
   log_msg_start(logger);
-  log_str(logger, "received malformed ");
+  log_str(logger, PSTR("received malformed "));
   if (network == MQTT_SN_FORWARDER_NETWORK_CLIENT) {
-    log_str(logger, "client");
+    log_str(logger, PSTR("client"));
   }
   if (network == MQTT_SN_FORWARDER_NETWORK_GATEWAY) {
-    log_str(logger, "gateway");
+    log_str(logger, PSTR("gateway"));
   }
   if (signal_strength) {
-    log_str(logger, " signal strength: ");
+    log_str(logger, PSTR(" signal strength: "));
     log_uint8(logger, signal_strength);
   }
-  log_str(logger, " message");
+  log_str(logger, PSTR(" message"));
   if (from) {
-    log_str(logger, " from ");
+    log_str(logger, PSTR(" from "));
     log_device_address(logger, from);
   }
-  log_str(logger, " ( len");
+  log_str(logger, PSTR(" ( len"));
   log_uint16(logger, data_len);
 
 #ifdef WITH_DEBUG_LOGGING
   if (!shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {
-    log_str(logger, ", data( ");
+    log_str(logger, PSTR(", data( "));
     log_uint8_array(logger, data, data_len);
-    log_str(logger, ")");
+    log_str(logger, PSTR(")"));
   }
 #endif
 
@@ -217,29 +215,29 @@ int log_could_not_generate_encapsulation_message(const MqttSnLogger *logger,
     return log_status(logger);
   }
   log_msg_start(logger);
-  log_str(logger, "could not generate encapsulation header for ");
+  log_str(logger, PSTR("could not generate encapsulation header for "));
   if (network == MQTT_SN_FORWARDER_NETWORK_CLIENT) {
-    log_str(logger, "client");
+    log_str(logger, PSTR("client"));
   }
   if (network == MQTT_SN_FORWARDER_NETWORK_GATEWAY) {
-    log_str(logger, "gateway");
+    log_str(logger, PSTR("gateway"));
   }
   if (broadcast_radius) {
-    log_str(logger, " broadcast");
+    log_str(logger, PSTR(" broadcast"));
   }
-  log_str(logger, " message");
+  log_str(logger, PSTR(" message"));
   if (from) {
-    log_str(logger, " from ");
+    log_str(logger, PSTR(" from "));
     log_device_address(logger, from);
   }
-  log_str(logger, " ( len");
+  log_str(logger, PSTR(" ( len"));
   log_uint16(logger, data_len);
 
 #ifdef WITH_DEBUG_LOGGING
   if (!shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {
-    log_str(logger, ", data( ");
+    log_str(logger, PSTR(", data( "));
     log_uint8_array(logger, data, data_len);
-    log_str(logger, ")");
+    log_str(logger, PSTR(")"));
   }
 #endif
 
@@ -286,11 +284,11 @@ int log_mqtt_sn_message(const MqttSnLogger *logger,
     }
   }
   if (network == MQTT_SN_FORWARDER_NETWORK_CLIENT) {
-    log_str(logger, "client ");
+    log_str(logger, PSTR("client "));
     log_msg_from(logger, header.msg_type, from);
   }
   if (network == MQTT_SN_FORWARDER_NETWORK_GATEWAY) {
-    log_str(logger, "gateway ");
+    log_str(logger, PSTR("gateway "));
     log_msg_to(logger, header.msg_type, from);
   }
 
@@ -394,11 +392,9 @@ int log_connect_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *he
   uint16_t duration = ntohs(c->duration);
   const char *client_id = c->clientId;
 
-  const char *as = " as ";
-
-  log_str(logger, as);
+  log_str(logger, PSTR(" as "));
   log_str(logger, client_id);
-  log_char(logger, ' ');
+  log_str(logger, PSTR(" "));
 
   log_open_braked(logger);
   log_mqtt_sn_flags(logger, flags);
@@ -457,10 +453,6 @@ int log_regack_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *hea
 }
 
 int log_publish_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
-
-  const char *dots = "... (";
-  const char *bytes_str = " bytes)";
-
   MqttSnMessagePublish *p = (MqttSnMessagePublish *) header->payload;
   uint16_t msg_id = ntohs(p->msgId);
   uint16_t topic_id = ntohs(((MqttSnMessagePublish *) header->payload)->topicId);
@@ -473,9 +465,9 @@ int log_publish_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *he
   log_comma(logger);
   log_mqtt_sn_flags(logger, flags);
 
-  log_str(logger, dots);
+  log_str(logger, PSTR("... ("));
   log_uint16(logger, msg_bytes);
-  log_str(logger, bytes_str);
+  log_str(logger, PSTR(" bytes)"));
 
   return log_status(logger);
 }
@@ -583,9 +575,7 @@ int log_pingreq_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *he
     MqttSnMessagePingReq *p = (MqttSnMessagePingReq *) header->payload;
     const char *clientId = p->clientId;
 
-    const char *is_awake = "is awake ";
-
-    log_str(logger, is_awake);
+    log_str(logger, PSTR("is awake "));
     log_str(logger, clientId);
     log_char(logger, '.');
   }

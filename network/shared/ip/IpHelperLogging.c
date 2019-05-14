@@ -9,33 +9,33 @@
 int print_cannot_convert_ip_str_to_network_address(const MqttSnLogger *logger,
                                                    const char *ip_str,
                                                    const char *address_name) {
-  log_str(logger, "Cannot convert ");
+  log_str(logger, PSTR("Cannot convert "));
   log_str(logger, ip_str);
-  log_str(logger, " to ");
+  log_str(logger, PSTR(" to "));
   log_str(logger, address_name);
-  log_str(logger, " network address.");
+  log_str(logger, PSTR(" network address."));
   log_flush(logger);
   return log_status(logger);
 }
 int print_invalid_port_given(const MqttSnLogger *logger, int32_t port) {
-  log_str(logger, "Error: Invalid port given: ");
+  log_str(logger, PSTR("Error: Invalid port given: "));
   log_int32(logger, port);
   log_flush(logger);
   return log_status(logger);
 }
 int log_opening_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  return log_opening_socket(logger, "unicast", protocol, address);
+  return log_opening_socket(logger, PSTR("unicast"), protocol, address);
 }
 int log_opening_multicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  return log_opening_socket(logger, "multicast", protocol, address);
+  return log_opening_socket(logger, PSTR("multicast"), protocol, address);
 }
 int log_failed_opening_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  return log_failed_opening_socket(logger, "unicast", protocol, address);
+  return log_failed_opening_socket(logger, PSTR("unicast"), protocol, address);
 }
 int log_failed_opening_multicast_socket(const MqttSnLogger *logger,
                                         const char *protocol,
                                         const device_address *address) {
-  return log_failed_opening_socket(logger, "multicast", protocol, address);
+  return log_failed_opening_socket(logger, PSTR("multicast"), protocol, address);
 }
 
 int log_opening_socket(const MqttSnLogger *logger,
@@ -97,10 +97,10 @@ int log_failed_opening_socket(const MqttSnLogger *logger,
 }
 
 int log_close_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  return log_close_socket(logger, "unicast", protocol, address);
+  return log_close_socket(logger, PSTR("unicast"), protocol, address);
 }
 int log_close_multicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  return log_close_socket(logger, "multicast", protocol, address);
+  return log_close_socket(logger, PSTR("multicast"), protocol, address);
 }
 
 int log_close_socket(const MqttSnLogger *logger,
@@ -111,23 +111,18 @@ int log_close_socket(const MqttSnLogger *logger,
     return 0;
   }
 
-  const char *close = "Close ";
-  const char *space = " ";
-  const char *listen_socket = " socket ";
-  const char *on_port = " on port ";
-  const char *dot = ".";
   uint32_t port = get_port_from_device_address(address);
 
   log_msg_start(logger);
-  log_str(logger, close);
+  log_str(logger, PSTR("Close "));
   log_str(logger, cast);
-  log_str(logger, space);
+  log_str(logger, PSTR(" "));
   log_str(logger, protocol);
-  log_str(logger, listen_socket);
+  log_str(logger, PSTR(" socket "));
   log_device_address(logger, address);
-  log_str(logger, on_port);
+  log_str(logger, PSTR(" on port "));
   log_uint32(logger, port);
-  log_str(logger, dot);
+  log_str(logger, PSTR("."));
   log_flush(logger);
   return log_status(logger);
 }
@@ -137,16 +132,12 @@ int log_new_connection(const MqttSnLogger *logger, const char *protocol, const d
     return 0;
   }
 
-  const char *client_str = "Client ";
-  const char *space = " ";
-  const char *connected_dot = " connected.";
-
   log_msg_start(logger);
-  log_str(logger, client_str);
+  log_str(logger, PSTR("Client "));
   log_str(logger, protocol);
-  log_str(logger, space);
+  log_str(logger, PSTR(" "));
   log_device_address(logger, address);
-  log_str(logger, connected_dot);
+  log_str(logger, PSTR(" connected."));
   log_flush(logger);
   return log_status(logger);
 }
@@ -156,16 +147,12 @@ int log_closed_connection(const MqttSnLogger *logger, const char *protocol, cons
     return 0;
   }
 
-  const char *client_str = "Client ";
-  const char *space = " ";
-  const char *disconnected_dot = " closed.";
-
   log_msg_start(logger);
-  log_str(logger, client_str);
+  log_str(logger, PSTR("Client "));
   log_str(logger, protocol);
-  log_str(logger, space);
+  log_str(logger, PSTR(" "));
   log_device_address(logger, address);
-  log_str(logger, disconnected_dot);
+  log_str(logger, PSTR(" closed."));
   log_flush(logger);
   return log_status(logger);
 }
@@ -175,16 +162,12 @@ int log_client_disconnected(const MqttSnLogger *logger, const char *protocol, co
     return 0;
   }
 
-  const char *client_str = "Client ";
-  const char *space = " ";
-  const char *disconnected_dot = " disconnected.";
-
   log_msg_start(logger);
-  log_str(logger, client_str);
+  log_str(logger, PSTR("Client "));
   log_str(logger, protocol);
-  log_str(logger, space);
+  log_str(logger, PSTR(" "));
   log_device_address(logger, address);
-  log_str(logger, disconnected_dot);
+  log_str(logger, PSTR(" disconnected."));
   log_flush(logger);
   return log_status(logger);
 }
@@ -194,16 +177,12 @@ int log_lost_connection(const MqttSnLogger *logger, const char *protocol, const 
     return 0;
   }
 
-  const char *client_str = "Client ";
-  const char *space = " ";
-  const char *disconnected_dot = " lost.";
-
   log_msg_start(logger);
-  log_str(logger, client_str);
+  log_str(logger, PSTR("Client "));
   log_str(logger, protocol);
-  log_str(logger, space);
+  log_str(logger, PSTR(" "));
   log_device_address(logger, address);
-  log_str(logger, disconnected_dot);
+  log_str(logger, PSTR(" lost."));
   log_flush(logger);
   return log_status(logger);
 }
@@ -260,16 +239,12 @@ int log_gateway_close_connection(const MqttSnLogger *logger, const char *protoco
     return 0;
   }
 
-  const char *client_str = "MQTT-SN Gateway ";
-  const char *space = " ";
-  const char *disconnected_dot = " disconnected.";
-
   log_msg_start(logger);
-  log_str(logger, client_str);
+  log_str(logger, PSTR("MQTT-SN Gateway "));
   log_str(logger, protocol);
-  log_str(logger, space);
+  log_str(logger, PSTR(" "));
   log_device_address(logger, address);
-  log_str(logger, disconnected_dot);
+  log_str(logger, PSTR(" disconnected."));
   log_flush(logger);
   return log_status(logger);
 }
@@ -279,16 +254,12 @@ int log_gateway_lost_connection(const MqttSnLogger *logger, const char *protocol
     return 0;
   }
 
-  const char *client_str = "MQTT-SN Gateway ";
-  const char *space = " ";
-  const char *disconnected_dot = " lost.";
-
   log_msg_start(logger);
-  log_str(logger, client_str);
+  log_str(logger, PSTR("MQTT-SN Gateway "));
   log_str(logger, protocol);
-  log_str(logger, space);
+  log_str(logger, PSTR(" "));
   log_device_address(logger, address);
-  log_str(logger, disconnected_dot);
+  log_str(logger, PSTR(" lost."));
   log_flush(logger);
   return log_status(logger);
 }
@@ -302,19 +273,19 @@ int log_failed_convert_device_address_to(const MqttSnLogger *logger, const devic
     return 0;
   }
   log_msg_start(logger);
-  log_str(logger, "Could not convert ");
+  log_str(logger, PSTR("Could not convert "));
   log_device_address(logger, from);
-  log_str(logger, " ");
+  log_str(logger, PSTR(" "));
   log_str(logger, to);
-  log_str(logger, ".");
+  log_str(logger, PSTR("."));
   log_flush(logger);
   return log_status(logger);
 }
 int log_multicast_socket_failed(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  return log_socket_failed(logger, "multicast", protocol, address);
+  return log_socket_failed(logger, PSTR("multicast"), protocol, address);
 }
 int log_unicast_socket_failed(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  return log_socket_failed(logger, "unicast", protocol, address);
+  return log_socket_failed(logger, PSTR("unicast"), protocol, address);
 }
 int log_socket_failed(const MqttSnLogger *logger,
                       const char *cast,
@@ -324,21 +295,17 @@ int log_socket_failed(const MqttSnLogger *logger,
     return 0;
   }
 
-  const char *space = " ";
-  const char *socket_str = " socket ";
-  const char *on_port = " on port ";
-  const char *failed = " failed.";
   uint32_t port = get_port_from_device_address(address);
 
   log_msg_start(logger);
   log_str(logger, cast);
-  log_str(logger, space);
+  log_str(logger, PSTR(" "));
   log_str(logger, protocol);
-  log_str(logger, socket_str);
+  log_str(logger, PSTR(" socket "));
   log_device_address(logger, address);
-  log_str(logger, on_port);
+  log_str(logger, PSTR(" on port "));
   log_uint32(logger, port);
-  log_str(logger, failed);
+  log_str(logger, PSTR(" failed."));
   log_flush(logger);
   return log_status(logger);
 }
