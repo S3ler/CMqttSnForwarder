@@ -144,7 +144,7 @@ int32_t ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
   }
 #endif
 
-123  for (int client_socket_fd_position = 0;
+  for (int client_socket_fd_position = 0;
        client_socket_fd_position < tcpNetwork->max_clients;
        ++client_socket_fd_position) {
     int client_socket_fd = tcpNetwork->client_socket_fds[client_socket_fd_position];
