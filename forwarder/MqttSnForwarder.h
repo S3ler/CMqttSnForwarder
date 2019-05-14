@@ -52,9 +52,14 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
                                               MqttSnMessageData *gatewayMessageData,
                                               MqttSnMessageData *clientMessageData);
 
-int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData, MqttSnMessageData *gatewayMessageData);
+int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData,
+                              MqttSnMessageData *gatewayMessageData,
+                              const device_address *mqtt_sn_gateway_network_address,
+                              const device_address *client_network_broadcast_address);
 
-int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData, MqttSnMessageData *clientMessageData);
+int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData,
+                                 MqttSnMessageData *clientMessageData,
+                                 const device_address *client_network_broadcast_address);
 
 #ifdef __cplusplus
 }

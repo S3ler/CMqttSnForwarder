@@ -16,7 +16,15 @@ int is_tcp_message_received(int socket_fd, int32_t timeout_ms);
 
 int listen_on_tcp_socket(uint32_t ip, uint16_t port, uint32_t max_pending_connections);
 
-// TODO return: error -1, nothing received 0, listen only 1, client only 2, multicast only 3, listen and client only 4, listen and multicast only 5, client and multicast only 6, all 7
+// TODO return: error -1,
+//  nothing received 0,
+//  listen only 1,
+//  client only 2,
+//  multicast only 3,
+//  listen and client only 4,
+//  listen and multicast only 5,
+//  client and multicast only 6,
+//  listen, client and multicast 7
 int new_connection_or_is_message_received(int listen_socket_fd,
                                           const int client_socket_fds[],
                                           int client_socket_fds_len,

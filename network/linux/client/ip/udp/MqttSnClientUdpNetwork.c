@@ -103,6 +103,7 @@ int32_t ClientLinuxUdpDisconnect(MqttSnClientNetworkInterface *n, void *context)
 
 int32_t ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
                            const device_address *from,
+                           const device_address *to,
                            const uint8_t *data,
                            uint16_t data_length,
                            uint16_t *send_data_length,
@@ -112,10 +113,10 @@ int32_t ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
   MqttSnClientUdpNetwork *clientUdpNetwork = (MqttSnClientUdpNetwork *) context;
 
 #ifdef WITH_DEBUG_LOGGING
-  log_db_send_client_message(n->logger, n->mqtt_sn_gateway_address, from, data, data_length);
+  log_db_send_client_message(n->logger, from, to, data, data_length);
 #endif
 
-  ssize_t send_bytes = send_udp_message(clientUdpNetwork->unicast_socket, from, data, data_length);
+  ssize_t send_bytes = send_udp_message(clientUdpNetwork->unicast_socket, to, data, data_length);
 
   if (send_bytes == -1) {
     return -1;
@@ -134,6 +135,7 @@ int32_t ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
 
 int32_t ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
                               device_address *from,
+                              device_address *to,
                               uint8_t *data,
                               uint16_t *data_length,
                               uint16_t max_data_length,
@@ -159,24 +161,38 @@ int32_t ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
 
 #ifdef WITH_UDP_BROADCAST
   if (message_received == 3) {
-    if (udpNetwork->received_messages++ % 2) {
-      return ClientLinuxUdpReceiveUnicast(n, from, data, data_length, max_data_length, udpNetwork);
+    if (udpNetwork->received_messages % 2) {
+      return ClientLinuxUdpReceiveUnicast(n, from, to, data, data_length, max_data_length, udpNetwork);
     } else if (n->client_network_broadcast_address) {
-      return ClientLinuxUdpReceiveMulticast(n, from, data, data_length, max_data_length, signal_strength, udpNetwork);
+      return ClientLinuxUdpReceiveMulticast(n,
+                                            from,
+                                            to,
+                                            data,
+                                            data_length,
+                                            max_data_length,
+                                            signal_strength,
+                                            udpNetwork);
     } else {
-      return ClientLinuxUdpReceiveUnicast(n, from, data, data_length, max_data_length, udpNetwork);
+      return ClientLinuxUdpReceiveUnicast(n, from, to, data, data_length, max_data_length, udpNetwork);
     }
   }
 #endif
 
   if (message_received == 1) {
-    return ClientLinuxUdpReceiveUnicast(n, from, data, data_length, max_data_length, udpNetwork);
+    return ClientLinuxUdpReceiveUnicast(n, from, to, data, data_length, max_data_length, udpNetwork);
   }
 
 #ifdef WITH_UDP_BROADCAST
   if (n->client_network_broadcast_address) {
     if (message_received == 2) {
-
+      return ClientLinuxUdpReceiveMulticast(n,
+                                            from,
+                                            to,
+                                            data,
+                                            data_length,
+                                            max_data_length,
+                                            signal_strength,
+                                            udpNetwork);
     }
   }
 #endif
@@ -186,6 +202,7 @@ int32_t ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
 
 int32_t ClientLinuxUdpReceiveUnicast(MqttSnClientNetworkInterface *n,
                                      device_address *from,
+                                     device_address *to,
                                      uint8_t *data,
                                      uint16_t *data_length,
                                      uint16_t max_data_length,
@@ -199,9 +216,11 @@ int32_t ClientLinuxUdpReceiveUnicast(MqttSnClientNetworkInterface *n,
     return -1;
   }
   *data_length = rec_data_length;
+  *to = *n->client_network_address;
+  udpNetwork->received_messages += 1;
 #ifdef WITH_DEBUG_LOGGING
   if (unicast_rc > 0) {
-    log_db_rec_client_message(n->logger, from, n->mqtt_sn_gateway_address, data, *data_length);
+    log_db_rec_client_message(n->logger, from, to, data, *data_length);
   }
 #endif
   return 0;
@@ -210,6 +229,7 @@ int32_t ClientLinuxUdpReceiveUnicast(MqttSnClientNetworkInterface *n,
 
 int32_t ClientLinuxUdpReceiveMulticast(MqttSnClientNetworkInterface *n,
                                        device_address *from,
+                                       device_address *to,
                                        uint8_t *data,
                                        uint16_t *data_length,
                                        uint16_t max_data_length,
@@ -225,11 +245,12 @@ int32_t ClientLinuxUdpReceiveMulticast(MqttSnClientNetworkInterface *n,
       return -1;
     }
     *data_length = rec_data_length;
-    *signal_strength = UINT8_MAX;
-
+    *signal_strength = 0x01;
+    *to = *n->client_network_broadcast_address;
+    udpNetwork->received_messages += 1;
 #ifdef WITH_DEBUG_LOGGING
     if (multicast_rc > 0) {
-      log_db_rec_client_message(n->logger, from, n->client_network_broadcast_address, data, *data_length);
+      log_db_rec_client_message(n->logger, from, to, data, *data_length);
     }
 #endif
   }

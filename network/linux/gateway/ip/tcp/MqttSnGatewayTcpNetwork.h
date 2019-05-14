@@ -19,31 +19,47 @@ typedef struct MqttSnGatewayTcpNetwork_ {
   int mqtt_sg_gateway_fd;
   uint8_t gateway_buffer[CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t gateway_buffer_bytes;
+  uint32_t to_drop_bytes;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXTCPNETWORKPROTOCOL)];
+  uint64_t received_messages;
 #ifdef WITH_TCP_BROADCAST
   MqttSnGatewayUdpNetwork udp_multicast_network;
 #endif
 } MqttSnGatewayTcpNetwork;
 
-int GatewayLinuxTcpInit(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxTcpInitialize(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxTcpDeinitialize(MqttSnGatewayNetworkInterface *n, void *context);
 
-int GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxTcpConnect(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *context);
 
-void GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *context);
+int32_t GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
+                            const device_address *from,
+                            const device_address *to,
+                            const uint8_t *data,
+                            uint16_t data_length,
+                            uint16_t *send_data_length,
+                            uint8_t signal_strength,
+                            int32_t timeout_ms,
+                            void *context);
+int32_t GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n,
+                               device_address *from,
+                               device_address *to,
+                               uint8_t *data,
+                               uint16_t *data_length,
+                               uint16_t max_data_length,
+                               uint8_t *signal_strength,
+                               int32_t timeout_ms,
+                               void *context);
 
-int GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n,
-                           MqttSnFixedSizeRingBuffer *receiveBuffer,
-                           int32_t timeout_ms,
-                           void *context);
+int32_t GatewayLinuxTcpReceiveUnicast(MqttSnGatewayNetworkInterface *n,
+                                      device_address *from,
+                                      device_address *to,
+                                      uint8_t *data,
+                                      uint16_t *data_length,
+                                      uint16_t max_data_length,
+                                      MqttSnGatewayTcpNetwork *tcp_network);
 
-int GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
-                        MqttSnFixedSizeRingBuffer *sendBuffer,
-                        int32_t timeout_ms,
-                        void *context);
-
-int save_received_tcp_packet_into_receive_buffer(
-    MqttSnGatewayTcpNetwork *gatewayTcpNetwork,
-    MqttSnFixedSizeRingBuffer *receiveBuffer);
 
 #ifdef __cplusplus
 }

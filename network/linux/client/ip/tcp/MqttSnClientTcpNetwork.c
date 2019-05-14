@@ -14,11 +14,11 @@
 #include <network/shared/ip/IpHelperLogging.h>
 #include <network/linux/shared/ip/MqttSnIpNetworkHelperLogging.h>
 
-int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
+int ClientLinuxTcpInitialize(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientTcpNetwork *tcpNetwork = (MqttSnClientTcpNetwork *) context;
 #ifdef WITH_TCP_BROADCAST
   if (n->client_network_broadcast_address) {
-    if (ClientLinuxUdpInit(n, &tcpNetwork->udp_multicast_network) < 0) {
+    if (ClientLinuxUdpInitialize(n, &tcpNetwork->udp_multicast_network) < 0) {
       return -1;
     }
   }
@@ -30,9 +30,11 @@ int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
     tcpNetwork->client_socket_fds[i] = -1;
     memset(tcpNetwork->client_buffer[i], 0, CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH);
     tcpNetwork->client_buffer_bytes[i] = 0;
+    tcpNetwork->client_to_drop_bytes[i] = 0;
   }
 
-  n->init = ClientLinuxTcpInit;
+  n->initialize = ClientLinuxTcpInitialize;
+  n->deinitialize = ClientLinuxTcpDeinitialize;
   n->connect = ClientLinuxTcpConnect;
   n->disconnect = ClientLinuxTcpDisconnect;
   n->receive = ClientLinuxTcpReceive;
@@ -40,8 +42,28 @@ int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context) {
   return 0;
 }
 
-int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context) {
+int32_t ClientLinuxTcpDeinitialize(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientTcpNetwork *tcpNetwork = (MqttSnClientTcpNetwork *) context;
+#ifdef WITH_TCP_BROADCAST
+  if (n->client_network_broadcast_address) {
+    if (ClientLinuxUdpDeinitialize(n, &tcpNetwork->udp_multicast_network) < 0) {
+      return -1;
+    }
+  }
+#endif
+  return 0;
+}
+
+int32_t ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context) {
+  MqttSnClientTcpNetwork *tcpNetwork = (MqttSnClientTcpNetwork *) context;
+
+#ifdef WITH_TCP_BROADCAST
+  if (n->client_network_broadcast_address) {
+    if (ClientLinuxUdpConnect(n, &tcpNetwork->udp_multicast_network) < 0) {
+      return -1;
+    }
+  }
+#endif
 
   uint32_t client_network_ip = 0;
   uint16_t client_network_port = 0;
@@ -62,17 +84,11 @@ int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context) {
 #ifdef WITH_LOGGING
   log_opening_unicast_socket(n->logger, tcpNetwork->protocol, n->client_network_address);
 #endif
-#ifdef WITH_TCP_BROADCAST
-  if (n->client_network_broadcast_address) {
-    if (ClientLinuxUdpConnect(n, &tcpNetwork->udp_multicast_network) < 0) {
-      return -1;
-    }
-  }
-#endif
+
   return 0;
 }
 
-void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
+int32_t ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientTcpNetwork *tcpNetwork = (MqttSnClientTcpNetwork *) context;
   if (tcpNetwork->listen_socket_fd > -1) {
     close(tcpNetwork->listen_socket_fd);
@@ -82,28 +98,98 @@ void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
 #endif
   }
   for (int i = 0; i < tcpNetwork->max_clients; ++i) {
+    close_client_connection(n, tcpNetwork, i);
 #ifdef WITH_DEBUG_LOGGING
     if (tcpNetwork->client_socket_fds[i] >= 0) {
       device_address address = get_device_address_from_tcp_file_descriptor(tcpNetwork->client_socket_fds[i]);
       log_closed_connection(n->logger, tcpNetwork->protocol, &address);
     }
 #endif
-    close_client_connection(n, tcpNetwork, i);
   }
+
 #ifdef WITH_TCP_BROADCAST
   if (n->client_network_broadcast_address) {
-    ClientLinuxUdpDisconnect(n, &tcpNetwork->udp_multicast_network);
-#ifdef WITH_LOGGING
-    log_close_multicast_socket(n->logger, tcpNetwork->protocol, n->client_network_broadcast_address);
-#endif
+    if (ClientLinuxUdpDisconnect(n, &tcpNetwork->udp_multicast_network) < 0) {
+      return -1;
+    }
   }
 #endif
+  return 0;
 }
 
-int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
-                          MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          int32_t timeout_ms,
-                          void *context) {
+int32_t ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
+                           const device_address *from,
+                           const device_address *to,
+                           const uint8_t *data,
+                           uint16_t data_length,
+                           uint16_t *send_data_length,
+                           uint8_t signal_strength,
+                           int32_t timeout_ms,
+                           void *context) {
+  MqttSnClientTcpNetwork *tcpNetwork = (MqttSnClientTcpNetwork *) context;
+
+#ifdef WITH_TCP_BROADCAST
+  if (n->client_network_broadcast_address) {
+    if (memcmp(to, n->client_network_broadcast_address, sizeof(device_address)) == 0) {
+      return ClientLinuxUdpSend(n,
+                                from,
+                                to,
+                                data,
+                                data_length,
+                                send_data_length,
+                                signal_strength,
+                                timeout_ms,
+                                &tcpNetwork->udp_multicast_network);
+    }
+  }
+#endif
+
+123  for (int client_socket_fd_position = 0;
+       client_socket_fd_position < tcpNetwork->max_clients;
+       ++client_socket_fd_position) {
+    int client_socket_fd = tcpNetwork->client_socket_fds[client_socket_fd_position];
+    if (client_socket_fd < 0) {
+      continue;
+    }
+
+    device_address peer_address = get_device_address_from_tcp_file_descriptor(client_socket_fd);
+    if (memcmp(&peer_address, to, sizeof(device_address)) != 0) {
+      continue;
+    }
+
+    ssize_t client_send_rc = send(client_socket_fd, data, data_length, 0);
+    if (client_send_rc < 0) {
+      close_client_connection(n, tcpNetwork, client_socket_fd_position);
+#ifdef WITH_DEBUG_LOGGING
+      device_address address = get_device_address_from_tcp_file_descriptor(client_socket_fd);
+      log_lost_connection(n->logger, tcpNetwork->protocol, &address);
+#endif
+      return 0;
+    }
+    *send_data_length = client_send_rc;
+#ifdef WITH_DEBUG_LOGGING
+    log_db_send_client_message(n->logger, from, to, data, data_length);
+#endif
+    return 0;
+  }
+
+  // no broadcast message and not client message => ignore message
+  *send_data_length = data_length;
+#ifdef WITH_DEBUG_LOGGING
+  log_client_unknown_destination(n->logger, from, to, data, data_length);
+#endif
+  return 0;
+}
+
+int32_t ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
+                              device_address *from,
+                              device_address *to,
+                              uint8_t *data,
+                              uint16_t *data_length,
+                              uint16_t max_data_length,
+                              uint8_t *signal_strength,
+                              int32_t timeout_ms,
+                              void *context) {
   MqttSnClientTcpNetwork *tcpNetwork = (MqttSnClientTcpNetwork *) context;
 
   fd_set read_fds;
@@ -129,127 +215,55 @@ int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
     return -1;
   }
 
+  if (select_rc == 0) {
+    return 0;
+  }
+
   if (select_rc == 1 || select_rc == 4 || select_rc == 5 || select_rc == 7) {
     // if something happened on the master socket, then it is an incoming connection
     if (MqttSnClientHandleMasterSocket(n, tcpNetwork) != 0) {
       return -1;
     }
   }
-
-  if (select_rc == 2 || select_rc == 4 || select_rc == 6 || select_rc == 7) {
-    // some IO operation on some other socket
-    MqttSnClientHandleClientSockets(n, tcpNetwork, receiveBuffer, &read_fds);
-  }
-#ifdef WITH_TCP_BROADCAST
-  // TODO we also receive message on the multicast port and forward them
-  if (n->client_network_broadcast_address) {
-    if (select_rc == 3 || select_rc == 5 || select_rc == 6 || select_rc == 7) {
-      if (ClientLinuxUdpReceive(n, receiveBuffer, 0, &tcpNetwork->udp_multicast_network) < 0) {
-        return -1;
+#ifdef WITH_UDP_BROADCAST
+  if (select_rc == 6 || select_rc == 7) {
+    if (n->client_network_broadcast_address) {
+      if (((tcpNetwork->received_messages + tcpNetwork->udp_multicast_network.received_messages)
+          % (tcpNetwork->max_clients + 1)) == 0) {
+        return ClientLinuxUdpReceive(n,
+                                     from,
+                                     to,
+                                     data,
+                                     data_length,
+                                     max_data_length,
+                                     signal_strength,
+                                     timeout_ms,
+                                     &tcpNetwork->udp_multicast_network);
       }
+      MqttSnClientHandleClientSockets(n, tcpNetwork, &read_fds, from, to, data, data_length, max_data_length);
     }
   }
 #endif
 
-  return 0;
-}
-
-int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
-                       MqttSnFixedSizeRingBuffer *sendBuffer,
-                       int32_t timeout_ms,
-                       void *context) {
-  MqttSnClientTcpNetwork *clientTcpNetwork = (MqttSnClientTcpNetwork *) context;
-
-  if (isEmpty(sendBuffer)) {
+  if (select_rc == 2 || select_rc == 4) {
+    MqttSnClientHandleClientSockets(n, tcpNetwork, &read_fds, from, to, data, data_length, max_data_length);
     return 0;
   }
-
 #ifdef WITH_TCP_BROADCAST
   if (n->client_network_broadcast_address) {
-    const MqttSnMessageData *front_msg = front(sendBuffer);
-    if (!front_msg) {
-      return 0;
-    }
-    if (front_msg->broadcast_radius &&
-        (memcmp(&front_msg->address, n->client_network_broadcast_address, sizeof(device_address)) == 0)) {
-      MqttSnMessageData clientSendMessage = {0};
-      if (pop(sendBuffer, &clientSendMessage) != 0) {
-        return 0;
-      }
-      // is broadcast message => send via udp
-      MqttSnFixedSizeRingBuffer tmp_sendQueue = {0};
-      MqttSnFixedSizeRingBufferInit(&tmp_sendQueue);
-      if (put(&tmp_sendQueue, &clientSendMessage) < 0) {
-        // error which should never happen
-        return -1;
-      }
-      if (ClientLinuxUdpSend(n, &tmp_sendQueue, 0, &clientTcpNetwork->udp_multicast_network) < 0) {
-        return -1;
-      }
-      return 0;
+    if (select_rc == 3 || select_rc == 5) {
+      return ClientLinuxUdpReceive(n,
+                                   from,
+                                   to,
+                                   data,
+                                   data_length,
+                                   max_data_length,
+                                   signal_strength,
+                                   timeout_ms,
+                                   &tcpNetwork->udp_multicast_network);
     }
   }
 #endif
-
-  MqttSnMessageData clientSendMessage = {0};
-  if (pop(sendBuffer, &clientSendMessage) != 0) {
-    return 0;
-  }
-
-  // convert device_address of clientSendMessage to IP and port
-  for (int client_socket_fd_position = 0;
-       client_socket_fd_position < clientTcpNetwork->max_clients;
-       ++client_socket_fd_position) {
-    int client_socket_fd = clientTcpNetwork->client_socket_fds[client_socket_fd_position];
-    if (clientTcpNetwork->client_socket_fds[client_socket_fd_position] < 0) {
-      continue;
-    }
-
-    device_address peer_address = get_device_address_from_tcp_file_descriptor(client_socket_fd);
-    if (memcmp(peer_address.bytes, clientSendMessage.address.bytes, sizeof(device_address)) != 0) {
-      continue;
-    }
-
-    struct timeval interval;
-    if (timeout_ms < 0) {
-      interval.tv_sec = 0;
-      interval.tv_usec = 0;
-    } else if (timeout_ms == 0) {
-      interval.tv_sec = 0;
-      interval.tv_usec = 1;
-    } else {
-      interval.tv_sec = timeout_ms / 1000;
-      interval.tv_usec = (timeout_ms % 1000) * 1000;
-    }
-
-    if (setsockopt(clientTcpNetwork->client_socket_fds[client_socket_fd_position],
-                   SOL_SOCKET,
-                   SO_SNDTIMEO,
-                   (char *) &interval,
-                   sizeof(struct timeval))) {
-      return -1;
-    }
-
-    ssize_t client_send_rc = send(clientTcpNetwork->client_socket_fds[client_socket_fd_position],
-                                  clientSendMessage.data,
-                                  clientSendMessage.data_length,
-                                  0);
-    if (client_send_rc < 0) {
-#ifdef WITH_DEBUG_LOGGING
-      device_address address = get_device_address_from_tcp_file_descriptor(client_socket_fd);
-      log_lost_connection(n->logger, clientTcpNetwork->protocol, &address);
-#endif
-      close_client_connection(n, clientTcpNetwork, client_socket_fd_position);
-      continue;
-    }
-#ifdef WITH_DEBUG_LOGGING
-    log_db_send_client_message(n->logger,
-                               n->mqtt_sn_gateway_address,
-                               &clientSendMessage.address,
-                               clientSendMessage.data,
-                               clientSendMessage.data_length);
-#endif
-  }
 
   return 0;
 }
@@ -263,6 +277,7 @@ void close_client_connection(MqttSnClientNetworkInterface *n, MqttSnClientTcpNet
   }
 }
 
+/*
 int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNetwork *tcpNetwork,
                                                                MqttSnFixedSizeRingBuffer *receiveBuffer,
                                                                int client_socket_position) {
@@ -281,49 +296,65 @@ int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNe
                                                &tcpNetwork->client_buffer_bytes[client_socket_position],
                                                receiveBuffer);
 }
-
+*/
 void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
-                                     MqttSnClientTcpNetwork *clientTcpNetwork,
-                                     MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                     fd_set *read_fds) {
-  for (int client_socket_fd_position = 0;
-       client_socket_fd_position < clientTcpNetwork->max_clients;
-       client_socket_fd_position++) {
-    int client_socket_fd = clientTcpNetwork->client_socket_fds[client_socket_fd_position];
+                                     MqttSnClientTcpNetwork *tcpNetwork,
+                                     fd_set *read_fds,
+                                     device_address *from,
+                                     device_address *to,
+                                     uint8_t *data,
+                                     uint16_t *data_length,
+                                     uint16_t max_data_length) {
+
+  for (int i = 0; i < tcpNetwork->max_clients; i++) {
+    // under the assumption that there is uniform distribution for all client received message we implement some form
+    // of round robin depend on the received message.
+    int pos = (i + tcpNetwork->received_messages) % tcpNetwork->max_clients;
+/*
+#ifdef WITH_TCP_BROADCAST
+    if (tcpNetwork->received_messages % (tcpNetwork->max_clients + 1) == 0) {
+      pos = tcpNetwork->received_messages / (tcpNetwork->max_clients + 1);
+    }
+#endif
+*/
+    int client_socket_fd = tcpNetwork->client_socket_fds[pos];
     if (client_socket_fd < 0) {
       continue;
     }
     if (FD_ISSET(client_socket_fd, read_fds) == 0) {
       continue;
     }
-    // TODO receive_rc values are not all implemented
-    int receive_rc = save_received_messages_from_tcp_socket_into_receive_buffer(clientTcpNetwork,
-                                                                                receiveBuffer,
-                                                                                client_socket_fd_position);
-    if (receive_rc == -2) {
-      // connection was close by client
-#ifdef WITH_DEBUG_LOGGING
-      device_address address = get_device_address_from_tcp_file_descriptor(client_socket_fd);
-      log_client_disconnected(n->logger, clientTcpNetwork->protocol, &address);
-#endif
-    }
-    if (receive_rc == -1) {
-      // connection to client lost
-#ifdef WITH_DEBUG_LOGGING
-      device_address address = get_device_address_from_tcp_file_descriptor(client_socket_fd);
-      log_lost_connection(n->logger, clientTcpNetwork->protocol, &address);
-#endif
-      close_client_connection(n, clientTcpNetwork, client_socket_fd_position);
-      continue;
-    }
-#ifdef WITH_DEBUG_LOGGING
-    if (receive_rc > 0) {
-      for (int32_t msg_counter = 0; msg_counter < receive_rc; ++msg_counter) {
-        const MqttSnMessageData *msg = getBack(receiveBuffer, ((receive_rc - 1) - msg_counter));
-        log_db_rec_client_message(n->logger, &msg->address, n->mqtt_sn_gateway_address, msg->data, msg->data_length);
+
+    int unicast_rc = save_received_tcp_packet_into_receive_buffer(tcpNetwork->client_socket_fds[pos],
+                                                                  from,
+                                                                  tcpNetwork->client_buffer[pos],
+                                                                  &tcpNetwork->client_buffer_bytes[pos],
+                                                                  sizeof(tcpNetwork->client_buffer[pos]),
+                                                                  data,
+                                                                  data_length,
+                                                                  max_data_length,
+                                                                  &tcpNetwork->client_to_drop_bytes[pos]);
+
+    if (unicast_rc < 0) {
+#ifdef WITH_LOGGING
+      device_address peer_address = get_device_address_from_tcp_file_descriptor(client_socket_fd);
+      if (unicast_rc == 2) {
+        log_client_disconnected(n->logger, tcpNetwork->protocol, &peer_address);
+      } else {
+        log_lost_connection(n->logger, tcpNetwork->protocol, &peer_address);
       }
+#endif
+      close_client_connection(n, tcpNetwork, pos);
+      return;
+    }
+    tcpNetwork->received_messages += 1;
+    *to = *n->client_network_address;
+#ifdef WITH_DEBUG_LOGGING
+    if (unicast_rc > 0) {
+      log_db_rec_client_message(n->logger, from, to, data, *data_length);
     }
 #endif
+    return;
   }
 }
 
@@ -339,20 +370,18 @@ int MqttSnClientHandleMasterSocket(MqttSnClientNetworkInterface *n, MqttSnClient
   }
 
   if (empty_socket_fd_position < 0) {
+    // no empty socket position
     return 0;
   }
 
   int new_socket;
-  int addrlen;
   struct sockaddr_in address;
-  addrlen = sizeof(address);
-  if ((new_socket = accept(tcpNetwork->listen_socket_fd,
-                           (struct sockaddr *) &address,
-                           (socklen_t *) &addrlen)) < 0) {
+  socklen_t addr_len = sizeof(address);
+  if ((new_socket = accept(tcpNetwork->listen_socket_fd, (struct sockaddr *) &address, &addr_len)) < 0) {
     return -1;
   }
   tcpNetwork->client_socket_fds[empty_socket_fd_position] = new_socket;
-#ifdef WITH_DEBUG_LOGGING
+#ifdef WITH_LOGGING
   device_address new_client_address = get_device_address_from_sockaddr_in(&address);
   log_new_connection(n->logger, tcpNetwork->protocol, &new_client_address);
 #endif

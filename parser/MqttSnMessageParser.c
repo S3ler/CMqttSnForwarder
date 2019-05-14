@@ -111,7 +111,7 @@ int parse_message_tolerant(ParsedMqttSnHeader *h,
 }
 
 int32_t parse_encapsulation_message(uint8_t *broadcast,
-                                    device_address *from,
+                                    device_address *wireless_node_id,
                                     uint8_t *mqtt_sn_message,
                                     uint16_t *mqtt_sn_message_len,
                                     uint16_t max_mqtt_sn_message_len,
@@ -127,7 +127,7 @@ int32_t parse_encapsulation_message(uint8_t *broadcast,
     return -1;
   }
   *broadcast = encapsulated_header->crtl;
-  *from = encapsulated_header->wireless_node_id;
+  *wireless_node_id = encapsulated_header->wireless_node_id;
   *mqtt_sn_message_len = data_len - read_bytes;
   if (*mqtt_sn_message > max_mqtt_sn_message_len) {
     return -1;
@@ -339,7 +339,7 @@ int generate_encapsulation_header(uint8_t *dst,
   if (*used_bytes > dst_len) {
     return -1;
   }
-  if (broadcast >= 0x01) {
+  if (broadcast > MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BROADCAST_RADIUS) {
     return -1;
   }
   dst[0] = broadcast;

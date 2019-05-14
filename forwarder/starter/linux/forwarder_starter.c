@@ -190,7 +190,7 @@ int start_gateway_plugin(const forwarder_config *fcfg,
 }
 #endif
 
-#ifdef WITH_LINUX_GATEWAY_NETWORK_TCP
+#ifdef WITH_LINUX_TCP_GATEWAY_NETWORK
 int start_gateway_tcp(const forwarder_config *fcfg,
                       MqttSnForwarder *mqttSnForwarder,
                       void *gatewayNetworkContext,
@@ -221,12 +221,13 @@ int start_gateway_tcp(const forwarder_config *fcfg,
     return EXIT_FAILURE;
   }
 
-  if (GatewayNetworkInit(&mqttSnForwarder->gatewayNetwork,
-                         &mqttSnGatewayNetworkAddress,
-                         &forwarderGatewayNetworkAddress,
-                         &forwarderGatewayNetworkBroadcastAddress,
-                         &tcpGatewayNetworkContext,
-                         GatewayLinuxTcpInit)) {
+  if (GatewayNetworkInitialize(&mqttSnForwarder->gatewayNetwork,
+                               CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                               &mqttSnGatewayNetworkAddress,
+                               &forwarderGatewayNetworkAddress,
+                               &forwarderGatewayNetworkBroadcastAddress,
+                               &tcpGatewayNetworkContext,
+                               GatewayLinuxTcpInitialize)) {
     fprintf(stderr, "Error init client network\n");
     return EXIT_FAILURE;
   }
@@ -362,7 +363,7 @@ int start_client_plugin(const forwarder_config *fcfg,
 }
 #endif
 
-#ifdef WITH_LINUX_CLIENT_NETWORK_TCP
+#ifdef WITH_LINUX_TCP_CLIENT_NETWORK
 int start_client_tcp(const forwarder_config *fcfg,
                      MqttSnForwarder *mqttSnForwarder,
                      void *gatewayNetworkContext,
@@ -394,12 +395,13 @@ int start_client_tcp(const forwarder_config *fcfg,
     return EXIT_FAILURE;
   }
 
-  if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
-                        &mqttSnGatewayNetworkAddress,
-                        &forwarderClientNetworkAddress,
-                        &forwarderClientNetworkBroadcastAddress,
-                        &tcpClientNetworkContext,
-                        ClientLinuxTcpInit)) {
+  if (ClientNetworkInitialize(&mqttSnForwarder->clientNetwork,
+                              CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                              &mqttSnGatewayNetworkAddress,
+                              &forwarderClientNetworkAddress,
+                              &forwarderClientNetworkBroadcastAddress,
+                              &tcpClientNetworkContext,
+                              ClientLinuxTcpInitialize)) {
     fprintf(stderr, "Error init client network\n");
     return EXIT_FAILURE;
   }
@@ -503,7 +505,7 @@ int start_forwarder(const forwarder_config *fcfg,
       return start_gateway_udp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
 #endif
-#ifdef WITH_LINUX_GATEWAY_NETWORK_TCP
+#ifdef WITH_LINUX_TCP_GATEWAY_NETWORK
     if (!strcmp(fcfg->gateway_network_protocol, "tcp")) {
       return start_gateway_tcp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
@@ -523,7 +525,7 @@ int start_forwarder(const forwarder_config *fcfg,
       return start_client_udp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }
 #endif
-#ifdef WITH_LINUX_CLIENT_NETWORK_TCP
+#ifdef WITH_LINUX_TCP_CLIENT_NETWORK
     if (!strcmp(fcfg->client_network_protocol, "tcp")) {
       return start_client_tcp(fcfg, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
     }

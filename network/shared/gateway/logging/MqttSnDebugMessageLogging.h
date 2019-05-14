@@ -16,7 +16,7 @@ int log_db_rec_gateway_message(const MqttSnLogger *logger,
                                uint16_t data_len);
 int log_db_send_gateway_message(const MqttSnLogger *logger,
                                 const device_address *from,
-                                const device_address *dst,
+                                const device_address *to,
                                 const uint8_t *data,
                                 uint16_t data_len);
 int log_incomplete_gateway_message(const MqttSnLogger *logger,

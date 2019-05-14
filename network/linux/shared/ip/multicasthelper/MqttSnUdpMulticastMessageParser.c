@@ -78,7 +78,7 @@ int initialize_udp_multicast_socket(int unicast_socket_fd, uint32_t broadcast_ip
 
   return multicast_socket_fd;
 }
-
+/*
 void close_udp_multicast_socket(int multicast_socket_fd) {
   // drop multicast group
   struct ip_mreq group;
@@ -87,21 +87,21 @@ void close_udp_multicast_socket(int multicast_socket_fd) {
   // close socket
   close(multicast_socket_fd);
 }
-
+*/
 struct sockaddr_in get_sockaddr_in_from_bind_file_descriptor(int file_descriptor) {
   struct sockaddr_in address = {0};
   socklen_t addrlen = sizeof(address);
   getsockname(file_descriptor, (struct sockaddr *) &address, &addrlen);
   return address;
 }
-
+/*
 ssize_t send_udp_mutlicast_message(int socket_fd,
                                    const device_address *to,
                                    const uint8_t *data,
                                    uint16_t data_length) {
   return send_udp_message(socket_fd, to, data, data_length);
 }
-
+*/
 int is_multicast_or_unicast_message_receive(int unicast_socket_fd, int multicast_socket_fd, int timeout_ms) {
   struct timeval interval = {timeout_ms / 1000, (timeout_ms % 1000) * 1000};
   if (interval.tv_sec < 0 || (interval.tv_sec == 0 && interval.tv_usec <= 0)) {
@@ -150,20 +150,12 @@ int is_multicast_or_unicast_message_receive(int unicast_socket_fd, int multicast
   }
   return -1;
 }
+/*
 
-int is_multicast_message_receive(int multicast_socket_fd, int timeout_ms) {
-  return is_udp_message_received(multicast_socket_fd, timeout_ms);
-}
 
-int receive_udp_mutlicast_message(int socket_fd,
-                                  uint8_t *buffer,
-                                  ssize_t *read_bytes,
-                                  uint16_t buffer_max_length,
-                                  device_address *from) {
-  return receive_udp_message(socket_fd, buffer, read_bytes, buffer_max_length, from);
 
-}
-
+*/
+/*
 int receive_and_save_udp_multicast_message_into_receive_buffer(int socket_fd,
                                                                MqttSnFixedSizeRingBuffer *receiveBuffer,
                                                                uint16_t max_data_length) {
@@ -185,5 +177,5 @@ int receive_and_save_udp_multicast_message_into_receive_buffer(int socket_fd,
   put(receiveBuffer, &receiveMessageData);
   return 1;
 }
-
+*/
 #endif

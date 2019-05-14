@@ -11,6 +11,7 @@
 #include <string.h>
 #include <netinet/in.h>
 
+/*
 int save_udp_messages_into_receive_buffer(uint8_t *buffer,
                                           ssize_t read_bytes,
                                           uint8_t broadcast_radius,
@@ -35,11 +36,13 @@ int save_udp_messages_into_receive_buffer(uint8_t *buffer,
   }
   return 0;
 }
-
+*/
+/*
 uint16_t get_udp_message_length(uint8_t *data) {
   return get_message_length((data));
 }
-
+*/
+/*
 int isCompleteThreeBytesUdpHeader(uint8_t *data, ssize_t data_length) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
@@ -48,7 +51,8 @@ int isCompleteThreeBytesUdpHeader(uint8_t *data, ssize_t data_length) {
   }
   return 0;
 }
-
+*/
+/*
 int isThreeBytesUdpHeader(uint8_t *data, ssize_t data_length) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
@@ -57,7 +61,8 @@ int isThreeBytesUdpHeader(uint8_t *data, ssize_t data_length) {
   }
   return 0;
 }
-
+*/
+/*
 int save_complete_new_udp_message(uint8_t *data,
                                   ssize_t data_length,
                                   uint8_t broadcast_radius,
@@ -72,7 +77,8 @@ int save_complete_new_udp_message(uint8_t *data,
                                               address,
                                               receiveBuffer);
 }
-
+*/
+/*
 int save_udp_message_into_receive_buffer(uint8_t *data,
                                          uint16_t data_length,
                                          uint8_t broadcast_radius,
@@ -86,7 +92,7 @@ int save_udp_message_into_receive_buffer(uint8_t *data,
   put(receiveBuffer, &receiveMessageData);
   return 0;
 }
-
+*/
 int initialize_udp_socket(uint16_t port) {
   int socket_fd;
 
@@ -189,9 +195,9 @@ int receive_udp_message(int socket_fd,
   }
 
   *from = get_device_address_from_sockaddr_in(&recv_sockaddr);
-  return 0;
+  return 1;
 }
-
+/*
 int receive_and_save_udp_message_into_receive_buffer(int socket_fd,
                                                      MqttSnFixedSizeRingBuffer *receiveBuffer,
                                                      uint16_t max_data_length) {
@@ -213,4 +219,4 @@ int receive_and_save_udp_message_into_receive_buffer(int socket_fd,
   put(receiveBuffer, &receiveMessageData);
   return 1;
 }
-
+*/

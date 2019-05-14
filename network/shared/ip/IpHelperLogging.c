@@ -2,6 +2,7 @@
 // Created by SomeDude on 11.05.2019.
 //
 
+#include <platform/platform_compatibility.h>
 #include "IpHelperLogging.h"
 #include "IpHelper.h"
 
@@ -132,7 +133,7 @@ int log_close_socket(const MqttSnLogger *logger,
 }
 
 int log_new_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 
@@ -151,7 +152,7 @@ int log_new_connection(const MqttSnLogger *logger, const char *protocol, const d
 }
 
 int log_closed_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 
@@ -170,7 +171,7 @@ int log_closed_connection(const MqttSnLogger *logger, const char *protocol, cons
 }
 
 int log_client_disconnected(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 
@@ -189,7 +190,7 @@ int log_client_disconnected(const MqttSnLogger *logger, const char *protocol, co
 }
 
 int log_lost_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 
@@ -203,6 +204,53 @@ int log_lost_connection(const MqttSnLogger *logger, const char *protocol, const 
   log_str(logger, space);
   log_device_address(logger, address);
   log_str(logger, disconnected_dot);
+  log_flush(logger);
+  return log_status(logger);
+}
+
+int log_client_unknown_destination(const MqttSnLogger *logger,
+                                   const device_address *from,
+                                   const device_address *to,
+                                   const uint8_t *data,
+                                   uint16_t data_len) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {
+    return 0;
+  }
+
+  log_msg_start(logger);
+  log_str(logger, PSTR("cannot send client message from "));
+  log_device_address(logger, from);
+  log_str(logger, PSTR(" to "));
+  log_device_address(logger, to);
+  log_str(logger, PSTR(" - destination not found ( len"));
+  log_uint32(logger, data_len);
+  log_str(logger, PSTR(", data( "));
+  log_uint8_array(logger, data, data_len);
+  log_str(logger, PSTR("))."));
+
+  log_flush(logger);
+  return log_status(logger);
+}
+int log_gateway_unknown_destination(const MqttSnLogger *logger,
+                                    const device_address *from,
+                                    const device_address *to,
+                                    const uint8_t *data,
+                                    uint16_t data_len) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {
+    return 0;
+  }
+
+  log_msg_start(logger);
+  log_str(logger, PSTR("cannot send gateway message from "));
+  log_device_address(logger, from);
+  log_str(logger, PSTR(" to "));
+  log_device_address(logger, to);
+  log_str(logger, PSTR(" - destination not mqtt-sn gateway ( len"));
+  log_uint32(logger, data_len);
+  log_str(logger, PSTR(", data( "));
+  log_uint8_array(logger, data, data_len);
+  log_str(logger, PSTR("))."));
+
   log_flush(logger);
   return log_status(logger);
 }

@@ -6,7 +6,9 @@
 #include <parser/MqttSnMessageParser.h>
 #include <string.h>
 #include <errno.h>
+#include <network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 
+/*
 // TODO rewrite: -1 on error 0 if nothing, else number of messages
 int save_tcp_messages_into_receive_buffer(uint8_t *data,
                                           ssize_t data_length,
@@ -86,7 +88,7 @@ int save_tcp_messages_into_receive_buffer(uint8_t *data,
   }
   return -1;
 }
-
+*/
 uint16_t get_tcp_message_length(uint8_t *data) {
   return get_message_length((data));
 }
@@ -100,6 +102,10 @@ int isCompleteThreeBytesTcpHeader(uint8_t *data, ssize_t data_length) {
   return 0;
 }
 
+int isCompleteTwoBytesTcpHeader(uint8_t *data, ssize_t data_length) {
+  return data_length > 1;
+}
+
 int isThreeBytesTcpHeader(uint8_t *data, ssize_t data_length) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
@@ -108,7 +114,7 @@ int isThreeBytesTcpHeader(uint8_t *data, ssize_t data_length) {
   }
   return 0;
 }
-
+/*
 int save_tcp_message_into_receive_buffer(uint8_t *data,
                                          uint16_t data_length,
                                          device_address address,
@@ -120,7 +126,8 @@ int save_tcp_message_into_receive_buffer(uint8_t *data,
   put(receiveBuffer, &receiveMessageData);
   return 0;
 }
-
+*/
+/*
 int save_complete_new_tcp_message(uint8_t *data,
                                   ssize_t data_length,
                                   device_address address,
@@ -135,7 +142,8 @@ int save_complete_new_tcp_message(uint8_t *data,
   *client_buffer_bytes = 0;
   return 0;
 }
-
+*/
+/*
 int save_incomplete_new_tcp_message(uint8_t *data,
                                     ssize_t data_length,
                                     device_address address,
@@ -156,7 +164,8 @@ int save_incomplete_new_tcp_message(uint8_t *data,
   *client_buffer_bytes = (uint16_t) data_length;
   return 0;
 }
-
+*/
+/*
 int save_multiple_complete_new_tcp_messages(uint8_t *data,
                                             ssize_t data_length,
                                             device_address address,
@@ -196,7 +205,8 @@ int save_multiple_complete_new_tcp_messages(uint8_t *data,
   }
   return -1;
 }
-
+*/
+/*
 int save_completed_tcp_message(uint8_t *data,
                                ssize_t data_length,
                                device_address address,
@@ -213,7 +223,8 @@ int save_completed_tcp_message(uint8_t *data,
   *client_buffer_bytes = 0;
   return 0;
 }
-
+*/
+/*
 int save_incomplete_tcp_message(uint8_t *data,
                                 ssize_t data_length,
                                 device_address address,
@@ -227,7 +238,8 @@ int save_incomplete_tcp_message(uint8_t *data,
   *client_buffer_bytes += (uint16_t) data_length;
   return 0;
 }
-
+*/
+/*
 int save_multiple_tcp_messages(uint8_t *data,
                                ssize_t data_length,
                                device_address address,
@@ -268,6 +280,135 @@ int save_multiple_tcp_messages(uint8_t *data,
                                               client_buffer_bytes,
                                               receiveBuffer) != 0) {
     return -1;
+  }
+  return 0;
+}
+*/
+int32_t save_received_tcp_packet_into_receive_buffer(int socket_fd,
+                                                     device_address *from,
+                                                     uint8_t *buffer,
+                                                     uint16_t *buffer_length,
+                                                     uint16_t max_buffer_length,
+                                                     uint8_t *data,
+                                                     uint16_t *data_length,
+                                                     uint16_t max_data_length,
+                                                     uint32_t *to_drop_bytes) {
+
+  int msg_rc = 0;
+  if (*to_drop_bytes > 0) {
+    // read bytes from tcp socket until we have dropped enough bytes
+    uint8_t receive_buffer[*to_drop_bytes];
+    ssize_t read_bytes;
+    if ((read_bytes = read(socket_fd, receive_buffer, *to_drop_bytes)) < 0) {
+      return -1;
+    }
+    *to_drop_bytes = *to_drop_bytes - read_bytes;
+    if (*to_drop_bytes > 0) {
+      return 0;
+    }
+  }
+
+  if (*buffer_length > 0) {
+    msg_rc = get_next_message_from_buffer(buffer,
+                                          buffer_length,
+                                          max_buffer_length,
+                                          data, data_length, max_data_length,
+                                          to_drop_bytes);
+    if (msg_rc < 0) {
+      return msg_rc;
+    }
+  }
+
+  if (*to_drop_bytes > 0) {
+    // read bytes from tcp socket until we have dropped enough bytes
+    uint8_t receive_buffer[*to_drop_bytes];
+    ssize_t read_bytes;
+    if ((read_bytes = read(socket_fd, receive_buffer, *to_drop_bytes)) < 0) {
+      return -1;
+    }
+    *to_drop_bytes = *to_drop_bytes - read_bytes;
+    if (*to_drop_bytes > 0) {
+      return 0;
+    }
+  }
+
+  uint16_t readable_bytes = max_buffer_length - *buffer_length;
+
+  ssize_t read_bytes;
+  if ((read_bytes = read(socket_fd, buffer, readable_bytes)) < 0) {
+    return -1;
+  }
+  if (read_bytes == 0) {
+    return -2;
+  }
+  *buffer_length = read_bytes;
+  *from = get_device_address_from_tcp_file_descriptor(socket_fd);
+
+  if (msg_rc > 0) {
+    return 0;
+  }
+  if (*buffer_length > 0) {
+    msg_rc = get_next_message_from_buffer(buffer,
+                                          buffer_length,
+                                          max_buffer_length,
+                                          data, data_length, max_data_length,
+                                          to_drop_bytes);
+    if (msg_rc < 0) {
+      return msg_rc;
+    }
+  }
+
+  return msg_rc;
+}
+int32_t get_next_message_from_buffer(uint8_t *buffer,
+                                     uint16_t *buffer_length,
+                                     uint32_t max_buffer_length,
+                                     uint8_t *data,
+                                     uint16_t *data_length,
+                                     uint16_t max_data_length,
+                                     uint32_t *to_drop_bytes) {
+  while (*buffer_length > 0) {
+    if (isThreeBytesTcpHeader(buffer, *buffer_length)) {
+      if (!isCompleteThreeBytesTcpHeader(buffer, *buffer_length)) {
+        // incomplete three byte header in buffer => read out as much data as possible
+        return 0;
+      }
+    } else {
+      // two byte header
+      if (!isCompleteTwoBytesTcpHeader(data, *buffer_length)) {
+        // incomplete two byte header in buffer => read out as much data as possible
+        return 0;
+      }
+    }
+
+    uint16_t msg_length = get_message_length(buffer);
+    if (msg_length > max_buffer_length) {
+      // complete messages does not fit into buffer => drop the message by dropping bytes
+      *to_drop_bytes = msg_length - *data_length;
+      memset(buffer, 0, *data_length);
+      *buffer_length = 0;
+      return 0;
+    }
+    if (*buffer_length < msg_length) {
+      // buffer contains incomplete message
+      return 0;
+    }
+    // packet is full in buffer
+    if (max_data_length < msg_length) {
+      // message cannot fit into destination buffer => drop it
+      uint32_t new_buffer_length = *buffer_length - msg_length;
+      memmove(buffer, &buffer[msg_length], new_buffer_length); //TODO check memmove
+      *buffer_length = new_buffer_length;
+      return 0;
+    }
+    // packet is full in buffer and can be written to data
+    *data_length = msg_length;
+    memcpy(data, buffer, *data_length);
+
+    uint32_t new_buffer_length = *buffer_length - msg_length;
+    memmove(buffer, &buffer[msg_length], new_buffer_length); //TODO check memmove
+    *buffer_length = new_buffer_length;
+    return 1;
   }
   return 0;
 }

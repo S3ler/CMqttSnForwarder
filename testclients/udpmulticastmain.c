@@ -3,13 +3,15 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
-#include <forwarder/network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
-#include <forwarder/network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h>
 #include <string.h>
-#include <forwarder/network/shared/ip/IpHelper.h>
-#include <forwarder/logging/linux/stdout/StdoutLogging.h>
 #include <arpa/inet.h>
-#include <forwarder/network/linux/shared/ip/MqttSnIpNetworkHelper.h>
+#include <network/linux/shared/ip/MqttSnIpNetworkHelper.h>
+#include <network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
+#include <logging/linux/stdout/StdoutLogging.h>
+#include <network/shared/ip/IpHelper.h>
+#include <network/shared/ip/IpHelperLogging.h>
+#include <network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h>
+#include <network/shared/client/logging/MqttSnDebugMessageLogging.h>
 
 #ifndef MQTT_SN_MULTICAST_IP
 #define MQTT_SN_MULTICAST_IP "224.1.1.103"
@@ -74,6 +76,14 @@ int read_and_send(int unicast_socket) {
   return 0;
 }
 
+int is_multicast_message_receive(int multicast_socket_fd, int timeout_ms);
+
+int receive_udp_mutlicast_message(int socket_fd,
+                                  uint8_t *buffer,
+                                  ssize_t *read_bytes,
+                                  uint16_t buffer_max_length,
+                                  device_address *from);
+
 int main() {
   MqttSnLogger logger = {0};
   MqttSnLoggerInit(&logger, LOG_LEVEL_DEBUG, stdout_log_init);
@@ -120,11 +130,11 @@ int main() {
       MqttSnMessageData msg = {0};
       device_address empty = {0};
       ssize_t read_bytes = -1;
-      if (receive_udp_mutlicast_message(multicast_socket, msg.data, &read_bytes, sizeof(msg.data), &msg.address)
+      if (receive_udp_mutlicast_message(multicast_socket, msg.data, &read_bytes, sizeof(msg.data), &msg.from)
           == 0) {
         msg.data_length = read_bytes;
         log_db_rec_client_message(&logger,
-                                  &msg.address,
+                                  &msg.from,
                                   &empty,
                                   msg.data,
                                   msg.data_length);
@@ -132,4 +142,16 @@ int main() {
     }
   }
   return EXIT_SUCCESS;
+}
+
+int is_multicast_message_receive(int multicast_socket_fd, int timeout_ms) {
+  return is_udp_message_received(multicast_socket_fd, timeout_ms);
+}
+int receive_udp_mutlicast_message(int socket_fd,
+                                  uint8_t *buffer,
+                                  ssize_t *read_bytes,
+                                  uint16_t buffer_max_length,
+                                  device_address *from) {
+  return receive_udp_message(socket_fd, buffer, read_bytes, buffer_max_length, from);
+
 }

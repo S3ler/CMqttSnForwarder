@@ -22,16 +22,6 @@ ssize_t send_udp_mutlicast_message(int socket_fd,
  */
 int is_multicast_or_unicast_message_receive(int unicast_socket_fd, int multicast_socket_fd, int timeout_ms);
 
-int is_multicast_message_receive(int multicast_socket_fd, int timeout_ms);
-
-int receive_udp_mutlicast_message(int socket_fd,
-                                  uint8_t *buffer,
-                                  ssize_t *read_bytes,
-                                  uint16_t buffer_max_length,
-                                  device_address *from);
-int receive_and_save_udp_multicast_message_into_receive_buffer(int socket_fd,
-                                                               MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                                               uint16_t max_data_length);
 #endif
 
 #endif //CMQTTSNFORWARDER_FORWARDER_NETWORK_LINUX_SHARED_IP_MULTICASTHELPER_MQTTSNUDPMULTICASTMESSAGEPARSER_H_

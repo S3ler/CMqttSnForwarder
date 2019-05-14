@@ -115,7 +115,6 @@ int print_usage(const MqttSnLogger *logger) {
 #elif defined(WITH_LINUX_TCP_CLIENT_NETWORK)
   log_str(logger, "       Can be tcp. Defaults to tcp.\n");
 #endif
-  log_str(logger, "       Can be udp, tcp. Defaults to udp.\n");
   log_str(logger, " -cA : bind the client network to the outgoing socket to this host/ip address.\n");
   log_str(logger, "       Use to control which interface the network communicates over.\n");
   log_str(logger, " -cp : listening on the specific client network port. Defaults to 7777.\n");

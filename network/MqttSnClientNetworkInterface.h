@@ -40,11 +40,13 @@ typedef struct MqttSnClientNetworkInterface_ {
   int32_t (*disconnect)(struct MqttSnClientNetworkInterface_ *, void *context);
 
   int32_t (*send)(struct MqttSnClientNetworkInterface_ *,
+                  const device_address *,
                   const device_address *, const uint8_t *, uint16_t, uint16_t *,
                   uint8_t,
                   int32_t,
                   void *context);
   int32_t (*receive)(struct MqttSnClientNetworkInterface_ *,
+                     device_address *,
                      device_address *, uint8_t *, uint16_t *, uint16_t,
                      uint8_t *,
                      int32_t,

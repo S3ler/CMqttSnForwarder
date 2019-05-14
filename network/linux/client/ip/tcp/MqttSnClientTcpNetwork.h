@@ -25,6 +25,8 @@ typedef struct MqttSnClientTcpNetwork_ {
   uint8_t client_buffer[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS]
   [CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH];
   uint16_t client_buffer_bytes[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
+  uint32_t client_to_drop_bytes[CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS];
+  uint64_t received_messages;
   int max_clients;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNCLIENTLINUXTCPNETWORKPROTOCOL)];
 #ifdef WITH_TCP_BROADCAST
@@ -32,35 +34,48 @@ typedef struct MqttSnClientTcpNetwork_ {
 #endif
 } MqttSnClientTcpNetwork;
 
-int ClientLinuxTcpInit(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxTcpInitialize(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxTcpDeinitialize(MqttSnClientNetworkInterface *n, void *context);
 
-int ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxTcpConnect(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context);
 
-void ClientLinuxTcpDisconnect(MqttSnClientNetworkInterface *n, void *context);
-
-int ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
-                          MqttSnFixedSizeRingBuffer *receiveBuffer,
-                          int32_t timeout_ms,
-                          void *context);
-
-int ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
-                       MqttSnFixedSizeRingBuffer *sendBuffer,
-                       int32_t timeout_ms,
-                       void *context);
+int32_t ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
+                           const device_address *from,
+                           const device_address *to,
+                           const uint8_t *data,
+                           uint16_t data_length,
+                           uint16_t *send_data_length,
+                           uint8_t signal_strength,
+                           int32_t timeout_ms,
+                           void *context);
+int32_t ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
+                              device_address *from,
+                              device_address *to,
+                              uint8_t *data,
+                              uint16_t *data_length,
+                              uint16_t max_data_length,
+                              uint8_t *signal_strength,
+                              int32_t timeout_ms,
+                              void *context);
 
 int MqttSnClientHandleMasterSocket(MqttSnClientNetworkInterface *n, MqttSnClientTcpNetwork *tcpNetwork);
 
 void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
-                                     MqttSnClientTcpNetwork *clientTcpNetwork,
-                                     MqttSnFixedSizeRingBuffer *receiveBuffer,
-                                     fd_set *read_fds);
+                                     MqttSnClientTcpNetwork *tcpNetwork,
+                                     fd_set *read_fds,
+                                     device_address *from,
+                                     device_address *to,
+                                     uint8_t *data,
+                                     uint16_t *data_length,
+                                     uint16_t max_data_length);
 
 void close_client_connection(MqttSnClientNetworkInterface *n, MqttSnClientTcpNetwork *tcpNetwork, int i);
-
+/*
 int save_received_messages_from_tcp_socket_into_receive_buffer(MqttSnClientTcpNetwork *tcpNetwork,
                                                                MqttSnFixedSizeRingBuffer *receiveBuffer,
                                                                int client_socket_position);
-
+*/
 #ifdef __cplusplus
 }
 #endif

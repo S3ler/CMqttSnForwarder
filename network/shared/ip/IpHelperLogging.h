@@ -57,6 +57,18 @@ int log_client_disconnected(const MqttSnLogger *logger, const char *protocol, co
 
 int log_lost_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 
+int log_client_unknown_destination(const MqttSnLogger *logger,
+                                   const device_address *from,
+                                   const device_address *to,
+                                   const uint8_t *data,
+                                   uint16_t data_len);
+
+int log_gateway_unknown_destination(const MqttSnLogger *logger,
+                                    const device_address *from,
+                                    const device_address *to,
+                                    const uint8_t *data,
+                                    uint16_t data_len);
+
 int log_gateway_close_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 
 int log_gateway_lost_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address);
