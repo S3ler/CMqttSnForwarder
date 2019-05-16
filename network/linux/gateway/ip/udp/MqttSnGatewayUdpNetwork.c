@@ -115,7 +115,6 @@ int32_t GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
                             const device_address *to,
                             const uint8_t *data,
                             uint16_t data_length,
-                            uint16_t *send_data_length,
                             uint8_t signal_strength,
                             int32_t timeout_ms,
                             void *context) {
@@ -125,27 +124,21 @@ int32_t GatewayLinuxUdpSend(MqttSnGatewayNetworkInterface *n,
   log_db_send_gateway_message(n->logger, from, to, data, data_length);
 #endif
 
-  ssize_t send_bytes = send_udp_message(udpNetwork->unicast_socket, to, data, data_length);
+  ssize_t send_rc = send_udp_message(udpNetwork->unicast_socket, to, data, data_length);
 
-  if (send_bytes == -1) {
-    return -1;
-  }
-
-  *send_data_length = send_bytes;
 #ifdef WITH_DEBUG_LOGGING
-  if (send_bytes != data_length) {
+  if (send_rc > 0 && send_rc != data_length) {
     log_incomplete_gateway_message(n->logger, from, data, data_length);
   }
 #endif
 
-  return 0;
+  return send_rc;
 }
 
 int32_t GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
                                device_address *from,
                                device_address *to,
                                uint8_t *data,
-                               uint16_t *data_length,
                                uint16_t max_data_length,
                                uint8_t *signal_strength,
                                int32_t timeout_ms,
@@ -170,25 +163,24 @@ int32_t GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
 #ifdef WITH_UDP_BROADCAST
   if (message_received == 3) {
     if (udpNetwork->received_messages++ % 2) {
-      return GatewayLinuxUdpReceiveUnicast(n, from, to, data, data_length, max_data_length, udpNetwork);
+      return GatewayLinuxUdpReceiveUnicast(n, from, to, data, max_data_length, udpNetwork);
     } else if (n->gateway_network_broadcast_address) {
       return GatewayLinuxUdpReceiveMulticast(n,
                                              from,
                                              to,
                                              data,
-                                             data_length,
                                              max_data_length,
                                              signal_strength,
                                              udpNetwork);
     } else {
-      return GatewayLinuxUdpReceiveUnicast(n, from, to, data, data_length, max_data_length, udpNetwork);
+      return GatewayLinuxUdpReceiveUnicast(n, from, to, data, max_data_length, udpNetwork);
     }
   }
 #endif
 
   if (message_received == 1) {
     udpNetwork->received_messages++;
-    return GatewayLinuxUdpReceiveUnicast(n, from, to, data, data_length, max_data_length, udpNetwork);
+    return GatewayLinuxUdpReceiveUnicast(n, from, to, data, max_data_length, udpNetwork);
   }
 
 #ifdef WITH_UDP_BROADCAST
@@ -199,7 +191,6 @@ int32_t GatewayLinuxUdpReceive(MqttSnGatewayNetworkInterface *n,
                                              from,
                                              to,
                                              data,
-                                             data_length,
                                              max_data_length,
                                              signal_strength,
                                              udpNetwork);
@@ -214,25 +205,22 @@ int32_t GatewayLinuxUdpReceiveUnicast(MqttSnGatewayNetworkInterface *n,
                                       device_address *from,
                                       device_address *to,
                                       uint8_t *data,
-                                      uint16_t *data_length,
                                       uint16_t max_data_length,
                                       MqttSnGatewayUdpNetwork *udpNetwork) {
-  ssize_t rec_data_length = 0;
-  int unicast_rc = receive_udp_message(udpNetwork->unicast_socket, data, &rec_data_length, max_data_length, from);
+  int unicast_rc = receive_udp_message(udpNetwork->unicast_socket, data, max_data_length, from);
   if (unicast_rc < 0) {
 #ifdef WITH_LOGGING
     log_unicast_socket_failed(n->logger, udpNetwork->protocol, n->gateway_network_address);
 #endif
     return -1;
   }
-  *data_length = rec_data_length;
   *to = *n->gateway_network_address;
 #ifdef WITH_DEBUG_LOGGING
   if (unicast_rc > 0) {
-    log_db_rec_gateway_message(n->logger, from, to, data, *data_length);
+    log_db_rec_gateway_message(n->logger, from, to, data, unicast_rc);
   }
 #endif
-  return 0;
+  return unicast_rc;
 }
 
 #ifdef WITH_UDP_BROADCAST
@@ -240,27 +228,25 @@ int32_t GatewayLinuxUdpReceiveMulticast(MqttSnGatewayNetworkInterface *n,
                                         device_address *from,
                                         device_address *to,
                                         uint8_t *data,
-                                        uint16_t *data_length,
                                         uint16_t max_data_length,
                                         uint8_t *signal_strength,
                                         MqttSnGatewayUdpNetwork *udpNetwork) {
   if (n->gateway_network_broadcast_address) {
-    ssize_t rec_data_length = 0;
-    int multicast_rc = receive_udp_message(udpNetwork->multicast_socket, data, &rec_data_length, max_data_length, from);
+    int multicast_rc = receive_udp_message(udpNetwork->multicast_socket, data, max_data_length, from);
     if (multicast_rc < 0) {
 #ifdef WITH_LOGGING
       log_multicast_socket_failed(n->logger, udpNetwork->protocol, n->gateway_network_broadcast_address);
 #endif
       return -1;
     }
-    *data_length = rec_data_length;
     *signal_strength = 0x01;
     *to = *n->gateway_network_broadcast_address;
 #ifdef WITH_DEBUG_LOGGING
     if (multicast_rc > 0) {
-      log_db_rec_gateway_message(n->logger, from, to, data, *data_length);
+      log_db_rec_gateway_message(n->logger, from, to, data, multicast_rc);
     }
 #endif
+    return multicast_rc;
   }
   return 0;
 }

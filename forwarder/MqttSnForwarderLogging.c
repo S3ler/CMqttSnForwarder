@@ -1,6 +1,3 @@
-//
-// Created by SomeDude on 11.05.2019.
-//
 
 #include "MqttSnForwarderLogging.h"
 #include <platform/platform_compatibility.h>

@@ -130,9 +130,9 @@ int main() {
       MqttSnMessageData msg = {0};
       device_address empty = {0};
       ssize_t read_bytes = -1;
-      if (receive_udp_mutlicast_message(multicast_socket, msg.data, &read_bytes, sizeof(msg.data), &msg.from)
-          == 0) {
-        msg.data_length = read_bytes;
+      int rc = receive_udp_mutlicast_message(multicast_socket, msg.data, &read_bytes, sizeof(msg.data), &msg.from);
+      if (rc > 0) {
+        msg.data_length = rc;
         log_db_rec_client_message(&logger,
                                   &msg.from,
                                   &empty,
@@ -152,6 +152,6 @@ int receive_udp_mutlicast_message(int socket_fd,
                                   ssize_t *read_bytes,
                                   uint16_t buffer_max_length,
                                   device_address *from) {
-  return receive_udp_message(socket_fd, buffer, read_bytes, buffer_max_length, from);
+  return receive_udp_message(socket_fd, buffer, buffer_max_length, from);
 
 }

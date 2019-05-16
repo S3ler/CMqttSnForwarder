@@ -283,7 +283,7 @@ int32_t ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
                                                          pluginClientNetwork->plugin_context);
 
 #ifdef WITH_DEBUG_LOGGING
-  if (send_rc != data_length) {
+  if (send_rc > 0 && send_rc != data_length) {
     log_incomplete_client_message(n->logger, from, data, data_length);
   }
 #endif

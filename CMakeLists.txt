@@ -151,10 +151,9 @@ if (WITH_LINUX_PLUGIN_NETWORK)
         target_compile_options(lib-mqtt-sn-linux-plugin-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
         target_link_libraries(lib-mqtt-sn-linux-plugin-gateway-network dl)
     endif ()
-
 endif ()
 
-option(WITH_LINUX_UDP_NETWORK "Include WITH_LINUX_UDP_NETWORK support?" OFF)
+option(WITH_LINUX_UDP_NETWORK "Include WITH_LINUX_UDP_NETWORK support?" ON)
 if (WITH_LINUX_UDP_NETWORK)
     add_definitions(-DWITH_LINUX_UDP_NETWORK)
     add_definitions(-DWITH_LINUX_UDP_GATEWAY_NETWORK)
@@ -356,9 +355,10 @@ endif ()
 
 
 set(MQTT_SN_FORWARDER_FILES
-        platform/device_address.h
         forwarder/MqttSnForwarder.c
-        forwarder/MqttSnForwarder.h)
+        forwarder/MqttSnForwarder.h
+        platform/device_address.c
+        platform/device_address.h)
 if (WITH_LOGGING)
     set(MQTT_SN_FORWARDER_FILES ${MQTT_SN_FORWARDER_FILES}
             forwarder/MqttSnForwarderLogging.c
@@ -679,6 +679,8 @@ if (WITH_ARDUINO)
         endif ()
 
         set(MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES
+                utility/arduino/eeprom/eeprom_config.h
+                utility/arduino/eeprom/eeprom_config.c
                 utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.c
                 utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.h)
         if (WITH_LOGGING)
@@ -688,6 +690,7 @@ if (WITH_ARDUINO)
         endif ()
         add_library(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader ${MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES})
         target_include_directories(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader PRIVATE .)
+        target_link_libraries(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader lib-mqtt-sn-forwarder-config lib-mqtt-sn-arduino-esp8266-eeprom-config-line-loader)
         target_compile_options(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
         if (WITH_LINUX_FAKE_ARDUINO_CLASSES)
             SET_SOURCE_FILES_PROPERTIES(${MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES} PROPERTIES LANGUAGE CXX)
@@ -695,12 +698,13 @@ if (WITH_ARDUINO)
             target_include_directories(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader PRIVATE ${Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES})
         endif ()
 
-
         set(MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES
                 utility/arduino/system/system.c
                 utility/arduino/system/system.h
                 network/arduino/shared/ip/ArduinoIpAddressHelper.c
-                network/arduino/shared/ip/ArduinoIpAddressHelper.h)
+                network/arduino/shared/ip/ArduinoIpAddressHelper.h
+                utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.c
+                utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.h)
         if (WITH_LOGGING)
             set(MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES ${MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES}
                     utility/arduino/system/system_logging.c
@@ -708,7 +712,10 @@ if (WITH_ARDUINO)
         endif ()
         add_library(lib-mqtt-sn-arduino-esp8266-system ${MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES})
         target_include_directories(lib-mqtt-sn-arduino-esp8266-system PRIVATE .)
+        target_link_libraries(lib-mqtt-sn-arduino-esp8266-system lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader)
         target_compile_options(lib-mqtt-sn-arduino-esp8266-system PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+        target_compile_definitions(lib-mqtt-sn-arduino-esp8266-system PRIVATE WITH_EEPROM WITH_RESTART)
+
         if (WITH_LINUX_FAKE_ARDUINO_CLASSES)
             SET_SOURCE_FILES_PROPERTIES(${MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES} PROPERTIES LANGUAGE CXX)
             target_compile_definitions(lib-mqtt-sn-arduino-esp8266-system PRIVATE WITH_LINUX_FAKE_ARDUINO_CLASSES)

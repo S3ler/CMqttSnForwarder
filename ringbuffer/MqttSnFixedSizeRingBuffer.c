@@ -1,6 +1,3 @@
-//
-// Created by bele on 25.01.19.
-//
 
 #include "MqttSnFixedSizeRingBuffer.h"
 #include <string.h>

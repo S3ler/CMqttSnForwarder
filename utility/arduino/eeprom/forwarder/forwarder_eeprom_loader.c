@@ -2,12 +2,13 @@
 // Created by SomeDude on 12.05.2019.
 //
 
-#include <assert.h>
-#include <forwarder/config/forwarder_config_logger.h>
-#include <platform/platform_compatibility.h>
 #include "forwarder_eeprom_loader.h"
 #include "forwarder_eeprom_loader_logging.h"
-#include "utility/arduino/eeprom/eeprom_config_logging.h"
+#include <platform/platform_compatibility.h>
+#include <forwarder/config/forwarder_config.h>
+#include <forwarder/config/forwarder_config_logger.h>
+#include <utility/arduino/eeprom/eeprom_config_logging.h>
+#include <assert.h>
 
 int eeprom_load_forwarder_config(EEPROM_cfg *ecfg, forwarder_config *fcfg) {
   assert(ecfg != NULL);

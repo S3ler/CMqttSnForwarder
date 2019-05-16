@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <platform/platform_compatibility.h>
+#include <logging/MqttSnLoggingInterface.h>
 #include <parser/logging/MqttSnForwarderLoggingMessages.h>
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,

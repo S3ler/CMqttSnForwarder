@@ -166,36 +166,33 @@ int is_udp_message_received(int socket_fd, int timeout_ms) {
   return 1;
 }
 
-int receive_udp_message(int socket_fd,
-                        uint8_t *buffer,
-                        ssize_t *read_bytes,
-                        uint16_t buffer_max_length,
-                        device_address *from) {
+int32_t receive_udp_message(int socket_fd, uint8_t *buffer, uint16_t buffer_max_length, device_address *from) {
   struct sockaddr_in recv_sockaddr;
   memset(&recv_sockaddr, 0, sizeof(recv_sockaddr));
   socklen_t recv_sockaddr_socklen = sizeof(recv_sockaddr);
+  int read_bytes = -1;
 
-  if ((*read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_PEEK,
+  if ((read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_PEEK,
                               (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
     return -1;
   }
 
-  if (*read_bytes > buffer_max_length) {
+  if (read_bytes > buffer_max_length) {
     // read bytes and discard
-    if ((*read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_WAITALL,
+    if ((read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_WAITALL,
                                 (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
       return -1;
     }
     return 0;
   }
 
-  if ((*read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_WAITALL,
+  if ((read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_WAITALL,
                               (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
     return -1;
   }
 
   *from = get_device_address_from_sockaddr_in(&recv_sockaddr);
-  return 1;
+  return read_bytes;
 }
 /*
 int receive_and_save_udp_message_into_receive_buffer(int socket_fd,
