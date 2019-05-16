@@ -328,7 +328,7 @@ int start_client_plugin(const forwarder_config *fcfg,
 
   MqttSnClientPluginContext clientPluginContext = {
       .dl_handle = NULL,
-      .plugin_network_init = NULL,
+      .plugin_network_initialize = NULL,
       .plugin_network_disconnect = NULL,
       .plugin_network_connect = NULL,
       .plugin_network_receive = NULL,

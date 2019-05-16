@@ -13,40 +13,48 @@ extern "C" {
 
 typedef struct MqttSnClientPluginContext_ {
   void *dl_handle;
-  int (*plugin_network_init)(const client_plugin_config *cfg, void **plugin_context);
-  void (*plugin_network_deinit)(const client_plugin_config *cfg, void **plugin_context);
-  int (*plugin_network_connect)(const client_plugin_config *cfg, void *plugin_context);
-  void (*plugin_network_disconnect)(const client_plugin_config *cfg, void *plugin_context);
-  int (*plugin_network_send)(const client_plugin_message *send_message,
-                             int32_t timeout_ms,
-                             const client_plugin_config *cfg,
-                             void *plugin_context);
-  int (*plugin_network_receive)(client_plugin_message *rec_message,
-                                int32_t timeout_ms,
-                                const client_plugin_config *cfg,
-                                void *plugin_context);
-  const char *(*plugin_get_short_network_protocol_name)();
-  uint16_t (*plugin_get_maximum_message_length)();
   void *plugin_context;
   const client_plugin_config *plugin_cfg;
 
+  int32_t (*plugin_network_initialize)(const client_plugin_config *cfg, void **plugin_context);
+  int32_t (*plugin_network_deinitialize)(const client_plugin_config *cfg, void **plugin_context);
+  int32_t (*plugin_network_connect)(const client_plugin_config *cfg, void *plugin_context);
+  int32_t (*plugin_network_disconnect)(const client_plugin_config *cfg, void *plugin_context);
+  int32_t (*plugin_network_send)(const client_plugin_send_message *send_message,
+                             int32_t timeout_ms,
+                             const client_plugin_config *cfg,
+                             void *plugin_context);
+  int32_t (*plugin_network_receive)(client_plugin_receive_message *rec_message,
+                                int32_t timeout_ms,
+                                const client_plugin_config *cfg,
+                                void *plugin_context);
+  const char *(*plugin_get_short_network_protocol_name)(void);
+  uint16_t (*plugin_get_maximum_message_length)(void);
+
 } MqttSnClientPluginContext;
 
-int ClientLinuxPluginInit(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxPluginInitialize(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxPluginDeinitialize(MqttSnClientNetworkInterface *n, void *context);
 
-int ClientLinuxPluginConnect(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxPluginConnect(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context);
 
-void ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *context);
-
-int ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n,
-                             MqttSnFixedSizeRingBuffer *receiveBuffer,
-                             int32_t timeout_ms,
-                             void *context);
-
-int ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
-                          MqttSnFixedSizeRingBuffer *sendBuffer,
-                          int32_t timeout_ms,
-                          void *context);
+int32_t ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
+                              const device_address *from,
+                              const device_address *to,
+                              const uint8_t *data,
+                              uint16_t data_length,
+                              uint8_t signal_strength,
+                              int32_t timeout_ms,
+                              void *context);
+int32_t ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n,
+                                 device_address *from,
+                                 device_address *to,
+                                 uint8_t *data,
+                                 uint16_t max_data_length,
+                                 uint8_t *signal_strength,
+                                 int32_t timeout_ms,
+                                 void *context);
 
 #ifdef __cplusplus
 }

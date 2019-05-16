@@ -21,7 +21,7 @@ int log_db_send_client_message(const MqttSnLogger *logger,
                                const uint8_t *data,
                                uint16_t data_len);
 int log_incomplete_client_message(const MqttSnLogger *logger,
-                                  const device_address *address,
+                                  const device_address *from,
                                   const uint8_t *data,
                                   uint16_t data_len);
 

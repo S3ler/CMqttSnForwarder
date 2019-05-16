@@ -53,7 +53,7 @@ int log_db_send_client_message(const MqttSnLogger *logger,
   return log_status(logger);
 }
 int log_incomplete_client_message(const MqttSnLogger *logger,
-                                  const device_address *address,
+                                  const device_address *from,
                                   const uint8_t *data,
                                   uint16_t data_len) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {
@@ -61,7 +61,7 @@ int log_incomplete_client_message(const MqttSnLogger *logger,
   }
 
   return log_client_mqtt_sn_message(logger,
-                                    address,
+                                    from,
                                     data,
                                     data_len,
                                     PSTR("could not send message completely - try again later: "));

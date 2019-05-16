@@ -95,19 +95,20 @@ add_library(lib-mqtt-sn-message-parser ${MQTT_SN_MESSAGE_PARSER_FILES})
 target_include_directories(lib-mqtt-sn-message-parser PRIVATE .)
 target_compile_options(lib-mqtt-sn-message-parser PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
-option(WITH_LINUX_PLUGIN_NETWORK "Include WITH_LINUX_PLUGIN_NETWORK support?" OFF)
+option(WITH_LINUX_PLUGIN_NETWORK "Include WITH_LINUX_PLUGIN_NETWORK support?" ON)
 if (WITH_LINUX_PLUGIN_NETWORK)
     add_definitions(-DWITH_LINUX_PLUGIN_NETWORK)
     message("Building with WITH_LINUX_PLUGIN_NETWORK support")
 
-    option(WITH_LINUX_PLUGIN_CLIENT_NETWORK_ "Include WITH_LINUX_PLUGIN_CLIENT_NETWORK_ support?" ON)
+    option(WITH_LINUX_PLUGIN_CLIENT_NETWORK "Include WITH_LINUX_PLUGIN_CLIENT_NETWORK support?" ON)
     option(WITH_LINUX_PLUGIN_GATEWAY_NETWORK "Include WITH_LINUX_PLUGIN_GATEWAY_NETWORK support?" ON)
-    if (NOT WITH_LINUX_PLUGIN_CLIENT_NETWORK_ OR NOT WITH_LINUX_PLUGIN_GATEWAY_NETWORK)
-        message(FATAL_ERROR "With WITH_LINUX_PLUGIN_NETWORK but neither with WITH_LINUX_PLUGIN_CLIENT_NETWORK_ nor with WITH_LINUX_PLUGIN_GATEWAY_NETWORK")
+    if (NOT WITH_LINUX_PLUGIN_CLIENT_NETWORK AND NOT WITH_LINUX_PLUGIN_GATEWAY_NETWORK)
+        message(FATAL_ERROR "With WITH_LINUX_PLUGIN_NETWORK but neither with WITH_LINUX_PLUGIN_CLIENT_NETWORK nor with WITH_LINUX_PLUGIN_GATEWAY_NETWORK")
     endif ()
-    if (WITH_LINUX_PLUGIN_CLIENT_NETWORK_)
+
+    if (WITH_LINUX_PLUGIN_CLIENT_NETWORK)
         add_definitions(-DWITH_LINUX_CLIENT_NETWORK_PLUGIN)
-        message("Building with WITH_LINUX_PLUGIN_CLIENT_NETWORK_ support")
+        message("Building with WITH_LINUX_PLUGIN_CLIENT_NETWORK support")
         set(LINUX_CLIENT_PLUGIN_NETWORK_FILES
                 network/MqttSnClientNetworkInterface.c
                 network/MqttSnClientNetworkInterface.h
@@ -115,16 +116,16 @@ if (WITH_LINUX_PLUGIN_NETWORK)
                 network/linux/client/plugin/client_network_plugin_interface.h
                 network/linux/client/plugin/MqttSnClientPluginNetwork.h
                 network/linux/client/plugin/MqttSnClientPluginNetwork.c)
+        if (WITH_LOGGING)
+            set(LINUX_CLIENT_PLUGIN_NETWORK_FILES ${LINUX_CLIENT_PLUGIN_NETWORK_FILES}
+                    network/linux/shared/plugin/logging/MqttSnPluginLogger.h
+                    network/linux/shared/plugin/logging/MqttSnPluginLogger.c)
+        endif ()
+        add_library(lib-mqtt-sn-linux-plugin-client-network ${LINUX_CLIENT_PLUGIN_NETWORK_FILES})
+        target_include_directories(lib-mqtt-sn-linux-plugin-client-network PRIVATE .)
+        target_compile_options(lib-mqtt-sn-linux-plugin-client-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+        target_link_libraries(lib-mqtt-sn-linux-plugin-client-network dl)
     endif ()
-    if (WITH_LOGGING)
-        set(LINUX_CLIENT_PLUGIN_NETWORK_FILES ${LINUX_CLIENT_PLUGIN_NETWORK_FILES}
-                network/linux/shared/plugin/logging/MqttSnPluginLogger.h
-                network/linux/shared/plugin/logging/MqttSnPluginLogger.c)
-    endif ()
-    add_library(lib-mqtt-sn-linux-plugin-client-network ${LINUX_CLIENT_PLUGIN_NETWORK_FILES})
-    target_include_directories(lib-mqtt-sn-linux-plugin-client-network PRIVATE .)
-    target_compile_options(lib-mqtt-sn-linux-plugin-client-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-    target_link_libraries(lib-mqtt-sn-linux-plugin-client-network dl)
 
     if (WITH_LINUX_PLUGIN_GATEWAY_NETWORK)
         add_definitions(-DWITH_LINUX_GATEWAY_NETWORK_PLUGIN)
@@ -136,19 +137,20 @@ if (WITH_LINUX_PLUGIN_NETWORK)
                 network/linux/gateway/plugin/gateway_network_plugin_interface.h
                 network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h
                 network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.c)
+        if (WITH_LOGGING)
+            set(WITH_LINUX_PLUGIN_GATEWAY_NETWORK ${WITH_LINUX_PLUGIN_GATEWAY_NETWORK}
+                    network/linux/shared/plugin/logging/MqttSnPluginLogger.h
+                    network/linux/shared/plugin/logging/MqttSnPluginLogger.c)
+        endif ()
+        add_library(lib-mqtt-sn-linux-plugin-gateway-network ${LINUX_GATEWAY_PLUGIN_NETWORK_FILES})
+        target_include_directories(lib-mqtt-sn-linux-plugin-gateway-network PRIVATE .)
+        target_compile_options(lib-mqtt-sn-linux-plugin-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+        target_link_libraries(lib-mqtt-sn-linux-plugin-gateway-network dl)
     endif ()
-    if (WITH_LOGGING)
-        set(WITH_LINUX_PLUGIN_GATEWAY_NETWORK ${WITH_LINUX_PLUGIN_GATEWAY_NETWORK}
-                network/linux/shared/plugin/logging/MqttSnPluginLogger.h
-                network/linux/shared/plugin/logging/MqttSnPluginLogger.c)
-    endif ()
-    add_library(lib-mqtt-sn-linux-plugin-gateway-network ${LINUX_GATEWAY_PLUGIN_NETWORK_FILES})
-    target_include_directories(lib-mqtt-sn-linux-plugin-gateway-network PRIVATE .)
-    target_compile_options(lib-mqtt-sn-linux-plugin-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-    target_link_libraries(lib-mqtt-sn-linux-plugin-gateway-network dl)
+
 endif ()
 
-option(WITH_LINUX_UDP_NETWORK "Include WITH_LINUX_UDP_NETWORK support?" ON)
+option(WITH_LINUX_UDP_NETWORK "Include WITH_LINUX_UDP_NETWORK support?" OFF)
 if (WITH_LINUX_UDP_NETWORK)
     add_definitions(-DWITH_LINUX_UDP_NETWORK)
     add_definitions(-DWITH_LINUX_UDP_GATEWAY_NETWORK)
@@ -233,104 +235,128 @@ if (WITH_LINUX_UDP_NETWORK)
 
 endif ()
 
-option(WITH_LINUX_TCP_NETWORK "Include WITH_LINUX_TCP_NETWORK support?" ON)
+option(WITH_LINUX_TCP_NETWORK "Include WITH_LINUX_TCP_NETWORK support?" OFF)
 if (WITH_LINUX_TCP_NETWORK)
     add_definitions(-DWITH_LINUX_TCP_NETWORK)
-    add_definitions(-DWITH_LINUX_TCP_GATEWAY_NETWORK)
-    add_definitions(-DWITH_LINUX_TCP_CLIENT_NETWORK)
     message("Building with WITH_LINUX_TCP_NETWORK support")
 
-    option(WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST "Include WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST support?" ON)
-    option(WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST "Include WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST support?" ON)
+    option(WITH_LINUX_TCP_GATEWAY_NETWORK "Include WITH_LINUX_TCP_GATEWAY_NETWORK support?" ON)
+    option(WITH_LINUX_TCP_CLIENT_NETWORK "Include WITH_LINUX_TCP_CLIENT_NETWORK support?" ON)
+    if (NOT WITH_LINUX_TCP_CLIENT_NETWORK AND NOT WITH_LINUX_TCP_GATEWAY_NETWORK)
+        message(FATAL_ERROR "With WITH_LINUX_TCP_NETWORK but neither with WITH_LINUX_TCP_CLIENT_NETWORK nor with WITH_LINUX_TCP_GATEWAY_NETWORK")
+    endif ()
+    if (WITH_LINUX_TCP_CLIENT_NETWORK)
+        add_definitions(-DWITH_LINUX_TCP_CLIENT_NETWORK)
+        message("Building with WITH_LINUX_TCP_CLIENT_NETWORK support")
+        option(WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST "Include WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST support?" ON)
+        if (WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
+            add_definitions(-DWITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
+            message("Building with WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST support")
+        endif ()
+    endif ()
+    if (WITH_LINUX_TCP_GATEWAY_NETWORK)
+        add_definitions(-DWITH_LINUX_TCP_GATEWAY_NETWORK)
+        message("Building with WITH_LINUX_TCP_GATEWAY_NETWORK support")
+        option(WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST "Include WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST support?" ON)
+        if (WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST)
+            add_definitions(-DWITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST)
+            message("Building with WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST support")
+        endif ()
+    endif ()
+
     if (WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST OR WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST)
-        add_definitions(-DWITH_TCP_BROADCAST) #TODO replace by WITH_LINUX_TCP_NETWORK_BROADCAST
-        add_definitions(-DWITH_LINUX_TCP_NETWORK_BROADCAST) #TODO replace by WITH_LINUX_TCP_NETWORK_BROADCAST
-    endif ()
-    if (WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
-        add_definitions(-DWITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
-        message("Building with WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST support")
-    endif ()
-    if (WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST)
-        add_definitions(-DWITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST)
-        message("Building with WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST support")
+        add_definitions(-DWITH_LINUX_TCP_NETWORK_BROADCAST)
     endif ()
 
-    set(LINUX_TCP_GATWAY_NETWORK_FILES
-            network/MqttSnGatewayNetworkInterface.c
-            network/MqttSnGatewayNetworkInterface.h
-            network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h
-            network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.c
-            network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
-            network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
-            network/shared/ip/IpHelper.c
-            network/shared/ip/IpHelper.h
-            network/linux/shared/ip/MqttSnIpNetworkHelper.h
-            network/linux/shared/ip/MqttSnIpNetworkHelper.c
-            network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c
-            network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h
-            )
-    if (WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST)
-        set(LINUX_TCP_GATWAY_NETWORK_FILES ${LINUX_TCP_GATWAY_NETWORK_FILES}
-                network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
-                network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
-    endif ()
-    if (WITH_LOGGING)
-        set(LINUX_TCP_GATWAY_NETWORK_FILES ${LINUX_TCP_GATWAY_NETWORK_FILES}
-                network/shared/ip/IpHelperLogging.c
-                network/shared/ip/IpHelperLogging.h
-                network/linux/shared/ip/MqttSnIpNetworkHelperLogging.h
-                network/linux/shared/ip/MqttSnIpNetworkHelperLogging.c
-                network/shared/gateway/logging/MqttSnDebugMessageLogging.c
-                network/shared/gateway/logging/MqttSnDebugMessageLogging.h)
-    endif ()
-    add_library(lib-mqtt-sn-linux-tcp-gateway-network ${LINUX_TCP_GATWAY_NETWORK_FILES})
-    target_include_directories(lib-mqtt-sn-linux-tcp-gateway-network PRIVATE .)
-    target_compile_options(lib-mqtt-sn-linux-tcp-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-    target_link_libraries(lib-mqtt-sn-linux-tcp-gateway-network lib-mqtt-sn-linux-udp-gateway-network)
 
-    set(LINUX_TCP_CLIENT_NETWORK_FILES
-            network/MqttSnClientNetworkInterface.c
-            network/MqttSnClientNetworkInterface.h
-            network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h
-            network/linux/client/ip/tcp/MqttSnClientTcpNetwork.c
-            network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
-            network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
-            network/shared/ip/IpHelper.c
-            network/shared/ip/IpHelper.h
-            network/linux/shared/ip/MqttSnIpNetworkHelper.h
-            network/linux/shared/ip/MqttSnIpNetworkHelper.c
-            network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c
-            network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h)
-    if (WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
-        set(LINUX_TCP_CLIENT_NETWORK_FILES ${LINUX_TCP_CLIENT_NETWORK_FILES}
-                network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
-                network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+    if (WITH_LINUX_TCP_GATEWAY_NETWORK)
+        set(LINUX_TCP_GATWAY_NETWORK_FILES
+                network/MqttSnGatewayNetworkInterface.c
+                network/MqttSnGatewayNetworkInterface.h
+                network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h
+                network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.c
+                network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
+                network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
+                network/shared/ip/IpHelper.c
+                network/shared/ip/IpHelper.h
+                network/linux/shared/ip/MqttSnIpNetworkHelper.h
+                network/linux/shared/ip/MqttSnIpNetworkHelper.c
+                network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c
+                network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h)
+        if (WITH_LOGGING)
+            set(LINUX_TCP_GATWAY_NETWORK_FILES ${LINUX_TCP_GATWAY_NETWORK_FILES}
+                    network/shared/ip/IpHelperLogging.c
+                    network/shared/ip/IpHelperLogging.h
+                    network/linux/shared/ip/MqttSnIpNetworkHelperLogging.h
+                    network/linux/shared/ip/MqttSnIpNetworkHelperLogging.c
+                    network/shared/gateway/logging/MqttSnDebugMessageLogging.c
+                    network/shared/gateway/logging/MqttSnDebugMessageLogging.h)
+        endif ()
+        add_library(lib-mqtt-sn-linux-tcp-gateway-network ${LINUX_TCP_GATWAY_NETWORK_FILES})
+        target_include_directories(lib-mqtt-sn-linux-tcp-gateway-network PRIVATE .)
+        target_compile_options(lib-mqtt-sn-linux-tcp-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+        if (WITH_LINUX_TCP_GATEWAY_NETWORK)
+            target_link_libraries(lib-mqtt-sn-linux-tcp-gateway-network lib-mqtt-sn-linux-udp-gateway-network)
+        endif ()
     endif ()
-    if (WITH_LOGGING)
-        set(LINUX_TCP_CLIENT_NETWORK_FILES ${LINUX_TCP_CLIENT_NETWORK_FILES}
-                network/shared/ip/IpHelperLogging.c
-                network/shared/ip/IpHelperLogging.h
-                network/linux/shared/ip/MqttSnIpNetworkHelperLogging.h
-                network/linux/shared/ip/MqttSnIpNetworkHelperLogging.c
-                network/shared/client/logging/MqttSnDebugMessageLogging.c
-                network/shared/client/logging/MqttSnDebugMessageLogging.h)
+
+    if (WITH_LINUX_TCP_CLIENT_NETWORK)
+        set(LINUX_TCP_CLIENT_NETWORK_FILES
+                network/MqttSnClientNetworkInterface.c
+                network/MqttSnClientNetworkInterface.h
+                network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h
+                network/linux/client/ip/tcp/MqttSnClientTcpNetwork.c
+                network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.c
+                network/linux/shared/ip/tcphelper/MqttSnTcpNetworkMessageParser.h
+                network/shared/ip/IpHelper.c
+                network/shared/ip/IpHelper.h
+                network/linux/shared/ip/MqttSnIpNetworkHelper.h
+                network/linux/shared/ip/MqttSnIpNetworkHelper.c
+                network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.c
+                network/linux/shared/ip/tcphelper/MqttSnTcpNetworkHelper.h)
+        if (WITH_LOGGING)
+            set(LINUX_TCP_CLIENT_NETWORK_FILES ${LINUX_TCP_CLIENT_NETWORK_FILES}
+                    network/shared/ip/IpHelperLogging.c
+                    network/shared/ip/IpHelperLogging.h
+                    network/linux/shared/ip/MqttSnIpNetworkHelperLogging.h
+                    network/linux/shared/ip/MqttSnIpNetworkHelperLogging.c
+                    network/shared/client/logging/MqttSnDebugMessageLogging.c
+                    network/shared/client/logging/MqttSnDebugMessageLogging.h)
+        endif ()
+        add_library(lib-mqtt-sn-linux-tcp-client-network ${LINUX_TCP_CLIENT_NETWORK_FILES})
+        target_include_directories(lib-mqtt-sn-linux-tcp-client-network PRIVATE .)
+        target_compile_options(lib-mqtt-sn-linux-tcp-client-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+        if (WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
+            target_link_libraries(lib-mqtt-sn-linux-tcp-client-network lib-mqtt-sn-linux-udp-client-network)
+        endif ()
     endif ()
-    add_library(lib-mqtt-sn-linux-tcp-client-network ${LINUX_TCP_CLIENT_NETWORK_FILES})
-    target_include_directories(lib-mqtt-sn-linux-tcp-client-network PRIVATE .)
-    target_compile_options(lib-mqtt-sn-linux-tcp-client-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-    target_link_libraries(lib-mqtt-sn-linux-tcp-client-network lib-mqtt-sn-linux-udp-client-network)
+
+    #if (WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
+    #    set(LINUX_TCP_CLIENT_NETWORK_FILES ${LINUX_TCP_CLIENT_NETWORK_FILES}
+    #            network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
+    #            network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
+    #endif ()
+
+
 endif ()
 
+if (NOT WITH_LINUX_PLUGIN_CLIENT_NETWORK AND NOT WITH_LINUX_UDP_CLIENT_NETWORK AND NOT WITH_LINUX_TCP_CLIENT_NETWORK)
+    message(FATAL_ERROR "Neither WITH_LINUX_PLUGIN_CLIENT_NETWORK nor with WITH_LINUX_UDP_CLIENT_NETWORK nor with WITH_LINUX_TCP_CLIENT_NETWORK")
+else ()
+    add_library(lib-mqtt-sn-linux-client-network ${LINUX_CLIENT_PLUGIN_NETWORK_FILES} ${LINUX_UDP_CLIENT_NETWORK_FILES} ${LINUX_TCP_CLIENT_NETWORK_FILES})
+    target_include_directories(lib-mqtt-sn-linux-client-network PRIVATE .)
+    target_compile_options(lib-mqtt-sn-linux-client-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(lib-mqtt-sn-linux-client-network lib-mqtt-sn-ring-buffer)
+endif ()
 
-add_library(lib-mqtt-sn-linux-gateway-network ${LINUX_UDP_GATEWAY_NETWORK_FILES} ${LINUX_TCP_GATWAY_NETWORK_FILES})
-target_include_directories(lib-mqtt-sn-linux-gateway-network PRIVATE .)
-target_compile_options(lib-mqtt-sn-linux-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-target_link_libraries(lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-ring-buffer)
-
-add_library(lib-mqtt-sn-linux-client-network ${LINUX_UDP_CLIENT_NETWORK_FILES} ${LINUX_TCP_CLIENT_NETWORK_FILES})
-target_include_directories(lib-mqtt-sn-linux-client-network PRIVATE .)
-target_compile_options(lib-mqtt-sn-linux-client-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-target_link_libraries(lib-mqtt-sn-linux-client-network lib-mqtt-sn-ring-buffer)
+if (NOT WITH_LINUX_PLUGIN_GATEWAY_NETWORK AND NOT WITH_LINUX_UDP_GATEWAY_NETWORK AND NOT WITH_LINUX_TCP_GATEWAY_NETWORK)
+    message(FATAL_ERROR "Neither with WITH_LINUX_PLUGIN_GATEWAY_NETWORK nor with WITH_LINUX_UDP_GATEWAY_NETWORK nor with WITH_LINUX_TCP_GATEWAY_NETWORK")
+else ()
+    add_library(lib-mqtt-sn-linux-gateway-network ${LINUX_GATEWAY_PLUGIN_NETWORK_FILES} ${LINUX_UDP_GATEWAY_NETWORK_FILES} ${LINUX_TCP_GATWAY_NETWORK_FILES})
+    target_include_directories(lib-mqtt-sn-linux-gateway-network PRIVATE .)
+    target_compile_options(lib-mqtt-sn-linux-gateway-network PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-ring-buffer)
+endif ()
 
 
 set(MQTT_SN_FORWARDER_FILES

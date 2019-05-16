@@ -5,7 +5,32 @@
 #include "MqttSnPluginLogger.h"
 #include <parser/logging/MqttSnForwarderLoggingMessages.h>
 
-int log_dlerror(const MqttSnLogger *logger, int level, const char *error) {
+// client log messages
+int log_client_network_connect(const MqttSnLogger *logger,
+                               const char *protocol_name,
+                               const device_address *as,
+                               const device_address *to) {
+  return log_network_connect(logger, protocol_name, "client", as, to);
+}
+int log_client_network_connect_fail(const MqttSnLogger *logger,
+                                    const char *protocol_name,
+                                    const device_address *as,
+                                    const device_address *to) {
+  return log_network_connect_result(logger, protocol_name, "client", "failed", as, to);
+}
+int log_client_network_disconnect(const MqttSnLogger *logger,
+                                  const char *protocol_name,
+                                  const device_address *address) {
+  return log_network_disconnect(logger, protocol_name, "client", address);
+}
+int log_client_network_deinitialized(const MqttSnLogger *logger,
+                                     const char *protocol_name,
+                                     const device_address *address) {
+  return log_network_deinitialized(logger, protocol_name, "client", address);
+}
+
+// shared log messages
+int log_dlerror(const MqttSnLogger *logger, const char *error) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }
@@ -87,6 +112,32 @@ int log_network_disconnect(const MqttSnLogger *logger,
                            const char *protocol_name,
                            const char *network_name,
                            const device_address *address) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return 0;
+  }
+
+  const char *connect = "Disconnect ";
+  const char *space = " ";
+  const char *network_as = " network connect as ";
+  const char *dot = ".";
+
+  log_msg_start(logger);
+  log_str(logger, connect);
+  log_str(logger, protocol_name);
+  log_str(logger, space);
+  log_str(logger, network_name);
+  log_str(logger, network_as);
+  log_device_address(logger, address);
+  log_str(logger, dot);
+
+  log_flush(logger);
+  return log_status(logger);
+}
+
+int log_network_deinitialized(const MqttSnLogger *logger,
+                              const char *protocol_name,
+                              const char *network_name,
+                              const device_address *address) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return 0;
   }

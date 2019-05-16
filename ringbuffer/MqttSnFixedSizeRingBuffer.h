@@ -22,7 +22,6 @@ typedef struct MqttSnMessageData_ {
   device_address from;
   device_address to;
   uint16_t data_length;
-  //uint8_t broadcast_radius;
   uint8_t signal_strength;
   uint8_t data[CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH];
 } MqttSnMessageData;

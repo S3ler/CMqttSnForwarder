@@ -18,7 +18,7 @@ uint16_t client_plugin_get_maximum_message_length() {
   return 1024;
 }
 
-int client_plugin_network_init(const client_plugin_config *cfg, void **plugin_context) {
+int client_plugin_network_initialize(const client_plugin_config *cfg, void **plugin_context) {
   hiredis_client_context *context = calloc(1, sizeof(hiredis_client_context));
   if (context == NULL) {
     printf("Can't allocate redis_client_context\n");
@@ -34,14 +34,7 @@ int client_plugin_network_init(const client_plugin_config *cfg, void **plugin_co
   return 0;
 }
 
-void client_plugin_network_disconnect(const client_plugin_config *cfg, void *plugin_context) {
-  hiredis_client_context *context = (hiredis_client_context *) plugin_context;
-  redisFree(context->redis_context);
-  context->redis_context = NULL;
-  context->status = 0;
-}
-
-void client_plugin_network_deinit(const client_plugin_config *cfg, void **plugin_context) {
+void client_plugin_network_deinitialize(const client_plugin_config *cfg, void **plugin_context) {
   hiredis_client_context *context = (hiredis_client_context *) *plugin_context;
   free(context->redis_send_list);
   free(context->redis_receive_list);
@@ -82,6 +75,13 @@ int client_plugin_network_connect(const client_plugin_config *cfg, void *plugin_
     return -1;
   }
   return 0;
+}
+
+void client_plugin_network_disconnect(const client_plugin_config *cfg, void *plugin_context) {
+  hiredis_client_context *context = (hiredis_client_context *) plugin_context;
+  redisFree(context->redis_context);
+  context->redis_context = NULL;
+  context->status = 0;
 }
 
 int client_plugin_network_send(const client_plugin_message *send_message,
