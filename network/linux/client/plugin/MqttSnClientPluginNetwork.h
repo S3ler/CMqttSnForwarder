@@ -16,10 +16,15 @@ typedef struct MqttSnClientPluginContext_ {
   void *plugin_context;
   const client_plugin_config *plugin_cfg;
 
+  const char *(*plugin_get_short_network_protocol_name)(void);
+  uint16_t (*plugin_get_maximum_message_length)(void);
+
   int32_t (*plugin_network_initialize)(const client_plugin_config *cfg, void **plugin_context);
   int32_t (*plugin_network_deinitialize)(const client_plugin_config *cfg, void **plugin_context);
+
   int32_t (*plugin_network_connect)(const client_plugin_config *cfg, void *plugin_context);
   int32_t (*plugin_network_disconnect)(const client_plugin_config *cfg, void *plugin_context);
+
   int32_t (*plugin_network_send)(const client_plugin_send_message *send_message,
                              int32_t timeout_ms,
                              const client_plugin_config *cfg,
@@ -28,9 +33,6 @@ typedef struct MqttSnClientPluginContext_ {
                                 int32_t timeout_ms,
                                 const client_plugin_config *cfg,
                                 void *plugin_context);
-  const char *(*plugin_get_short_network_protocol_name)(void);
-  uint16_t (*plugin_get_maximum_message_length)(void);
-
 } MqttSnClientPluginContext;
 
 int32_t ClientLinuxPluginInitialize(MqttSnClientNetworkInterface *n, void *context);

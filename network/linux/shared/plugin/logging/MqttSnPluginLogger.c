@@ -29,6 +29,31 @@ int log_client_network_deinitialized(const MqttSnLogger *logger,
   return log_network_deinitialized(logger, protocol_name, "client", address);
 }
 
+
+// gateway log messages
+int log_gateway_network_connect(const MqttSnLogger *logger,
+                                const char *protocol_name,
+                                const device_address *as,
+                                const device_address *to) {
+  return log_network_connect(logger, protocol_name, "gateway", as, to);
+}
+int log_gateway_network_connect_fail(const MqttSnLogger *logger,
+                                     const char *protocol_name,
+                                     const device_address *as,
+                                     const device_address *to) {
+  return log_network_connect_result(logger, protocol_name, "gateway", "failed", as, to);
+}
+int log_gateway_network_disconnect(const MqttSnLogger *logger,
+                                   const char *protocol_name,
+                                   const device_address *address) {
+  return log_network_disconnect(logger, protocol_name, "gateway", address);
+}
+int log_gateway_network_deinitialized(const MqttSnLogger *logger,
+                                      const char *protocol_name,
+                                      const device_address *address) {
+  return log_network_deinitialized(logger, protocol_name, "gateway", address);
+}
+
 // shared log messages
 int log_dlerror(const MqttSnLogger *logger, const char *error) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {

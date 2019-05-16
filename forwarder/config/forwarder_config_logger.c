@@ -64,8 +64,8 @@ int print_usage(const MqttSnLogger *logger) {
                        " | --ct client_network_timeout}\n"));
 
 #ifdef WITH_LINUX_PLUGIN_NETWORK
-  log_str(logger,PSTR("                        [-gnp gateway_network_plugin]\n"));
-  log_str(logger,PSTR("                        [-cnp client_network_plugin]\n"));
+  log_str(logger, PSTR("                        [-gnp gateway_network_plugin]\n"));
+  log_str(logger, PSTR("                        [-cnp client_network_plugin]\n"));
 #endif
 
 #if defined(WITH_LOGGING)
@@ -105,7 +105,7 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger,PSTR("       Can be tcp. Defaults to tcp.\n"));
 #endif
   log_str(logger, PSTR(" -gA : bind the gateway network to the outgoing socket to this host/ip address.\n"));
-  log_str(logger, PSTR("       Use to control which interface the network communicates over.\n"));
+  log_str(logger, PSTR("       Use to control which interface to communicates over or to set the address for the gateway network.\n"));
   log_str(logger, PSTR(" -gp : listening on the specific gateway network port. Defaults to 9999.\n"));
   log_str(logger,
           PSTR(" -gL : specify protocol, broadcast address, port as a URL in the form: protocol://address[:port]\n"));
@@ -119,7 +119,7 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger,PSTR("       Can be tcp. Defaults to tcp.\n"));
 #endif
   log_str(logger, PSTR(" -cA : bind the client network to the outgoing socket to this host/ip address.\n"));
-  log_str(logger, PSTR("       Use to control which interface the network communicates over.\n"));
+  log_str(logger, PSTR("       Use to control which interface to communicates over or to set the address for the client network.\n"));
   log_str(logger, PSTR(" -cp : listening on the specific client network port. Defaults to 7777.\n"));
   log_str(logger,
           PSTR(" -cL : specify protocol, broadcast address, port as a URL in the form: protocol://address[:port]\n"));
@@ -174,18 +174,20 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger, PSTR(" -V : specify the version of the MQTT-SN protocol to use.\n"));
   log_str(logger, PSTR("      Can be mqttsnv1. Defaults to mqttsnv1.\n"));
 #ifdef WITH_LINUX_PLUGIN_NETWORK
-  log_str(logger,PSTR(" -gnp : path to the gateway network plugin.\n"));
-  log_str(logger,PSTR("       The gateway network protocol must match the short protocol name gained from the plugin.\n"));
+  log_str(logger, PSTR(" -gnp : path to the gateway network plugin.\n"));
   log_str(logger,
-          "       A gateway bind address is saved to a device address and given to the gateway network plugin.\n"));
-  log_str(logger,PSTR("       A port overwrites the two last bytes of the gateway network bind address. "
-                  "You can set gateway port to -1 if you want to overwrite this behaviour\n"));
-  log_str(logger,PSTR(" -cnp : absolute path to the client network plugin.\n"));
-  log_str(logger,PSTR("       The client network protocol must match the short protocol name gained from the plugin.\n"));
+          PSTR("       The gateway network protocol must match the short protocol name gained from the plugin.\n"));
   log_str(logger,
-          "       A client bind address is saved to a device address and given to the gateway network plugin.\n"));
-  log_str(logger,PSTR("       A client port overwrites the two last bytes of the gateway network bind address. "
-                  "You can set gateway port to -1 if you want to overwrite this behaviour\n"));
+          PSTR("       A gateway bind address is saved to a device address and given to the gateway network plugin.\n"));
+  log_str(logger, PSTR("       A port overwrites the two last bytes of the gateway network bind address. "
+                       "You can set gateway port to -1 if you want to overwrite this behaviour\n"));
+  log_str(logger, PSTR(" -cnp : absolute path to the client network plugin.\n"));
+  log_str(logger,
+          PSTR("       The client network protocol must match the short protocol name gained from the plugin.\n"));
+  log_str(logger,
+          PSTR("       A client bind address is saved to a device address and given to the gateway network plugin.\n"));
+  log_str(logger, PSTR("       A client port overwrites the two last bytes of the gateway network bind address. "
+                       "You can set gateway port to -1 if you want to overwrite this behaviour\n"));
 #endif
 #if defined(WITH_LOGGING)
   log_str(logger, PSTR(" -q : specify quiet logging. Don't print any log messages.\n"));

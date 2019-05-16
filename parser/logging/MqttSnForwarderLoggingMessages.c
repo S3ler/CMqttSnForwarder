@@ -7,7 +7,7 @@
 #ifndef Arduino_h
 #include <netinet/in.h>
 #endif
-// TODO PSTR
+
 #define MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET 2
 static const char *MQTT_SN_MESSAGE_TYPE_STRING[] = {
     FOREACH_MQTT_SN_MESSAGE_TYPE(GENERATE_MQTT_SN_MESSAGE_TYPE_STRING)

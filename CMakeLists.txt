@@ -118,6 +118,8 @@ if (WITH_LINUX_PLUGIN_NETWORK)
                 network/linux/client/plugin/MqttSnClientPluginNetwork.c)
         if (WITH_LOGGING)
             set(LINUX_CLIENT_PLUGIN_NETWORK_FILES ${LINUX_CLIENT_PLUGIN_NETWORK_FILES}
+                    network/shared/client/logging/MqttSnDebugMessageLogging.c
+                    network/shared/client/logging/MqttSnDebugMessageLogging.h
                     network/linux/shared/plugin/logging/MqttSnPluginLogger.h
                     network/linux/shared/plugin/logging/MqttSnPluginLogger.c)
         endif ()
@@ -138,7 +140,9 @@ if (WITH_LINUX_PLUGIN_NETWORK)
                 network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h
                 network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.c)
         if (WITH_LOGGING)
-            set(WITH_LINUX_PLUGIN_GATEWAY_NETWORK ${WITH_LINUX_PLUGIN_GATEWAY_NETWORK}
+            set(LINUX_GATEWAY_PLUGIN_NETWORK_FILES ${LINUX_GATEWAY_PLUGIN_NETWORK_FILES}
+                    network/shared/gateway/logging/MqttSnDebugMessageLogging.c
+                    network/shared/gateway/logging/MqttSnDebugMessageLogging.h
                     network/linux/shared/plugin/logging/MqttSnPluginLogger.h
                     network/linux/shared/plugin/logging/MqttSnPluginLogger.c)
         endif ()
@@ -330,14 +334,6 @@ if (WITH_LINUX_TCP_NETWORK)
             target_link_libraries(lib-mqtt-sn-linux-tcp-client-network lib-mqtt-sn-linux-udp-client-network)
         endif ()
     endif ()
-
-    #if (WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
-    #    set(LINUX_TCP_CLIENT_NETWORK_FILES ${LINUX_TCP_CLIENT_NETWORK_FILES}
-    #            network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.c
-    #            network/linux/shared/ip/multicasthelper/MqttSnUdpMulticastMessageParser.h)
-    #endif ()
-
-
 endif ()
 
 if (NOT WITH_LINUX_PLUGIN_CLIENT_NETWORK AND NOT WITH_LINUX_UDP_CLIENT_NETWORK AND NOT WITH_LINUX_TCP_CLIENT_NETWORK)
@@ -387,7 +383,14 @@ endif ()
 
 set(MQTT_SN_FORWARDER_LINUX_STARTER_FILES
         forwarder/starter/linux/forwarder_starter.h
-        forwarder/starter/linux/forwarder_starter.c)
+        forwarder/starter/linux/forwarder_starter.c
+        network/shared/ip/IpHelper.c
+        network/shared/ip/IpHelper.h)
+if (WITH_LOGGING)
+    set(MQTT_SN_FORWARDER_LINUX_STARTER_FILES ${MQTT_SN_FORWARDER_LINUX_STARTER_FILES}
+            network/shared/ip/IpHelperLogging.c
+            network/shared/ip/IpHelperLogging.h)
+endif ()
 add_library(lib-mqtt-sn-linux-forwarder-starter ${MQTT_SN_FORWARDER_LINUX_STARTER_FILES})
 target_include_directories(lib-mqtt-sn-linux-forwarder-starter PRIVATE .)
 target_compile_options(lib-mqtt-sn-linux-forwarder-starter PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})

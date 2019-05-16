@@ -146,17 +146,22 @@ int start_gateway_plugin(const forwarder_config *fcfg,
       .bytes = forwarderGatewayNetworkAddress.bytes,
       .length = sizeof(device_address)};
 
+  const gateway_plugin_device_address pluginForwarderGatewayNetworkBroadcastAddress = {
+      .bytes = forwarderGatewayNetworkBroadcastAddress.bytes,
+      .length = sizeof(device_address)};
+
   gateway_plugin_config plugin_cfg = {
       .plugin_path = fcfg->gateway_network_plugin_path,
       .protocol = fcfg->gateway_network_protocol,
       .mqtt_sn_gateway_network_address = &pluginMqttSnGatewayNetworkAddress,
       .forwarder_gateway_network_address = &pluginForwarderGatewayNetworkAddress,
+      .forwarder_gateway_network_broadcast_address = &pluginForwarderGatewayNetworkBroadcastAddress,
       .gateway_plugin_device_address_length = CMQTTSNFORWARDER_DEVICE_ADDRESS_LENGTH,
       .forwarder_maximum_message_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH};
 
   MqttSnGatewayPluginContext gatewayPluginContext = {
       .dl_handle = NULL,
-      .plugin_network_init = NULL,
+      .plugin_network_initialize = NULL,
       .plugin_network_disconnect = NULL,
       .plugin_network_connect = NULL,
       .plugin_network_receive = NULL,
@@ -175,12 +180,13 @@ int start_gateway_plugin(const forwarder_config *fcfg,
   mqttSnForwarder->gatewayNetwork.logger = &logger;
 #endif
 
-  if (GatewayNetworkInit(&mqttSnForwarder->gatewayNetwork,
-                         &mqttSnGatewayNetworkAddress,
-                         &forwarderGatewayNetworkAddress,
-                         &forwarderGatewayNetworkBroadcastAddress,
-                         &gatewayPluginContext,
-                         GatewayLinuxPluginInit)) {
+  if (GatewayNetworkInitialize(&mqttSnForwarder->gatewayNetwork,
+                               CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                               &mqttSnGatewayNetworkAddress,
+                               &forwarderGatewayNetworkAddress,
+                               &forwarderGatewayNetworkBroadcastAddress,
+                               &gatewayPluginContext,
+                               GatewayLinuxPluginInitialize)) {
     fprintf(stderr, "Error init gateway network\n");
     return EXIT_FAILURE;
   }
@@ -347,12 +353,13 @@ int start_client_plugin(const forwarder_config *fcfg,
   mqttSnForwarder->clientNetwork.logger = &logger;
 #endif
 
-  if (ClientNetworkInit(&mqttSnForwarder->clientNetwork,
-                        &mqttSnGatewayNetworkAddress,
-                        &forwarderClientNetworkAddress,
-                        &forwarderClientNetworkBroadcastAddress,
-                        &clientPluginContext,
-                        ClientLinuxPluginInit)) {
+  if (ClientNetworkInitialize(&mqttSnForwarder->clientNetwork,
+                              CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                              &mqttSnGatewayNetworkAddress,
+                              &forwarderClientNetworkAddress,
+                              &forwarderClientNetworkBroadcastAddress,
+                              &clientPluginContext,
+                              ClientLinuxPluginInitialize)) {
     fprintf(stderr, "Error init client network\n");
     return EXIT_FAILURE;
   }

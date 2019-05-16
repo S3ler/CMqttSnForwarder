@@ -33,11 +33,11 @@ typedef struct MqttSnClientNetworkInterface_ {
   device_address *mqtt_sn_gateway_address;
   device_address *client_network_broadcast_address;
 
-  int32_t (*initialize)(struct MqttSnClientNetworkInterface_ *, void *context);
-  int32_t (*deinitialize)(struct MqttSnClientNetworkInterface_ *, void *context);
+  int32_t (*initialize)(struct MqttSnClientNetworkInterface_ *n, void *context);
+  int32_t (*deinitialize)(struct MqttSnClientNetworkInterface_ *n, void *context);
 
-  int32_t (*connect)(struct MqttSnClientNetworkInterface_ *, void *context);
-  int32_t (*disconnect)(struct MqttSnClientNetworkInterface_ *, void *context);
+  int32_t (*connect)(struct MqttSnClientNetworkInterface_ *n, void *context);
+  int32_t (*disconnect)(struct MqttSnClientNetworkInterface_ *n, void *context);
 
   int32_t (*send)(struct MqttSnClientNetworkInterface_ *n,
                   const device_address *from,

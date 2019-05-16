@@ -120,24 +120,23 @@ int32_t GatewayNetworkSend(MqttSnGatewayNetworkInterface *n,
   }
 
   MqttSnMessageData msg = {0};
-  if (pop(sendBuffer, &msg) != 0) {
+  if (pop(sendBuffer, &msg) < 0) {
     return 0;
   }
 
-  uint16_t send_data_len = 0;
-  if (n->send(n,
-              &msg.from,
-              &msg.to,
-              msg.data,
-              msg.data_length,
-              &send_data_len,
-              msg.signal_strength,
-              timeout_ms,
-              context) < 0) {
+  int32_t send_rc = n->send(n,
+                            &msg.from,
+                            &msg.to,
+                            msg.data,
+                            msg.data_length,
+                            msg.signal_strength,
+                            timeout_ms,
+                            context);
+  if (send_rc < 0) {
     n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED;
   }
 
-  if (msg.data_length != send_data_len) {
+  if (msg.data_length != send_rc) {
     if (put(sendBuffer, &msg) < 0) {
       return -1;
     }
@@ -164,18 +163,19 @@ int32_t GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
     return 0;
   }
   MqttSnMessageData msg = {0};
-  if (n->receive(n,
-                 &msg.from,
-                 &msg.to,
-                 msg.data,
-                 &msg.data_length,
-                 n->max_data_length,
-                 &msg.signal_strength,
-                 timeout_ms,
-                 context) < 0) {
+  int receive_rc = n->receive(n,
+                              &msg.from,
+                              &msg.to,
+                              msg.data,
+                              n->max_data_length,
+                              &msg.signal_strength,
+                              timeout_ms,
+                              context);
+  if (receive_rc < 0) {
     n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED;
   }
 
+  msg.data_length = receive_rc;
   if (msg.data_length > 0) {
     if (put(receiveBuffer, &msg) < 0) {
       // ignored

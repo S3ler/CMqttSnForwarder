@@ -51,20 +51,20 @@ typedef struct client_plugin_receive_message_ {
 const char *client_plugin_get_short_network_protocol_name();
 uint16_t client_plugin_get_maximum_message_length();
 
-int client_plugin_network_initialize(const client_plugin_config *cfg, void **plugin_context);
-void client_plugin_network_deinitialize(const client_plugin_config *cfg, void **plugin_context);
+int32_t client_plugin_network_initialize(const client_plugin_config *cfg, void **plugin_context);
+int32_t client_plugin_network_deinitialize(const client_plugin_config *cfg, void **plugin_context);
 
-int client_plugin_network_connect(const client_plugin_config *cfg, void *plugin_context);
-void client_plugin_network_disconnect(const client_plugin_config *cfg, void *plugin_context);
+int32_t client_plugin_network_connect(const client_plugin_config *cfg, void *plugin_context);
+int32_t client_plugin_network_disconnect(const client_plugin_config *cfg, void *plugin_context);
 
-int client_plugin_network_send(const client_plugin_send_message *send_message,
-                               int timeout_ms,
-                               const client_plugin_config *cfg,
-                               void *plugin_context);
-int client_plugin_network_receive(client_plugin_receive_message *rec_message,
-                                  int timeout_ms,
-                                  const client_plugin_config *cfg,
-                                  void *plugin_context);
+int32_t client_plugin_network_send(const client_plugin_send_message *send_message,
+                                   int32_t timeout_ms,
+                                   const client_plugin_config *cfg,
+                                   void *plugin_context);
+int32_t client_plugin_network_receive(client_plugin_receive_message *rec_message,
+                                      int32_t timeout_ms,
+                                      const client_plugin_config *cfg,
+                                      void *plugin_context);
 
 #ifdef __cplusplus
 }

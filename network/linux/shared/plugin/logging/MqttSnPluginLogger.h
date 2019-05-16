@@ -25,6 +25,21 @@ int log_client_network_deinitialized(const MqttSnLogger *logger,
                                      const char *protocol_name,
                                      const device_address *address);
 
+int log_gateway_network_connect(const MqttSnLogger *logger,
+                                const char *protocol_name,
+                                const device_address *as,
+                                const device_address *to);
+int log_gateway_network_connect_fail(const MqttSnLogger *logger,
+                                     const char *protocol_name,
+                                     const device_address *as,
+                                     const device_address *to);
+int log_gateway_network_disconnect(const MqttSnLogger *logger,
+                                   const char *protocol_name,
+                                   const device_address *address);
+int log_gateway_network_deinitialized(const MqttSnLogger *logger,
+                                      const char *protocol_name,
+                                      const device_address *address);
+
 int log_dlerror(const MqttSnLogger *logger, const char *error);
 int log_max_msg_length_mismatch(const MqttSnLogger *logger, int level, uint16_t gw_max, uint16_t plugin_max);
 int log_network_connect(const MqttSnLogger *logger,

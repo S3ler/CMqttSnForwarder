@@ -29,23 +29,27 @@ typedef struct MqttSnGatewayNetworkInterface_ {
   device_address *gateway_network_address;
   device_address *gateway_network_broadcast_address;
 
-  int32_t (*initialize)(struct MqttSnGatewayNetworkInterface_ *, void *context);
-  int32_t (*deinitialize)(struct MqttSnGatewayNetworkInterface_ *, void *context);
+  int32_t (*initialize)(struct MqttSnGatewayNetworkInterface_ *n, void *context);
+  int32_t (*deinitialize)(struct MqttSnGatewayNetworkInterface_ *n, void *context);
 
-  int32_t (*connect)(struct MqttSnGatewayNetworkInterface_ *, void *context);
-  int32_t (*disconnect)(struct MqttSnGatewayNetworkInterface_ *, void *context);
+  int32_t (*connect)(struct MqttSnGatewayNetworkInterface_ *n, void *context);
+  int32_t (*disconnect)(struct MqttSnGatewayNetworkInterface_ *n, void *context);
 
-  int32_t (*send)(struct MqttSnGatewayNetworkInterface_ *,
-                  const device_address *,
-                  const device_address *, const uint8_t *, uint16_t, uint16_t *,
-                  uint8_t,
-                  int32_t,
+  int32_t (*send)(struct MqttSnGatewayNetworkInterface_ *n,
+                  const device_address *from,
+                  const device_address *to,
+                  const uint8_t *data,
+                  uint16_t data_length,
+                  uint8_t signal_strength,
+                  int32_t timeout_ms,
                   void *context);
-  int32_t (*receive)(struct MqttSnGatewayNetworkInterface_ *,
-                     device_address *,
-                     device_address *, uint8_t *, uint16_t *, uint16_t,
-                     uint8_t *,
-                     int32_t,
+  int32_t (*receive)(struct MqttSnGatewayNetworkInterface_ *n,
+                      device_address *from,
+                      device_address *to,
+                      uint8_t *data,
+                     uint16_t data_length,
+                     uint8_t* signal_strength,
+                     int32_t timeout_ms,
                      void *context);
 
 #ifdef WITH_LOGGING

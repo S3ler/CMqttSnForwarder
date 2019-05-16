@@ -121,11 +121,10 @@ int32_t ClientNetworkSend(MqttSnClientNetworkInterface *n,
   }
 
   MqttSnMessageData msg = {0};
-  if (pop(sendBuffer, &msg) != 0) {
+  if (pop(sendBuffer, &msg) < 0) {
     return 0;
   }
 
-  uint16_t send_data_length = 0;
   int send_rc = n->send(n,
                         &msg.from,
                         &msg.to,
@@ -138,8 +137,7 @@ int32_t ClientNetworkSend(MqttSnClientNetworkInterface *n,
     n->status = MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS_DISCONNECTED;
   }
 
-  msg.data_length = send_rc;
-  if (msg.data_length != send_data_length) {
+  if (msg.data_length != send_rc) {
     if (put(sendBuffer, &msg) < 0) {
       return -1;
     }

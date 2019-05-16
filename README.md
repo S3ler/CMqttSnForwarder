@@ -2,10 +2,16 @@ Featurelist:
 * search gw for mqtt-sn-gateway     // FEATURE implement searching for gateway
 * fix tests
 * use network interface by address
-* filter out non-mqtt-sn-gateway address on gateway network interface
+* filter out non-mqtt-sn-gateway address on gateway network interface (shouldnt be necessary
+* fix plugin
+* plugin multicast
 arduino
+* fix arduino esp8266 interfaces
+* tcp
 * multicast in tcp  for
-* default configuration on error
+* default configuration (on error)
+* enable es32 compatibility
+
 
 // TODO enable GW MQTT-SN message header check?
 

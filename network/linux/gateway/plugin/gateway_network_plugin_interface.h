@@ -15,7 +15,6 @@ typedef struct gateway_plugin_device_address_ {
   uint16_t length;
   uint8_t *bytes;
 } gateway_plugin_device_address;
-
 typedef struct gateway_plugin_config_ {
   const char *plugin_path;
   const char *protocol;
@@ -23,33 +22,32 @@ typedef struct gateway_plugin_config_ {
   uint16_t gateway_plugin_device_address_length;
   const gateway_plugin_device_address *mqtt_sn_gateway_network_address;
   const gateway_plugin_device_address *forwarder_gateway_network_address;
+  const gateway_plugin_device_address *forwarder_gateway_network_broadcast_address;
 } gateway_plugin_config;
 
-typedef struct gateway_plugin_message_ {
-  gateway_plugin_device_address address;
+typedef struct gateway_plugin_send_device_address_ {
+  const uint16_t length;
+  const uint8_t *bytes;
+} gateway_plugin_send_device_address;
+typedef struct gateway_plugin_send_message_ {
+  const gateway_plugin_send_device_address from;
+  const gateway_plugin_send_device_address to;
+  const uint8_t *data;
+  const uint16_t data_length;
+  const uint8_t signal_strength;
+} gateway_plugin_send_message;
+
+typedef struct gateway_plugin_receive_device_address_ {
+  const uint16_t length;
+  const uint8_t *bytes;
+} gateway_plugin_receive_device_address;
+typedef struct gateway_plugin_receive_message_ {
+  gateway_plugin_receive_device_address from;
+  gateway_plugin_receive_device_address to;
   uint8_t *data;
-  uint16_t *data_length;
-} gateway_plugin_message;
-
-/**
- * initialize the network - use the protocol to check if the protocol matches you
- * match the protocol
- * initialize resources
- * the protocol is set by the -gP or -gL command line argument and passed to the plugin_config.
- * initialize the plugin_context here
- * @return -1 on error or when the protocol does not match else 0
- */
-int gateway_plugin_network_init(const gateway_plugin_config *cfg, void **plugin_context);
-
-/**
- * initialize the network - use the protocol to check if the protocol matches you
- * match the protocol
- * initialize resources
- * the protocol is set by the -gP or -gL command line argument and passed to the plugin_config.
- * initialize the plugin_context here
- * @return -1 on error or when the protocol does not match else 0
- */
-void gateway_plugin_network_deinit(const gateway_plugin_config *cfg, void **plugin_context);
+  uint16_t max_data_length;
+  uint8_t *signal_strength;
+} gateway_plugin_receive_message;
 
 /**
  *
@@ -64,11 +62,24 @@ const char *gateway_plugin_get_short_network_protocol_name();
 uint16_t gateway_plugin_get_maximum_message_length();
 
 /**
- * free resources
- * there will be no later call
- * free the plugin_context information here
+ * initialize the network - use the protocol to check if the protocol matches you
+ * match the protocol
+ * initialize resources
+ * the protocol is set by the -gP or -gL command line argument and passed to the plugin_config.
+ * initialize the plugin_context here
+ * @return -1 on error or when the protocol does not match else 0
  */
-void gateway_plugin_network_disconnect(const gateway_plugin_config *cfg, void *plugin_context);
+int32_t gateway_plugin_network_initialize(const gateway_plugin_config *cfg, void **plugin_context);
+
+/**
+ * initialize the network - use the protocol to check if the protocol matches you
+ * match the protocol
+ * initialize resources
+ * the protocol is set by the -gP or -gL command line argument and passed to the plugin_config.
+ * initialize the plugin_context here
+ * @return -1 on error or when the protocol does not match else 0
+ */
+int32_t gateway_plugin_network_deinitialize(const gateway_plugin_config *cfg, void **plugin_context);
 
 /**
  * Connect to the network - use the mqtt_gateway_network_address and the forwarder_network_address inside the plugin_config.
@@ -78,7 +89,14 @@ void gateway_plugin_network_disconnect(const gateway_plugin_config *cfg, void *p
  * @param plugin_context
  * @return -1 on error
  */
-int gateway_plugin_network_connect(const gateway_plugin_config *cfg, void *plugin_context);
+int32_t gateway_plugin_network_connect(const gateway_plugin_config *cfg, void *plugin_context);
+
+/**
+ * free resources
+ * there will be no later call
+ * free the plugin_context information here
+ */
+int32_t gateway_plugin_network_disconnect(const gateway_plugin_config *cfg, void *plugin_context);
 
 /**
  * receives data from the network to the target
@@ -90,10 +108,10 @@ int gateway_plugin_network_connect(const gateway_plugin_config *cfg, void *plugi
  * @param context
  * @return -1 on error, 1 if a message was received, 0 if no message was received
  */
-int gateway_plugin_network_receive(gateway_plugin_message *rec_message,
-                                   int timeout_ms,
-                                   const gateway_plugin_config *cfg,
-                                   void *plugin_context);
+int32_t gateway_plugin_network_receive(gateway_plugin_receive_message *rec_message,
+                                       int32_t timeout_ms,
+                                       const gateway_plugin_config *cfg,
+                                       void *plugin_context);
 
 /**
  * Is used for two scenarios: Sends data over the gateway network to the mqt-sn gateway.
@@ -106,10 +124,10 @@ int gateway_plugin_network_receive(gateway_plugin_message *rec_message,
  * @param plugin_context plugin context for plugin specific information to be passed between the plugin functions
  * @return -1 on error, else the number of send bytes, if the number of send bytes does not match plugin_message.data_length the packet will be resend later.
  */
-int gateway_plugin_network_send(const gateway_plugin_message *send_message,
-                                int timeout_ms,
-                                const gateway_plugin_config *cfg,
-                                void *plugin_context);
+int32_t gateway_plugin_network_send(const gateway_plugin_send_message *send_message,
+                                    int32_t timeout_ms,
+                                    const gateway_plugin_config *cfg,
+                                    void *plugin_context);
 
 #ifdef __cplusplus
 }

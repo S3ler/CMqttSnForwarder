@@ -122,7 +122,7 @@ int32_t ClientLinuxPluginInitialize(MqttSnClientNetworkInterface *n, void *conte
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginClientNetwork->plugin_network_send =
       (int32_t (*)(const client_plugin_send_message *send_message,
-                   int timeout_ms,
+                   int32_t timeout_ms,
                    const client_plugin_config *cfg,
                    void *plugin_context))
           dlsym(pluginClientNetwork->dl_handle, "client_plugin_network_send");
@@ -139,7 +139,7 @@ int32_t ClientLinuxPluginInitialize(MqttSnClientNetworkInterface *n, void *conte
 #pragma GCC diagnostic ignored "-Wpedantic"
   pluginClientNetwork->plugin_network_receive =
       (int32_t (*)(client_plugin_receive_message *rec_message,
-                   int timeout_ms,
+                   int32_t timeout_ms,
                    const client_plugin_config *cfg,
                    void *plugin_context))
           dlsym(pluginClientNetwork->dl_handle, "client_plugin_network_receive");
@@ -189,11 +189,9 @@ int32_t ClientLinuxPluginDeinitialize(MqttSnClientNetworkInterface *n, void *con
     return -1;
   }
 #ifdef WITH_DEBUG_LOGGING
-  if (n->logger) {
-    log_client_network_deinitialized(n->logger,
-                                     pluginClientNetwork->plugin_get_short_network_protocol_name(),
-                                     n->client_network_address);
-  }
+  log_client_network_deinitialized(n->logger,
+                                   pluginClientNetwork->plugin_get_short_network_protocol_name(),
+                                   n->client_network_address);
 #endif
   if (dlclose(pluginClientNetwork->dl_handle)) {
     error = dlerror();
@@ -249,6 +247,7 @@ int32_t ClientLinuxPluginDisconnect(MqttSnClientNetworkInterface *n, void *conte
   pluginClientNetwork->dl_handle = NULL;
   return 0;
 }
+
 int32_t ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
                               const device_address *from,
                               const device_address *to,
@@ -262,19 +261,13 @@ int32_t ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
   if (pluginClientNetwork->plugin_get_maximum_message_length() <= data_length) {
     // too long messages for the protocol are ignored by the standard
 #ifdef WITH_DEBUG_LOGGING
-    if (log_too_long_message(n->logger, from, MQTT_SN_FORWARDER_NETWORK_CLIENT, data, data_length)) {
-      return -1;
-    }
+    log_too_long_message(n->logger, from, MQTT_SN_FORWARDER_NETWORK_CLIENT, data, data_length);
 #endif
-    return 0;
+    return data_length;
   }
 
 #ifdef WITH_DEBUG_LOGGING
-  if (n->logger) {
-    if (log_db_send_client_message(n->logger, from, to, data, data_length)) {
-      return -1;
-    }
-  }
+  log_db_send_client_message(n->logger, from, to, data, data_length);
 #endif
 
   const client_plugin_send_message msg = {
@@ -292,7 +285,6 @@ int32_t ClientLinuxPluginSend(MqttSnClientNetworkInterface *n,
 #ifdef WITH_DEBUG_LOGGING
   if (send_rc != data_length) {
     log_incomplete_client_message(n->logger, from, data, data_length);
-    return -1;
   }
 #endif
 
@@ -309,21 +301,21 @@ int32_t ClientLinuxPluginReceive(MqttSnClientNetworkInterface *n,
                                  void *context) {
   MqttSnClientPluginContext *pluginClientNetwork = (MqttSnClientPluginContext *) context;
 
-  client_plugin_receive_message rec_message = {
+  client_plugin_receive_message rec_msg = {
       .from = {.length = 0, .bytes = from->bytes},
       .to = {.length = 0, .bytes = to->bytes},
       .data = data,
       .max_data_length = max_data_length,
       .signal_strength = signal_strength};
 
-  int32_t receive_rc = pluginClientNetwork->plugin_network_receive(&rec_message,
+  int32_t receive_rc = pluginClientNetwork->plugin_network_receive(&rec_msg,
                                                                    timeout_ms,
                                                                    pluginClientNetwork->plugin_cfg,
                                                                    pluginClientNetwork->plugin_context);
-  if (receive_rc > 0) {
 #ifdef WITH_DEBUG_LOGGING
+  if (receive_rc > 0) {
     log_db_rec_client_message(n->logger, from, to, data, receive_rc);
-#endif
   }
+#endif
   return receive_rc;
 }
