@@ -309,7 +309,7 @@ int32_t save_received_tcp_packet_into_receive_buffer(int socket_fd,
 
   if (*buffer_length > 0) {
     // TODO data_length;
-    uint16_t data_length;
+    uint16_t data_length = 0;
     msg_rc = get_next_message_from_buffer(buffer,
                                           buffer_length,
                                           max_buffer_length,
@@ -352,7 +352,7 @@ int32_t save_received_tcp_packet_into_receive_buffer(int socket_fd,
   }
   if (*buffer_length > 0) {
     // TODO data_length;
-    uint16_t data_length;
+    uint16_t data_length = 0;
     msg_rc = get_next_message_from_buffer(buffer,
                                           buffer_length,
                                           max_buffer_length,

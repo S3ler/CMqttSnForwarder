@@ -6,7 +6,7 @@
 #ifndef CMQTTSNFORWARDER_FORWARDER_NETWORK_LINUX_SHARED_IP_MULTICASTHELPER_MQTTSNUDPMULTICASTMESSAGEPARSER_H_
 #define CMQTTSNFORWARDER_FORWARDER_NETWORK_LINUX_SHARED_IP_MULTICASTHELPER_MQTTSNUDPMULTICASTMESSAGEPARSER_H_
 
-#if defined(WITH_TCP_BROADCAST) || defined(WITH_UDP_BROADCAST)
+#if defined(WITH_LINUX_TCP_NETWORK_BROADCAST) || defined(WITH_LINUX_UDP_NETWORK_BROADCAST)
 struct sockaddr_in get_sockaddr_in_from_bind_file_descriptor(int file_descriptor);
 int initialize_udp_multicast_socket(int unicast_socket_fd, uint32_t broadcast_ip, uint16_t broadcast_port);
 ssize_t send_udp_mutlicast_message(int socket_fd,
