@@ -238,7 +238,7 @@ if (WITH_LINUX_UDP_NETWORK)
 
 endif ()
 
-option(WITH_LINUX_TCP_NETWORK "Include WITH_LINUX_TCP_NETWORK support?" OFF)
+option(WITH_LINUX_TCP_NETWORK "Include WITH_LINUX_TCP_NETWORK support?" ON)
 if (WITH_LINUX_TCP_NETWORK)
     add_definitions(-DWITH_LINUX_TCP_NETWORK)
     message("Building with WITH_LINUX_TCP_NETWORK support")

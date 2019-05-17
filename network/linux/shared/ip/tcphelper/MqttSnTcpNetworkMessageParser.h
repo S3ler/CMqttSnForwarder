@@ -87,7 +87,6 @@ int32_t save_received_tcp_packet_into_receive_buffer(int socket_fd,
                                                      uint16_t *buffer_length,
                                                      uint16_t max_buffer_length,
                                                      uint8_t *data,
-                                                     uint16_t *data_length,
                                                      uint16_t max_data_length,
                                                      uint32_t *to_drop_bytes);
 int32_t get_next_message_from_buffer(uint8_t *buffer,

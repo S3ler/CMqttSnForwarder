@@ -22,7 +22,7 @@ typedef struct MqttSnGatewayTcpNetwork_ {
   uint32_t to_drop_bytes;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXTCPNETWORKPROTOCOL)];
   uint64_t received_messages;
-#ifdef WITH_TCP_BROADCAST
+#ifdef WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST
   MqttSnGatewayUdpNetwork udp_multicast_network;
 #endif
 } MqttSnGatewayTcpNetwork;
@@ -38,7 +38,6 @@ int32_t GatewayLinuxTcpSend(MqttSnGatewayNetworkInterface *n,
                             const device_address *to,
                             const uint8_t *data,
                             uint16_t data_length,
-                            uint16_t *send_data_length,
                             uint8_t signal_strength,
                             int32_t timeout_ms,
                             void *context);
@@ -46,7 +45,6 @@ int32_t GatewayLinuxTcpReceive(MqttSnGatewayNetworkInterface *n,
                                device_address *from,
                                device_address *to,
                                uint8_t *data,
-                               uint16_t *data_length,
                                uint16_t max_data_length,
                                uint8_t *signal_strength,
                                int32_t timeout_ms,
@@ -56,7 +54,6 @@ int32_t GatewayLinuxTcpReceiveUnicast(MqttSnGatewayNetworkInterface *n,
                                       device_address *from,
                                       device_address *to,
                                       uint8_t *data,
-                                      uint16_t *data_length,
                                       uint16_t max_data_length,
                                       MqttSnGatewayTcpNetwork *tcp_network);
 

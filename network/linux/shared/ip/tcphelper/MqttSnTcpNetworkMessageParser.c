@@ -290,7 +290,6 @@ int32_t save_received_tcp_packet_into_receive_buffer(int socket_fd,
                                                      uint16_t *buffer_length,
                                                      uint16_t max_buffer_length,
                                                      uint8_t *data,
-                                                     uint16_t *data_length,
                                                      uint16_t max_data_length,
                                                      uint32_t *to_drop_bytes) {
 
@@ -309,10 +308,14 @@ int32_t save_received_tcp_packet_into_receive_buffer(int socket_fd,
   }
 
   if (*buffer_length > 0) {
+    // TODO data_length;
+    uint16_t data_length;
     msg_rc = get_next_message_from_buffer(buffer,
                                           buffer_length,
                                           max_buffer_length,
-                                          data, data_length, max_data_length,
+                                          data,
+                                          &data_length,
+                                          max_data_length,
                                           to_drop_bytes);
     if (msg_rc < 0) {
       return msg_rc;
@@ -348,10 +351,14 @@ int32_t save_received_tcp_packet_into_receive_buffer(int socket_fd,
     return 0;
   }
   if (*buffer_length > 0) {
+    // TODO data_length;
+    uint16_t data_length;
     msg_rc = get_next_message_from_buffer(buffer,
                                           buffer_length,
                                           max_buffer_length,
-                                          data, data_length, max_data_length,
+                                          data,
+                                          &data_length,
+                                          max_data_length,
                                           to_drop_bytes);
     if (msg_rc < 0) {
       return msg_rc;
@@ -408,7 +415,7 @@ int32_t get_next_message_from_buffer(uint8_t *buffer,
     uint32_t new_buffer_length = *buffer_length - msg_length;
     memmove(buffer, &buffer[msg_length], new_buffer_length); //TODO check memmove
     *buffer_length = new_buffer_length;
-    return 1;
+    return *data_length;
   }
   return 0;
 }

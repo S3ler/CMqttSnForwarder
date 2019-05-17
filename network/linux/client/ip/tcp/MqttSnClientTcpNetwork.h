@@ -29,7 +29,7 @@ typedef struct MqttSnClientTcpNetwork_ {
   uint64_t received_messages;
   int max_clients;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNCLIENTLINUXTCPNETWORKPROTOCOL)];
-#ifdef WITH_TCP_BROADCAST
+#ifdef WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST
   MqttSnClientUdpNetwork udp_multicast_network;
 #endif
 } MqttSnClientTcpNetwork;
@@ -45,7 +45,6 @@ int32_t ClientLinuxTcpSend(MqttSnClientNetworkInterface *n,
                            const device_address *to,
                            const uint8_t *data,
                            uint16_t data_length,
-                           uint16_t *send_data_length,
                            uint8_t signal_strength,
                            int32_t timeout_ms,
                            void *context);
@@ -53,7 +52,6 @@ int32_t ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
                               device_address *from,
                               device_address *to,
                               uint8_t *data,
-                              uint16_t *data_length,
                               uint16_t max_data_length,
                               uint8_t *signal_strength,
                               int32_t timeout_ms,
@@ -61,14 +59,13 @@ int32_t ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
 
 int MqttSnClientHandleMasterSocket(MqttSnClientNetworkInterface *n, MqttSnClientTcpNetwork *tcpNetwork);
 
-void MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
-                                     MqttSnClientTcpNetwork *tcpNetwork,
-                                     fd_set *read_fds,
-                                     device_address *from,
-                                     device_address *to,
-                                     uint8_t *data,
-                                     uint16_t *data_length,
-                                     uint16_t max_data_length);
+int32_t MqttSnClientHandleClientSockets(MqttSnClientNetworkInterface *n,
+                                        MqttSnClientTcpNetwork *tcpNetwork,
+                                        fd_set *read_fds,
+                                        device_address *from,
+                                        device_address *to,
+                                        uint8_t *data,
+                                        uint16_t max_data_length);
 
 void close_client_connection(MqttSnClientNetworkInterface *n, MqttSnClientTcpNetwork *tcpNetwork, int i);
 /*
