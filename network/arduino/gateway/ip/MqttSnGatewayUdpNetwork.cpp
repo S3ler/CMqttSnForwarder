@@ -3,9 +3,11 @@
 //
 
 #include "MqttSnGatewayUdpNetwork.hpp"
-#include <network/arduino/shared/ip/ArduinoIpAddressHelper.h>
-#include <network/arduino/shared/ip/udp/UdpHelper.h>
+#include <network/arduino/shared/ip/ArduinoIpAddressHelper.hpp>
+#include <network/arduino/shared/ip/udp/UdpHelper.hpp>
 #include <network/shared/ip/IpHelper.h>
+#include <network/shared/ip/IpHelperLogging.h>
+#include <network/shared/gateway/logging/MqttSnDebugMessageLogging.h>
 #include <parser/MqttSnMessageParser.h>
 #include <string.h>
 
@@ -101,23 +103,18 @@ int32_t GatewayArduinoUdpSend(MqttSnGatewayNetworkInterface *n,
                               void *context) {
   MqttSnGatewayUdpNetwork *udpContext = (MqttSnGatewayUdpNetwork *) context;
 
-  MqttSnMessageData toSend = {0};
-  if (pop(sendBuffer, &toSend)) {
-    return 0;
-  }
 #ifdef WITH_DEBUG_LOGGING
-  log_db_send_gateway_message(n->logger, &toSend.address, n->mqtt_sn_gateway_address, toSend.data, toSend.data_length);
+  log_db_send_gateway_message(n->logger, from, to, data, data_length);
 #endif
 
 #ifdef WITH_UDP_BROADCAST_GATEWAY
   if (n->gateway_network_broadcast_address) {
-    if (toSend.broadcast_radius &&
-        memcmp(&toSend.address, n->gateway_network_broadcast_address, sizeof(device_address)) == 0) {
-      return arduino_send_multicast_udp(udpContext->unicast_socket, &toSend.address, toSend.data, toSend.data_length);
+    if (memcmp(to, n->gateway_network_broadcast_address, sizeof(device_address)) == 0) {
+      return arduino_send_multicast_udp(udpContext->unicast_socket, to, data, data_length);
     }
   }
 #endif
-  return arduino_send_udp(udpContext->unicast_socket, n->mqtt_sn_gateway_address, toSend.data, toSend.data_length);
+  return arduino_send_udp(udpContext->unicast_socket, to, data, data_length);
 }
 
 
@@ -131,48 +128,34 @@ int32_t GatewayArduinoUdpReceive(MqttSnGatewayNetworkInterface *n,
                                  void *context) {
   MqttSnGatewayUdpNetwork *udpContext = (MqttSnGatewayUdpNetwork *) context;
 
-  MqttSnMessageData toReceive = {0};
-
-  int unicast_rc = arduino_receive_udp(udpContext->unicast_socket,
-                                       &toReceive.address,
-                                       toReceive.data,
-                                       &toReceive.data_length);
-  if (unicast_rc < 0) {
-    return -1;
-  }
-  if (unicast_rc > 0) {
-    put(receiveBuffer, &toReceive);
+#ifdef WITH_UDP_BROADCAST_CLIENT
+  if (n->gateway_network_broadcast_address)
+  {
+    if (udpContext->received_messages % 2)
+    {
+      int multicast_rc = arduino_receive_udp(udpContext->multicast_socket, from, to, data, max_data_length);
+      if (multicast_rc < 0)
+      {
+        return multicast_rc;
+      }
+      if (multicast_rc > 0)
+      {
 #ifdef WITH_DEBUG_LOGGING
-    const MqttSnMessageData *msg = back(receiveBuffer);
-    log_db_rec_gateway_message(n->logger, n->gateway_network_address, &msg->address, msg->data, msg->data_length);
+        log_db_rec_gateway_message(n->logger, from, to, data, multicast_rc);
 #endif
-  }
-
-#ifdef WITH_UDP_BROADCAST_GATEWAY
-  if (n->gateway_network_broadcast_address) {
-    memset(&toReceive, 0, sizeof(MqttSnMessageData));
-    int multicast_rc = arduino_receive_udp(udpContext->multicast_socket,
-                                           &toReceive.address,
-                                           toReceive.data,
-                                           &toReceive.data_length);
-    if (multicast_rc < 0) {
-      return -1;
-    }
-    if (multicast_rc > 0) {
-      toReceive.broadcast_radius = MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BROADCAST_RADIUS;
-      put(receiveBuffer, &toReceive);
-#ifdef WITH_DEBUG_LOGGING
-      const MqttSnMessageData *msg = back(receiveBuffer);
-      log_db_rec_gateway_message(n->logger,
-                                 &msg->address,
-                                 n->gateway_network_broadcast_address,
-                                 msg->data,
-                                 msg->data_length);
-#endif
+        return multicast_rc;
+      }
     }
   }
 #endif
 
-  return 0;
+  int32_t unicast_rc = arduino_receive_udp(udpContext->unicast_socket, from, to, data, max_data_length);
+#ifdef WITH_DEBUG_LOGGING
+  if (unicast_rc > 0)
+  {
+    log_db_rec_gateway_message(n->logger, from, to, data, unicast_rc);
+  }
+#endif
+
+  return unicast_rc;
 }
-

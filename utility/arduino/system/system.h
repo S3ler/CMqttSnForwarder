@@ -7,14 +7,14 @@
 
 #include <utility/arduino/eeprom/eeprom_config.h>
 #include <forwarder/config/forwarder_config.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef MDNS_RESOLVER_h
 #include <WiFiUdp.h>
 #include <mDNSResolver.h>
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 int connect_wifi(const char *ssid, const char *password, const MqttSnLogger *logger, uint32_t timeout_ms);

@@ -33,6 +33,7 @@ typedef struct MqttSnGatewayUdpNetwork_ {
 #else
   UDP *unicast_socket;
 #endif
+  uint64_t received_messages;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYARDUINOUDPNETWORKPROTOCOL)];
 } MqttSnGatewayUdpNetwork;
 

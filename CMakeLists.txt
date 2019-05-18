@@ -701,7 +701,7 @@ if (WITH_ARDUINO)
         set(MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES
                 utility/arduino/system/system.c
                 utility/arduino/system/system.h
-                network/arduino/shared/ip/ArduinoIpAddressHelper.c
+                network/arduino/shared/ip/ArduinoIpAddressHelper.cpp
                 network/arduino/shared/ip/ArduinoIpAddressHelper.h
                 utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.c
                 utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.h)

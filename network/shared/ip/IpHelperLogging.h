@@ -4,11 +4,12 @@
 
 #ifndef CMQTTSNFORWARDER_FORWARDER_NETWORK_SHARED_IP_IPHELPERLOGGING_H_
 #define CMQTTSNFORWARDER_FORWARDER_NETWORK_SHARED_IP_IPHELPERLOGGING_H_
+
+#include <logging/MqttSnLoggingInterface.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <logging/MqttSnLoggingInterface.h>
 
 int print_cannot_convert_ip_str_to_network_address(const MqttSnLogger *logger,
                                                    const char *ip_str,

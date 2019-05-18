@@ -11,8 +11,6 @@ extern "C" {
 #include <platform/device_address.h>
 #include <stdint.h>
 
-#ifdef WITH_LOGGING
-
 typedef enum MQTT_SN_FORWARDER_NETWORK_ {
   MQTT_SN_FORWARDER_NETWORK_INVALID = -1,
   MQTT_SN_FORWARDER_NETWORK_GATEWAY = 0,
@@ -91,7 +89,6 @@ int log_msg_start(const MqttSnLogger *logger);
 
 int log_device_address(const MqttSnLogger *logger, const device_address *address);
 
-#endif
 #ifdef __cplusplus
 }
 #endif

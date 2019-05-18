@@ -8,8 +8,10 @@
   "license": "GPL-2.0-only",
   "homepage": "www.arsmb.de",
   "export": {
-    "exclude":
-    [
+    "include": [
+      "*/*"
+    ],
+    "exclude": [
       "forwarder/starter/linux/*",
       "forwarder/starter/linux/forwarder_starter.c",
       "forwarder/starter/linux/forwarder_starter.h",
@@ -23,6 +25,29 @@
       "plugins/*",
       "testclients/*",
       "utility/linux/*"
+    ]
+  },
+  "build": {
+    "srcFilter": [
+      "-<forwarder/starter/linux/*>",
+      "-<logging/linux/*>",
+      "-<network/linux/*>",
+      "-<testclients/*>",
+      "-<utility/linux/*>",
+      "-<plugins/*>"
+    ],
+    "flags": [
+      "-D WITH_PLATFORMIO",
+      "-D WITH_LOGGING",
+      "-D WITH_DEBUG_LOGGING",
+      "-D WITH_ARDUINO_GATEWAY_NETWORK_UDP",
+      "-D WITH_ARDUINO_CLIENT_NETWORK_UDP",
+      "-D WITH_UDP_BROADCAST",
+      "-D WITH_UDP_BROADCAST_GATEWAY",
+      "-D WITH_UDP_BROADCAST_CLIENT",
+      "-D WITH_EEPROM",
+      "-D CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN=2",
+      "-D CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH=64"
     ]
   }
 }
