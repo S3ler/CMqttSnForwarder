@@ -1,0 +1,28 @@
+{
+  "name": "CMqttSnForwarder",
+  "authors": {
+    "name": "Gabriel Nikol",
+    "maintainer": true
+  },
+  "version": "0.2.0",
+  "license": "GPL-2.0-only",
+  "homepage": "www.arsmb.de",
+  "export": {
+    "exclude":
+    [
+      "forwarder/starter/linux/*",
+      "forwarder/starter/linux/forwarder_starter.c",
+      "forwarder/starter/linux/forwarder_starter.h",
+      "forwarder/starter/linux/main.c",
+      "logging/linux/*",
+      "logging/linux/stderr/StderrLogging.c",
+      "logging/linux/stderr/StderrLogging.h",
+      "logging/linux/stdout/StdoutLogging.c",
+      "logging/linux/stdout/StdoutLogging.h",
+      "network/linux/*",
+      "plugins/*",
+      "testclients/*",
+      "utility/linux/*"
+    ]
+  }
+}
