@@ -2,7 +2,7 @@
 // Created by SomeDude on 28.04.2019.
 //
 
-#include "ArduinoSerial.h"
+#include "ArduinoSerial.hpp"
 
 int arduino_serial_log_init(MqttSnLogger *logger) {
   logger->log_init = arduino_serial_log_init;

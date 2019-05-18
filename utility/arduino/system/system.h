@@ -17,13 +17,6 @@ extern "C" {
 #include <mDNSResolver.h>
 #endif
 
-#ifndef EXIT_FAILURE
-#define EXIT_FAILURE -1
-#endif
-#ifndef EXIT_SUCCESS
-#define EXIT_SUCCESS 0
-#endif
-
 int connect_wifi(const char *ssid, const char *password, const MqttSnLogger *logger, uint32_t timeout_ms);
 
 int parse_arduino_serial_line(char *line, size_t *line_pos, size_t line_max);

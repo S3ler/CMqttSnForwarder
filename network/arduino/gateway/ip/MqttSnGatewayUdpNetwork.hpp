@@ -5,9 +5,7 @@
 #ifndef CMQTTSNFORWARDER_FORWARDER_NETWORK_ARDUINO_GATEWAY_IP_MQTTSNGATEWAYUDPNETWORK_H_
 #define CMQTTSNFORWARDER_FORWARDER_NETWORK_ARDUINO_GATEWAY_IP_MQTTSNGATEWAYUDPNETWORK_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include <network/MqttSnGatewayNetworkInterface.h>
 #if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_GATEWAY)
@@ -19,6 +17,10 @@ extern WiFiUDP *gatewayBCUdp;
 #else
 #include <Udp.h>
 extern UDP *gatewayUdp;
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #define CMQTTSNFORWARDER_MQTTSNGATEWAYARDUINOUDPNETWORKPROTOCOL "udp"

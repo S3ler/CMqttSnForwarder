@@ -1,6 +1,8 @@
 //
 // Created by SomeDude on 07.04.2019.
 //
+#ifndef WITH_PLATFORMIO
+
 #include "forwarder_starter.h"
 #include <stdlib.h>
 #include <string.h>
@@ -584,3 +586,5 @@ int start_forwarder(const forwarder_config *fcfg,
 
   return rc;
 }
+
+#endif

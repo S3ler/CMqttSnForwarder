@@ -4,15 +4,17 @@
 
 #ifndef CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_
 #define CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_
+
+
+#if defined(Arduino_h) || defined(WITH_PLATFORMIO)// Arduino
+#ifdef WITH_LOGGING
+#include <logging/arduino/ArduinoSerial.hpp>
+#endif
+#else // Linux
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#if defined(Arduino_h) // Arduino
-#ifdef WITH_LOGGING
-#include <forwarder/logging/arduino/ArduinoSerial.h>
-#endif
-#else // Linux
 #ifdef WITH_LOGGING
 #include <netinet/in.h>
 #include <logging/linux/stdout/StdoutLogging.h>
@@ -25,10 +27,12 @@ int strcmp_P(const char *a, const char *b);
 #include <digital.h>
 #include <ESPClass.h>
 #include <SerialClass.h>
-#endif
-#endif
 
 #ifdef __cplusplus
 }
 #endif
+#endif
+#endif
+
+
 #endif //CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_

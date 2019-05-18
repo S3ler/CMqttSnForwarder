@@ -6,13 +6,12 @@
 #define CMQTTSNFORWARDER_FORWARDER_NETWORK_ARDUINO_SHARED_IP_UDP_UDPHELPER_H_
 
 #ifdef WITH_UDP_BROADCAST
-#include <WiFiUDP.h>
+#include <WiFiUdp.h>
 #else
 #include <Udp.h>
 #endif
 
 #include <stdint.h>
-#include <forwarder/global_defines.h>
 
 int arduino_init_udp(UDP *wiFiUdp, uint16_t port);
 

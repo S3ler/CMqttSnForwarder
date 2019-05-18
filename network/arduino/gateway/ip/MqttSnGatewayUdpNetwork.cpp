@@ -2,11 +2,11 @@
 // Created by SomeDude on 29.04.2019.
 //
 
-#include "MqttSnGatewayUdpNetwork.h"
+#include "MqttSnGatewayUdpNetwork.hpp"
 #include <network/arduino/shared/ip/ArduinoIpAddressHelper.h>
 #include <network/arduino/shared/ip/udp/UdpHelper.h>
 #include <network/shared/ip/IpHelper.h>
-#include <forwarder/parser/MqttSnMessageParser.h>
+#include <parser/MqttSnMessageParser.h>
 #include <string.h>
 
 int GatewayArduinoUdpInit(MqttSnGatewayNetworkInterface *n, void *context) {

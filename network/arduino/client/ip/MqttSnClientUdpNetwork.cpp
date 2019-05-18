@@ -2,11 +2,11 @@
 // Created by SomeDude on 29.04.2019.
 //
 
-#include "MqttSnClientUdpNetwork.h"
+#include "MqttSnClientUdpNetwork.hpp"
 #include <network/arduino/shared/ip/ArduinoIpAddressHelper.h>
 #include <network/arduino/shared/ip/udp/UdpHelper.h>
 #include <network/shared/ip/IpHelper.h>
-#include <forwarder/parser/MqttSnMessageParser.h>
+#include <parser/MqttSnMessageParser.h>
 #include <string.h>
 
 int ClientArduinoUdpInit(MqttSnClientNetworkInterface *n, void *context) {
@@ -17,11 +17,12 @@ int ClientArduinoUdpInit(MqttSnClientNetworkInterface *n, void *context) {
 #ifdef WITH_UDP_BROADCAST_CLIENT
   udpContext->multicast_socket = clientBCUdp;
 #endif
-  n->client_network_init = ClientArduinoUdpInit;
-  n->client_network_receive = ClientArduinoUdpReceive;
-  n->client_network_send = ClientArduinoUdpSend;
-  n->client_network_connect = ClientArduinoUdpConnect;
-  n->client_network_disconnect = ClientArduinoUdpDisconnect;
+  n->initialize = ClientArduinoUdpInit;
+  n->deinitialize = ClientArduinoUdpReceive;
+  n->connect = ClientArduinoUdpConnect;
+  n->disconnect = ClientArduinoUdpDisconnect;
+  n->send = ClientArduinoUdpSend;
+  n->receive = ClientArduinoUdpReceive;
   return 0;
 }
 

@@ -18,7 +18,7 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         void *gatewayNetworkContext) {
 
 #ifdef WITH_LOGGING
-#ifdef Arduino_h
+#if defined(Arduino_h) || defined(WITH_PLATFORMIO)
   if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, arduino_serial_log_init) != 0) {
 #else
   if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, stdout_log_init) != 0) {
@@ -322,7 +322,7 @@ int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData,
                               const device_address *client_network_broadcast_address) {
   uint8_t broadcast = 0;
   if (client_network_broadcast_address
-      && memcmp(&gatewayMessageData->to, client_network_broadcast_address, sizeof(device_address))==0) {
+      && memcmp(&gatewayMessageData->to, client_network_broadcast_address, sizeof(device_address)) == 0) {
     broadcast = MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BROADCAST_RADIUS;
   }
   int rc = generate_encapsulation_message(gatewayMessageData->data,

@@ -1,3 +1,4 @@
+#ifndef WITH_PLATFORMIO
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,3 +40,5 @@ int main(int argc, char *argv[]) {
 
   return rc;
 }
+
+#endif

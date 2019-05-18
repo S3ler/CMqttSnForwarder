@@ -1,6 +1,7 @@
 //
 // Created by SomeDude on 07.04.2019.
 //
+#ifndef WITH_PLATFORMIO
 
 #ifndef CMQTTSNFORWARDER_FORWARDER_STARTER_H
 #define CMQTTSNFORWARDER_FORWARDER_STARTER_H
@@ -58,3 +59,4 @@ int start_forwarder(const forwarder_config *fcfg,
                     void *clientNetworkContext);
 
 #endif //CMQTTSNFORWARDER_FORWARDER_STARTER_H
+#endif
