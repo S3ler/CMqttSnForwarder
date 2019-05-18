@@ -9,7 +9,7 @@
 #include <parser/MqttSnMessageParser.h>
 #include <string.h>
 
-int ClientArduinoUdpInit(MqttSnClientNetworkInterface *n, void *context) {
+int32_t ClientArduinoUdpInitialize(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
   memset(udpContext, 0, sizeof(MqttSnClientUdpNetwork));
   strcpy(udpContext->protocol, CMQTTSNFORWARDER_MQTTSNCLIENTARDUINOUDPNETWORKPROTOCOL);
@@ -17,8 +17,8 @@ int ClientArduinoUdpInit(MqttSnClientNetworkInterface *n, void *context) {
 #ifdef WITH_UDP_BROADCAST_CLIENT
   udpContext->multicast_socket = clientBCUdp;
 #endif
-  n->initialize = ClientArduinoUdpInit;
-  n->deinitialize = ClientArduinoUdpReceive;
+  n->initialize = ClientArduinoUdpInitialize;
+  n->deinitialize = ClientArduinoUdpDeinitialize;
   n->connect = ClientArduinoUdpConnect;
   n->disconnect = ClientArduinoUdpDisconnect;
   n->send = ClientArduinoUdpSend;
@@ -26,7 +26,13 @@ int ClientArduinoUdpInit(MqttSnClientNetworkInterface *n, void *context) {
   return 0;
 }
 
-int ClientArduinoUdpConnect(MqttSnClientNetworkInterface *n, void *context) {
+int32_t ClientArduinoUdpDeinitialize(MqttSnClientNetworkInterface *n, void *context) {
+  // MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
+  // TODO
+  return 0;
+}
+
+int32_t ClientArduinoUdpConnect(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
   uint16_t gateway_network_port = get_port_from_device_address(n->client_network_address);
   if (arduino_init_udp(udpContext->unicast_socket, gateway_network_port) != 0) {
@@ -77,10 +83,44 @@ void ClientArduinoUdpDisconnect(MqttSnClientNetworkInterface *n, void *context) 
 #endif
 }
 
-int ClientArduinoUdpReceive(MqttSnClientNetworkInterface *n,
-                            MqttSnFixedSizeRingBuffer *receiveBuffer,
-                            int32_t timeout_ms,
-                            void *context) {
+int32_t ClientArduinoUdpSend(MqttSnClientNetworkInterface *n,
+                             const device_address *from,
+                             const device_address *to,
+                             const uint8_t *data,
+                             uint16_t data_length,
+                             uint8_t signal_strength,
+                             int32_t timeout_ms,
+                             void *context) {
+  MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
+
+  MqttSnMessageData toSend = {0};
+  if (pop(sendBuffer, &toSend)) {
+    return 0;
+  }
+
+#ifdef WITH_DEBUG_LOGGING
+  log_db_send_client_message(n->logger, n->mqtt_sn_gateway_address, &toSend.address, toSend.data, toSend.data_length);
+#endif
+
+#ifdef WITH_UDP_BROADCAST_CLIENT
+  if (n->client_network_broadcast_address) {
+    if (toSend.broadcast_radius &&
+        memcmp(&toSend.address, n->client_network_broadcast_address, sizeof(device_address)) == 0) {
+      return arduino_send_multicast_udp(udpContext->unicast_socket, &toSend.address, toSend.data, toSend.data_length);
+    }
+  }
+#endif
+  return arduino_send_udp(udpContext->unicast_socket, &toSend.address, toSend.data, toSend.data_length);
+}
+
+int32_t ClientArduinoUdpReceive(MqttSnClientNetworkInterface *n,
+                                device_address *from,
+                                device_address *to,
+                                uint8_t *data,
+                                uint16_t max_data_length,
+                                uint8_t *signal_strength,
+                                int32_t timeout_ms,
+                                void *context) {
   MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
 
   MqttSnMessageData toReceive = {0};
@@ -128,28 +168,4 @@ int ClientArduinoUdpReceive(MqttSnClientNetworkInterface *n,
   return 0;
 }
 
-int ClientArduinoUdpSend(MqttSnClientNetworkInterface *n,
-                         MqttSnFixedSizeRingBuffer *sendBuffer,
-                         int32_t timeout_ms,
-                         void *context) {
-  MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
 
-  MqttSnMessageData toSend = {0};
-  if (pop(sendBuffer, &toSend)) {
-    return 0;
-  }
-
-#ifdef WITH_DEBUG_LOGGING
-  log_db_send_client_message(n->logger, n->mqtt_sn_gateway_address, &toSend.address, toSend.data, toSend.data_length);
-#endif
-
-#ifdef WITH_UDP_BROADCAST_CLIENT
-  if (n->client_network_broadcast_address) {
-    if (toSend.broadcast_radius &&
-        memcmp(&toSend.address, n->client_network_broadcast_address, sizeof(device_address)) == 0) {
-      return arduino_send_multicast_udp(udpContext->unicast_socket, &toSend.address, toSend.data, toSend.data_length);
-    }
-  }
-#endif
-  return arduino_send_udp(udpContext->unicast_socket, &toSend.address, toSend.data, toSend.data_length);
-}

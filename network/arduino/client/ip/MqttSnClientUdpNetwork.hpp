@@ -5,8 +5,6 @@
 #ifndef CMQTTSNFORWARDER_FORWARDER_NETWORK_ARDUINO_CLIENT_IP_MQTTSNCLIENTUDPNETWORK_H_
 #define CMQTTSNFORWARDER_FORWARDER_NETWORK_ARDUINO_CLIENT_IP_MQTTSNCLIENTUDPNETWORK_H_
 
-
-
 #include <network/MqttSnClientNetworkInterface.h>
 #if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_CLIENT)
 #include <WiFiUdp.h>
@@ -38,21 +36,28 @@ typedef struct MqttSnClientUdpNetwork_ {
   char protocol[sizeof("CMQTTSNFORWARDER_MQTTSNCLIENTARDUINOUDPNETWORKPROTOCOL")];
 } MqttSnClientUdpNetwork;
 
-int ClientArduinoUdpInit(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientArduinoUdpInitialize(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientArduinoUdpDeinitialize(MqttSnClientNetworkInterface *n, void *context);
 
-int ClientArduinoUdpConnect(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientArduinoUdpConnect(MqttSnClientNetworkInterface *n, void *context);
+int32_t ClientArduinoUdpDisconnect(MqttSnClientNetworkInterface *n, void *context);
 
-void ClientArduinoUdpDisconnect(MqttSnClientNetworkInterface *n, void *context);
-
-int ClientArduinoUdpReceive(MqttSnClientNetworkInterface *n,
-                            MqttSnFixedSizeRingBuffer *receiveBuffer,
-                            int32_t timeout_ms,
-                            void *context);
-
-int ClientArduinoUdpSend(MqttSnClientNetworkInterface *n,
-                         MqttSnFixedSizeRingBuffer *sendBuffer,
-                         int32_t timeout_ms,
-                         void *context);
+int32_t ClientArduinoUdpSend(MqttSnClientNetworkInterface *n,
+                             const device_address *from,
+                             const device_address *to,
+                             const uint8_t *data,
+                             uint16_t data_length,
+                             uint8_t signal_strength,
+                             int32_t timeout_ms,
+                             void *context);
+int32_t ClientArduinoUdpReceive(MqttSnClientNetworkInterface *n,
+                                device_address *from,
+                                device_address *to,
+                                uint8_t *data,
+                                uint16_t max_data_length,
+                                uint8_t *signal_strength,
+                                int32_t timeout_ms,
+                                void *context);
 
 #ifdef __cplusplus
 }

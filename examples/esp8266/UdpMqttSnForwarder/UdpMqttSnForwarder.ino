@@ -1,3 +1,5 @@
+
+#include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <WiFiUdp.h>
@@ -9,7 +11,7 @@
 #include <CMqttSnForwarderArduino.h>
 
 #ifdef WITH_EEPROM
-EEPROM_cfg* eeprom_cfg = NULL;
+EEPROM_cfg *eeprom_cfg = NULL;
 #else
 #define STASSID "..."
 #define STAPSK  "..."
@@ -20,9 +22,9 @@ MqttSnLogger fcfg_logger = {0};
 forwarder_config fcfg = {0};
 
 // forwarder
-MqttSnForwarder mqttSnForwarder = {0};
-void* clientNetworkContext = nullptr;
-void* gatewayNetworkContext = nullptr;
+MqttSnForwarder mqttSnForwarder;
+void *clientNetworkContext = nullptr;
+void *gatewayNetworkContext = nullptr;
 // mqtt sn gateway address
 uint16_t mqtt_sn_gateway_port = 8888;
 device_address mqttSnGatewayNetworkAddress = {0};
@@ -35,8 +37,8 @@ device_address forwarderGatewayNetworkBroadcastAddress = {0};
 // udp gateway
 WiFiUDP gatewayWiFiUdp;
 WiFiUDP gatewayBCWiFiUdp;
-WiFiUDP* gatewayUdp = &gatewayWiFiUdp;
-WiFiUDP* gatewayBCUdp = &gatewayBCWiFiUdp;
+WiFiUDP *gatewayUdp = &gatewayWiFiUdp;
+WiFiUDP *gatewayBCUdp = &gatewayBCWiFiUdp;
 MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
 #endif
 
@@ -44,8 +46,8 @@ MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
 // udp client
 WiFiUDP clientWiFiUdp;
 WiFiUDP clientBCWiFiUdp;
-WiFiUDP* clientUdp = &clientWiFiUdp;
-WiFiUDP* clientBCUdp = &clientBCWiFiUdp;
+WiFiUDP *clientUdp = &clientWiFiUdp;
+WiFiUDP *clientBCUdp = &clientBCWiFiUdp;
 
 MqttSnClientUdpNetwork udpClientNetworkContext = {0};
 #endif
@@ -63,8 +65,6 @@ MqttSnClientUdpNetwork udpClientNetworkContext = {0};
 char line[EEPROM_LINE_SIZE] = {0};
 size_t line_pos = 0;
 size_t line_max = EEPROM_LINE_SIZE;
-
-
 
 void configureModeTimeout(int timeout) {
   if (timeout > 0) {
@@ -94,7 +94,7 @@ void configureModeTimeout(int timeout) {
     if (timeout > 0) {
       if (Serial.available() <= 0) {
         int current = millis();
-        if ((current - started ) > (timeout * 1000)) {
+        if ((current - started) > (timeout * 1000)) {
           Serial.println("Restarting ...");
           eeprom_config_cleanup(&eeprom_cfg);
           log_flush(&fcfg_logger);
@@ -130,7 +130,7 @@ void setup() {
   }
   yield();
 
-  int wifi_rc = connect_wifi(eeprom_cfg, &fcfg_logger, 20000);
+  int wifi_rc = connect_wifi(eeprom_cfg->WiFi_cfg.ssid, eeprom_cfg->WiFi_cfg.password, &fcfg_logger, 20000);
   if (wifi_rc != 0) {
     configureModeTimeout(30);
   }
@@ -142,8 +142,13 @@ void setup() {
 #endif
 
   // MQTT-SN Gateway Address
-  if (convert_hostname_port_to_device_address(&fcfg_logger, fcfg.mqtt_sn_gateway_host, fcfg.mqtt_sn_gateway_port, &mqttSnGatewayNetworkAddress, "mqtt-sn gateway")) {
-    Serial.println("Could not resolve MQTT-SN Gateway Host to device address - configure with: --mqtt_sn_gateway_host or --URL.");
+  if (convert_hostname_port_to_device_address(&fcfg_logger,
+                                              fcfg.mqtt_sn_gateway_host,
+                                              fcfg.mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
+    Serial.println(
+        "Could not resolve MQTT-SN Gateway Host to device address - configure with: --mqtt_sn_gateway_host or --URL.");
     Serial.println("Use '--help' to see usage.");
     configureModeTimeout(30);
   }
@@ -151,8 +156,13 @@ void setup() {
   // Gateway Network Address
   add_port_to_device_address(fcfg.gateway_network_bind_port, &forwarderGatewayNetworkAddress);
 #ifdef WITH_UDP_BROADCAST_GATEWAY
-  if (convert_string_ip_port_to_device_address(&fcfg_logger, fcfg.gateway_network_broadcast_address, fcfg.gateway_network_broadcast_bind_port, &forwarderGatewayNetworkBroadcastAddress, "gateway broadcast")) {
-    Serial.println("Could not convert gateway broadcast to device address - configure with: --gateway_network_broadcast_address and --gateway_network_broadcast_bind_port or --gateway_network_broadcast_url.");
+  if (convert_string_ip_port_to_device_address(&fcfg_logger,
+                                               fcfg.gateway_network_broadcast_address,
+                                               fcfg.gateway_network_broadcast_bind_port,
+                                               &forwarderGatewayNetworkBroadcastAddress,
+                                               "gateway broadcast")) {
+    Serial.println(
+        "Could not convert gateway broadcast to device address - configure with: --gateway_network_broadcast_address and --gateway_network_broadcast_bind_port or --gateway_network_broadcast_url.");
     Serial.println("Use '--help' to see usage.");
     configureModeTimeout(30);
   }
@@ -161,8 +171,13 @@ void setup() {
   // Client Network Address
   add_port_to_device_address(fcfg.client_network_bind_port, &forwarderClientNetworkAddress);
 #ifdef WITH_UDP_BROADCAST_CLIENT
-  if (convert_string_ip_port_to_device_address(&fcfg_logger, fcfg.client_network_broadcast_address, fcfg.client_network_broadcast_bind_port, &forwarderClientNetworkBroadcastAddress, "client broadcast")) {
-    Serial.println("Could not convert client broadcast to device address - configure with: --client_network_broadcast_address and --client_network_broadcast_bind_port or --client_network_broadcast_url.");
+  if (convert_string_ip_port_to_device_address(&fcfg_logger,
+                                               fcfg.client_network_broadcast_address,
+                                               fcfg.client_network_broadcast_bind_port,
+                                               &forwarderClientNetworkBroadcastAddress,
+                                               "client broadcast")) {
+    Serial.println(
+        "Could not convert client broadcast to device address - configure with: --client_network_broadcast_address and --client_network_broadcast_bind_port or --client_network_broadcast_url.");
     Serial.println("Use '--help' to see usage.");
     configureModeTimeout(30);
   }
@@ -173,12 +188,13 @@ void setup() {
     gatewayNetworkContext = &udpGatewayNetworkContext;
 
 #ifdef WITH_UDP_BROADCAST_GATEWAY
-    if (GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
-                           &mqttSnGatewayNetworkAddress,
-                           &forwarderGatewayNetworkAddress,
-                           &forwarderGatewayNetworkBroadcastAddress,
-                           &udpGatewayNetworkContext,
-                           GatewayArduinoUdpInit)) {
+    if (GatewayNetworkInitialize(&mqttSnForwarder.gatewayNetwork,
+                                 CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                                 &mqttSnGatewayNetworkAddress,
+                                 &forwarderGatewayNetworkAddress,
+                                 &forwarderGatewayNetworkBroadcastAddress,
+                                 &udpGatewayNetworkContext,
+                                 GatewayArduinoUdpInit)) {
 #else
     if (GatewayNetworkInit(&mqttSnForwarder.gatewayNetwork,
                            &mqttSnGatewayNetworkAddress,
@@ -195,12 +211,13 @@ void setup() {
     // Gateway Network is UDP
     clientNetworkContext = &udpClientNetworkContext;
 #ifdef WITH_UDP_BROADCAST_CLIENT
-    if (ClientNetworkInit(&mqttSnForwarder.clientNetwork,
-                          &mqttSnGatewayNetworkAddress,
-                          &forwarderClientNetworkAddress,
-                          &forwarderClientNetworkBroadcastAddress,
-                          &udpClientNetworkContext,
-                          ClientArduinoUdpInit)) {
+    if (ClientNetworkInitialize(&mqttSnForwarder.clientNetwork,
+                                CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                                &mqttSnGatewayNetworkAddress,
+                                &forwarderClientNetworkAddress,
+                                &forwarderClientNetworkBroadcastAddress,
+                                &udpClientNetworkContext,
+                                ClientArduinoUdpInit)) {
 #else
     if (ClientNetworkInit(&mqttSnForwarder.clientNetwork,
                           &mqttSnGatewayNetworkAddress,
@@ -274,9 +291,12 @@ void loop() {
   }
   if (Serial.available() > 0) {
     if (parse_arduino_serial_line(line, &line_pos, line_max)) {
+      arduino_serial_eval_process(eeprom_cfg, &fcfg, line, line_pos);
+/*
       int fcfg_rc = arduino_serial_eval_process(eeprom_cfg, &fcfg, line, line_pos);
       memset(line, 0, sizeof(line));
       line_pos = 0;
+*/
     }
   }
 }
