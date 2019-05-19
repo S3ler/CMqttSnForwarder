@@ -6,6 +6,7 @@
 #include <platform/platform_compatibility.h>
 #ifndef Arduino_h
 #include <netinet/in.h>
+#include <parser/MqttSnAdvertiseMessage.h>
 #endif
 
 #define MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET 2
@@ -355,9 +356,9 @@ int log_verbose_mqtt_sn_message_payload(const MqttSnLogger *logger, const Parsed
   return log_status(logger);
 }
 int log_advertise_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
-  MqttSnAdvertise *a = (MqttSnAdvertise *) header->payload;
-  uint8_t gw_id = a->gwId;
-  uint16_t duration = ntohs(a->duration);
+  MqttSnAdvertise *advertise = (MqttSnAdvertise *) header->payload;
+  uint8_t gw_id = advertise->gwId;
+  uint16_t duration = ntohs(advertise->duration);
   log_open_braked(logger);
   log_gateway_id(logger, gw_id);
   log_comma(logger);

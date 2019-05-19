@@ -85,7 +85,9 @@ endif ()
 set(MQTT_SN_MESSAGE_PARSER_FILES
         platform/device_address.h
         parser/MqttSnMessageParser.c
-        parser/MqttSnMessageParser.h)
+        parser/MqttSnMessageParser.h
+        parser/MqttSnAdvertiseMessage.c
+        parser/MqttSnAdvertiseMessage.h)
 if (WITH_LOGGING)
     set(MQTT_SN_MESSAGE_PARSER_FILES ${MQTT_SN_MESSAGE_PARSER_FILES}
             parser/logging/MqttSnForwarderLoggingMessages.c

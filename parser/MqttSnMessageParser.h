@@ -208,10 +208,12 @@ typedef struct MqttSnMessageHeaderThreeOctetsLengthField_ {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct MqttSnAdvertise_ {
-  uint8_t gwId;
-  uint16_t duration;
-} MqttSnAdvertise;
+typedef struct ParsedMqttSnHeader_ {
+  uint8_t indicator;
+  uint16_t length;
+  MQTT_SN_MESSAGE_TYPE msg_type;
+  void *payload;
+} ParsedMqttSnHeader;
 #pragma pack(pop)
 
 #pragma pack(push, 1)
@@ -225,15 +227,6 @@ typedef struct MqttSnGwInfo_ {
   uint8_t gwId;
   device_address gwAdd;
 } MqttSnGwInfo;
-#pragma pack(pop)
-
-#pragma pack(push, 1)
-typedef struct ParsedMqttSnHeader_ {
-  uint8_t indicator;
-  uint16_t length;
-  MQTT_SN_MESSAGE_TYPE msg_type;
-  void *payload;
-} ParsedMqttSnHeader;
 #pragma pack(pop)
 
 #pragma pack(push, 1)
@@ -347,7 +340,11 @@ typedef struct MqttSnEncapsulatedMessage_ {
 } MqttSnEncapsulatedMessage;
 #pragma pack(pop)
 
-int parse_header(ParsedMqttSnHeader *h, MQTT_SN_MESSAGE_TYPE msg_type, const uint8_t *data, uint16_t data_len);
+int32_t parse_header(ParsedMqttSnHeader *h,
+                     MQTT_SN_MESSAGE_TYPE msg_type,
+                     const uint8_t *data,
+                     uint16_t data_len,
+                     int32_t *parsed_bytes);
 
 int parse_message_tolerant(ParsedMqttSnHeader *h,
                            MQTT_SN_MESSAGE_TYPE msg_type,
@@ -382,6 +379,12 @@ int is_valid_three_bytes_header(const uint8_t *data, ssize_t data_len);
 
 uint8_t is_three_bytes_header(const uint8_t *data);
 
+int32_t generate_mqtt_sn_header(uint8_t *dst,
+                                uint16_t dst_len,
+                                uint16_t msg_len,
+                                MQTT_SN_MESSAGE_TYPE msg_type,
+                                int32_t *used_bytes);
+
 int generate_publish(uint8_t *dst,
                      uint16_t dst_len,
                      uint8_t dup,
@@ -409,6 +412,9 @@ int generate_encapsulation_message(uint8_t *dst,
                                    const device_address *from,
                                    const uint8_t *data,
                                    uint16_t data_len);
+
+int32_t generate_mqtt_sn_uint8(uint8_t *dst_pos, uint16_t dst_len, uint8_t value, int32_t *used_bytes);
+int32_t generate_mqtt_sn_uint16(uint8_t *dst_pos, uint16_t dst_len, uint16_t value, int32_t *used_bytes);
 
 #ifdef __cplusplus
 }

@@ -5,12 +5,14 @@ Featurelist:
 * filter out non-mqtt-sn-gateway address on gateway network interface (shouldnt be necessary
 * fix plugin
 * plugin multicast
+* parsing creates error messages which are printable
 arduino
 * fix arduino esp8266 interfaces
 * tcp
 * multicast in tcp  for
 * default configuration (on error)
 * enable es32 compatibility
+
 
 
 // TODO enable GW MQTT-SN message header check?
