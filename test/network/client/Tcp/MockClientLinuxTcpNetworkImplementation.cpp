@@ -27,7 +27,7 @@ int MockClientLinuxTcpNetworkImplementation::sendToNetwork(const device_address 
   }
   // check if Tcp socket is connected, if not then do it!
   uint16_t total_send_bytes = 0;
-  while(total_send_bytes < dataLength){
+  while (total_send_bytes < dataLength) {
     uint16_t send_bytes = send(forwarder_socket_fd, buf, dataLength, 0);
     if (send_bytes <= 0) {
       close(forwarder_socket_fd);
@@ -177,7 +177,7 @@ int MockClientLinuxTcpNetworkImplementation::getDeviceAddressFromFileDescriptor(
   (*peerAddress).bytes[3] = ip[3];
 
   uint16_t port_as_number = (uint16_t) htons(address.sin_port);
-  (*peerAddress).bytes[4] = (uint8_t) (port_as_number >> 8);
-  (*peerAddress).bytes[5] = (uint8_t) (port_as_number >> 0);
+  (*peerAddress).bytes[4] = (uint8_t)(port_as_number >> 8);
+  (*peerAddress).bytes[5] = (uint8_t)(port_as_number >> 0);
   return 0;
 }

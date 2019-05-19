@@ -34,7 +34,6 @@
 #include <forwarder/MqttSnForwarder.c>
 #include <forwarder/MqttSnForwarder.h>
 
-
 #include <forwarder/MqttSnForwarderLogging.c>
 #include <forwarder/MqttSnForwarderLogging.h>
 

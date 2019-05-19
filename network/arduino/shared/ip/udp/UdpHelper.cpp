@@ -9,7 +9,6 @@
 #include <string.h>
 #include <CMqttSnForwarderArduino.h>
 
-
 int32_t arduino_init_udp(WiFiUDP *wiFiUdp, uint16_t port) {
   if (wiFiUdp->begin(port) == 1) {
     return 0;
@@ -21,7 +20,10 @@ void arduino_deinit_udp(WiFiUDP *wiFiUdp) {
   wiFiUdp->stop();
 }
 
-int32_t arduino_send_udp(WiFiUDP *wiFiUdp, const device_address *destination, const uint8_t *bytes, uint16_t bytes_len) {
+int32_t arduino_send_udp(WiFiUDP *wiFiUdp,
+                         const device_address *destination,
+                         const uint8_t *bytes,
+                         uint16_t bytes_len) {
   IPAddress destination_IPAddress;
   uint16_t destination_port = 0;
 
@@ -30,13 +32,17 @@ int32_t arduino_send_udp(WiFiUDP *wiFiUdp, const device_address *destination, co
   if (wiFiUdp->beginPacket(destination_IPAddress, destination_port) == 1) {
     uint16_t write_rc = wiFiUdp->write(bytes, bytes_len);
     if (wiFiUdp->endPacket()) {
-        return write_rc;
+      return write_rc;
     }
   }
   return -1;
 }
 
-int32_t arduino_receive_udp(WiFiUDP *wiFiUdp, device_address *from, device_address *to, uint8_t *bytes, uint16_t max_bytes_len) {
+int32_t arduino_receive_udp(WiFiUDP *wiFiUdp,
+                            device_address *from,
+                            device_address *to,
+                            uint8_t *bytes,
+                            uint16_t max_bytes_len) {
 
   if (wiFiUdp->parsePacket() > 0) {
     memset(from, 0x0, sizeof(device_address));
@@ -44,8 +50,8 @@ int32_t arduino_receive_udp(WiFiUDP *wiFiUdp, device_address *from, device_addre
 
     int available = wiFiUdp->available();
     if (available > max_bytes_len) {
-    // too much data => ignored
-    wiFiUdp->flush();
+      // too much data => ignored
+      wiFiUdp->flush();
       return 0;
 
     }

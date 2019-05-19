@@ -199,11 +199,11 @@ int32_t ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
                                                         tcpNetwork->udp_multicast_network.multicast_socket);
 #else
   int select_rc = new_connection_or_is_message_received(tcpNetwork->listen_socket_fd,
-                                                                                 tcpNetwork->client_socket_fds,
-                                                                                 tcpNetwork->max_clients,
-                                                                                 timeout_ms,
-                                                                                 &read_fds,
-                                                                                 -1);
+                                                        tcpNetwork->client_socket_fds,
+                                                        tcpNetwork->max_clients,
+                                                        timeout_ms,
+                                                        &read_fds,
+                                                        -1);
 #endif
   if (select_rc < 0) {
 #ifdef WITH_LOGGING

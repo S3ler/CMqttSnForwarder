@@ -18,9 +18,13 @@ int32_t arduino_init_udp(WiFiUDP *wiFiUdp, uint16_t port);
 
 void arduino_deinit_udp(WiFiUDP *wiFiUdp);
 
-int32_t arduino_send_udp(WiFiUDP *wiFiUdp,const device_address *destination,const uint8_t *bytes, uint16_t bytes_len);
+int32_t arduino_send_udp(WiFiUDP *wiFiUdp, const device_address *destination, const uint8_t *bytes, uint16_t bytes_len);
 
-int32_t arduino_receive_udp(WiFiUDP *wiFiUdp, device_address *from, device_address *to, uint8_t *bytes, uint16_t max_bytes_len);
+int32_t arduino_receive_udp(WiFiUDP *wiFiUdp,
+                            device_address *from,
+                            device_address *to,
+                            uint8_t *bytes,
+                            uint16_t max_bytes_len);
 
 #ifdef WITH_UDP_BROADCAST
 int arduino_join_multicast_udp(WiFiUDP *wiFiUdp, IPAddress bc_ip, uint16_t bc_port);

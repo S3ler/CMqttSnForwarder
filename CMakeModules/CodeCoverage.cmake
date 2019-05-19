@@ -219,7 +219,7 @@ function(SETUP_TARGET_FOR_COVERAGE_LCOV_LOCAL_EXLUCDE)
             COMMAND ${LCOV_PATH} ${Coverage_LCOV_ARGS} --gcov-tool ${GCOV_PATH} -directory . --zerocounters ${LCOVRC_PATH}
             # Create baseline to make sure untouched files show up in the report
             COMMAND ${LCOV_PATH} ${Coverage_LCOV_ARGS} --gcov-tool ${GCOV_PATH} -c -i -d . -o ${Coverage_NAME}.base
-            COMMENT("STATUS ${COVERAGE_LCOV_EXCLUDES}")
+            COMMENT ("STATUS ${COVERAGE_LCOV_EXCLUDES}")
 
             # Run tests
             COMMAND ${Coverage_EXECUTABLE} ${Coverage_EXECUTABLE_ARGS}

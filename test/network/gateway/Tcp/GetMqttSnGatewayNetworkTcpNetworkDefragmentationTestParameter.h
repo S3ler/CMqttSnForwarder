@@ -26,7 +26,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -45,7 +45,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -64,7 +64,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -83,7 +83,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -102,7 +102,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -121,7 +121,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -140,7 +140,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -159,7 +159,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -178,7 +178,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -197,7 +197,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -216,7 +216,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -235,7 +235,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -254,7 +254,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -273,7 +273,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -292,7 +292,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -311,7 +311,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -330,7 +330,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -349,7 +349,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -368,7 +368,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -387,7 +387,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -406,7 +406,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -425,7 +425,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -444,7 +444,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -463,7 +463,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -482,7 +482,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -501,7 +501,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());
@@ -520,7 +520,7 @@ template<MockGatewayNetworkAddressGenerator generateNetworkAddress, class MockGa
     mockGatewayNetworkInterfaces.push_back(mockGatewayNetworkInterface);
     std::vector<MockGatewayConfiguration> mockGatewayConfigurations;
     uint16_t p = 8888;
-    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+    device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
     MockGatewayConfiguration mockGatewayConfiguration(
         mockGatewayDeviceAddress, 1,
         mockGatewayNetworkInterface.get());

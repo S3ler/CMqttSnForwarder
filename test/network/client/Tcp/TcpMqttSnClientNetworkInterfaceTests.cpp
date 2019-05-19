@@ -32,7 +32,7 @@ device_address getDeviceAddressFromMqttSnClientTcpNetworkContext(uint16_t identi
 }
 
 MqttSnClientTcpNetwork clientNetworkContext = {0};
-device_address forwarderAddress({127, 0, 0, 1, (uint8_t) ((uint16_t) 9999 >> 8), (uint8_t) ((uint16_t) 9999 >> 0)});
+device_address forwarderAddress({127, 0, 0, 1, (uint8_t)((uint16_t) 9999 >> 8), (uint8_t)((uint16_t) 9999 >> 0)});
 std::vector<std::shared_ptr<MockClientLinuxTcpNetworkImplementation>> mockClientTcpNetworkInterfaces;
 MqttSnGatewayClientNetworkTestConfiguration mqttSnGatewayClientNetworkTestConfiguration(forwarderAddress,
                                                                                         &clientNetworkContext,
@@ -73,14 +73,16 @@ struct PrintToStringMqttSnClientTcpNetworkTestValueParameterParamName {
 };
 
 INSTANTIATE_TEST_SUITE_P(SendReceiveTests,
-                         MqttSnClientNetworkInterfaceTests,
-                         ::testing::ValuesIn(clientNetworkTestParameter.begin(), clientNetworkTestParameter.end()),
-                         PrintToStringMqttSnClientTcpNetworkTestValueParameterParamName());
+    MqttSnClientNetworkInterfaceTests,
+    ::testing::ValuesIn(clientNetworkTestParameter.begin(), clientNetworkTestParameter.end()),
+    PrintToStringMqttSnClientTcpNetworkTestValueParameterParamName()
+);
 
 INSTANTIATE_TEST_SUITE_P(DefragmentationTests,
-                         MqttSnClientNetworkInterfaceMessageDefragmentationTests,
-                         ::testing::ValuesIn(clientNetworkDefragmentationTestParameter.begin(),
-                                             clientNetworkDefragmentationTestParameter.end()),
-                         PrintToStringMqttSnClientTcpNetworkTestValueParameterParamName());
+    MqttSnClientNetworkInterfaceMessageDefragmentationTests,
+    ::testing::ValuesIn(clientNetworkDefragmentationTestParameter.begin(),
+                        clientNetworkDefragmentationTestParameter.end()),
+    PrintToStringMqttSnClientTcpNetworkTestValueParameterParamName()
+);
 
 #endif //CMQTTSNFORWARDER_TCPMQTTSNCLIENTNETWORKINTERFACETESTS_H

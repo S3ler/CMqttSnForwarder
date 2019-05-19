@@ -31,8 +31,8 @@ int getDeviceAddressFromFileDescriptor1(int peer_fd, device_address *peer_addres
   (*peer_address).bytes[3] = ip[3];
 
   uint16_t port_as_number = (uint16_t) htons(address.sin_port);
-  (*peer_address).bytes[4] = (uint8_t) (port_as_number >> 8);
-  (*peer_address).bytes[5] = (uint8_t) (port_as_number >> 0);
+  (*peer_address).bytes[4] = (uint8_t)(port_as_number >> 8);
+  (*peer_address).bytes[5] = (uint8_t)(port_as_number >> 0);
   return 0;
 }
 
@@ -43,7 +43,7 @@ std::map<MqttSnFixedSizeRingBuffer *, MqttSnFixedSizeRingBufferMock *>
 device_address generateMockGatewayTcpNetworkAddress(uint16_t mockClientIdentifier) {
   // a zeroed device forwarderAddress tells the test set to use the given device forwarderAddress
   uint16_t p = 8888 + mockClientIdentifier;
-  device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+  device_address mockGatewayDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
 
   return mockGatewayDeviceAddress;
 }
@@ -107,14 +107,16 @@ INSTANTIATE_TEST_SUITE_P(GatewayConnectTests,
                          */
 
 INSTANTIATE_TEST_SUITE_P(GatewaySendReceiveTests,
-                         MqttSnGatewayNetworkInterfaceSendReceiveTests,
-                         ::testing::ValuesIn(gatewayNetworkTestParameter.begin(), gatewayNetworkTestParameter.end()),
-                         PrintToStringMqttSnClientGatewayTcpNetworkTestValueParameterParamName());
+    MqttSnGatewayNetworkInterfaceSendReceiveTests,
+    ::testing::ValuesIn(gatewayNetworkTestParameter.begin(), gatewayNetworkTestParameter.end()),
+    PrintToStringMqttSnClientGatewayTcpNetworkTestValueParameterParamName()
+);
 
 INSTANTIATE_TEST_SUITE_P(GatewayDefragmentationTests,
-                         MqttSnGatewayNetworkInterfaceMessageDefragmentationTests,
-                         ::testing::ValuesIn(gatewayNetworkDefragmentationTestParameter.begin(),
-                                             gatewayNetworkDefragmentationTestParameter.end()),
-                         PrintToStringMqttSnClientGatewayTcpNetworkTestValueParameterParamName());
+    MqttSnGatewayNetworkInterfaceMessageDefragmentationTests,
+    ::testing::ValuesIn(gatewayNetworkDefragmentationTestParameter.begin(),
+                        gatewayNetworkDefragmentationTestParameter.end()),
+    PrintToStringMqttSnClientGatewayTcpNetworkTestValueParameterParamName()
+);
 
 #endif //CMQTTSNFORWARDER_LINUXTCPMQTTSNGATEWAYNETWORKINTERFACETESTS_H

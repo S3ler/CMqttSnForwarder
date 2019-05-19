@@ -4,7 +4,7 @@
 
 #include "ESPClass.h"
 
-void ESPClass::restart(){
+void ESPClass::restart() {
 
 }
 

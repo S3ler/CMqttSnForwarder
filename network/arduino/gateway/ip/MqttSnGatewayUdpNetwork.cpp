@@ -117,7 +117,6 @@ int32_t GatewayArduinoUdpSend(MqttSnGatewayNetworkInterface *n,
   return arduino_send_udp(udpContext->unicast_socket, to, data, data_length);
 }
 
-
 int32_t GatewayArduinoUdpReceive(MqttSnGatewayNetworkInterface *n,
                                  device_address *from,
                                  device_address *to,

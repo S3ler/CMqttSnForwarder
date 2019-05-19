@@ -173,21 +173,21 @@ int32_t receive_udp_message(int socket_fd, uint8_t *buffer, uint16_t buffer_max_
   int read_bytes = -1;
 
   if ((read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_PEEK,
-                              (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
+                             (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
     return -1;
   }
 
   if (read_bytes > buffer_max_length) {
     // read bytes and discard
     if ((read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_WAITALL,
-                                (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
+                               (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
       return -1;
     }
     return 0;
   }
 
   if ((read_bytes = recvfrom(socket_fd, buffer, buffer_max_length, MSG_WAITALL,
-                              (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
+                             (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) < 0) {
     return -1;
   }
 

@@ -4,7 +4,7 @@
 
 #include "SerialClass.h"
 
-int SerialClass::available(){
+int SerialClass::available() {
   return 0;
 }
 char SerialClass::read() {

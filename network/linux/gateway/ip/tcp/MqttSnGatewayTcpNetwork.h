@@ -57,7 +57,6 @@ int32_t GatewayLinuxTcpReceiveUnicast(MqttSnGatewayNetworkInterface *n,
                                       uint16_t max_data_length,
                                       MqttSnGatewayTcpNetwork *tcp_network);
 
-
 #ifdef __cplusplus
 }
 #endif

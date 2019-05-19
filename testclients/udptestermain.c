@@ -89,7 +89,7 @@ int main() {
       to_address.sin_port = htons(FORWARDER_CLIENT_NETWORK_PORT);
       inet_pton(AF_INET, FORWARDER_IP, &(to_address.sin_addr));
       socklen_t to_sockaddr_socklen = sizeof(to_address);
-      if (sendto(client_fd, (uint8_t *) &publish, publish.length, 0,
+      if (sendto(client_fd, (uint8_t * ) & publish, publish.length, 0,
                  (const struct sockaddr *) &to_address, to_sockaddr_socklen) != publish.length) {
         perror("MqttSnForwarder socket send");
         exit(EXIT_FAILURE);
@@ -138,7 +138,7 @@ int main() {
 
         struct sockaddr_in to_address = recv_sockaddr;
         socklen_t to_address_socklen = sizeof(to_address);
-        if (sendto(gateway_fd, (uint8_t *) &gateway_recv_buf, gateway_rec_buf_len, 0,
+        if (sendto(gateway_fd, (uint8_t * ) & gateway_recv_buf, gateway_rec_buf_len, 0,
                    (const struct sockaddr *) &to_address, to_address_socklen) != gateway_rec_buf_len) {
           perror("Gateway socket send");
           exit(EXIT_FAILURE);
@@ -226,10 +226,10 @@ int openGatewaySocket(int port) {
 }
 
 int MqttSnPublishInit(MQTT_SN_PUBLISH *publish, uint8_t *data, uint16_t length) {
-  publish->length = (uint8_t) (length + PUBLISH_HEADER_LEN);
+  publish->length = (uint8_t)(length + PUBLISH_HEADER_LEN);
   publish->msg_type = PUBLISH;
   publish->flags = 0;
-  publish->flags = (uint8_t) (publish->flags | 0x62); // 0b01100010
+  publish->flags = (uint8_t)(publish->flags | 0x62); // 0b01100010
   publish->topic_id = htons(5);
   publish->msg_id = htons(10);
   memcpy(publish->data, data, length);

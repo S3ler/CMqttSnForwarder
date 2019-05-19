@@ -131,7 +131,7 @@ int MockGatewayLinuxTcpNetworkImplementation::awaitForwarderConnection(MockGatew
     struct sockaddr_in sockaddr;
     int addrlen = sizeof(sockaddr);
     if ((forwarder_socket_fd = accept(master_socket_fd, (struct sockaddr *) &sockaddr,
-                                      (socklen_t *) &addrlen)) < 0) {
+                                      (socklen_t * ) & addrlen)) < 0) {
       return -1;
     }
   }
@@ -151,8 +151,8 @@ int MockGatewayLinuxTcpNetworkImplementation::getDeviceAddressFromFileDescriptor
   (*peerAddress).bytes[3] = ip[3];
 
   uint16_t port_as_number = (uint16_t) htons(address.sin_port);
-  (*peerAddress).bytes[4] = (uint8_t) (port_as_number >> 8);
-  (*peerAddress).bytes[5] = (uint8_t) (port_as_number >> 0);
+  (*peerAddress).bytes[4] = (uint8_t)(port_as_number >> 8);
+  (*peerAddress).bytes[5] = (uint8_t)(port_as_number >> 0);
   return 0;
 }
 

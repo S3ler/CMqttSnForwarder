@@ -29,7 +29,6 @@ int log_client_network_deinitialized(const MqttSnLogger *logger,
   return log_network_deinitialized(logger, protocol_name, "client", address);
 }
 
-
 // gateway log messages
 int log_gateway_network_connect(const MqttSnLogger *logger,
                                 const char *protocol_name,

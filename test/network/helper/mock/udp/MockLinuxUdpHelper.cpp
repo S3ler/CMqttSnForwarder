@@ -47,12 +47,12 @@ std::unique_ptr<MockLinuxUdpDatagram> MockLinuxUdpHelper::receiveUdpMessage(int 
 
   if ((read_bytes = recvfrom(socket_fd, &buffer[0], buffer.size(), MSG_WAITALL,
                              (struct sockaddr *) &recv_sockaddr, &recv_sockaddr_socklen)) <= 0) {
-    return std::unique_ptr<MockLinuxUdpDatagram>{nullptr};
+    return std::unique_ptr < MockLinuxUdpDatagram > {nullptr};
   }
   buffer.resize(read_bytes);
 
   device_address gateway_address = MockLinuxUdpHelper::getDeviceAddressFromSockAddrIn(&recv_sockaddr);
 
-  return std::unique_ptr<MockLinuxUdpDatagram>{
-      new MockLinuxUdpDatagram(gateway_address, (uint8_t *) &buffer, read_bytes)};
+  return std::unique_ptr < MockLinuxUdpDatagram > {
+      new MockLinuxUdpDatagram(gateway_address, (uint8_t * ) & buffer, read_bytes)};
 }

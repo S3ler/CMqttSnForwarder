@@ -44,11 +44,11 @@ typedef struct MqttSnGatewayNetworkInterface_ {
                   int32_t timeout_ms,
                   void *context);
   int32_t (*receive)(struct MqttSnGatewayNetworkInterface_ *n,
-                      device_address *from,
-                      device_address *to,
-                      uint8_t *data,
+                     device_address *from,
+                     device_address *to,
+                     uint8_t *data,
                      uint16_t data_length,
-                     uint8_t* signal_strength,
+                     uint8_t *signal_strength,
                      int32_t timeout_ms,
                      void *context);
 

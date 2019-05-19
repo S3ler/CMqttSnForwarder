@@ -97,7 +97,7 @@ static int parse_port(const forwarder_config *fcfg, char *port_str, int *dst) {
 static int parse_timeout(const forwarder_config *fcfg, char *timeout_str, int *dst) {
   char *endprt;
   long int n = strtol(timeout_str, &endprt, 10);
-  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > UINT32_MAX)) {
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > INT32_MAX)) {
     print_invalid_timeout_given(fcfg->logger, n);
     return -1;
   }
@@ -650,17 +650,17 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       }
     }
 #if defined(WITH_LOGGING)
-    else if (!strcmp(argv[i], "-q") || !strcmp(argv[i], "--quiet")) {
-      fcfg->log_lvl = LOG_LEVEL_QUIET;
-    } else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--default")) {
-      fcfg->log_lvl = LOG_LEVEL_DEFAULT;
-    } else if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--verbose")) {
-      fcfg->log_lvl = LOG_LEVEL_VERBOSE;
-    }
+      else if (!strcmp(argv[i], "-q") || !strcmp(argv[i], "--quiet")) {
+        fcfg->log_lvl = LOG_LEVEL_QUIET;
+      } else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--default")) {
+        fcfg->log_lvl = LOG_LEVEL_DEFAULT;
+      } else if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--verbose")) {
+        fcfg->log_lvl = LOG_LEVEL_VERBOSE;
+      }
 #if defined(WITH_DEBUG_LOGGING)
-    else if (!strcmp(argv[i], "-db") || !strcmp(argv[i], "--debug")) {
-      fcfg->log_lvl = LOG_LEVEL_DEBUG;
-    }
+      else if (!strcmp(argv[i], "-db") || !strcmp(argv[i], "--debug")) {
+        fcfg->log_lvl = LOG_LEVEL_DEBUG;
+      }
 #endif
 #endif
     else if (!strcmp_P(argv[i], "--help")) {

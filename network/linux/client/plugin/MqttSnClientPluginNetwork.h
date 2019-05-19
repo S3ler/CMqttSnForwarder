@@ -26,13 +26,13 @@ typedef struct MqttSnClientPluginContext_ {
   int32_t (*plugin_network_disconnect)(const client_plugin_config *cfg, void *plugin_context);
 
   int32_t (*plugin_network_send)(const client_plugin_send_message *send_message,
-                             int32_t timeout_ms,
-                             const client_plugin_config *cfg,
-                             void *plugin_context);
+                                 int32_t timeout_ms,
+                                 const client_plugin_config *cfg,
+                                 void *plugin_context);
   int32_t (*plugin_network_receive)(client_plugin_receive_message *rec_message,
-                                int32_t timeout_ms,
-                                const client_plugin_config *cfg,
-                                void *plugin_context);
+                                    int32_t timeout_ms,
+                                    const client_plugin_config *cfg,
+                                    void *plugin_context);
 } MqttSnClientPluginContext;
 
 int32_t ClientLinuxPluginInitialize(MqttSnClientNetworkInterface *n, void *context);

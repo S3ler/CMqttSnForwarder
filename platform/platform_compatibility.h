@@ -5,7 +5,6 @@
 #ifndef CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_
 #define CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_
 
-
 #if defined(Arduino_h) || defined(WITH_PLATFORMIO)// Arduino
 #ifdef WITH_LOGGING
 #include <logging/arduino/ArduinoSerial.hpp>
@@ -33,6 +32,5 @@ int strcmp_P(const char *a, const char *b);
 #endif
 #endif
 #endif
-
 
 #endif //CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_

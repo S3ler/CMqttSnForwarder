@@ -105,7 +105,9 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger,PSTR("       Can be tcp. Defaults to tcp.\n"));
 #endif
   log_str(logger, PSTR(" -gA : bind the gateway network to the outgoing socket to this host/ip address.\n"));
-  log_str(logger, PSTR("       Use to control which interface to communicates over or to set the address for the gateway network.\n"));
+  log_str(logger,
+          PSTR(
+              "       Use to control which interface to communicates over or to set the address for the gateway network.\n"));
   log_str(logger, PSTR(" -gp : listening on the specific gateway network port. Defaults to 9999.\n"));
   log_str(logger,
           PSTR(" -gL : specify protocol, broadcast address, port as a URL in the form: protocol://address[:port]\n"));
@@ -119,7 +121,9 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger,PSTR("       Can be tcp. Defaults to tcp.\n"));
 #endif
   log_str(logger, PSTR(" -cA : bind the client network to the outgoing socket to this host/ip address.\n"));
-  log_str(logger, PSTR("       Use to control which interface to communicates over or to set the address for the client network.\n"));
+  log_str(logger,
+          PSTR(
+              "       Use to control which interface to communicates over or to set the address for the client network.\n"));
   log_str(logger, PSTR(" -cp : listening on the specific client network port. Defaults to 7777.\n"));
   log_str(logger,
           PSTR(" -cL : specify protocol, broadcast address, port as a URL in the form: protocol://address[:port]\n"));

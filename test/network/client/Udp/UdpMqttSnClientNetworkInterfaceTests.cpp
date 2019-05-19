@@ -25,13 +25,13 @@ device_address getDeviceAddressFromMqttSnClientUdpNetworkContext(uint16_t identi
 
 device_address generateMockClientUdpNetworkAddress(uint16_t mockClientIdentifier) {
   uint16_t p = 20000 + mockClientIdentifier;
-  device_address mockClientDeviceAddress({127, 0, 0, 1, (uint8_t) (p >> 8), (uint8_t) (p >> 0)});
+  device_address mockClientDeviceAddress({127, 0, 0, 1, (uint8_t)(p >> 8), (uint8_t)(p >> 0)});
   return mockClientDeviceAddress;
 }
 
 MqttSnClientUdpNetwork clientNetworkContext = {0};
 device_address forwarderAddress
-    ({127, 0, 0, 1, (uint8_t) ((uint16_t) 10000 >> 8), (uint8_t) ((uint16_t) 10000 >> 0)});
+    ({127, 0, 0, 1, (uint8_t)((uint16_t) 10000 >> 8), (uint8_t)((uint16_t) 10000 >> 0)});
 bool useIdentifier = false;
 std::vector<std::shared_ptr<MockClientLinuxUdpNetworkImplementation>> mockClientUdpNetworkInterfaces;
 MqttSnGatewayClientNetworkTestConfiguration mqttSnGatewayClientNetworkTestConfiguration(forwarderAddress,
@@ -59,8 +59,9 @@ struct PrintToStringMqttSnClientUdpNetworkTestValueParameterParamName {
 };
 
 INSTANTIATE_TEST_SUITE_P(UdpSendReceiveTests,
-                         MqttSnClientNetworkInterfaceTests,
-                         ::testing::ValuesIn(clientNetworkTestParameter.begin(), clientNetworkTestParameter.end()),
-                         PrintToStringMqttSnClientUdpNetworkTestValueParameterParamName());
+    MqttSnClientNetworkInterfaceTests,
+    ::testing::ValuesIn(clientNetworkTestParameter.begin(), clientNetworkTestParameter.end()),
+    PrintToStringMqttSnClientUdpNetworkTestValueParameterParamName()
+);
 
 #endif //CMQTTSNFORWARDER_UDPMQTTSNCLIENTNETWORKINTERFACETESTS_H
