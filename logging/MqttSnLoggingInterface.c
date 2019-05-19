@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <inttypes.h>
 
 int MqttSnLoggerInit(MqttSnLogger *logger,
                      log_level_t log_level,
@@ -96,7 +97,7 @@ int log_int64(const MqttSnLogger *logger, int64_t n) {
   const char *int64_max_str = "-9223372036854775806";
   int int64_max_str_length = strlen(int64_max_str);
   char n_str[int64_max_str_length + 1];
-  snprintf((char *) &n_str, int64_max_str_length + 1, "%lli", n);
+  snprintf((char *) &n_str, int64_max_str_length + 1, "%" PRId64, n);
   return log_str(logger, n_str);
 }
 
