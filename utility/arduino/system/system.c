@@ -11,6 +11,7 @@
 #include <network/shared/ip/IpHelperLogging.h>
 #include <network/arduino/shared/ip/ArduinoIpAddressHelper.hpp>
 #include <forwarder/config/forwarder_config_logger.h>
+#include <cstdlib>
 
 int connect_wifi(const char *ssid, const char *password, const MqttSnLogger *logger, uint32_t timeout_ms) {
   if (strlen(ssid) == 0) {

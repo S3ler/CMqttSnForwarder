@@ -702,7 +702,7 @@ if (WITH_ARDUINO)
                 utility/arduino/system/system.c
                 utility/arduino/system/system.h
                 network/arduino/shared/ip/ArduinoIpAddressHelper.cpp
-                network/arduino/shared/ip/ArduinoIpAddressHelper.h
+                network/arduino/shared/ip/ArduinoIpAddressHelper.hpp
                 utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.c
                 utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.h)
         if (WITH_LOGGING)
