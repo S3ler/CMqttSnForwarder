@@ -14,10 +14,6 @@ extern "C" {
 
 int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags);
 
-int log_gateway_id(const MqttSnLogger *logger, uint8_t gwId);
-
-int log_radius(const MqttSnLogger *logger, uint8_t radius);
-
 int log_message_id(const MqttSnLogger *logger, uint16_t msgId);
 
 int log_dup_flag(const MqttSnLogger *logger, uint8_t dup);
@@ -83,18 +79,18 @@ int log_mqtt_sn_message(const MqttSnLogger *logger,
                         const device_address *from,
                         MQTT_SN_FORWARDER_NETWORK network,
                         const uint8_t *data,
-                        uint16_t data_len,
+                        uint16_t data_length,
                         const char *additional_msg);
 
-int log_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
+int log_mqtt_sn_message_payload(const MqttSnLogger *logger,
+                                const ParsedMqttSnHeader *header,
+                                const uint8_t *data,
+                                uint16_t data_length);
 int log_default_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
-int log_verbose_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
-
-int log_advertise_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
-
-int log_searchgw_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
-
-int log_gwinfo_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
+int log_verbose_mqtt_sn_message_payload(const MqttSnLogger *logger,
+                                        const ParsedMqttSnHeader *header,
+                                        const uint8_t *data,
+                                        uint16_t data_length);
 
 int log_connect_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 

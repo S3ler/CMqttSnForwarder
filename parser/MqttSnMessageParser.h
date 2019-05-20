@@ -170,7 +170,6 @@ typedef enum MQTT_SN_OFFMESSAGE_TYPE_ {
 #define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME(flags)            ((MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
 
 #define MQTT_SN_PINGREQ_MESSAGE_HEADER_LENGTH 2
-#define MQTT_SN_GWINFO_MESSAGE_HEADER_LENGTH 3
 #define MQTT_SN_MAX_CLIENT_ID_STRING_LENGTH 23 // without null terminator
 #define MQTT_SN_MAX_CLIENT_ID_LENGTH 24 // including null terminator
 
@@ -214,19 +213,6 @@ typedef struct ParsedMqttSnHeader_ {
   MQTT_SN_MESSAGE_TYPE msg_type;
   void *payload;
 } ParsedMqttSnHeader;
-#pragma pack(pop)
-
-#pragma pack(push, 1)
-typedef struct MqttSnSearchGw_ {
-  uint8_t radius;
-} MqttSnSearchGw;
-#pragma pack(pop)
-
-#pragma pack(push, 1)
-typedef struct MqttSnGwInfo_ {
-  uint8_t gwId;
-  device_address gwAdd;
-} MqttSnGwInfo;
 #pragma pack(pop)
 
 #pragma pack(push, 1)
@@ -412,6 +398,14 @@ int generate_encapsulation_message(uint8_t *dst,
                                    const device_address *from,
                                    const uint8_t *data,
                                    uint16_t data_len);
+
+int32_t parse_mqtt_sn_uint8_byte(const uint8_t *src_pos, uint16_t src_len, int32_t *parsed_bytes, uint8_t *dst);
+int32_t parse_mqtt_sn_uint16_byte(const uint8_t *src_pos, uint16_t src_len, int32_t *parsed_bytes, uint16_t *dst);
+int32_t parse_mqtt_sn_device_address(const uint8_t *src_pos,
+                                     uint16_t src_len,
+                                     int32_t *parsed_bytes,
+                                     device_address *dst_add,
+                                     uint16_t *dst_len);
 
 int32_t generate_mqtt_sn_uint8(uint8_t *dst_pos, uint16_t dst_len, uint8_t value, int32_t *used_bytes);
 int32_t generate_mqtt_sn_uint16(uint8_t *dst_pos, uint16_t dst_len, uint16_t value, int32_t *used_bytes);

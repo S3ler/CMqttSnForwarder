@@ -87,13 +87,17 @@ set(MQTT_SN_MESSAGE_PARSER_FILES
         parser/MqttSnMessageParser.c
         parser/MqttSnMessageParser.h
         parser/MqttSnAdvertiseMessage.c
-        parser/MqttSnAdvertiseMessage.h)
+        parser/MqttSnAdvertiseMessage.h parser/MqttSnSearchGwMessage.c parser/MqttSnSearchGwMessage.h)
 if (WITH_LOGGING)
     set(MQTT_SN_MESSAGE_PARSER_FILES ${MQTT_SN_MESSAGE_PARSER_FILES}
-            parser/logging/MqttSnForwarderLoggingMessages.c
-            parser/logging/MqttSnForwarderLoggingMessages.h)
+            parser/logging/MqttSnAdvertiseMessageLogging.c
+            parser/logging/MqttSnAdvertiseMessageLogging.h
+            parser/logging/MqttSnMessageParserLogging.c
+            parser/logging/MqttSnMessageParserLogging.h
+            parser/logging/MqttSnSearchGwMessageLogging.c
+            parser/logging/MqttSnSearchGwMessageLogging.h parser/logging/MqttSnGwInfoMessageLogging.c parser/logging/MqttSnGwInfoMessageLogging.h)
 endif ()
-add_library(lib-mqtt-sn-message-parser ${MQTT_SN_MESSAGE_PARSER_FILES})
+add_library(lib-mqtt-sn-message-parser ${MQTT_SN_MESSAGE_PARSER_FILES} parser/MqttSnGwInfoMessage.c parser/MqttSnGwInfoMessage.h)
 target_include_directories(lib-mqtt-sn-message-parser PRIVATE .)
 target_compile_options(lib-mqtt-sn-message-parser PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
@@ -364,7 +368,9 @@ set(MQTT_SN_FORWARDER_FILES
 if (WITH_LOGGING)
     set(MQTT_SN_FORWARDER_FILES ${MQTT_SN_FORWARDER_FILES}
             forwarder/MqttSnForwarderLogging.c
-            forwarder/MqttSnForwarderLogging.h)
+            forwarder/MqttSnForwarderLogging.h
+            parser/logging/MqttSnForwarderLoggingMessages.c
+            parser/logging/MqttSnForwarderLoggingMessages.h)
 endif ()
 add_library(lib-mqtt-sn-forwarder ${MQTT_SN_FORWARDER_FILES})
 target_include_directories(lib-mqtt-sn-forwarder PRIVATE .)

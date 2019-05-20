@@ -3,6 +3,9 @@
 //
 
 #include "MqttSnForwarderLoggingMessages.h"
+#include "MqttSnAdvertiseMessageLogging.h"
+#include "MqttSnSearchGwMessageLogging.h"
+#include "MqttSnGwInfoMessageLogging.h"
 #include <platform/platform_compatibility.h>
 #ifndef Arduino_h
 #include <netinet/in.h>
@@ -42,27 +45,7 @@ int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags) {
 
   return log_status(logger);
 }
-int log_gateway_id(const MqttSnLogger *logger, uint8_t gwId) {
-  return log_str_key_uint8_value(logger, PSTR("gw"), gwId);
-}
-int log_radius(const MqttSnLogger *logger, uint8_t radius) {
-  return log_char_key_uint8_value(logger, 'r', radius);
-}
-int log_gw_add(const MqttSnLogger *logger, const device_address *gwAdd, uint16_t gwAdd_len) {
-  log_str(logger, PSTR("gwAdd"));
-  const char *dot = ".";
-  for (size_t i = 0; i < gwAdd_len; ++i) {
-    if (log_uint8(logger, gwAdd->bytes[i])) {
-      return -1;
-    }
-    if (i + 1 < sizeof(device_address)) {
-      if (log_str(logger, dot)) {
-        return -1;
-      }
-    }
-  }
-  return log_status(logger);
-}
+
 int log_message_id(const MqttSnLogger *logger, uint16_t msgId) {
   return log_char_key_uint16_value(logger, 'm', msgId);
 }
@@ -266,13 +249,13 @@ int log_mqtt_sn_message(const MqttSnLogger *logger,
                         const device_address *from,
                         MQTT_SN_FORWARDER_NETWORK network,
                         const uint8_t *data,
-                        uint16_t data_len,
+                        uint16_t data_length,
                         const char *additional_msg) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
     return log_status(logger);
   }
   ParsedMqttSnHeader header = {0};
-  if (parse_message_tolerant(&header, ANY_MESSAGE_TYPE, data, data_len)) {
+  if (parse_message_tolerant(&header, ANY_MESSAGE_TYPE, data, data_length)) {
     return log_status(logger);
   }
   log_msg_start(logger);
@@ -293,15 +276,18 @@ int log_mqtt_sn_message(const MqttSnLogger *logger,
     log_msg_to(logger, header.msg_type, from);
   }
 
-  log_mqtt_sn_message_payload(logger, &header);
+  log_mqtt_sn_message_payload(logger, &header, data, data_length);
   return log_flush(logger);
 }
 
-int log_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
+int log_mqtt_sn_message_payload(const MqttSnLogger *logger,
+                                const ParsedMqttSnHeader *header,
+                                const uint8_t *data,
+                                uint16_t data_length) {
   log_open_braked(logger);
 
   log_default_mqtt_sn_message_payload(logger, header);
-  log_verbose_mqtt_sn_message_payload(logger, header);
+  log_verbose_mqtt_sn_message_payload(logger, header, data, data_length);
 
   log_close_braked_dot(logger);
   return log_status(logger);
@@ -321,11 +307,14 @@ int log_default_mqtt_sn_message_payload(const MqttSnLogger *logger, const Parsed
   }
   return log_status(logger);
 }
-int log_verbose_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
+int log_verbose_mqtt_sn_message_payload(const MqttSnLogger *logger,
+                                        const ParsedMqttSnHeader *header,
+                                        const uint8_t *data,
+                                        uint16_t data_length) {
   switch (header->msg_type) {
-    case ADVERTISE: return log_advertise_message(logger, header);
-    case SEARCHGW: return log_searchgw_message(logger, header);
-    case GWINFO: return log_gwinfo_message(logger, header);
+    case ADVERTISE: return log_advertise_message_byte(logger, data, data_length);
+    case SEARCHGW: return log_searchgw_message_byte(logger, data, data_length);
+    case GWINFO: return log_gwinfo_message_byte(logger, data, data_length);
     case WILLTOPICREQ: return 0; // FEATURE log this message
     case WILLTOPIC: return 0; // FEATURE log this message
     case WILLMSGREQ: return 0; // FEATURE log this message
@@ -355,37 +344,7 @@ int log_verbose_mqtt_sn_message_payload(const MqttSnLogger *logger, const Parsed
   }
   return log_status(logger);
 }
-int log_advertise_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
-  MqttSnAdvertise *advertise = (MqttSnAdvertise *) header->payload;
-  uint8_t gw_id = advertise->gwId;
-  uint16_t duration = ntohs(advertise->duration);
-  log_open_braked(logger);
-  log_gateway_id(logger, gw_id);
-  log_comma(logger);
-  log_duration(logger, duration);
-  log_close_braked_dot(logger);
-  return log_status(logger);
-}
-int log_searchgw_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
-  MqttSnSearchGw *s = (MqttSnSearchGw *) header->payload;
-  uint8_t radius = s->radius;
-  log_open_braked(logger);
-  log_radius(logger, radius);
-  log_close_braked_dot(logger);
-  return log_status(logger);
-}
-int log_gwinfo_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
-  MqttSnGwInfo *g = (MqttSnGwInfo *) header->payload;
-  uint8_t gw_id = g->gwId;
-  const device_address *gw_add = &g->gwAdd;
-  uint16_t gwAdd_len = header->length - MQTT_SN_GWINFO_MESSAGE_HEADER_LENGTH;
-  log_open_braked(logger);
-  log_gateway_id(logger, gw_id);
-  log_comma(logger);
-  log_gw_add(logger, gw_add, gwAdd_len);
-  log_close_braked_dot(logger);
-  return log_status(logger);
-}
+
 int log_connect_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
   MqttSnMessageConnect *c = (MqttSnMessageConnect *) header->payload;
   uint8_t flags = c->flags;
