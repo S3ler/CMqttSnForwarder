@@ -6,9 +6,12 @@
 #define CMQTTSNFORWARDER_PARSER_MQTTSNCONNECTMESSAGE_H_
 
 #include <stdint.h>
+#include "MqttSnMessageParser.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #define MQTT_SN_MESSAGE_CONNECT_HEADER_LENGTH         MQTT_SN_MESSAGE_HEADER_SHORT_LENGTH
 #define MQTT_SN_MESSAGE_CONNECT_FLAGS_LENGTH          MQTT_SN_FLAGS_LENGTH
 #define MQTT_SN_MESSAGE_CONNECT_PROTOCOLID_LENGTH     MQTT_SN_PROTOCOLID_LENGTH
@@ -29,7 +32,7 @@ int32_t parse_connect_message_byte(uint8_t *will,
                                    uint8_t *protocol_id,
                                    uint16_t *duration,
                                    char *client_id,
-                                   uint8_t *client_id_length,
+                                   uint16_t *client_id_length,
                                    uint8_t client_id_max_length,
                                    const uint8_t *data,
                                    uint16_t data_len);

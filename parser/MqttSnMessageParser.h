@@ -101,11 +101,22 @@ typedef enum MQTT_SN_RETURN_CODE_ {
 #define MQTT_SN_FLAGS_LENGTH                  1
 #define MQTT_SN_PROTOCOLID_LENGTH             1
 #define MQTT_SN_CLIENTID_MIN_LENGTH           1
-#define MQTT_SN_CLIENTID_MAX_LENGTH           1
+#define MQTT_SN_CLIENTID_MAX_LENGTH           23
 #define MQTT_SN_RETURNCODE_LENGTH             1
-
+#define MQTT_SN_WILLTOPIC_MIN_LENGTH          0
+#define MQTT_SN_WILLTOPIC_MAX_LENGTH          UINT16_MAX
+#define MQTT_SN_WILLMSG_MIN_LENGTH            0
+#define MQTT_SN_WILLMSG_MAX_LENGTH            UINT16_MAX
 #define MQTT_SN_TOPIC_ID_LENGTH               2
 #define MQTT_SN_MESSAGE_ID_LENGTH             2
+#define MQTT_SN_TOPICNAME_MIN_LENGTH          1
+#define MQTT_SN_TOPICNAME_MAX_LENGTH          UINT16_MAX
+#define MQTT_SN_DATA_MIN_LENGTH               0
+#define MQTT_SN_DATA_MAX_LENGTH               UINT16_MAX
+
+
+
+
 
 #define MQTT_SN_FLAG_DUP_POS            0x80 // 0b1000 0000
 #define MQTT_SN_FLAG_QOS_POS            0x60 // 0b0110 0000
@@ -406,11 +417,23 @@ int32_t parse_mqtt_sn_device_address(const uint8_t *src_pos,
                                      int32_t *parsed_bytes,
                                      device_address *dst_add,
                                      uint16_t *dst_len);
+int32_t parse_mqtt_sn_char_until_end_byte(const uint8_t *src_pos,
+                                          uint16_t src_len,
+                                          int32_t *parsed_bytes,
+                                          char *c_buf,
+                                          uint16_t *c_buf_length,
+                                          uint16_t c_buf_max_length);
+int32_t parse_mqtt_sn_uint8_until_end_byte(const uint8_t *src_pos,
+                                          uint16_t src_len,
+                                          int32_t *parsed_bytes,
+                                           uint8_t *u8_buf,
+                                          uint16_t *u8_buf_length,
+                                          uint16_t u8_buf_max_length);
 int32_t parse_mqtt_sn_client_id_byte(const uint8_t *src_pos,
                                      uint16_t src_len,
                                      int32_t *parsed_bytes,
                                      char *client_id,
-                                     uint8_t *client_id_length,
+                                     uint16_t *client_id_length,
                                      uint8_t client_id_max_length);
 int32_t parse_mqtt_sn_return_code_byte(const uint8_t *src_pos,
                                        uint16_t src_len,

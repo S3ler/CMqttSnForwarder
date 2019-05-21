@@ -25,7 +25,7 @@ int32_t parse_will_topic_req_header(ParsedMqttSnHeader *h,
   if (parse_header(h, WILLTOPICREQ, data, data_len, parsed_bytes) < 0) {
     return -1;
   }
-  if (h->length != MQTT_SN_MESSAGE_ADVERTISE_LENGTH) {
+  if (h->length != MQTT_SN_MESSAGE_WILLTOPICREQ_LENGTH) {
     // invalid message length for will topic request
     return -1;
   }

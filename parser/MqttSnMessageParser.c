@@ -403,14 +403,63 @@ int32_t parse_mqtt_sn_device_address(const uint8_t *src_pos,
   // TODO implement me
   return 0;
 }
+int32_t parse_mqtt_sn_char_until_end_byte(const uint8_t *src_pos,
+                                          uint16_t src_len,
+                                          int32_t *parsed_bytes,
+                                          char *c_buf,
+                                          uint16_t *c_buf_length,
+                                          uint16_t c_buf_max_length) {
+  if (src_len > (*parsed_bytes)) {
+    return -1;
+  }
+  (*c_buf_length) = src_len - (*parsed_bytes);
+  *parsed_bytes += (*c_buf_length);
+
+  if ((*c_buf_length) > c_buf_max_length) {
+    return -1;
+  }
+
+  if ((*c_buf_length) > 0) {
+    c_buf[0] = '\0'; // TODO test for length incl null terminator and not
+    strncat(c_buf, (const char *) src_pos, (*c_buf_length));
+  }
+
+  return *parsed_bytes;
+}
+int32_t parse_mqtt_sn_uint8_until_end_byte(const uint8_t *src_pos,
+                                           uint16_t src_len,
+                                           int32_t *parsed_bytes,
+                                           uint8_t *u8_buf,
+                                           uint16_t *u8_buf_length,
+                                           uint16_t u8_buf_max_length) {
+  if (src_len > (*parsed_bytes)) {
+    return -1;
+  }
+  (*u8_buf_length) = src_len - (*parsed_bytes);
+  *parsed_bytes += (*u8_buf_length);
+
+  if ((*u8_buf_length) > u8_buf_max_length) {
+    return -1;
+  }
+
+  if ((*u8_buf_length) > 0) {
+    memcpy(u8_buf, (const char *) src_pos, (*u8_buf_length));
+  }
+
+  return *parsed_bytes;
+}
 int32_t parse_mqtt_sn_client_id_byte(const uint8_t *src_pos,
                                      uint16_t src_len,
                                      int32_t *parsed_bytes,
                                      char *client_id,
-                                     uint8_t *client_id_length,
+                                     uint16_t *client_id_length,
                                      uint8_t client_id_max_length) {
-  // TODO implement me
-  return 0;
+  return parse_mqtt_sn_char_until_end_byte(src_pos,
+                                           src_len,
+                                           parsed_bytes,
+                                           client_id,
+                                           client_id_length,
+                                           client_id_max_length);
 }
 int32_t parse_mqtt_sn_return_code_byte(const uint8_t *src_pos,
                                        uint16_t src_len,
@@ -451,21 +500,39 @@ int32_t parse_mqtt_sn_flags(const uint8_t *src_pos,
   uint8_t flags = src_pos[0];
   if (dup) {
     *dup = GET_MQTT_SN_DUP_FLAG(flags);
+  } else {
+    // TODO check if not set!
   }
   if (qos) {
     *qos = GET_MQTT_SN_QOS_FLAG(flags);
+    // check reserved valuess
+    if (*qos < -1 || *qos > 2) {
+      return -1;
+    }
+  } else {
+    if (GET_MQTT_SN_QOS_FLAG(flags) != 0) {
+      return -1;
+    }
   }
   if (retain) {
     *retain = GET_MQTT_SN_RETAIN_FLAG(flags);
+  } else {
+    // TODO check if not set!
   }
   if (will) {
     *will = GET_MQTT_SN_WILL_FLAG(flags);
+  } else {
+    // TODO check if not set!
   }
   if (clean_session) {
     *clean_session = GET_MQTT_SN_CLEAN_SESSION(flags);
+  } else {
+    // TODO check if not set!
   }
   if (topic_id_type) {
     *topic_id_type = GET_MQTT_SN_TOPIC_ID_TYPE(flags);
+  } else {
+    // TODO check if not set!
   }
   return (*parsed_bytes);
 }
@@ -496,6 +563,8 @@ int32_t generate_mqtt_sn_uint16(uint8_t *dst_pos, uint16_t dst_len, uint16_t val
   (*dst_pos) = htons(value);
   return (*used_bytes);
 }
+
+
 
 
 

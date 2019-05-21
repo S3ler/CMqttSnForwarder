@@ -26,7 +26,7 @@ static int32_t parse_connect_client_id(const uint8_t *src_pos,
                                        uint16_t src_len,
                                        int32_t *parsed_bytes,
                                        char *client_id,
-                                       uint8_t *client_id_length,
+                                       uint16_t *client_id_length,
                                        uint8_t client_id_max_length);
 
 int32_t parse_connect_message_byte(uint8_t *will,
@@ -34,7 +34,7 @@ int32_t parse_connect_message_byte(uint8_t *will,
                                    uint8_t *protocol_id,
                                    uint16_t *duration,
                                    char *client_id,
-                                   uint8_t *client_id_length,
+                                   uint16_t *client_id_length,
                                    uint8_t client_id_max_length,
                                    const uint8_t *data,
                                    uint16_t data_len) {
@@ -61,8 +61,7 @@ int32_t parse_connect_message_byte(uint8_t *will,
                                               &parsed_bytes,
                                               client_id,
                                               client_id_length,
-                                              client_id_max_length))
-      < 0) {
+                                              client_id_max_length)) < 0) {
     return -1;
   }
   return parsed_bytes;
@@ -99,8 +98,11 @@ int32_t parse_connect_client_id(const uint8_t *src_pos,
                                 uint16_t src_len,
                                 int32_t *parsed_bytes,
                                 char *client_id,
-                                uint8_t *client_id_length,
+                                uint16_t *client_id_length,
                                 uint8_t client_id_max_length) {
+  if (client_id_max_length > MQTT_SN_MESSAGE_CONNECT_CLIENTID_MAX_LENGTH) {
+    client_id_max_length = MQTT_SN_MESSAGE_CONNECT_CLIENTID_MAX_LENGTH;
+  }
   return parse_mqtt_sn_client_id_byte(src_pos,
                                       src_len,
                                       parsed_bytes,
