@@ -234,7 +234,7 @@ int32_t generate_flags(uint8_t *dst,
                        uint8_t clean_session,
                        uint8_t topic_id_type,
                        int32_t *used_bytes) {
-  *used_bytes += MQTT_SN_FLAG_LENGTH;
+  *used_bytes += MQTT_SN_FLAGS_LENGTH;
   if (dst_len < *used_bytes) {
     return -1;
   }
@@ -395,6 +395,80 @@ int32_t parse_mqtt_sn_uint8_byte(const uint8_t *src_pos, uint16_t src_len, int32
   *dst = src_pos[0];
   return *parsed_bytes;
 }
+int32_t parse_mqtt_sn_device_address(const uint8_t *src_pos,
+                                     uint16_t src_len,
+                                     int32_t *parsed_bytes,
+                                     device_address *dst_add,
+                                     uint16_t *dst_len) {
+  // TODO implement me
+  return 0;
+}
+int32_t parse_mqtt_sn_client_id_byte(const uint8_t *src_pos,
+                                     uint16_t src_len,
+                                     int32_t *parsed_bytes,
+                                     char *client_id,
+                                     uint8_t *client_id_length,
+                                     uint8_t client_id_max_length) {
+  // TODO implement me
+  return 0;
+}
+int32_t parse_mqtt_sn_return_code_byte(const uint8_t *src_pos,
+                                       uint16_t src_len,
+                                       int32_t *parsed_bytes,
+                                       MQTT_SN_RETURN_CODE *return_code) {
+  uint8_t dst_return_code = RETURN_CODE_ANY;
+  if (parse_mqtt_sn_uint8_byte(src_pos, src_len, parsed_bytes, &dst_return_code) < 0) {
+    return -1;
+  }
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtype-limits"
+  if (!MQTT_SN_RETURN_CODE_VALID(dst_return_code)) {
+#pragma GCC diagnostic pop
+    return -1;
+  }
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtype-limits"
+  if (MQTT_SN_RETURN_CODE_RESERVED(dst_return_code)) {
+#pragma GCC diagnostic pop
+    return -1;
+  }
+  (*return_code) = dst_return_code;
+  return *parsed_bytes;
+}
+int32_t parse_mqtt_sn_flags(const uint8_t *src_pos,
+                            uint16_t src_len,
+                            int32_t *parsed_bytes,
+                            uint8_t *dup,
+                            int8_t *qos,
+                            uint8_t *retain,
+                            uint8_t *will,
+                            uint8_t *clean_session,
+                            uint8_t *topic_id_type) {
+  (*parsed_bytes) += 1;
+  if ((*parsed_bytes) > src_len) {
+    return -1;
+  }
+  uint8_t flags = src_pos[0];
+  if (dup) {
+    *dup = GET_MQTT_SN_DUP_FLAG(flags);
+  }
+  if (qos) {
+    *qos = GET_MQTT_SN_QOS_FLAG(flags);
+  }
+  if (retain) {
+    *retain = GET_MQTT_SN_RETAIN_FLAG(flags);
+  }
+  if (will) {
+    *will = GET_MQTT_SN_WILL_FLAG(flags);
+  }
+  if (clean_session) {
+    *clean_session = GET_MQTT_SN_CLEAN_SESSION(flags);
+  }
+  if (topic_id_type) {
+    *topic_id_type = GET_MQTT_SN_TOPIC_ID_TYPE(flags);
+  }
+  return (*parsed_bytes);
+}
 
 int32_t parse_mqtt_sn_uint16_byte(const uint8_t *src_pos, uint16_t src_len, int32_t *parsed_bytes, uint16_t *dst) {
   (*parsed_bytes) += 2;
@@ -422,11 +496,6 @@ int32_t generate_mqtt_sn_uint16(uint8_t *dst_pos, uint16_t dst_len, uint16_t val
   (*dst_pos) = htons(value);
   return (*used_bytes);
 }
-int32_t parse_mqtt_sn_device_address(const uint8_t *src_pos,
-                                     uint16_t src_len,
-                                     int32_t *parsed_bytes,
-                                     device_address *dst_add,
-                                     uint16_t *dst_len) {
-  // TODO implement me
-  return 0;
-}
+
+
+

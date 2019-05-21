@@ -11,47 +11,6 @@ extern "C" {
 #include <platform/device_address.h>
 #include <unistd.h>
 
-/*
-typedef enum MQTT_SN_MESSAGE_TYPE_ {
-  ANY_MESSAGE_TYPE = -2,
-  RESERVED_INVALID = -1,
-  ADVERTISE = 0x00,
-  SEARCHGW = 0x01,
-  GWINFO = 0x02,
-  RESERVED_03 = 0x03,
-  CONNECT = 0x04,
-  CONNACK = 0x05,
-  WILLTOPICREQ = 0x06,
-  WILLTOPIC = 0x07,
-  WILLMSGREQ = 0x08,
-  WILLMSG = 0x09,
-  REGISTER = 0x0A,
-  REGACK = 0x0B,
-  PUBLISH = 0x0C,
-  PUBACK = 0x0D,
-  PUBCOMP = 0x0E,
-  PUBREC = 0x0F,
-  PUBREL = 0x10,
-  RESERVED_11 = 0x11,
-  SUBSCRIBE = 0x12,
-  SUBACK = 0x13,
-  UNSUBSCRIBE = 0x14,
-  UNSUBACK = 0x15,
-  PINGREQ = 0x16,
-  PINGRESP = 0x17,
-  DISCONNECT = 0x18,
-  RESERVED_19 = 0x19,
-  WILLTOPICUPD = 0x1A,
-  WILLTOPICRESP = 0x1B,
-  WILLMSGUPD = 0x1C,
-  WILLMSGRESP = 0x1D,
-  RESERVED_1E = 0x1E,
-  RESERVED_FD = 0xFD,
-  ENCAPSULATED_MESSAGE = 0xFE,
-  RESERVED_FF = 0xFF,
-} MQTT_SN_MESSAGE_TYPE;
-*/
-
 #define FOREACH_MQTT_SN_MESSAGE_TYPE(MESSAGE_TYPE) \
         MESSAGE_TYPE(ANY_MESSAGE_TYPE , -2)   \
         MESSAGE_TYPE(RESERVED_INVALID , -1)   \
@@ -94,14 +53,59 @@ typedef enum MQTT_SN_MESSAGE_TYPE_ {
 #define GENERATE_MQTT_SN_MESSAGE_TYPE_ENUM(MESSAGE_TYPE, MESSAGE_CODE) MESSAGE_TYPE = MESSAGE_CODE,
 #define GENERATE_MQTT_SN_MESSAGE_TYPE_STRING(STRING, NUMBER) #STRING,
 
-typedef enum MQTT_SN_OFFMESSAGE_TYPE_ {
+typedef enum MQTT_SN_MESSAGE_TYPE_ {
   FOREACH_MQTT_SN_MESSAGE_TYPE(GENERATE_MQTT_SN_MESSAGE_TYPE_ENUM)
 } MQTT_SN_MESSAGE_TYPE;
 
 #define MQTT_SN_MESSAGE_TYPE_RESERVED(type) (type == RESERVED_03 || type == RESERVED_11 || type == RESERVED_19 \
                                             || (type >= RESERVED_1E && type <= RESERVED_FD) || type == RESERVED_FF)
 
-#define MQTT_SN_FLAG_LENGTH             1
+#define FOREACH_MQTT_SN_MESSAGE_RETURN_CODE(RETURN_CODE) \
+        RETURN_CODE(RETURN_CODE_ANY , -2)   \
+        RETURN_CODE(RETURN_CODE_RESERVED_INVALID , -1)   \
+        RETURN_CODE(RETURN_CODE_ACCEPTED , 0x00)   \
+        RETURN_CODE(RETURN_CODE_REJECTED_CONGESTION , 0x01)   \
+        RETURN_CODE(RETURN_CODE_REJECTED_INVALID_TOPIC_ID , 0x02)   \
+        RETURN_CODE(RETURN_CODE_REJCETED_NOT_SUPPORTED , 0x03)   \
+        RETURN_CODE(RETURN_CODE_RESERVED_04 , 0x04)   \
+        RETURN_CODE(RETURN_CODE_RESERVED_FF , 0xFF)   \
+
+
+#define GENERATE_MQTT_SN_MESSAGE_RETURN_CODE_ENUM(RETURN_CODE, RETURN_VALUE) RETURN_CODE = RETURN_VALUE,
+#define GENERATE_MQTT_SN_MESSAGE_RETURN_CODE_STRING(STRING, NUMBER) #STRING,
+
+typedef enum MQTT_SN_RETURN_CODE_ {
+  FOREACH_MQTT_SN_MESSAGE_RETURN_CODE(GENERATE_MQTT_SN_MESSAGE_RETURN_CODE_ENUM)
+} MQTT_SN_RETURN_CODE;
+
+#define MQTT_SN_RETURN_CODE_VALID(type) (type >= RETURN_CODE_ACCEPTED && type <= RETURN_CODE_REJCETED_NOT_SUPPORTED)
+#define MQTT_SN_RETURN_CODE_RESERVED(type) (type >= RETURN_CODE_RESERVED_04 && type <= RETURN_CODE_RESERVED_FF)
+
+
+
+// Header length
+#define MQTT_SN_MESSAGE_HEADER_SHORT_LENGTHFIELD_LENGTH   1
+#define MQTT_SN_MESSAGE_HEADER_LONG_LENGTHFIELD_LENGTH    3
+#define MQTT_SN_MESSAGE_MSG_TYPE_LENGTH                   1
+
+#define MQTT_SN_MESSAGE_HEADER_SHORT_LENGTH   (MQTT_SN_MESSAGE_HEADER_SHORT_LENGTHFIELD_LENGTH + MQTT_SN_MESSAGE_MSG_TYPE_LENGTH)
+#define MQTT_SN_MESSAGE_HEADER_LONG_LENGTH    (MQTT_SN_MESSAGE_HEADER_LONG_LENGTHFIELD_LENGTH + MQTT_SN_MESSAGE_MSG_TYPE_LENGTH)
+#define MQTT_SN_HEADER_LENGTH(indicator)      (indicator ? MQTT_SN_MESSAGE_HEADER_SHORT_LENGTH : MQTT_SN_MESSAGE_HEADER_LONG_LENGTH)
+
+// Field length
+#define MQTT_SN_GWID_LENGTH                   1
+#define MQTT_SN_DURATION_LENGTH               2
+#define MQTT_SN_RADIUS_LENGTH                 1
+#define MQTT_SN_GWADD_MIN_LENGTH              1
+#define MQTT_SN_GWADD_MAX_LENGTH              sizeof(device_address)
+#define MQTT_SN_FLAGS_LENGTH                  1
+#define MQTT_SN_PROTOCOLID_LENGTH             1
+#define MQTT_SN_CLIENTID_MIN_LENGTH           1
+#define MQTT_SN_CLIENTID_MAX_LENGTH           1
+#define MQTT_SN_RETURNCODE_LENGTH             1
+
+#define MQTT_SN_TOPIC_ID_LENGTH               2
+#define MQTT_SN_MESSAGE_ID_LENGTH             2
 
 #define MQTT_SN_FLAG_DUP_POS            0x80 // 0b1000 0000
 #define MQTT_SN_FLAG_QOS_POS            0x60 // 0b0110 0000
@@ -173,8 +177,6 @@ typedef enum MQTT_SN_OFFMESSAGE_TYPE_ {
 #define MQTT_SN_MAX_CLIENT_ID_STRING_LENGTH 23 // without null terminator
 #define MQTT_SN_MAX_CLIENT_ID_LENGTH 24 // including null terminator
 
-#define MQTT_SN_HEADER_LENGTH(indicator)                        (indicator ? 4 : 2)
-
 #define MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BYTE_LENGTH           1
 #define MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BROADCAST_RADIUS      1
 #define MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(indicator)   (MQTT_SN_HEADER_LENGTH(indicator) \
@@ -185,9 +187,7 @@ typedef enum MQTT_SN_OFFMESSAGE_TYPE_ {
 #define MQTT_SN_MINIMAL_MESSAGE_LENGTH          MQTT_SN_PINGRESP_MESSAGE_HEADER_LENGTH
 #define MQTT_SN_MAXIMUM_MESSAGE_LENGTH          UINT16_MAX
 
-#define MQTT_SN_TOPIC_ID_LENGTH   2
-#define MQTT_SN_MESSAGE_ID_LENGTH 2
-#define MQTT_SN_PUBLISH_MESSAGE_WO_HEADER_LENGTH (MQTT_SN_FLAG_LENGTH + MQTT_SN_TOPIC_ID_LENGTH + MQTT_SN_MESSAGE_ID_LENGTH)
+#define MQTT_SN_PUBLISH_MESSAGE_WO_HEADER_LENGTH (MQTT_SN_FLAGS_LENGTH + MQTT_SN_TOPIC_ID_LENGTH + MQTT_SN_MESSAGE_ID_LENGTH)
 #define MQTT_SN_PUBLISH_MESSAGE_HEADER_LENGTH(indicator) (MQTT_SN_HEADER_LENGTH(indicator) + MQTT_SN_PUBLISH_MESSAGE_WO_HEADER_LENGTH)
 
 #pragma pack(push)
@@ -406,7 +406,25 @@ int32_t parse_mqtt_sn_device_address(const uint8_t *src_pos,
                                      int32_t *parsed_bytes,
                                      device_address *dst_add,
                                      uint16_t *dst_len);
-
+int32_t parse_mqtt_sn_client_id_byte(const uint8_t *src_pos,
+                                     uint16_t src_len,
+                                     int32_t *parsed_bytes,
+                                     char *client_id,
+                                     uint8_t *client_id_length,
+                                     uint8_t client_id_max_length);
+int32_t parse_mqtt_sn_return_code_byte(const uint8_t *src_pos,
+                                       uint16_t src_len,
+                                       int32_t *parsed_bytes,
+                                       MQTT_SN_RETURN_CODE *return_code);
+int32_t parse_mqtt_sn_flags(const uint8_t *src_pos,
+                            uint16_t src_len,
+                            int32_t *parsed_bytes,
+                            uint8_t *dup,
+                            int8_t *qos,
+                            uint8_t *retain,
+                            uint8_t *will,
+                            uint8_t *clean_session,
+                            uint8_t *topic_id_type);
 int32_t generate_mqtt_sn_uint8(uint8_t *dst_pos, uint16_t dst_len, uint8_t value, int32_t *used_bytes);
 int32_t generate_mqtt_sn_uint16(uint8_t *dst_pos, uint16_t dst_len, uint16_t value, int32_t *used_bytes);
 

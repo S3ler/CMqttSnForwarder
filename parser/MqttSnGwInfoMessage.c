@@ -54,10 +54,10 @@ int32_t parse_gwinfo_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t
   if ((*parsed_bytes = parse_header(h, GWINFO, data, data_len, parsed_bytes)) < 0) {
     return -1;
   }
-  if ((*parsed_bytes) < MQTT_SN_MESSAGE_GWINFO_HEADER_LENGTH) {
+  if ((*parsed_bytes) < MQTT_SN_MESSAGE_GWINFO_WO_GWADD_LENGTH) {
     return -1;
   }
-  if ((*parsed_bytes) > (int32_t) MQTT_SN_MESSAGE_GWINFO_FROM_CLIENT_MAX_LENGTH) {
+  if ((*parsed_bytes) > (int32_t) MQTT_SN_MESSAGE_GWINFO_W_GWADD_MAX_LENGTH) {
     // gw add too long to handle
     return -1;
   }
