@@ -114,10 +114,6 @@ typedef enum MQTT_SN_RETURN_CODE_ {
 #define MQTT_SN_DATA_MIN_LENGTH               0
 #define MQTT_SN_DATA_MAX_LENGTH               UINT16_MAX
 
-
-
-
-
 #define MQTT_SN_FLAG_DUP_POS            0x80 // 0b1000 0000
 #define MQTT_SN_FLAG_QOS_POS            0x60 // 0b0110 0000
 #define MQTT_SN_FLAG_RETAIN_POS         0x10 // 0b0001 0000
@@ -424,11 +420,11 @@ int32_t parse_mqtt_sn_char_until_end_byte(const uint8_t *src_pos,
                                           uint16_t *c_buf_length,
                                           uint16_t c_buf_max_length);
 int32_t parse_mqtt_sn_uint8_until_end_byte(const uint8_t *src_pos,
-                                          uint16_t src_len,
-                                          int32_t *parsed_bytes,
+                                           uint16_t src_len,
+                                           int32_t *parsed_bytes,
                                            uint8_t *u8_buf,
-                                          uint16_t *u8_buf_length,
-                                          uint16_t u8_buf_max_length);
+                                           uint16_t *u8_buf_length,
+                                           uint16_t u8_buf_max_length);
 int32_t parse_mqtt_sn_client_id_byte(const uint8_t *src_pos,
                                      uint16_t src_len,
                                      int32_t *parsed_bytes,

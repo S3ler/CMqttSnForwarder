@@ -61,6 +61,7 @@ int32_t parse_header(ParsedMqttSnHeader *h,
                      const uint8_t *data,
                      uint16_t data_len,
                      int32_t *parsed_bytes) {
+  // TODO data_len can be more than parsed header length
   if (data_len < 2) {
     *parsed_bytes += data_len;
     return -1;
@@ -531,6 +532,9 @@ int32_t parse_mqtt_sn_flags(const uint8_t *src_pos,
   }
   if (topic_id_type) {
     *topic_id_type = GET_MQTT_SN_TOPIC_ID_TYPE(flags);
+    if ((*topic_id_type) == MQTT_SN_FLAG_TOPIC_ID_TYPE_RESERVED) {
+      return -1;
+    }
   } else {
     // TODO check if not set!
   }

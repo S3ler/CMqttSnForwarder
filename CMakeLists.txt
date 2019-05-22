@@ -97,7 +97,7 @@ set(MQTT_SN_MESSAGE_PARSER_FILES
         parser/MqttSnConnackMessage.c
         parser/MqttSnConnackMessage.h
         parser/MqttSnWillTopicReq.c
-        parser/MqttSnWillTopicReq.h parser/MqttSnWillTopicMessage.c parser/MqttSnWillTopicMessage.h parser/MqttSnWillMsgReqMessage.c parser/MqttSnWillMsgReqMessage.h parser/MqttSnWillMsgMessage.c parser/MqttSnWillMsgMessage.h parser/MqttSnRegister.c parser/MqttSnRegister.h parser/MqttSnRegAckMessage.c parser/MqttSnRegAckMessage.h parser/MqttSnPublishMessage.c parser/MqttSnPublishMessage.h parser/MqttSnPubackMessage.c parser/MqttSnPubackMessage.h parser/MqttSnPubrecMessage.c parser/MqttSnPubrecMessage.h)
+        parser/MqttSnWillTopicReq.h parser/MqttSnWillTopicMessage.c parser/MqttSnWillTopicMessage.h parser/MqttSnWillMsgReqMessage.c parser/MqttSnWillMsgReqMessage.h parser/MqttSnWillMsgMessage.c parser/MqttSnWillMsgMessage.h parser/MqttSnRegister.c parser/MqttSnRegister.h parser/MqttSnRegAckMessage.c parser/MqttSnRegAckMessage.h parser/MqttSnPublishMessage.c parser/MqttSnPublishMessage.h parser/MqttSnPubackMessage.c parser/MqttSnPubackMessage.h parser/MqttSnPubrecMessage.c parser/MqttSnPubrecMessage.h parser/MqttSnSubscribeMessage.c parser/MqttSnSubscribeMessage.h)
 if (WITH_LOGGING)
     set(MQTT_SN_MESSAGE_PARSER_FILES ${MQTT_SN_MESSAGE_PARSER_FILES}
             parser/logging/MqttSnAdvertiseMessageLogging.c
