@@ -16,7 +16,7 @@ extern "C" {
 #define MQTT_SN_MESSAGE_PUBACK_TOPICID_LENGTH                 MQTT_SN_TOPIC_ID_LENGTH
 #define MQTT_SN_MESSAGE_PUBACK_MESSAGEID_LENGTH               MQTT_SN_MESSAGE_ID_LENGTH
 #define MQTT_SN_MESSAGE_PUBACK_RETURNCODE_LENGTH              MQTT_SN_RETURNCODE_LENGTH
-#define MQTT_SN_MESSAGE_PUBACK_LENGTH                       (MQTT_SN_MESSAGE_PUBACK_HEADER_LENGTH + \
+#define MQTT_SN_MESSAGE_PUBACK_LENGTH                         (MQTT_SN_MESSAGE_PUBACK_HEADER_LENGTH + \
                                                               MQTT_SN_MESSAGE_PUBACK_TOPICID_LENGTH + \
                                                               MQTT_SN_MESSAGE_PUBACK_MESSAGEID_LENGTH + \
                                                               MQTT_SN_MESSAGE_PUBACK_RETURNCODE_LENGTH)
