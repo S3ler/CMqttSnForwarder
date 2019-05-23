@@ -33,15 +33,15 @@ extern "C" {
 #define MQTT_SN_MESSAGE_UNSUBSCRIBE_W_TOPICNAME_MAX_LENGTH         (MQTT_SN_MESSAGE_UNSUBSCRIBE_WO_TOPICNAME_MAX_LENGTH + MQTT_SN_MESSAGE_UNSUBSCRIBE_WO_TOPICNAME_MAX_LENGTH)
 
 int32_t parse_unsubscribe_byte(uint8_t *dup,
-                             int8_t *qos,
-                             uint8_t *topic_id_type,
-                             uint16_t *msg_id,
-                             uint16_t *topic_id,
-                             char *topic_name,
-                             uint16_t *topic_name_length,
-                             uint16_t topic_name_max_length,
-                             const uint8_t *data,
-                             uint16_t data_len);
+                               int8_t *qos,
+                               uint8_t *topic_id_type,
+                               uint16_t *msg_id,
+                               uint16_t *topic_id,
+                               char *topic_name,
+                               uint16_t *topic_name_length,
+                               uint16_t topic_name_max_length,
+                               const uint8_t *data,
+                               uint16_t data_len);
 #ifdef __cplusplus
 }
 #endif

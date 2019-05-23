@@ -400,9 +400,27 @@ int32_t parse_mqtt_sn_device_address(const uint8_t *src_pos,
                                      uint16_t src_len,
                                      int32_t *parsed_bytes,
                                      device_address *dst_add,
-                                     uint16_t *dst_len) {
-  // TODO implement me
-  return 0;
+                                     uint16_t *dst_add_len) {
+  return parse_mqtt_sn_uint8_array_byte(src_pos,
+                                        src_len,
+                                        parsed_bytes,
+                                        sizeof(device_address),
+                                        dst_add->bytes,
+                                        dst_add_len,
+                                        sizeof(device_address));
+}
+
+int32_t parse_mqtt_sn_device_address_until_end(const uint8_t *src_pos,
+                                               uint16_t src_len,
+                                               int32_t *parsed_bytes,
+                                               device_address *dst_add,
+                                               uint16_t *dst_add_len) {
+  return parse_mqtt_sn_uint8_until_end_byte(src_pos,
+                                            src_len,
+                                            parsed_bytes,
+                                            dst_add->bytes,
+                                            dst_add_len,
+                                            sizeof(device_address));
 }
 int32_t parse_mqtt_sn_char_until_end_byte(const uint8_t *src_pos,
                                           uint16_t src_len,
@@ -448,6 +466,27 @@ int32_t parse_mqtt_sn_uint8_until_end_byte(const uint8_t *src_pos,
   }
 
   return *parsed_bytes;
+}
+int32_t parse_mqtt_sn_uint8_array_byte(const uint8_t *src_pos,
+                                       uint16_t src_len,
+                                       int32_t *parsed_bytes,
+                                       uint16_t to_parse_bytes,
+                                       uint8_t *u8_buf,
+                                       uint16_t *u8_buf_length,
+                                       uint16_t u8_buf_max_length) {
+
+  if (src_len < (*parsed_bytes) + to_parse_bytes) {
+    (*parsed_bytes) = src_len;
+    return -1;
+  }
+  if (to_parse_bytes > u8_buf_max_length) {
+    (*parsed_bytes) += to_parse_bytes;
+    return -1;
+  }
+  (*u8_buf_length) = to_parse_bytes;
+  (*parsed_bytes) += to_parse_bytes;
+  memcpy(u8_buf, src_pos, to_parse_bytes);
+  return (*parsed_bytes);
 }
 int32_t parse_mqtt_sn_client_id_byte(const uint8_t *src_pos,
                                      uint16_t src_len,
@@ -567,6 +606,7 @@ int32_t generate_mqtt_sn_uint16(uint8_t *dst_pos, uint16_t dst_len, uint16_t val
   (*dst_pos) = htons(value);
   return (*used_bytes);
 }
+
 
 
 

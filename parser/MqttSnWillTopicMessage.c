@@ -13,12 +13,12 @@ static int32_t parse_will_topic_flags(const uint8_t *src_pos,
                                       int32_t *parsed_bytes,
                                       int8_t *qos,
                                       uint8_t *retain);
-static int32_t parse_will_topic(const uint8_t *src_pos,
-                                uint16_t src_len,
-                                int32_t *parsed_bytes,
-                                char *will_topic,
-                                uint16_t *will_topic_length,
-                                uint16_t will_topic_max_length);
+static int32_t parse_will_topic_will_topic(const uint8_t *src_pos,
+                                           uint16_t src_len,
+                                           int32_t *parsed_bytes,
+                                           char *will_topic,
+                                           uint16_t *will_topic_length,
+                                           uint16_t will_topic_max_length);
 
 int32_t parse_will_topic_byte(int8_t *qos,
                               uint8_t *retain,
@@ -35,12 +35,12 @@ int32_t parse_will_topic_byte(int8_t *qos,
   if ((parsed_bytes = parse_will_topic_flags(data + parsed_bytes, data_len, &parsed_bytes, qos, retain)) < 0) {
     return -1;
   }
-  if ((parsed_bytes = parse_will_topic(data + parsed_bytes,
-                                       data_len,
-                                       &parsed_bytes,
-                                       will_topic,
-                                       will_topic_length,
-                                       will_topic_max_length)) < 0) {
+  if ((parsed_bytes = parse_will_topic_will_topic(data + parsed_bytes,
+                                                  data_len,
+                                                  &parsed_bytes,
+                                                  will_topic,
+                                                  will_topic_length,
+                                                  will_topic_max_length)) < 0) {
     return -1;
   }
   return parsed_bytes;
@@ -67,12 +67,12 @@ int32_t parse_will_topic_flags(const uint8_t *src_pos,
                                uint8_t *retain) {
   return parse_mqtt_sn_flags(src_pos, src_len, parsed_bytes, NULL, qos, retain, NULL, NULL, NULL);
 }
-int32_t parse_will_topic(const uint8_t *src_pos,
-                         uint16_t src_len,
-                         int32_t *parsed_bytes,
-                         char *will_topic,
-                         uint16_t *will_topic_length,
-                         uint16_t will_topic_max_length) {
+int32_t parse_will_topic_will_topic(const uint8_t *src_pos,
+                                    uint16_t src_len,
+                                    int32_t *parsed_bytes,
+                                    char *will_topic,
+                                    uint16_t *will_topic_length,
+                                    uint16_t will_topic_max_length) {
   if (will_topic_max_length > MQTT_SN_MESSAGE_WILLTOPIC_WILLTOPIC_MAX_LENGTH) {
     will_topic_max_length = MQTT_SN_MESSAGE_WILLTOPIC_WILLTOPIC_MAX_LENGTH;
   }

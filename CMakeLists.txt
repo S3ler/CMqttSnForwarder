@@ -119,7 +119,20 @@ set(MQTT_SN_MESSAGE_PARSER_FILES
         parser/MqttSnUnsubscribeMessage.c
         parser/MqttSnUnsubscribeMessage.h
         parser/MqttSnSubackMessage.c
-        parser/MqttSnSubackMessage.h)
+        parser/MqttSnSubackMessage.h
+        parser/MqttSnUnsubackMessage.c
+        parser/MqttSnUnsubackMessage.h
+        parser/MqttSnPingReqMessage.c
+        parser/MqttSnPingReqMessage.h
+        parser/MqttSnPingRespMessage.c
+        parser/MqttSnPingRespMessage.h
+        parser/MqttSnDisconnectMessage.c
+        parser/MqttSnDisconnectMessage.h
+        #TODO WILLTOPICUPD
+        #TODO WILLMSGUPD
+        #TODO WILLTOPICRESP
+        parser/MqttSnForwarderEncapsulationMessage.c
+        parser/MqttSnForwarderEncapsulationMessage.h parser/MqttSnWillTopicUpdMessage.c parser/MqttSnWillTopicUpdMessage.h parser/MqttSnWillMsgUpdMessage.c parser/MqttSnWillMsgUpdMessage.h parser/MqttSnWillTopicRespMessage.c parser/MqttSnWillTopicRespMessage.h parser/MqttSnWillMsgRespMessage.c parser/MqttSnWillMsgRespMessage.h)
 if (WITH_LOGGING)
     set(MQTT_SN_MESSAGE_PARSER_FILES ${MQTT_SN_MESSAGE_PARSER_FILES}
             parser/logging/MqttSnAdvertiseMessageLogging.c

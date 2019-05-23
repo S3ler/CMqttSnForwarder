@@ -100,8 +100,9 @@ typedef enum MQTT_SN_RETURN_CODE_ {
 #define MQTT_SN_GWADD_MAX_LENGTH              sizeof(device_address)
 #define MQTT_SN_FLAGS_LENGTH                  1
 #define MQTT_SN_PROTOCOLID_LENGTH             1
-#define MQTT_SN_CLIENTID_MIN_LENGTH           1
-#define MQTT_SN_CLIENTID_MAX_LENGTH           23
+#define MQTT_SN_CLIENTID_NULL_TERMINATOR      1
+#define MQTT_SN_CLIENTID_MIN_LENGTH           (1 + MQTT_SN_CLIENTID_NULL_TERMINATOR)
+#define MQTT_SN_CLIENTID_MAX_LENGTH           (23 + MQTT_SN_CLIENTID_NULL_TERMINATOR)
 #define MQTT_SN_RETURNCODE_LENGTH             1
 #define MQTT_SN_WILLTOPIC_MIN_LENGTH          0
 #define MQTT_SN_WILLTOPIC_MAX_LENGTH          UINT16_MAX
@@ -113,6 +114,9 @@ typedef enum MQTT_SN_RETURN_CODE_ {
 #define MQTT_SN_TOPICNAME_MAX_LENGTH          UINT16_MAX
 #define MQTT_SN_DATA_MIN_LENGTH               0
 #define MQTT_SN_DATA_MAX_LENGTH               UINT16_MAX
+// TODO WILLUPDATE
+#define MQTT_SN_CTRL_LENGTH                   1
+#define MQTT_SN_WIRELESSNODEID_LENGTH         sizeof(device_address)
 
 #define MQTT_SN_FLAG_DUP_POS            0x80 // 0b1000 0000
 #define MQTT_SN_FLAG_QOS_POS            0x60 // 0b0110 0000
@@ -412,7 +416,12 @@ int32_t parse_mqtt_sn_device_address(const uint8_t *src_pos,
                                      uint16_t src_len,
                                      int32_t *parsed_bytes,
                                      device_address *dst_add,
-                                     uint16_t *dst_len);
+                                     uint16_t *dst_add_len);
+int32_t parse_mqtt_sn_device_address_until_end(const uint8_t *src_pos,
+                                               uint16_t src_len,
+                                               int32_t *parsed_bytes,
+                                               device_address *dst_add,
+                                               uint16_t *dst_add_len);
 int32_t parse_mqtt_sn_char_until_end_byte(const uint8_t *src_pos,
                                           uint16_t src_len,
                                           int32_t *parsed_bytes,
@@ -425,6 +434,13 @@ int32_t parse_mqtt_sn_uint8_until_end_byte(const uint8_t *src_pos,
                                            uint8_t *u8_buf,
                                            uint16_t *u8_buf_length,
                                            uint16_t u8_buf_max_length);
+int32_t parse_mqtt_sn_uint8_array_byte(const uint8_t *src_pos,
+                                       uint16_t src_len,
+                                       int32_t *parsed_bytes,
+                                       uint16_t to_parse_bytes,
+                                       uint8_t *u8_buf,
+                                       uint16_t *u8_buf_length,
+                                       uint16_t u8_buf_max_length);
 int32_t parse_mqtt_sn_client_id_byte(const uint8_t *src_pos,
                                      uint16_t src_len,
                                      int32_t *parsed_bytes,

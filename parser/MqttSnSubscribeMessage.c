@@ -34,10 +34,6 @@ static int32_t parse_subscribe_topic_name(const uint8_t *src_pos,
                                           uint16_t *topic_name_length,
                                           uint16_t topic_name_max_length);
 
-int32_t parse_subscribe_msg_id(const uint8_t *src_pos, uint16_t src_length, int32_t *parsed_bytes, uint16_t *msg_id) {
-  return parse_mqtt_sn_uint16_byte(src_pos, src_length, parsed_bytes, msg_id);
-}
-
 int32_t parse_subscribe_byte(uint8_t *dup,
                              int8_t *qos,
                              uint8_t *topic_id_type,
@@ -125,6 +121,10 @@ int32_t parse_subscribe_flags(const uint8_t *src_pos,
     }
   }
   return *parsed_bytes;
+}
+
+int32_t parse_subscribe_msg_id(const uint8_t *src_pos, uint16_t src_length, int32_t *parsed_bytes, uint16_t *msg_id) {
+  return parse_mqtt_sn_uint16_byte(src_pos, src_length, parsed_bytes, msg_id);
 }
 int32_t parse_subscribe_predefined_topic(const uint8_t *src_pos,
                                          uint16_t src_len,

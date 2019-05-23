@@ -3,7 +3,6 @@
 //
 
 #include "MqttSnConnectMessage.h"
-#include "MqttSnMessageParser.h"
 
 static int32_t parse_connect_header(ParsedMqttSnHeader *h,
                                     const uint8_t *data,
