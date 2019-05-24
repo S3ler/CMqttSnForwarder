@@ -4,27 +4,22 @@
 
 #ifndef CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_H
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_H
+
+
+#include <stdint.h>
+#include <platform/device_address.h>
+#include <platform/MqttSnMessageData.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <platform/device_address.h>
-
 #ifndef CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN
 #define CMQTTSNFORWARDER_MQTTSNFIXEDSIZERINGBUFFER_MAXLEN 100
 #endif
-#ifndef CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH
-#define CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH 1024
-#endif
 
-typedef struct MqttSnMessageData_ {
-  device_address from;
-  device_address to;
-  uint16_t data_length;
-  uint8_t signal_strength;
-  uint8_t data[CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH];
-} MqttSnMessageData;
+
+
 
 typedef struct MqttSnFixedSizeRingBuffer_ {
   uint32_t head;

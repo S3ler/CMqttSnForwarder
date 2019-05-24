@@ -40,7 +40,9 @@ set(MQTT_SN_PLATFORM_ABSTRACTION_LAYER_FILES
         platform/device_address.c
         platform/device_address.h
         platform/platform_compatibility.c
-        platform/platform_compatibility.h)
+        platform/platform_compatibility.h
+        platform/MqttSnMessageData.c
+        platform/MqttSnMessageData.h)
 add_library(lib-mqtt-sn-platform-abstraction-layer ${MQTT_SN_PLATFORM_ABSTRACTION_LAYER_FILES})
 target_include_directories(lib-mqtt-sn-platform-abstraction-layer PRIVATE .)
 target_compile_options(lib-mqtt-sn-platform-abstraction-layer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
