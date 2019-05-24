@@ -411,7 +411,7 @@ set(MQTT_SN_FORWARDER_FILES
         forwarder/MqttSnForwarder.c
         forwarder/MqttSnForwarder.h
         platform/device_address.c
-        platform/device_address.h)
+        platform/device_address.h forwarder/MqttSnForwarderParser.c forwarder/MqttSnForwarderParser.h)
 if (WITH_LOGGING)
     set(MQTT_SN_FORWARDER_FILES ${MQTT_SN_FORWARDER_FILES}
             forwarder/MqttSnForwarderLogging.c

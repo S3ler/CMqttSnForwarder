@@ -193,12 +193,15 @@ int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t dat
 
 int32_t generate_mqtt_sn_header(uint8_t *dst,
                                 uint16_t dst_len,
+                                int32_t *gen_bytes,
                                 uint16_t msg_len,
-                                MQTT_SN_MESSAGE_TYPE msg_type,
-                                int32_t *used_bytes) {
+                                MQTT_SN_MESSAGE_TYPE msg_type) {
+  if (dst_len < msg_len) {
+    return -1;
+  }
   if (msg_len > UINT8_MAX) {
-    *used_bytes = sizeof(MqttSnMessageHeaderThreeOctetsLengthField);
-    if (dst_len < *used_bytes) {
+    *gen_bytes = sizeof(MqttSnMessageHeaderThreeOctetsLengthField);
+    if (dst_len < *gen_bytes) {
       return -1;
     }
     MqttSnMessageHeaderThreeOctetsLengthField *header = (MqttSnMessageHeaderThreeOctetsLengthField *) dst;
@@ -207,8 +210,8 @@ int32_t generate_mqtt_sn_header(uint8_t *dst,
     header->msg_type = msg_type;
     return 0;
   }
-  *used_bytes = sizeof(MqttSnMessageHeaderOneOctetLengthField);
-  if (dst_len < *used_bytes) {
+  *gen_bytes = sizeof(MqttSnMessageHeaderOneOctetLengthField);
+  if (dst_len < *gen_bytes) {
     return -1;
   }
   MqttSnMessageHeaderOneOctetLengthField *header = (MqttSnMessageHeaderOneOctetLengthField *) dst;
@@ -223,7 +226,7 @@ int32_t generate_publish_header(uint8_t *dst, uint16_t dst_len, uint16_t data_le
   if (dst_len < total_length) {
     return -1;
   }
-  return generate_mqtt_sn_header(dst, 0, total_length, PUBLISH, used_bytes);
+  return generate_mqtt_sn_header(dst, 0, used_bytes, total_length, PUBLISH);
 }
 
 int32_t generate_flags(uint8_t *dst,
@@ -374,9 +377,9 @@ int generate_encapsulation_message(uint8_t *dst,
   uint8_t indicator = (data_len + MQTT_SN_HEADER_LENGTH(0) > UINT8_MAX);
   if (generate_mqtt_sn_header(dst,
                               dst_len,
+                              &used_bytes,
                               data_len + MQTT_SN_ENCAPSULATED_MESSAGE_HEADER_LENGTH(indicator),
-                              ENCAPSULATED_MESSAGE,
-                              &used_bytes)) {
+                              ENCAPSULATED_MESSAGE)) {
     return -1;
   }
   if (generate_encapsulation_header(dst + used_bytes, dst_len, broadcast, from, &used_bytes)) {
@@ -587,6 +590,7 @@ int32_t parse_mqtt_sn_uint16_byte(const uint8_t *src_pos, uint16_t src_len, int3
   }
   (*dst) = (uint16_t) src_pos[0] << 8;
   (*dst) |= (uint16_t) src_pos[1] << 0;
+  // TODO NTOHS?
   return *parsed_bytes;
 }
 
@@ -605,6 +609,24 @@ int32_t generate_mqtt_sn_uint16(uint8_t *dst_pos, uint16_t dst_len, uint16_t val
   }
   (*dst_pos) = htons(value);
   return (*used_bytes);
+}
+int32_t generate_mqtt_sn_device_address(uint8_t *dst_pos,
+                                        uint16_t dst_len,
+                                        int32_t *used_bytes,
+                                        const device_address *address) {
+  return generate_mqtt_sn_uint8_array(dst_pos, dst_len, used_bytes, address->bytes, sizeof(device_address));
+}
+int32_t generate_mqtt_sn_uint8_array(uint8_t *dst_pos,
+                                     uint16_t dst_len,
+                                     int32_t *gen_bytes,
+                                     const uint8_t *src,
+                                     uint16_t src_len) {
+  (*gen_bytes) += src_len;
+  if (dst_len < (*gen_bytes)) {
+    return -1;
+  }
+  memcpy(dst_pos, src, src_len);
+  return 0;
 }
 
 

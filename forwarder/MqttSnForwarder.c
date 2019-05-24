@@ -5,12 +5,14 @@
 #include "MqttSnForwarder.h"
 #include "ringbuffer/MqttSnFixedSizeRingBuffer.h"
 #include "network/MqttSnClientNetworkInterface.h"
+#include "MqttSnForwarderParser.h"
 #include <string.h>
 #include <stdio.h>
 #include <signal.h>
 #include <platform/platform_compatibility.h>
 #include <logging/MqttSnLoggingInterface.h>
 #include <parser/logging/MqttSnForwarderLoggingMessages.h>
+#include <parser/MqttSnForwarderEncapsulationMessage.h>
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         log_level_t log_level,
@@ -215,9 +217,9 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
     return 0;
   }
 
-  if (RemoveMqttSnForwardingHeader(gatewayMessageData,
-                                   clientMessageData,
-                                   forwarder->clientNetwork.client_network_broadcast_address) != 0) {
+  if (remove_mqtt_sn_forwarder_encapsulation_frame(gatewayMessageData,
+                                                   clientMessageData,
+                                                   forwarder->clientNetwork.client_network_broadcast_address, NULL) != 0) {
 #ifdef WITH_DEBUG_LOGGING
     log_gateway_mqtt_sn_message_malformed(&forwarder->logger,
                                           &gatewayMessageData->from,
@@ -275,10 +277,10 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
                                          clientMessageData->signal_strength);
   }
 #endif
-  if (AddMqttSnForwardingHeader(clientMessageData,
-                                gatewayMessageData,
-                                forwarder->gatewayNetwork.mqtt_sn_gateway_address,
-                                forwarder->clientNetwork.client_network_broadcast_address) != 0) {
+  if (add_mqtt_sn_forwarder_encapsulation_frame(clientMessageData,
+                                                gatewayMessageData,
+                                                forwarder->gatewayNetwork.mqtt_sn_gateway_address,
+                                                forwarder->clientNetwork.client_network_broadcast_address, NULL) != 0) {
 #ifdef WITH_DEBUG_LOGGING
     log_could_not_generate_encapsulation_message(&forwarder->logger,
                                                  MQTT_SN_FORWARDER_NETWORK_GATEWAY,
@@ -293,50 +295,5 @@ int AddForwardingHeaderToClientMessages(MqttSnForwarder *forwarder,
     // we do our best to not drop message due to RAM loss
     put(&forwarder->clientNetworkReceiveBuffer, clientMessageData);
   }
-  return 0;
-}
-
-int RemoveMqttSnForwardingHeader(MqttSnMessageData *gatewayMessageData,
-                                 MqttSnMessageData *clientMessageData,
-                                 const device_address *client_network_broadcast_address) {
-  uint8_t broadcast = 0;
-  int32_t rc = parse_encapsulation_message(&broadcast,
-                                           &clientMessageData->to,
-                                           clientMessageData->data,
-                                           &clientMessageData->data_length,
-                                           CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
-                                           gatewayMessageData->data,
-                                           gatewayMessageData->data_length);
-  if (rc < 0) {
-    return -1;
-  }
-  if (broadcast == MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BROADCAST_RADIUS) {
-    clientMessageData->to = *client_network_broadcast_address;
-  }
-  clientMessageData->from = gatewayMessageData->from;
-  return 0;
-}
-int AddMqttSnForwardingHeader(MqttSnMessageData *clientMessageData,
-                              MqttSnMessageData *gatewayMessageData,
-                              const device_address *mqtt_sn_gateway_network_address,
-                              const device_address *client_network_broadcast_address) {
-  uint8_t broadcast = 0;
-  if (client_network_broadcast_address
-      && memcmp(&gatewayMessageData->to, client_network_broadcast_address, sizeof(device_address)) == 0) {
-    broadcast = MQTT_SN_ENCAPSULATED_MESSAGE_CRTL_BROADCAST_RADIUS;
-  }
-  int rc = generate_encapsulation_message(gatewayMessageData->data,
-                                          CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
-                                          broadcast,
-                                          &clientMessageData->from,
-                                          clientMessageData->data,
-                                          clientMessageData->data_length);
-  if (rc < 0) {
-    return -1;
-  }
-  gatewayMessageData->data_length = rc;
-  gatewayMessageData->to = *mqtt_sn_gateway_network_address;
-  gatewayMessageData->from = clientMessageData->from;
-
   return 0;
 }

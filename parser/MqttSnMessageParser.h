@@ -378,9 +378,9 @@ uint8_t is_three_bytes_header(const uint8_t *data);
 
 int32_t generate_mqtt_sn_header(uint8_t *dst,
                                 uint16_t dst_len,
+                                int32_t *gen_bytes,
                                 uint16_t msg_len,
-                                MQTT_SN_MESSAGE_TYPE msg_type,
-                                int32_t *used_bytes);
+                                MQTT_SN_MESSAGE_TYPE msg_type);
 
 int generate_publish(uint8_t *dst,
                      uint16_t dst_len,
@@ -462,7 +462,15 @@ int32_t parse_mqtt_sn_flags(const uint8_t *src_pos,
                             uint8_t *topic_id_type);
 int32_t generate_mqtt_sn_uint8(uint8_t *dst_pos, uint16_t dst_len, uint8_t value, int32_t *used_bytes);
 int32_t generate_mqtt_sn_uint16(uint8_t *dst_pos, uint16_t dst_len, uint16_t value, int32_t *used_bytes);
-
+int32_t generate_mqtt_sn_uint8_array(uint8_t *dst_pos,
+                                     uint16_t dst_len,
+                                     int32_t *gen_bytes,
+                                     const uint8_t *src,
+                                     uint16_t src_len);
+int32_t generate_mqtt_sn_device_address(uint8_t *dst_pos,
+                                        uint16_t dst_len,
+                                        int32_t *used_bytes,
+                                        const device_address *address);
 #ifdef __cplusplus
 }
 #endif

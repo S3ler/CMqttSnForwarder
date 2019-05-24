@@ -68,7 +68,7 @@ int32_t generate_advertise_message(uint8_t *dst, uint16_t dst_len, uint8_t gw_id
   return used_bytes;
 }
 int32_t generate_advertise_header(uint8_t *dst_pos, uint16_t dst_len, int32_t *used_bytes) {
-  return generate_mqtt_sn_header(dst_pos, dst_len, MQTT_SN_MESSAGE_ADVERTISE_LENGTH, ADVERTISE, used_bytes);
+  return generate_mqtt_sn_header(dst_pos, dst_len, used_bytes, MQTT_SN_MESSAGE_ADVERTISE_LENGTH, ADVERTISE);
 }
 int32_t generate_advertise_gw_id(uint8_t *dst_pos, uint16_t dst_len, uint8_t gw_id, int32_t *used_bytes) {
   return generate_mqtt_sn_uint8(dst_pos, dst_len, gw_id, used_bytes);
