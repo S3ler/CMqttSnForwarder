@@ -144,7 +144,7 @@ if (WITH_LOGGING)
             parser/logging/MqttSnSearchGwMessageLogging.c
             parser/logging/MqttSnSearchGwMessageLogging.h
             parser/logging/MqttSnGwInfoMessageLogging.c
-            parser/logging/MqttSnGwInfoMessageLogging.h)
+            parser/logging/MqttSnGwInfoMessageLogging.h parser/logging/common/MqttSnMessageLogging.c parser/logging/common/MqttSnMessageLogging.h)
 endif ()
 add_library(lib-mqtt-sn-message-parser ${MQTT_SN_MESSAGE_PARSER_FILES})
 target_include_directories(lib-mqtt-sn-message-parser PRIVATE .)
