@@ -19,6 +19,10 @@ extern "C" {
 #include <logging/linux/stdout/StdoutLogging.h>
 #endif
 #include <string.h>
+#define MQTT_SN_PARSE_CONFIG_FAILURE -1
+#define MQTT_SN_PARSE_SUCCESS 1
+#define MQTT_SN_PARSE_CONFIG_HELP 2
+#define MQTT_SN_PARSE_CONFIG_SUCCESS 0
 //#define strcmp_P(str, pstr) strcmp(str, pstr)
 int strcmp_P(const char *a, const char *b);
 #define PSTR(str) (str)

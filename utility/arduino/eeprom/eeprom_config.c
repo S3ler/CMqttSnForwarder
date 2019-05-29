@@ -75,7 +75,7 @@ int process_eeprom_force_set_str(EEPROM_cfg *ecfg, const MqttSnLogger *logger, c
     return -1;
   }
   if (ecfg_line_len - strlen(efl) <= 1) {
-    log_argument_value_not_specified(logger, efl, PSTR("input"));
+    print_argument_value_not_specified(logger, efl, PSTR("input"));
     return -2;
   }
   print_save_ecfg_line_to_eeprom(logger);
@@ -173,7 +173,7 @@ int validate_eeprom_config_token(const MqttSnLogger *logger, int argc, char *arg
       i++;
     } else if (!strcmp(argv[i], "-ewn") || !strcmp(argv[i], "--eeprom_wifi_name")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_name"));
+        print_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_name"));
         return 1;
       } else {
         // validation only
@@ -181,7 +181,7 @@ int validate_eeprom_config_token(const MqttSnLogger *logger, int argc, char *arg
       i++;
     } else if (!strcmp(argv[i], "-ewp") || !strcmp(argv[i], "--eeprom_wifi_password")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_password"));
+        print_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_password"));
         return 1;
       } else {
         // validation only
@@ -235,7 +235,7 @@ int process_eeprom_config_token(EEPROM_cfg *ecfg, const MqttSnLogger *logger, in
       print_eeprom_wifi_cleared(logger);
     } else if (!strcmp(argv[i], "-ewn") || !strcmp(argv[i], "--eeprom_wifi_name")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_name"));
+        print_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_name"));
         return -1;
       } else {
         if (strlen(argv[i + 1]) + 1 > sizeof(ecfg->WiFi_cfg.ssid)) {
@@ -248,7 +248,7 @@ int process_eeprom_config_token(EEPROM_cfg *ecfg, const MqttSnLogger *logger, in
       i++;
     } else if (!strcmp(argv[i], "-ewp") || !strcmp(argv[i], "--eeprom_wifi_password")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_password"));
+        print_argument_value_not_specified(logger, argv[i], PSTR("eeprom_wifi_password"));
         return -1;
       } else {
         if (strlen(argv[i + 1]) + 1 > sizeof(ecfg->WiFi_cfg.password)) {

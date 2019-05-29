@@ -221,11 +221,13 @@ if (WITH_LINUX_UDP_NETWORK)
         add_definitions(-DWITH_LINUX_UDP_NETWORK_BROADCAST) #TODO replace by WITH_LINUX_UDP_NETWORK_BROADCAST
     endif ()
     if (WITH_LINUX_UDP_CLIENT_NETWORK_BROADCAST)
+        add_definitions(-DWITH_CLIENT_NETWORK_BROADCAST)
         add_definitions(-DWITH_LINUX_UDP_CLIENT_NETWORK_BROADCAST)
         add_definitions(-DWITH_UDP_BROADCAST_CLIENT) # TODO replace by WITH_LINUX_UDP_CLIENT_NETWORK_BROADCAST
         message("Building with WITH_LINUX_UDP_CLIENT_NETWORK_BROADCAST support")
     endif ()
     if (WITH_LINUX_UDP_GATEWAY_NETWORK_BROADCAST)
+        add_definitions(-DWITH_GATEWAY_NETWORK_BROADCAST)
         add_definitions(-DWITH_LINUX_UDP_GATEWAY_NETWORK_BROADCAST)
         add_definitions(-DWITH_UDP_BROADCAST_GATEWAY) #TODO replace by WITH_LINUX_UDP_GATEWAY_NETWORK_BROADCAST
         message("Building with WITH_LINUX_UDP_GATEWAY_NETWORK_BROADCAST support")
@@ -306,6 +308,7 @@ if (WITH_LINUX_TCP_NETWORK)
         message("Building with WITH_LINUX_TCP_CLIENT_NETWORK support")
         option(WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST "Include WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST support?" ON)
         if (WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
+            add_definitions(-DWITH_CLIENT_NETWORK_BROADCAST)
             add_definitions(-DWITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST)
             message("Building with WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST support")
         endif ()
@@ -315,6 +318,7 @@ if (WITH_LINUX_TCP_NETWORK)
         message("Building with WITH_LINUX_TCP_GATEWAY_NETWORK support")
         option(WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST "Include WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST support?" ON)
         if (WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST)
+            add_definitions(-DWITH_GATEWAY_NETWORK_BROADCAST)
             add_definitions(-DWITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST)
             message("Building with WITH_LINUX_TCP_GATEWAY_NETWORK_BROADCAST support")
         endif ()
@@ -406,6 +410,54 @@ else ()
     target_link_libraries(lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-ring-buffer)
 endif ()
 
+set(MQTT_SN_CLIENT_TEST_FILES
+        client/pub/config/publish_client_config.c client/pub/config/publish_client_config.h
+        config/gateway_network_config.c config/gateway_network_config.h
+        config/mqtt_sn_gateway_config.c config/mqtt_sn_gateway_config.h
+        config/config_command_helper.c config/config_command_helper.h
+        config/mqtt_sn_version_config.c config/mqtt_sn_version_config.h
+        config/client_network_config.c config/client_network_config.h
+        config/mqtt_sn_logger_config.c config/mqtt_sn_logger_config.h
+        client/sub/config/subscription_client_config.c client/sub/config/subscription_client_config.h
+        gateway/echogateway/config/echogateway_config.c gateway/echogateway/config/echogateway_config.h
+        config/client_connect_config.c config/client_connect_config.h
+        config/client_register_config.c config/client_register_config.h
+        config/client_subscribe_config.c config/client_subscribe_config.h
+        config/client_publish_config.c config/client_publish_config.h
+        config/client_find_mqtt_sn_gateway_config.c config/client_find_mqtt_sn_gateway_config.h)
+
+set(MQTT_SN_CLIENT_PUB_FILES client/pub/linux/main.c ${MQTT_SN_CLIENT_TEST_FILES})
+add_executable(MqttSnClientPub ${MQTT_SN_CLIENT_PUB_FILES})
+target_include_directories(MqttSnClientPub PRIVATE .)
+target_compile_options(MqttSnClientPub PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(MqttSnClientPub
+        lib-mqtt-sn-ring-buffer
+        lib-mqtt-sn-message-parser
+        lib-mqtt-sn-logging
+        lib-mqtt-sn-linux-client-network
+        lib-mqtt-sn-linux-gateway-network)
+
+set(MQTT_SN_CLIENT_SUB_FILES client/sub/linux/main.c ${MQTT_SN_CLIENT_TEST_FILES})
+add_executable(MqttSnClientSub ${MQTT_SN_CLIENT_SUB_FILES})
+target_include_directories(MqttSnClientSub PRIVATE .)
+target_compile_options(MqttSnClientSub PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(MqttSnClientSub
+        lib-mqtt-sn-ring-buffer
+        lib-mqtt-sn-message-parser
+        lib-mqtt-sn-logging
+        lib-mqtt-sn-linux-client-network
+        lib-mqtt-sn-linux-gateway-network)
+
+set(MQTT_SN_ECHOGATEWAY_FILES gateway/echogateway/linux/main.c ${MQTT_SN_CLIENT_TEST_FILES})
+add_executable(MqttSnEchoGateway ${MQTT_SN_ECHOGATEWAY_FILES})
+target_include_directories(MqttSnEchoGateway PRIVATE .)
+target_compile_options(MqttSnEchoGateway PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(MqttSnEchoGateway
+        lib-mqtt-sn-ring-buffer
+        lib-mqtt-sn-message-parser
+        lib-mqtt-sn-logging
+        lib-mqtt-sn-linux-client-network
+        lib-mqtt-sn-linux-gateway-network)
 
 set(MQTT_SN_FORWARDER_FILES
         forwarder/MqttSnForwarder.c

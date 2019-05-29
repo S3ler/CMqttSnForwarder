@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <platform/platform_compatibility.h>
+#include <config/config_command_helper.h>
 
 // TODO remove strdup
 int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
@@ -20,12 +21,14 @@ int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
 
   fcfg->log_lvl = LOG_LEVEL_DEFAULT;
 
-  fcfg->protocol_version = MQTT_SN_PROTOCOL_V1;
+  fcfg->protocol_version = DEFAULT_MQTT_SN_PROTOCOL_ID;
 
-  // gateway network
+  // mqtt-sn gateway
   memcpy(fcfg->localhost, DEFAULT_MQTT_SN_GATEWAY_HOST, sizeof(DEFAULT_MQTT_SN_GATEWAY_HOST));
   fcfg->mqtt_sn_gateway_host = fcfg->localhost;
-  fcfg->mqtt_sn_gateway_port = 8888;
+  fcfg->mqtt_sn_gateway_port = DEFAULT_MQTT_SN_GATEWAY_PORT;
+
+  // gateway network
   memcpy(fcfg->udp, DEFAULT_UDP, sizeof(DEFAULT_UDP));
   fcfg->gateway_network_protocol = fcfg->udp;
   fcfg->gateway_network_bind_port = 9999;
@@ -87,7 +90,7 @@ static int parse_port(const forwarder_config *fcfg, char *port_str, int *dst) {
   char *endprt;
   long int n = strtol(port_str, &endprt, 10);
   if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > 65535)) {
-    print_fcfg_invalid_port_given(fcfg->logger, n);
+    print_config_parser_invalid_port_given(fcfg->logger, n);
     return -1;
   }
   *dst = n;
@@ -168,7 +171,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #if defined(WITH_MQTT_SN_FORWADER_CONFIG_FILE)
     if (!strcmp(argv[i], "-c") || !strcmp(argv[i], "--config-file")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "config file");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "config file");
         return 1;
       } else {
 #if defined(Arduino_h) && defined(__SD_H__)
@@ -197,7 +200,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #else
         FILE *config_file = fopen(argv[i + 1], "r");
         if (!config_file) {
-          log_could_not_read_config_file(fcfg->logger, strerror(errno));
+          print_could_not_read_config_file(fcfg->logger, strerror(errno));
           fclose(config_file);
           return 1;
         }
@@ -207,7 +210,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         while ((read = getline(&line, &len, config_file)) != -1) {
           if (process_forwarder_config_str(fcfg, line, len, argv[0])) {
             fclose(config_file);
-            log_could_not_read_config_file(fcfg->logger, strerror(errno));
+            print_could_not_read_config_file(fcfg->logger, strerror(errno));
             if (line) {
               free(line);
             }
@@ -225,7 +228,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #endif
     if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "host");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "host");
         return 1;
       } else {
         // TODO strdup
@@ -237,7 +240,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--mqtt_sn_gateway_port")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "port");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "port");
         return 1;
       } else {
         if (parse_port(fcfg, argv[i + 1], &fcfg->mqtt_sn_gateway_port)) {
@@ -247,7 +250,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-L") || !strcmp(argv[i], "--url")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "URL");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "URL");
         return 1;
       } else {
         char *url = argv[i + 1];
@@ -256,7 +259,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
           url += 7;
           fcfg->mqtt_sn_gateway_port = 8888;
         } else {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
           return 1;
         }
         // TODO strdup
@@ -276,7 +279,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-gP") || !strcmp(argv[i], "--gateway_network_protocol")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
         return 1;
       } else {
         // TODO strdup
@@ -288,7 +291,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-gA") || !strcmp(argv[i], "--gateway_network_bind_address")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "address");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "address");
         return 1;
       } else {
         fcfg->gateway_network_bind_address = strdup(argv[i + 1]);
@@ -296,7 +299,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-gp") || !strcmp(argv[i], "--gateway_network_bind_port")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "port");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "port");
         return 1;
       } else {
         if (parse_port(fcfg, argv[i + 1], &fcfg->gateway_network_bind_port)) {
@@ -306,7 +309,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-gL") || !strcmp(argv[i], "--gateway_network_url")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "URL");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "URL");
         return 1;
       } else {
         char *url = argv[i + 1];
@@ -323,13 +326,13 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
           }
           fcfg->gateway_network_protocol = strdup(prot);
         } else {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
 
         if (addr) {
           fcfg->gateway_network_bind_address = strdup(addr);
         } else {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
 
         if (port) {
@@ -339,13 +342,13 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         }
 
         if (null_token) {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
       }
       i++;
     } else if (!strcmp(argv[i], "-gst") || !strcmp(argv[i], "--gateway_send_timeout")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
         return 1;
       } else {
         if (parse_timeout(fcfg, argv[i + 1], &fcfg->gateway_network_send_timeout)) {
@@ -355,7 +358,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-grt") || !strcmp(argv[i], "--gateway_receive_timeout")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
         return 1;
       } else {
         if (parse_timeout(fcfg, argv[i + 1], &fcfg->gateway_network_receive_timeout)) {
@@ -365,7 +368,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-gt") || !strcmp(argv[i], "--gateway_network_timeout")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
         return 1;
       } else {
         if (parse_timeout(fcfg, argv[i + 1], &fcfg->gateway_network_send_timeout)) {
@@ -380,7 +383,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #ifdef WITH_LINUX_PLUGIN_NETWORK
       else if (!strcmp(argv[i], "-gnp") || !strcmp(argv[i], "--gateway_network_plugin")) {
         if (i == argc - 1) {
-          log_argument_value_not_specified(fcfg->logger, argv[i], "path");
+          print_argument_value_not_specified(fcfg->logger, argv[i], "path");
           return 1;
         } else {
           fcfg->gateway_network_plugin_path = strdup(argv[i + 1]);
@@ -390,7 +393,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #endif
     else if (!strcmp(argv[i], "-cP") || !strcmp(argv[i], "--client_network_protocol")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
         return 1;
       } else {
         // TODO strdup
@@ -402,7 +405,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-cA") || !strcmp(argv[i], "--client_network_bind_address")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "address");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "address");
         return 1;
       } else {
         fcfg->client_network_bind_address = strdup(argv[i + 1]);
@@ -410,7 +413,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-cp") || !strcmp(argv[i], "--client_network_bind_port")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "port");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "port");
         return 1;
       } else {
         if (parse_port(fcfg, argv[i + 1], &fcfg->client_network_bind_port)) {
@@ -420,7 +423,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-cst") || !strcmp(argv[i], "--client_send_timeout")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
         return 1;
       } else {
         if (parse_timeout(fcfg, argv[i + 1], &fcfg->client_network_send_timeout)) {
@@ -430,7 +433,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-crt") || !strcmp(argv[i], "--client_receive_timeout")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
         return 1;
       } else {
         if (parse_timeout(fcfg, argv[i + 1], &fcfg->client_network_receive_timeout)) {
@@ -440,7 +443,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-ct") || !strcmp(argv[i], "--client_network_timeout")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "timeout");
         return 1;
       } else {
         if (parse_timeout(fcfg, argv[i + 1], &fcfg->client_network_send_timeout)) {
@@ -453,7 +456,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-cL") || !strcmp(argv[i], "--client_network_url")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "URL");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "URL");
         return 1;
       } else {
         char *url = argv[i + 1];
@@ -470,14 +473,14 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
           }
           fcfg->client_network_protocol = strdup(prot);
         } else {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
 
         if (addr) {
           free(fcfg->client_network_bind_address);
           fcfg->client_network_bind_address = strdup(addr);
         } else {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
 
         if (port) {
@@ -487,7 +490,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         }
 
         if (null_token) {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
       }
       i++;
@@ -497,7 +500,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       // gateway network broadcast
     else if (!strcmp(argv[i], "-gbP") || !strcmp(argv[i], "--gateway_network_broadcast_protocol")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
         return 1;
       } else {
         fcfg->gateway_network_broadcast_protocol = argv[i + 1];
@@ -505,7 +508,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-gbA") || !strcmp(argv[i], "--gateway_network_broadcast_address")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "address");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "address");
         return 1;
       } else {
         fcfg->gateway_network_broadcast_address = argv[i + 1];
@@ -513,7 +516,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-gbp") || !strcmp(argv[i], "--gateway_network_broadcast_bind_port")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "port");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "port");
         return 1;
       } else {
         if (parse_port(fcfg, argv[i + 1], &fcfg->gateway_network_broadcast_bind_port)) {
@@ -523,7 +526,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-gbL") || !strcmp(argv[i], "--gateway_network_broadcast_url")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "URL");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "URL");
         return 1;
       } else {
         char *url = argv[i + 1];
@@ -536,13 +539,13 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         if (prot) {
           fcfg->gateway_network_broadcast_protocol = prot;
         } else {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
 
         if (addr) {
           fcfg->gateway_network_broadcast_address = addr;
         } else {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
 
         if (port) {
@@ -552,7 +555,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         }
 
         if (null_token) {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
       }
       i++;
@@ -562,7 +565,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       // client network broadcast
     else if (!strcmp(argv[i], "-cbP") || !strcmp(argv[i], "--client_network_broadcast_protocol")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "protocol");
         return 1;
       } else {
         fcfg->client_network_broadcast_protocol = argv[i + 1];
@@ -570,7 +573,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-cbA") || !strcmp(argv[i], "--client_network_broadcast_address")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "address");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "address");
         return 1;
       } else {
         fcfg->client_network_broadcast_address = argv[i + 1];
@@ -578,7 +581,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-cbp") || !strcmp(argv[i], "--client_network_broadcast_bind_port")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "port");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "port");
         return 1;
       } else {
         if (parse_port(fcfg, argv[i + 1], &fcfg->client_network_broadcast_bind_port)) {
@@ -588,7 +591,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
       i++;
     } else if (!strcmp(argv[i], "-cbL") || !strcmp(argv[i], "--client_network_broadcast_url")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "URL");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "URL");
         return 1;
       } else {
         char *url = argv[i + 1];
@@ -601,13 +604,13 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         if (prot) {
           fcfg->client_network_broadcast_protocol = prot;
         } else {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
 
         if (addr) {
           fcfg->client_network_broadcast_address = addr;
         } else {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
 
         if (port) {
@@ -617,7 +620,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
         }
 
         if (null_token) {
-          log_unsupported_url_scheme(fcfg->logger);
+          print_unsupported_url_scheme(fcfg->logger);
         }
       }
       i++;
@@ -627,7 +630,7 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #ifdef WITH_LINUX_PLUGIN_NETWORK
       else if (!strcmp(argv[i], "-cnp") || !strcmp(argv[i], "--client_network_plugin")) {
         if (i == argc - 1) {
-          log_argument_value_not_specified(fcfg->logger, argv[i], "path");
+          print_argument_value_not_specified(fcfg->logger, argv[i], "path");
           return 1;
         } else {
           fcfg->client_network_plugin_path = strdup(argv[i + 1]);
@@ -637,11 +640,11 @@ int process_forwarder_config_line(forwarder_config *fcfg, int argc, char *argv[]
 #endif
     else if (!strcmp(argv[i], "-V") || !strcmp(argv[i], "--protocol-version")) {
       if (i == argc - 1) {
-        log_argument_value_not_specified(fcfg->logger, argv[i], "version");
+        print_argument_value_not_specified(fcfg->logger, argv[i], "version");
         return 1;
       } else {
         if (!strcmp(argv[i + 1], "mqttsnv1")) {
-          fcfg->protocol_version = MQTT_SN_PROTOCOL_V1;
+          fcfg->protocol_version = MQTT_SN_PROTOCOLID_V1;
         } else {
           log_invalid_protocol_version_given(fcfg->logger);
           return 1;

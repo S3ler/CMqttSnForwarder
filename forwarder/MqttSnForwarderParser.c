@@ -34,7 +34,7 @@ int32_t remove_mqtt_sn_forwarder_encapsulation_frame(MqttSnMessageData *gatewayM
     clientMessageData->to = *client_network_broadcast_address;
   }
 #if defined(WITH_DEBUG_LOGGING)
-
+  //TODO
 #endif
   return 0;
 }

@@ -9,7 +9,11 @@ extern "C" {
 #include <string.h>
 #include <logging/MqttSnLoggingInterface.h>
 
-#define MQTT_SN_PROTOCOL_V1 0x01
+#define MQTT_SN_PROTOCOLID_V1 0x01
+
+#ifndef DEFAULT_MQTT_SN_PROTOCOL_ID
+#define DEFAULT_MQTT_SN_PROTOCOL_ID MQTT_SN_PROTOCOLID_V1
+#endif
 
 #define CLIENT_NETWORK_DEFAULT_SEND_TIMEOUT 1000
 #define CLIENT_NETWORK_DEFAULT_RECEIVE_TIMEOUT 1000
@@ -35,6 +39,7 @@ extern "C" {
 #ifndef MANUAL_WEBSITE
 #define MANUAL_WEBSITE "N/D"
 #endif
+
 #ifdef Arduino_h
 #ifndef DEFAULT_MQTT_SN_GATEWAY_HOST
 #define DEFAULT_MQTT_SN_GATEWAY_HOST "arsmb.de"
@@ -43,6 +48,10 @@ extern "C" {
 #ifndef DEFAULT_MQTT_SN_GATEWAY_HOST
 #define DEFAULT_MQTT_SN_GATEWAY_HOST "localhost"
 #endif
+#endif
+
+#ifndef DEFAULT_MQTT_SN_GATEWAY_PORT
+#define DEFAULT_MQTT_SN_GATEWAY_PORT 8888
 #endif
 
 #ifndef DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS
@@ -69,6 +78,10 @@ extern "C" {
 #define FORWARDER_CONFIG_HELP 2
 
 typedef struct forwarder_config_ {
+  // TODO change to following schema:
+  // mqtt_sn_version_config - contains version, buildate and stuff
+  // mqtt_sn_gateway_config
+  //
   MqttSnLogger *logger;
   // TODO replace int by int32_t
   char version[sizeof(VERSION)];
@@ -84,6 +97,7 @@ typedef struct forwarder_config_ {
   char localhost[sizeof(DEFAULT_MQTT_SN_GATEWAY_HOST)];
   char *mqtt_sn_gateway_host;
   int mqtt_sn_gateway_port;
+
   // gateway network config
   char udp[sizeof(DEFAULT_UDP)];
   char *gateway_network_protocol;
@@ -93,6 +107,8 @@ typedef struct forwarder_config_ {
   char *gateway_network_broadcast_protocol;
   char *gateway_network_broadcast_address;
   int gateway_network_broadcast_bind_port;
+  int gateway_network_send_timeout;
+  int gateway_network_receive_timeout;
 #ifdef WITH_LINUX_PLUGIN_NETWORK
   char *gateway_network_plugin_path;
 #endif
@@ -106,14 +122,11 @@ typedef struct forwarder_config_ {
   char *client_network_broadcast_protocol;
   char *client_network_broadcast_address;
   int client_network_broadcast_bind_port;
+  int client_network_send_timeout;
+  int client_network_receive_timeout;
 #ifdef WITH_LINUX_PLUGIN_NETWORK
   char *client_network_plugin_path;
 #endif
-
-  int gateway_network_send_timeout;
-  int gateway_network_receive_timeout;
-  int client_network_send_timeout;
-  int client_network_receive_timeout;
 
 } forwarder_config;
 

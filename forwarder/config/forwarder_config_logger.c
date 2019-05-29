@@ -6,20 +6,6 @@
 #include "forwarder_config_logger.h"
 #include "forwarder_config.h"
 
-int print_argc_argv(const MqttSnLogger *logger, int argc, char **argv) {
-  log_str(logger, PSTR("argc: "));
-  log_uint64(logger, argc);
-  log_str(logger, PSTR(" argv: "));
-  for (uint16_t i = 0; i < argc; i++) {
-    log_str(logger, argv[i]);
-    if (i + 1 < argc) {
-      log_str(logger, PSTR(", "));
-    }
-  }
-  log_flush(logger);
-  return log_status(logger);
-}
-
 int print_usage(const MqttSnLogger *logger) {
 
   // forwarder description, version an build date
@@ -212,58 +198,6 @@ int print_usage(const MqttSnLogger *logger) {
   log_str(logger, MANUAL_WEBSITE);
   log_str(logger, PSTR(" for more information.\n"));
 
-  log_flush(logger);
-  return log_status(logger);
-}
-
-int print_fcfg_invalid_port_given(const MqttSnLogger *logger, long invalid_port) {
-  log_str(logger, PSTR("Error: Invalid port given: "));
-  log_uint16(logger, invalid_port);
-  log_flush(logger);
-  return log_status(logger);
-}
-
-int print_invalid_timeout_given(const MqttSnLogger *logger, long timeout) {
-  log_str(logger, PSTR("Error: Invalid port given: "));
-  log_uint16(logger, timeout);
-  log_flush(logger);
-  return log_status(logger);
-}
-
-int log_could_not_read_config_file(const MqttSnLogger *logger, char *strerror) {
-  log_str(logger, PSTR("Error: Could not read config file: "));
-  log_str(logger, strerror);
-  log_str(logger, PSTR("."));
-  log_flush(logger);
-  return log_status(logger);
-}
-
-int log_argument_value_not_specified(const MqttSnLogger *logger, const char *argument, const char *argument_name) {
-  log_str(logger, PSTR("Error: "));
-  log_str(logger, argument);
-  log_str(logger, PSTR(" argument given but no "));
-  log_str(logger, argument_name);
-  log_str(logger, PSTR(" specified."));
-  log_flush(logger);
-  return log_status(logger);
-}
-
-int log_unsupported_url_scheme(const MqttSnLogger *logger) {
-  log_str(logger, PSTR("Error: unsupported URL scheme."));
-  log_flush(logger);
-  return log_status(logger);
-}
-
-int log_invalid_protocol_version_given(const MqttSnLogger *logger) {
-  log_str(logger, PSTR("Error: Invalid protocol version given."));
-  log_flush(logger);
-  return log_status(logger);
-}
-
-int log_unknown_option(const MqttSnLogger *logger, const char *unknown_option) {
-  log_str(logger, PSTR("Error: Unknown option "));
-  log_str(logger, unknown_option);
-  log_str(logger, PSTR("."));
   log_flush(logger);
   return log_status(logger);
 }
