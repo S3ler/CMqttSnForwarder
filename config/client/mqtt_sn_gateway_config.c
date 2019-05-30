@@ -5,7 +5,7 @@
 #include "mqtt_sn_gateway_config.h"
 #include <string.h>
 #include <stdlib.h>
-#include <config/config_command_helper.h>
+#include <config/common/config_command_helper.h>
 #include <platform/platform_compatibility.h>
 
 int32_t mqtt_sn_gateway_config_init(mqtt_sn_gateway_config *msgcfg) {

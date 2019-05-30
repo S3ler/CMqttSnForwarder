@@ -5,9 +5,10 @@
 #ifndef CMQTTSNFORWARDER_GATEWAY_ECHOGATEWAY_CONFIG_ECHOGATEWAY_CONFIG_H_
 #define CMQTTSNFORWARDER_GATEWAY_ECHOGATEWAY_CONFIG_ECHOGATEWAY_CONFIG_H_
 
-#include <config/mqtt_sn_version_config.h>
-#include <config/client_network_config.h>
-#include <config/mqtt_sn_logger_config.h>
+#include <config/common/mqtt_sn_version_config.h>
+#include <config/network/client_network_config.h>
+#include <config/common/mqtt_sn_logger_config.h>
+#include <config/gateway/gateway_advertisment_config.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,6 +17,7 @@ extern "C" {
 typedef struct echogateway_config_ {
   mqtt_sn_version_config msvcfg;
   client_network_config cncfg;
+  gateway_advertisement_config gacfg;
   mqtt_sn_logger_config mslcfg;
 } echogateway_config;
 

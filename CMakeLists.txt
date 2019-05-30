@@ -86,55 +86,33 @@ endif ()
 
 set(MQTT_SN_MESSAGE_PARSER_FILES
         platform/device_address.h
-        parser/MqttSnMessageParser.c
-        parser/MqttSnMessageParser.h
-        parser/MqttSnAdvertiseMessage.c
-        parser/MqttSnAdvertiseMessage.h
-        parser/MqttSnSearchGwMessage.c
-        parser/MqttSnSearchGwMessage.h
-        parser/MqttSnGwInfoMessage.c
-        parser/MqttSnGwInfoMessage.h
-        parser/MqttSnConnectMessage.c
-        parser/MqttSnConnectMessage.h
-        parser/MqttSnConnackMessage.c
-        parser/MqttSnConnackMessage.h
-        parser/MqttSnWillTopicReq.c
-        parser/MqttSnWillTopicReq.h
-        parser/MqttSnWillTopicMessage.c
-        parser/MqttSnWillTopicMessage.h
-        parser/MqttSnWillMsgReqMessage.c
-        parser/MqttSnWillMsgReqMessage.h
-        parser/MqttSnWillMsgMessage.c
-        parser/MqttSnWillMsgMessage.h
-        parser/MqttSnRegister.c
-        parser/MqttSnRegister.h
-        parser/MqttSnRegAckMessage.c
-        parser/MqttSnRegAckMessage.h
-        parser/MqttSnPublishMessage.c
-        parser/MqttSnPublishMessage.h
-        parser/MqttSnPubackMessage.c
-        parser/MqttSnPubackMessage.h
-        parser/MqttSnPubrecMessage.c
-        parser/MqttSnPubrecMessage.h
-        parser/MqttSnSubscribeMessage.c
-        parser/MqttSnSubscribeMessage.h
-        parser/MqttSnUnsubscribeMessage.c
-        parser/MqttSnUnsubscribeMessage.h
-        parser/MqttSnSubackMessage.c
-        parser/MqttSnSubackMessage.h
-        parser/MqttSnUnsubackMessage.c
-        parser/MqttSnUnsubackMessage.h
-        parser/MqttSnPingReqMessage.c
-        parser/MqttSnPingReqMessage.h
-        parser/MqttSnPingRespMessage.c
-        parser/MqttSnPingRespMessage.h
-        parser/MqttSnDisconnectMessage.c
-        parser/MqttSnDisconnectMessage.h
-        #TODO WILLTOPICUPD
-        #TODO WILLMSGUPD
-        #TODO WILLTOPICRESP
-        parser/MqttSnForwarderEncapsulationMessage.c
-        parser/MqttSnForwarderEncapsulationMessage.h parser/MqttSnWillTopicUpdMessage.c parser/MqttSnWillTopicUpdMessage.h parser/MqttSnWillMsgUpdMessage.c parser/MqttSnWillMsgUpdMessage.h parser/MqttSnWillTopicRespMessage.c parser/MqttSnWillTopicRespMessage.h parser/MqttSnWillMsgRespMessage.c parser/MqttSnWillMsgRespMessage.h)
+        parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h
+        parser/MqttSnAdvertiseMessage.c parser/MqttSnAdvertiseMessage.h
+        parser/MqttSnSearchGwMessage.c parser/MqttSnSearchGwMessage.h
+        parser/MqttSnGwInfoMessage.c parser/MqttSnGwInfoMessage.h
+        parser/MqttSnConnectMessage.c parser/MqttSnConnectMessage.h
+        parser/MqttSnConnackMessage.c parser/MqttSnConnackMessage.h
+        parser/MqttSnWillTopicReq.c parser/MqttSnWillTopicReq.h
+        parser/MqttSnWillTopicMessage.c parser/MqttSnWillTopicMessage.h
+        parser/MqttSnWillMsgReqMessage.c parser/MqttSnWillMsgReqMessage.h
+        parser/MqttSnWillMsgMessage.c parser/MqttSnWillMsgMessage.h
+        parser/MqttSnRegister.c parser/MqttSnRegister.h
+        parser/MqttSnRegAckMessage.c parser/MqttSnRegAckMessage.h
+        parser/MqttSnPublishMessage.c parser/MqttSnPublishMessage.h
+        parser/MqttSnPubackMessage.c parser/MqttSnPubackMessage.h
+        parser/MqttSnPubrecMessage.c parser/MqttSnPubrecMessage.h
+        parser/MqttSnSubscribeMessage.c parser/MqttSnSubscribeMessage.h
+        parser/MqttSnUnsubscribeMessage.c parser/MqttSnUnsubscribeMessage.h
+        parser/MqttSnSubackMessage.c parser/MqttSnSubackMessage.h
+        parser/MqttSnUnsubackMessage.c parser/MqttSnUnsubackMessage.h
+        parser/MqttSnPingReqMessage.c parser/MqttSnPingReqMessage.h
+        parser/MqttSnPingRespMessage.c parser/MqttSnPingRespMessage.h
+        parser/MqttSnDisconnectMessage.c parser/MqttSnDisconnectMessage.h
+        parser/MqttSnForwarderEncapsulationMessage.c parser/MqttSnForwarderEncapsulationMessage.h
+        parser/MqttSnWillTopicUpdMessage.c parser/MqttSnWillTopicUpdMessage.h
+        parser/MqttSnWillMsgUpdMessage.c parser/MqttSnWillMsgUpdMessage.h
+        parser/MqttSnWillTopicRespMessage.c parser/MqttSnWillTopicRespMessage.h
+        parser/MqttSnWillMsgRespMessage.c parser/MqttSnWillMsgRespMessage.h)
 if (WITH_LOGGING)
     set(MQTT_SN_MESSAGE_PARSER_FILES ${MQTT_SN_MESSAGE_PARSER_FILES}
             parser/logging/MqttSnAdvertiseMessageLogging.c
@@ -144,12 +122,14 @@ if (WITH_LOGGING)
             parser/logging/MqttSnSearchGwMessageLogging.c
             parser/logging/MqttSnSearchGwMessageLogging.h
             parser/logging/MqttSnGwInfoMessageLogging.c
-            parser/logging/MqttSnGwInfoMessageLogging.h parser/logging/common/MqttSnMessageLogging.c parser/logging/common/MqttSnMessageLogging.h)
+            parser/logging/MqttSnGwInfoMessageLogging.h
+            parser/logging/common/MqttSnMessageLogging.c
+            parser/logging/common/MqttSnMessageLogging.h)
 endif ()
 add_library(lib-mqtt-sn-message-parser ${MQTT_SN_MESSAGE_PARSER_FILES})
 target_include_directories(lib-mqtt-sn-message-parser PRIVATE .)
 target_compile_options(lib-mqtt-sn-message-parser PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-
+target_link_libraries(lib-mqtt-sn-message-parser lib-mqtt-sn-logging)
 option(WITH_LINUX_PLUGIN_NETWORK "Include WITH_LINUX_PLUGIN_NETWORK support?" ON)
 if (WITH_LINUX_PLUGIN_NETWORK)
     add_definitions(-DWITH_LINUX_PLUGIN_NETWORK)
@@ -414,19 +394,23 @@ endif ()
 
 set(MQTT_SN_CLIENT_TEST_FILES
         client/pub/config/publish_client_config.c client/pub/config/publish_client_config.h
-        config/gateway_network_config.c config/gateway_network_config.h
-        config/mqtt_sn_gateway_config.c config/mqtt_sn_gateway_config.h
-        config/config_command_helper.c config/config_command_helper.h
-        config/mqtt_sn_version_config.c config/mqtt_sn_version_config.h
-        config/client_network_config.c config/client_network_config.h
-        config/mqtt_sn_logger_config.c config/mqtt_sn_logger_config.h
+        config/network/gateway_network_config.c config/network/gateway_network_config.h
+        config/client/mqtt_sn_gateway_config.c config/client/mqtt_sn_gateway_config.h
+        config/common/config_command_helper.c config/common/config_command_helper.h
+        config/common/mqtt_sn_version_config.c config/common/mqtt_sn_version_config.h
+        config/network/client_network_config.c config/network/client_network_config.h
+        config/common/mqtt_sn_logger_config.c config/common/mqtt_sn_logger_config.h
         client/sub/config/subscription_client_config.c client/sub/config/subscription_client_config.h
         gateway/echogateway/config/echogateway_config.c gateway/echogateway/config/echogateway_config.h
-        config/client_connect_config.c config/client_connect_config.h
-        config/client_register_config.c config/client_register_config.h
-        config/client_subscribe_config.c config/client_subscribe_config.h
-        config/client_publish_config.c config/client_publish_config.h
-        config/client_find_mqtt_sn_gateway_config.c config/client_find_mqtt_sn_gateway_config.h)
+        config/client/client_connect_config.c config/client/client_connect_config.h
+        config/client/client_register_config.c config/client/client_register_config.h
+        config/client/client_subscribe_config.c config/client/client_subscribe_config.h
+        config/client/client_publish_config.c config/client/client_publish_config.h
+        config/client/client_find_mqtt_sn_gateway_config.c config/client/client_find_mqtt_sn_gateway_config.h
+        config/gateway/gateway_advertisment_config.c config/gateway/gateway_advertisment_config.h
+        gateway/echogateway/linux/starter/echogateway_starter.c gateway/echogateway/linux/starter/echogateway_starter.h
+        gateway/echogateway/echogateway.c gateway/echogateway/echogateway.h
+        )
 
 set(MQTT_SN_CLIENT_PUB_FILES client/pub/linux/main.c ${MQTT_SN_CLIENT_TEST_FILES})
 add_executable(MqttSnClientPub ${MQTT_SN_CLIENT_PUB_FILES})
@@ -450,7 +434,8 @@ target_link_libraries(MqttSnClientSub
         lib-mqtt-sn-linux-client-network
         lib-mqtt-sn-linux-gateway-network)
 
-set(MQTT_SN_ECHOGATEWAY_FILES gateway/echogateway/linux/main.c ${MQTT_SN_CLIENT_TEST_FILES})
+set(MQTT_SN_ECHOGATEWAY_FILES gateway/echogateway/linux/main.c         parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h
+         ${MQTT_SN_CLIENT_TEST_FILES})
 add_executable(MqttSnEchoGateway ${MQTT_SN_ECHOGATEWAY_FILES})
 target_include_directories(MqttSnEchoGateway PRIVATE .)
 target_compile_options(MqttSnEchoGateway PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
@@ -459,7 +444,7 @@ target_link_libraries(MqttSnEchoGateway
         lib-mqtt-sn-message-parser
         lib-mqtt-sn-logging
         lib-mqtt-sn-linux-client-network
-        lib-mqtt-sn-linux-gateway-network)
+        pthread dl)
 
 set(MQTT_SN_FORWARDER_FILES
         forwarder/MqttSnForwarder.c

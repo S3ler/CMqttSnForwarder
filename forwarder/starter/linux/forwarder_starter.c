@@ -24,91 +24,6 @@
 #include <forwarder/MqttSnForwarderLogging.h>
 #include <assert.h>
 
-int convert_hostname_port_to_device_address(const char *hostname,
-                                            int port,
-                                            device_address *address,
-                                            const char *address_name) {
-  if (hostname == NULL) {
-    memset(address, 0, sizeof(device_address));
-  } else {
-    if (convert_string_to_device_address(hostname, address)) {
-      if (get_device_address_from_hostname(hostname, address)) {
-        fprintf(stderr, "Cannot convert or resolve %s to %s network address.\n", hostname, address_name);
-        return EXIT_FAILURE;
-      }
-    }
-  }
-
-  if (port < -1 || port > 65535) {
-    fprintf(stderr, "Error: Invalid port given: %d\n", port);
-    return EXIT_FAILURE;
-  }
-  if (port > -1) {
-    add_port_to_device_address(port, address);
-  }
-  return EXIT_SUCCESS;
-}
-
-int get_device_address_from_hostname(const char *hostname, device_address *dst) {
-  memset(dst, 0, sizeof(device_address));
-
-  struct addrinfo hints = {0};
-
-  struct addrinfo *ainfo, *rp;
-  int rc = 0;
-
-  rc = getaddrinfo(hostname, NULL, &hints, &ainfo);
-  if (rc) {
-    return -1;
-  }
-  // prefer ip v4 address
-  for (rp = ainfo; rp != NULL; rp = rp->ai_next) {
-    if (rp->ai_family == AF_INET) {
-      if (get_device_address_from_addrinfo(rp, dst)) {
-        continue;
-      }
-      freeaddrinfo(ainfo);
-      return 0;
-    }
-  }
-
-  // no ip v4 address found use a ip v6
-  for (rp = ainfo; rp != NULL; rp = rp->ai_next) {
-    if (rp->ai_family == AF_INET6) {
-      if (get_device_address_from_addrinfo(rp, dst)) {
-        continue;
-      }
-      freeaddrinfo(ainfo);
-      return 0;
-    }
-  }
-
-  freeaddrinfo(ainfo);
-  return -1;
-}
-
-int get_device_address_from_addrinfo(struct addrinfo *ai_addr, device_address *dst) {
-  assert(ai_addr->ai_family == AF_INET || ai_addr->ai_family == AF_INET6);
-  assert(ai_addr->ai_family == AF_INET ? (sizeof(device_address) >= 4 + 2) : (sizeof(device_address) >= 16 + 2));
-
-  if (ai_addr->ai_family == AF_INET) {
-    struct sockaddr_in *sockaddr = (struct sockaddr_in *) ai_addr->ai_addr;
-    uint32_t ip_as_number = ntohl(sockaddr->sin_addr.s_addr);
-    dst->bytes[0] = (ip_as_number >> 24) & 0xFF;
-    dst->bytes[1] = (ip_as_number >> 16) & 0xFF;
-    dst->bytes[2] = (ip_as_number >> 8) & 0xFF;
-    dst->bytes[3] = (ip_as_number >> 0) & 0xFF;
-
-    add_port_to_device_address(ntohs(sockaddr->sin_port), dst);
-  }
-  if (ai_addr->ai_family == AF_INET6) {
-    struct sockaddr_in6 *sockaddr = (struct sockaddr_in6 *) ai_addr->ai_addr;
-    int ai_family_size = sizeof(sockaddr->sin6_addr.__in6_u.__u6_addr8);
-    memcpy(dst->bytes, sockaddr->sin6_addr.__in6_u.__u6_addr8, ai_family_size);
-    add_port_to_device_address(ntohs(sockaddr->sin6_port), dst);
-  }
-  return 0;
-}
 
 #ifdef WITH_LINUX_PLUGIN_NETWORK
 int start_gateway_plugin(const forwarder_config *fcfg,
@@ -158,8 +73,8 @@ int start_gateway_plugin(const forwarder_config *fcfg,
       .mqtt_sn_gateway_network_address = &pluginMqttSnGatewayNetworkAddress,
       .forwarder_gateway_network_address = &pluginForwarderGatewayNetworkAddress,
       .forwarder_gateway_network_broadcast_address = &pluginForwarderGatewayNetworkBroadcastAddress,
-      .gateway_plugin_device_address_length = CMQTTSNFORWARDER_DEVICE_ADDRESS_LENGTH,
-      .forwarder_maximum_message_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH};
+      .gateway_plugin_device_address_length = MQTT_SN_DEVICE_ADDRESS_LENGTH,
+      .forwarder_maximum_message_length = MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH};
 
   MqttSnGatewayPluginContext gatewayPluginContext = {
       .dl_handle = NULL,
@@ -183,7 +98,7 @@ int start_gateway_plugin(const forwarder_config *fcfg,
 #endif
 
   if (GatewayNetworkInitialize(&mqttSnForwarder->gatewayNetwork,
-                               CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                               MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
                                &mqttSnGatewayNetworkAddress,
                                &forwarderGatewayNetworkAddress,
                                &forwarderGatewayNetworkBroadcastAddress,
@@ -230,7 +145,7 @@ int start_gateway_tcp(const forwarder_config *fcfg,
   }
 
   if (GatewayNetworkInitialize(&mqttSnForwarder->gatewayNetwork,
-                               CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                               MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
                                &mqttSnGatewayNetworkAddress,
                                &forwarderGatewayNetworkAddress,
                                &forwarderGatewayNetworkBroadcastAddress,
@@ -277,7 +192,7 @@ int start_gateway_udp(const forwarder_config *fcfg,
   }
 
   if (GatewayNetworkInitialize(&mqttSnForwarder->gatewayNetwork,
-                               CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                               MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
                                &mqttSnGatewayNetworkAddress,
                                &forwarderGatewayNetworkAddress,
                                &forwarderGatewayNetworkBroadcastAddress,
@@ -331,8 +246,8 @@ int start_client_plugin(const forwarder_config *fcfg,
       .plugin_path = fcfg->client_network_plugin_path,
       .protocol = fcfg->client_network_protocol,
       .forwarder_client_network_address = &pluginMqttSnForwarderNetworkAddress,
-      .client_plugin_device_address_length = CMQTTSNFORWARDER_DEVICE_ADDRESS_LENGTH,
-      .forwarder_maximum_message_length = CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH};
+      .client_plugin_device_address_length = MQTT_SN_DEVICE_ADDRESS_LENGTH,
+      .forwarder_maximum_message_length = MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH};
 
   MqttSnClientPluginContext clientPluginContext = {
       .dl_handle = NULL,
@@ -356,7 +271,7 @@ int start_client_plugin(const forwarder_config *fcfg,
 #endif
 
   if (ClientNetworkInitialize(&mqttSnForwarder->clientNetwork,
-                              CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                              MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
                               &mqttSnGatewayNetworkAddress,
                               &forwarderClientNetworkAddress,
                               &forwarderClientNetworkBroadcastAddress,
@@ -405,7 +320,7 @@ int start_client_tcp(const forwarder_config *fcfg,
   }
 
   if (ClientNetworkInitialize(&mqttSnForwarder->clientNetwork,
-                              CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                              MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
                               &mqttSnGatewayNetworkAddress,
                               &forwarderClientNetworkAddress,
                               &forwarderClientNetworkBroadcastAddress,
@@ -453,7 +368,7 @@ int start_client_udp(const forwarder_config *fcfg,
   }
 
   if (ClientNetworkInitialize(&mqttSnForwarder->clientNetwork,
-                              CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH,
+                              MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
                               &mqttSnGatewayNetworkAddress,
                               &forwarderClientNetworkAddress,
                               &forwarderClientNetworkBroadcastAddress,

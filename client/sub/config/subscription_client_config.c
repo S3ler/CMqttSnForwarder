@@ -5,7 +5,7 @@
 #include "subscription_client_config.h"
 #include <string.h>
 #include <platform/platform_compatibility.h>
-#include <config/config_command_helper.h>
+#include <config/common/config_command_helper.h>
 
 int32_t subscription_client_config_init(subscription_client_config *cfg) {
   memset(cfg, 0, sizeof(*cfg));

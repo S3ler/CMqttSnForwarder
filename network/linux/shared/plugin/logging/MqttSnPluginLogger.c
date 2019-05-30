@@ -212,5 +212,7 @@ int log_too_long_message(const MqttSnLogger *logger,
   }
 
   const char *description = "dropping too long message: ";
+  // TODO FIXME resee Modulation
+  return 0;
   return log_mqtt_sn_message(logger, from, network, data, data_len, description);
 }

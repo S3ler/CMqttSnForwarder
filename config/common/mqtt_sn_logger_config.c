@@ -47,18 +47,17 @@ int32_t mqtt_sn_logger_config_process_args(mqtt_sn_logger_config *cfg,
     }
 #endif
   }
-
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
 void mqtt_sn_logger_config_print_usage_short(const MqttSnLogger *logger, const char *indent) {
   if (indent) {
     log_str(logger, indent);
   }
-#ifndef WITH_DEBUG_LOGGING
-  log_str(logger, PSTR("[[-q quiet] | [-d default] | [-v verbose]]\n"));
-#else
-  log_str(logger, PSTR("[[-q quiet] | [-d default] | [-v verbose] | [-db debug]]\n"));
+  log_str(logger, PSTR("[[-q quiet] | [-d default] | [-v verbose]"));
+#ifdef WITH_DEBUG_LOGGING
+  log_str(logger, PSTR(" | [-db debug]"));
 #endif
+  log_str(logger, PSTR("]\n"));
 }
 void mqtt_sn_logger_config_print_usage_long(const MqttSnLogger *logger) {
   log_str(logger, PSTR(" -q : specify quiet logging. Don't print any log messages.\n"));

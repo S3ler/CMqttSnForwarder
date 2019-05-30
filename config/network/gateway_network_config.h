@@ -13,6 +13,17 @@
 extern "C" {
 #endif
 
+#ifndef DEFAULT_UDP
+#define DEFAULT_UDP "udp"
+#endif
+#ifndef DEFAULT_TCP
+#define DEFAULT_TCP "tcp"
+#endif
+
+#ifndef DEFAULT_MQTT_SN_GATEWAY_PROTOCOL
+#define DEFAULT_MQTT_SN_GATEWAY_PROTOCOL DEFAULT_UDP
+#endif
+
 #ifndef GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT
 #define GATEWAY_NETWORK_DEFAULT_SEND_TIMEOUT 1000
 #endif
@@ -30,17 +41,6 @@ extern "C" {
 #endif
 #ifndef DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT
 #define DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT 5353
-#endif
-
-#ifndef DEFAULT_UDP
-#define DEFAULT_UDP "udp"
-#endif
-#ifndef DEFAULT_TCP
-#define DEFAULT_TCP "tcp"
-#endif
-
-#ifndef DEFAULT_MQTT_SN_GATEWAY_PROTOCOL
-#define DEFAULT_MQTT_SN_GATEWAY_PROTOCOL DEFAULT_UDP
 #endif
 
 typedef struct linux_gateway_network_config_ {
@@ -66,14 +66,15 @@ typedef struct linux_gateway_network_config_ {
 #endif
 } gateway_network_config;
 
-int32_t gateway_network_config_init(gateway_network_config *lgncfg);
+int32_t gateway_network_config_init(gateway_network_config *cfg);
+void gateway_network_config_cleanup(gateway_network_config *cfg);
 
-void gateway_network_config_cleanup(gateway_network_config *lgncfg);
 int32_t is_gateway_network_config_command(const char *arg, int *i);
-int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
+int32_t gateway_network_config_process_args(gateway_network_config *cfg,
                                             const MqttSnLogger *logger,
                                             int argc,
                                             char **argv);
+
 void gateway_network_config_print_usage_short(const MqttSnLogger *logger, const char *indent);
 void gateway_network_config_print_usage_long(const MqttSnLogger *logger);
 

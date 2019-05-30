@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <platform/platform_compatibility.h>
-#include <config/config_command_helper.h>
+#include <config/common/config_command_helper.h>
 
 // TODO remove strdup
 int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
@@ -75,13 +75,13 @@ int forwarder_config_init(forwarder_config *fcfg, MqttSnLogger *logger) {
 
 void forwarder_config_cleanup(forwarder_config *fcfg) {
   if (fcfg->mqtt_sn_gateway_host != fcfg->localhost) {
-    free(fcfg->mqtt_sn_gateway_host);
+    //free(fcfg->mqtt_sn_gateway_host);
   }
   if (fcfg->gateway_network_protocol != fcfg->udp) {
-    free(fcfg->gateway_network_protocol);
+    //free(fcfg->gateway_network_protocol);
   }
   if (fcfg->client_network_protocol != fcfg->udp) {
-    free(fcfg->client_network_protocol);
+    //free(fcfg->client_network_protocol);
   }
   MqttSnLoggerDeinit(fcfg->logger);
 }

@@ -12,6 +12,7 @@ extern "C" {
 #include <logging/MqttSnLoggingInterface.h>
 #include <netdb.h>
 
+
 struct sockaddr_in get_sockaddr_in_from_tcp_file_descriptor(int file_descriptor);
 
 struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *deviceAddress);
@@ -19,6 +20,16 @@ struct sockaddr_in get_sockaddr_in_from_device_address(const device_address *dev
 device_address get_device_address_from_tcp_file_descriptor(int file_descriptor);
 
 device_address get_device_address_from_sockaddr_in(struct sockaddr_in *sockaddr);
+
+
+int convert_hostname_port_to_device_address(const char *hostname,
+                                            int port,
+                                            device_address *address,
+                                            const char *address_name);
+
+int get_device_address_from_hostname(const char *hostname, device_address *dst);
+
+int get_device_address_from_addrinfo(struct addrinfo *ai_addr, device_address *dst);
 
 #ifdef __cplusplus
 }

@@ -12,8 +12,8 @@
 extern "C" {
 #endif
 
-#ifndef CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH
-#define CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH 1024
+#ifndef MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH
+#define MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH 1024
 #endif
 
 typedef struct MqttSnMessageData_ {
@@ -21,7 +21,7 @@ typedef struct MqttSnMessageData_ {
   device_address to;
   uint16_t data_length;
   uint8_t signal_strength;
-  uint8_t data[CMQTTSNFORWARDER_MAXIMUM_MESSAGE_LENGTH];
+  uint8_t data[MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH];
 } MqttSnMessageData;
 
 #ifdef __cplusplus

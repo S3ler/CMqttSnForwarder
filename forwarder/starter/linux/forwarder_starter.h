@@ -15,13 +15,7 @@ typedef struct MqttSnForwarder_fcfg_ptr_ {
   const forwarder_config *fcfg_ptr;
 } MqttSnForwarder_fcfg_ptr;
 
-int convert_hostname_port_to_device_address(const char *hostname,
-                                            int port,
-                                            device_address *address,
-                                            const char *address_name);
 
-int get_device_address_from_hostname(const char *hostname, device_address *dst);
-int get_device_address_from_addrinfo(struct addrinfo *ai_addr, device_address *dst);
 
 int start_gateway_udp(const forwarder_config *fcfg,
                       MqttSnForwarder *mqttSnForwarder,

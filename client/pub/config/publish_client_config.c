@@ -3,7 +3,7 @@
 //
 
 #include <platform/platform_compatibility.h>
-#include <config/config_command_helper.h>
+#include <config/common/config_command_helper.h>
 #include <stdbool.h>
 #include "publish_client_config.h"
 

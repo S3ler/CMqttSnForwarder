@@ -388,7 +388,7 @@ int32_t get_next_message_from_buffer(uint8_t *buffer,
       }
     }
 
-    uint16_t msg_length = get_message_length(buffer);
+    uint16_t msg_length = get_tcp_message_length(buffer);
     if (msg_length > max_buffer_length) {
       // complete messages does not fit into buffer => drop the message by dropping bytes
       *to_drop_bytes = msg_length - *data_length;

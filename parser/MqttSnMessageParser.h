@@ -4,12 +4,13 @@
 
 #ifndef CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H
 #define CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include <platform/device_address.h>
 #include <unistd.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define FOREACH_MQTT_SN_MESSAGE_TYPE(MESSAGE_TYPE) \
         MESSAGE_TYPE(ANY_MESSAGE_TYPE , -2)   \

@@ -9,7 +9,7 @@ int log_forwarder_started(const MqttSnLogger *logger,
                           int tweak,
                           const char *build_date) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
-    return 0;
+    return log_status(logger);
   }
 
   log_msg_start(logger);
@@ -34,7 +34,7 @@ int log_forwarder_terminated(const MqttSnLogger *logger,
                              uint32_t minor,
                              uintmax_t tweak) {
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
-    return 0;
+    return log_status(logger);
   }
 
   log_msg_start(logger);

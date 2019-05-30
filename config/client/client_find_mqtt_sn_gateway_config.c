@@ -3,7 +3,7 @@
 //
 
 #include "client_find_mqtt_sn_gateway_config.h"
-#include "config_command_helper.h"
+#include "config/common/config_command_helper.h"
 #include <string.h>
 #include <platform/platform_compatibility.h>
 #include <stdlib.h>

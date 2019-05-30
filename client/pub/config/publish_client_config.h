@@ -6,14 +6,14 @@
 #define CMQTTSNFORWARDER_CLIENT_PUB_CONFIG_CLIENT_PUBLISH_CONFIG_H_
 
 #include <logging/MqttSnLoggingInterface.h>
-#include <config/mqtt_sn_version_config.h>
-#include <config/mqtt_sn_gateway_config.h>
-#include <config/gateway_network_config.h>
-#include <config/mqtt_sn_logger_config.h>
-#include <config/client_find_mqtt_sn_gateway_config.h>
-#include <config/client_connect_config.h>
-#include <config/client_register_config.h>
-#include <config/client_publish_config.h>
+#include <config/common/mqtt_sn_version_config.h>
+#include <config/client/mqtt_sn_gateway_config.h>
+#include <config/network/gateway_network_config.h>
+#include <config/common/mqtt_sn_logger_config.h>
+#include <config/client/client_find_mqtt_sn_gateway_config.h>
+#include <config/client/client_connect_config.h>
+#include <config/client/client_register_config.h>
+#include <config/client/client_publish_config.h>
 
 #ifdef __cplusplus
 extern "C" {

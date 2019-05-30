@@ -15,7 +15,7 @@ int32_t mqtt_sn_version_config_init(mqtt_sn_version_config *cfg) {
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
 void mqtt_sn_version_config_cleanup(mqtt_sn_version_config *cfg) {
-
+  // nothing to do here
 }
 void mqtt_sn_version_config_print_usage_short(const MqttSnLogger *logger) {
   log_str(logger, PSTR("version "));

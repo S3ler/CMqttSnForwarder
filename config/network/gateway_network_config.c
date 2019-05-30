@@ -6,46 +6,46 @@
 #include <platform/platform_compatibility.h>
 #include <string.h>
 #include <stdlib.h>
-#include <config/config_command_helper.h>
+#include <config/common/config_command_helper.h>
 
-int32_t gateway_network_config_init(gateway_network_config *lgncfg) {
-  memset(lgncfg, 0, sizeof(*lgncfg));
-  memcpy(lgncfg->default_gateway_network_protocol, DEFAULT_UDP, sizeof(DEFAULT_UDP));
-  lgncfg->gateway_network_protocol = lgncfg->default_gateway_network_protocol;
-  lgncfg->gateway_network_bind_port = DEFAULT_MQTT_SN_GATEWAY_BIND_PORT;
+int32_t gateway_network_config_init(gateway_network_config *cfg) {
+  memset(cfg, 0, sizeof(*cfg));
+  memcpy(cfg->default_gateway_network_protocol, DEFAULT_MQTT_SN_GATEWAY_PROTOCOL, sizeof(DEFAULT_MQTT_SN_GATEWAY_PROTOCOL));
+  cfg->gateway_network_protocol = cfg->default_gateway_network_protocol;
+  cfg->gateway_network_bind_port = DEFAULT_MQTT_SN_GATEWAY_BIND_PORT;
 #ifdef WITH_GATEWAY_NETWORK_BROADCAST
-  lgncfg->gateway_network_broadcast_protocol = lgncfg->default_gateway_network_protocol;
+  cfg->gateway_network_broadcast_protocol = cfg->default_gateway_network_protocol;
 #endif
-  memcpy(lgncfg->default_gateway_network_broadcast_address,
+  memcpy(cfg->default_gateway_network_broadcast_address,
          DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS,
          sizeof(DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS));
-  lgncfg->gateway_network_broadcast_address = lgncfg->default_gateway_network_broadcast_address;
-  lgncfg->gateway_network_broadcast_bind_port = DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT;
+  cfg->gateway_network_broadcast_address = cfg->default_gateway_network_broadcast_address;
+  cfg->gateway_network_broadcast_bind_port = DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT;
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
 
-void gateway_network_config_cleanup(gateway_network_config *lgncfg) {
-  if (lgncfg->gateway_network_protocol != lgncfg->default_gateway_network_protocol) {
-    free(lgncfg->gateway_network_protocol);
+void gateway_network_config_cleanup(gateway_network_config *cfg) {
+  if (cfg->gateway_network_protocol != cfg->default_gateway_network_protocol) {
+    //free(cfg->gateway_network_protocol);
   }
-  if (lgncfg->gateway_network_bind_address) {
-    free(lgncfg->gateway_network_bind_address);
+  if (cfg->gateway_network_bind_address) {
+    //free(cfg->gateway_network_bind_address);
   }
-  if (lgncfg->gateway_network_broadcast_address != lgncfg->default_gateway_network_broadcast_address) {
-    free(lgncfg->gateway_network_broadcast_address);
+  if (cfg->gateway_network_broadcast_address != cfg->default_gateway_network_broadcast_address) {
+    //free(cfg->gateway_network_broadcast_address);
   }
 #ifdef WITH_GATEWAY_NETWORK_BROADCAST
-  if (lgncfg->gateway_network_broadcast_protocol != lgncfg->default_gateway_network_protocol) {
-    free(lgncfg->gateway_network_broadcast_protocol);
+  if (cfg->gateway_network_broadcast_protocol != cfg->default_gateway_network_protocol) {
+    //free(cfg->gateway_network_broadcast_protocol);
   }
 #endif
 #ifdef WITH_LINUX_PLUGIN_NETWORK
-  if (lgncfg->gateway_network_plugin_path) {
-    free(lgncfg->gateway_network_plugin_path);
+  if (cfg->gateway_network_plugin_path) {
+    //free(cfg->gateway_network_plugin_path);
   }
 #endif
 }
-int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
+int32_t gateway_network_config_process_args(gateway_network_config *cfg,
                                             const MqttSnLogger *logger,
                                             int argc,
                                             char **argv) {
@@ -56,10 +56,10 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "protocol");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        if (lgncfg->gateway_network_protocol != lgncfg->default_gateway_network_protocol) {
-          free(lgncfg->gateway_network_protocol);
+        if (cfg->gateway_network_protocol != cfg->default_gateway_network_protocol) {
+          free(cfg->gateway_network_protocol);
         }
-        lgncfg->gateway_network_protocol = strdup(argv[i + 1]);
+        cfg->gateway_network_protocol = strdup(argv[i + 1]);
       }
       i++;
     } else if (!strcmp(argv[i], "-gA") || !strcmp(argv[i], "--gateway_network_bind_address")) {
@@ -67,7 +67,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "address");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        lgncfg->gateway_network_bind_address = strdup(argv[i + 1]);
+        cfg->gateway_network_bind_address = strdup(argv[i + 1]);
       }
       i++;
     } else if (!strcmp(argv[i], "-gp") || !strcmp(argv[i], "--gateway_network_bind_port")) {
@@ -75,7 +75,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "port");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        if (parse_port(logger, argv[i + 1], &lgncfg->gateway_network_bind_port)) {
+        if (parse_port(logger, argv[i + 1], &cfg->gateway_network_bind_port)) {
           return MQTT_SN_PARSE_CONFIG_FAILURE;
         }
       }
@@ -93,22 +93,22 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         char *null_token = strtok(NULL, "://");
 
         if (prot) {
-          if (lgncfg->gateway_network_protocol != lgncfg->default_gateway_network_protocol) {
-            free(lgncfg->gateway_network_protocol);
+          if (cfg->gateway_network_protocol != cfg->default_gateway_network_protocol) {
+            free(cfg->gateway_network_protocol);
           }
-          lgncfg->gateway_network_protocol = strdup(prot);
+          cfg->gateway_network_protocol = strdup(prot);
         } else {
           print_unsupported_url_scheme(logger);
         }
 
         if (addr) {
-          lgncfg->gateway_network_bind_address = strdup(addr);
+          cfg->gateway_network_bind_address = strdup(addr);
         } else {
           print_unsupported_url_scheme(logger);
         }
 
         if (port) {
-          if (parse_port(logger, port, &lgncfg->gateway_network_bind_port)) {
+          if (parse_port(logger, port, &cfg->gateway_network_bind_port)) {
             return MQTT_SN_PARSE_CONFIG_FAILURE;
           }
         }
@@ -124,7 +124,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "timeout");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        if (parse_timeout(logger, argv[i + 1], &lgncfg->gateway_network_send_timeout)) {
+        if (parse_timeout(logger, argv[i + 1], &cfg->gateway_network_send_timeout)) {
           return MQTT_SN_PARSE_CONFIG_FAILURE;
         }
       }
@@ -134,7 +134,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "timeout");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        if (parse_timeout(logger, argv[i + 1], &lgncfg->gateway_network_receive_timeout)) {
+        if (parse_timeout(logger, argv[i + 1], &cfg->gateway_network_receive_timeout)) {
           return MQTT_SN_PARSE_CONFIG_FAILURE;
         }
       }
@@ -144,10 +144,10 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "timeout");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        if (parse_timeout(logger, argv[i + 1], &lgncfg->gateway_network_send_timeout)) {
+        if (parse_timeout(logger, argv[i + 1], &cfg->gateway_network_send_timeout)) {
           return MQTT_SN_PARSE_CONFIG_FAILURE;
         }
-        if (parse_timeout(logger, argv[i + 1], &lgncfg->gateway_network_receive_timeout)) {
+        if (parse_timeout(logger, argv[i + 1], &cfg->gateway_network_receive_timeout)) {
           return MQTT_SN_PARSE_CONFIG_FAILURE;
         }
       }
@@ -160,7 +160,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "protocol");
         return 1;
       } else {
-        lgncfg->gateway_network_broadcast_protocol = argv[i + 1];
+        cfg->gateway_network_broadcast_protocol = argv[i + 1];
       }
       i++;
     } else if (!strcmp(argv[i], "-gbA") || !strcmp(argv[i], "--gateway_network_broadcast_address")) {
@@ -168,7 +168,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "address");
         return 1;
       } else {
-        lgncfg->gateway_network_broadcast_address = argv[i + 1];
+        cfg->gateway_network_broadcast_address = argv[i + 1];
       }
       i++;
     } else if (!strcmp(argv[i], "-gbp") || !strcmp(argv[i], "--gateway_network_broadcast_bind_port")) {
@@ -176,7 +176,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "port");
         return 1;
       } else {
-        if (parse_port(logger, argv[i + 1], &lgncfg->gateway_network_broadcast_bind_port)) {
+        if (parse_port(logger, argv[i + 1], &cfg->gateway_network_broadcast_bind_port)) {
           return 1;
         }
       }
@@ -194,19 +194,19 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         char *null_token = strtok(NULL, "://");
 
         if (prot) {
-          lgncfg->gateway_network_broadcast_protocol = prot;
+          cfg->gateway_network_broadcast_protocol = prot;
         } else {
           print_unsupported_url_scheme(logger);
         }
 
         if (addr) {
-          lgncfg->gateway_network_broadcast_address = addr;
+          cfg->gateway_network_broadcast_address = addr;
         } else {
           print_unsupported_url_scheme(logger);
         }
 
         if (port) {
-          if (parse_port(logger, port, &lgncfg->gateway_network_broadcast_bind_port)) {
+          if (parse_port(logger, port, &cfg->gateway_network_broadcast_bind_port)) {
             return 1;
           }
         }
@@ -225,7 +225,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *lgncfg,
         print_argument_value_not_specified(logger, argv[i], "path");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        lgncfg->gateway_network_plugin_path = strdup(argv[i + 1]);
+        cfg->gateway_network_plugin_path = strdup(argv[i + 1]);
       }
       i++;
     }

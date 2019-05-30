@@ -31,11 +31,19 @@ int32_t process_config_file_line(const MqttSnLogger *logger,
 
 int32_t parse_port(const MqttSnLogger *logger, char *port_str, int32_t *dst);
 
+int32_t parse_duration(const MqttSnLogger *logger, char *duration_str, uint16_t *duration_dst);
+
+int32_t parse_radius(const MqttSnLogger *logger, char *radius_str, uint8_t *radius_dst);
+
 int32_t parse_timeout(const MqttSnLogger *logger, char *timeout_str, int32_t *dst);
 
 int32_t parse_topic_id(const MqttSnLogger *logger, char* topic_id_str, uint16_t *dst);
 
 int32_t print_invalid_topic_id_given(const MqttSnLogger* logger, const char* given_str);
+
+int32_t print_invalid_duration_given(const MqttSnLogger* logger, const char* given_str);
+
+int32_t print_invalid_radius_given(const MqttSnLogger *logger, const char *given_str);
 
 int32_t print_config_parser_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
 

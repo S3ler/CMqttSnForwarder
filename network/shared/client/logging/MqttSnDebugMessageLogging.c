@@ -59,7 +59,8 @@ int log_incomplete_client_message(const MqttSnLogger *logger,
   if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {
     return 0;
   }
-
+  // TODO FIXME by using different layout of files and functions
+  return 0;
   return log_client_mqtt_sn_message(logger,
                                     from,
                                     data,

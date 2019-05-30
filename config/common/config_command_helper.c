@@ -150,6 +150,26 @@ int32_t parse_port(const MqttSnLogger *logger, char *port_str, int32_t *dst) {
   *dst = n;
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
+int32_t parse_duration(const MqttSnLogger *logger, char *duration_str, uint16_t *duration_dst) {
+  char *endprt;
+  long int n = strtol(duration_str, &endprt, 10);
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < 0 || n > UINT16_MAX)) {
+    print_invalid_duration_given(logger, duration_str);
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+  *duration_dst = n;
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
+int32_t parse_radius(const MqttSnLogger *logger, char *radius_str, uint8_t *radius_dst) {
+  char *endprt;
+  long int n = strtol(radius_str, &endprt, 10);
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < 0 || n > UINT16_MAX)) {
+    print_invalid_radius_given(logger, radius_str);
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+  *radius_dst = n;
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
 int32_t parse_timeout(const MqttSnLogger *logger, char *timeout_str, int32_t *dst) {
   char *endprt;
   long int n = strtol(timeout_str, &endprt, 10);
@@ -172,6 +192,18 @@ int32_t parse_topic_id(const MqttSnLogger *logger, char *topic_id_str, uint16_t 
 }
 int32_t print_invalid_topic_id_given(const MqttSnLogger *logger, const char *given_str) {
   log_str(logger, PSTR("Error: Invalid topic id given: "));
+  log_str(logger, given_str);
+  log_flush(logger);
+  return log_status(logger);
+}
+int32_t print_invalid_duration_given(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: Invalid duration given: "));
+  log_str(logger, given_str);
+  log_flush(logger);
+  return log_status(logger);
+}
+int32_t print_invalid_radius_given(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: Invalid radius given: "));
   log_str(logger, given_str);
   log_flush(logger);
   return log_status(logger);
@@ -275,3 +307,6 @@ int32_t parse_client_publish_config_qos(const MqttSnLogger *logger, char *qos_st
   *qos_dst = n;
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
+
+
+
