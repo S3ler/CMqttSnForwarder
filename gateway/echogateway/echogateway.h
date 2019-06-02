@@ -9,6 +9,7 @@
 #include <logging/MqttSnLoggingInterface.h>
 #include <network/MqttSnClientNetworkInterface.h>
 #include <config/common/mqtt_sn_version_config.h>
+#include <gateway/echogateway/config/echogateway_config.h>
 
 typedef struct EchoGateway_ {
 
@@ -27,10 +28,9 @@ typedef struct EchoGateway_ {
 } EchoGateway;
 
 int32_t EchoGatewayInit(EchoGateway *egw, log_level_t log_level, void *clientNetworkContext);
+int32_t EchoGatewayConnect(EchoGateway *egw);
+int32_t EchoGatewayDisconnect(EchoGateway *egw);
 int32_t EchoGatewayDeinit(EchoGateway *egw);
 int32_t EchoGatewayLoop(EchoGateway *egw);
-
-int32_t log_echogateway_started(const MqttSnLogger *logger, const mqtt_sn_version_config *msvcfg);
-int32_t log_echogateway_terminated(const MqttSnLogger *logger, const mqtt_sn_version_config *msvcfg);
 
 #endif //CMQTTSNFORWARDER_GATEWAY_ECHOGATEWAY_ECHOGATEWAY_H_

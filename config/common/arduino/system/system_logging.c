@@ -76,7 +76,9 @@ int print_wifi_connecting_to(const MqttSnLogger *logger, const char *ssid, const
   log_str(logger, ssid);
   log_str(logger, PSTR(" , password: "));
 #ifdef WITH_DEBUG_LOGGING
-  log_str(logger, password);
+  if (password) {
+    log_str(logger, password);
+  }
 #else
   log_str(logger, PSTR("****"));
 #endif

@@ -16,6 +16,10 @@ extern "C" {
 #define CLIENT_MQTT_SN_MAX_PUBLISH 5
 #endif
 
+#ifndef CLIENT_MQTT_SN_PUBLISH_FROM_CONSOLE_IN_DEFAULT
+#define CLIENT_MQTT_SN_PUBLISH_FROM_CONSOLE_IN_DEFAULT 0
+#endif
+
 // TODO default value definition
 
 typedef struct single_client_publish_config_ {
@@ -32,6 +36,7 @@ typedef struct client_publish_config_ {
   int8_t default_qos;
   uint8_t default_topic_id_type;
   uint16_t default_topic_id;
+  uint8_t console_in;
 
   uint16_t publish_list_max_len;
   single_client_publish_config publish_list[CLIENT_MQTT_SN_MAX_PUBLISH];

@@ -4,8 +4,6 @@
 
 #ifndef CMQTTSNFORWARDER_CONFIG_CLIENT_NETWORK_CONFIG_H_
 #define CMQTTSNFORWARDER_CONFIG_CLIENT_NETWORK_CONFIG_H_
-// TODO implement me
-
 
 #include <stdint.h>
 #include <logging/MqttSnLoggingInterface.h>

@@ -214,9 +214,9 @@ int32_t print_config_parser_invalid_port_given(const MqttSnLogger *logger, long 
   log_flush(logger);
   return log_status(logger);
 }
-int32_t print_config_parser_invalid_qos_given(const MqttSnLogger *logger, long qos) {
+int32_t print_config_parser_invalid_qos_given(const MqttSnLogger *logger, uint64_t given_qos) {
   log_str(logger, PSTR("Error: Invalid qos given: "));
-  log_uint16(logger, qos);
+  log_uint64(logger, given_qos);
   log_flush(logger);
   return log_status(logger);
 }
@@ -290,7 +290,7 @@ int32_t print_config_list_full(const MqttSnLogger *logger, char *arg_list, uint1
 int32_t parse_client_subscription_config_qos(const MqttSnLogger *logger, char *qos_str, int8_t *qos_dst) {
   char *endprt;
   long int n = strtol(qos_str, &endprt, 10);
-  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < 0 || n > 2)) {
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > 2)) {
     print_config_parser_invalid_qos_given(logger, n);
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
@@ -307,6 +307,10 @@ int32_t parse_client_publish_config_qos(const MqttSnLogger *logger, char *qos_st
   *qos_dst = n;
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
-
-
+int32_t print_see_usage(const MqttSnLogger *logger, const char *executable_name) {
+  log_str(logger, PSTR("Use "));
+  log_str(logger, executable_name);
+  log_str(logger, PSTR(" --help' to see usage."));
+  return log_status(logger);
+}
 

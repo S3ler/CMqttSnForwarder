@@ -5,8 +5,9 @@
 #ifndef CMQTTSNFORWARDER_UTILITY_ARDUINO_SYSTEM_H_
 #define CMQTTSNFORWARDER_UTILITY_ARDUINO_SYSTEM_H_
 
-#include <utility/arduino/eeprom/eeprom_config.h>
+#include <config/common/arduino/eeprom/eeprom_config.h>
 #include <forwarder/config/forwarder_config.h>
+
 #ifdef MDNS_RESOLVER_h
 #include <WiFiUdp.h>
 #include <mDNSResolver.h>
@@ -16,11 +17,15 @@
 extern "C" {
 #endif
 
-int connect_wifi(const char *ssid, const char *password, const MqttSnLogger *logger, uint32_t timeout_ms);
+int connect_wifi(const char *ssid, const char *password, uint32_t timeout_ms, const MqttSnLogger *logger);
 
 int parse_arduino_serial_line(char *line, size_t *line_pos, size_t line_max);
 
-int arduino_serial_eval_process(EEPROM_cfg *ecfg, forwarder_config *fcfg, char *line, size_t line_pos);
+int arduino_serial_eval_process(EEPROM_cfg *ecfg,
+                                forwarder_config *fcfg,
+                                const MqttSnLogger *logger,
+                                char *line,
+                                size_t line_pos);
 
 int convert_hostname_port_to_device_address(const MqttSnLogger *logger,
                                             const char *hostname,

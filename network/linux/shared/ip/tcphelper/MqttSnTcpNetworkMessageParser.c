@@ -7,6 +7,7 @@
 #include <string.h>
 #include <errno.h>
 #include <network/linux/shared/ip/MqttSnIpNetworkHelper.h>
+#include <unistd.h>
 
 /*
 // TODO rewrite: -1 on error 0 if nothing, else number of messages

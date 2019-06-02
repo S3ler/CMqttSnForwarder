@@ -6,14 +6,14 @@
 #include <assert.h>
 #include <platform/platform_compatibility.h>
 #include <string.h>
-#include <utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.h>
 #include <network/shared/ip/IpHelper.h>
 #include <network/shared/ip/IpHelperLogging.h>
 #include <network/arduino/shared/ip/ArduinoIpAddressHelper.hpp>
-#include <forwarder/config/forwarder_config_logger.h>
 #include <cstdlib>
+#include <config/common/arduino/eeprom/forwarder/forwarder_eeprom_loader.h>
+#include <config/common/config_command_helper.h>
 
-int connect_wifi(const char *ssid, const char *password, const MqttSnLogger *logger, uint32_t timeout_ms) {
+int connect_wifi(const char *ssid, const char *password, uint32_t timeout_ms, const MqttSnLogger *logger) {
   if (strlen(ssid) == 0) {
     // WiFi not configured
     print_wifi_not_configured(logger);
@@ -72,25 +72,29 @@ int parse_arduino_serial_line(char *line, size_t *line_pos, size_t line_max) {
   return 0;
 }
 
-int arduino_serial_eval_process(EEPROM_cfg *ecfg, forwarder_config *fcfg, char *line, size_t line_pos) {
+int arduino_serial_eval_process(EEPROM_cfg *ecfg,
+                                forwarder_config *fcfg,
+                                const MqttSnLogger *logger,
+                                char *line,
+                                size_t line_pos) {
 #ifdef WITH_EEPROM
   // process eeprom commands
-  int ecfg_rc = process_eeprom_config_str(ecfg, fcfg->logger, line, line_pos);
+  int ecfg_rc = process_eeprom_config_str(ecfg, logger, line, line_pos);
   if (ecfg_rc != 1) {
     return 3;
   }
 #endif
 
 #ifdef WITH_RESTART
-  int system_rc = process_system_config_str(fcfg->logger, line, line_pos);
+  int system_rc = process_system_config_str(logger, line, line_pos);
   if (system_rc == 0 || system_rc == 2) {
     return 4;
   }
 #endif
 
-  int fcfg_rc = eeprom_save_forwarder_config_line(ecfg, fcfg, line, line_pos);
-  if (fcfg_rc == 0) {
-    print_system_restarting(fcfg->logger);
+  int fcfg_rc = eeprom_save_forwarder_config_line(ecfg, fcfg, nullptr, line, line_pos);
+  if (fcfg_rc != MQTT_SN_PARSE_CONFIG_FAILURE) {
+    print_system_restarting(logger);
     eeprom_config_cleanup(&ecfg);
     ESP.restart();
   }

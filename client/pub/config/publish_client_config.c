@@ -10,6 +10,8 @@
 int32_t publish_client_config_init(publish_client_config *cfg) {
   memset(cfg, 0, sizeof(*cfg));
 
+  memcpy(&cfg->executable_name, MQTT_SN_PUBLISH_CLIENT_EXECUTABLE_NAME, sizeof(MQTT_SN_PUBLISH_CLIENT_EXECUTABLE_NAME));
+
   mqtt_sn_version_config_init(&cfg->msvcfg);
   mqtt_sn_gateway_config_init(&cfg->msgcfg);
   gateway_network_config_init(&cfg->gncfg);
@@ -87,7 +89,7 @@ int32_t publish_client_config_process_line(publish_client_config *cfg,
   if (client_file_rc + msgfg_rc + gnfg_rc + mslcfg_rc + cfmsgcfg_rc + cccfg_rc + crcfg_rc + cpcfg_rc + cfg_rc
       != (argc - 1)) {
     // there is an unknown option
-    for (int i = 0; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
       if (!is_mqtt_sn_gateway_config_command(argv[i], &i)
           & !is_gateway_network_config_command(argv[i], &i)
           & !is_mqtt_sn_logger_config_command(argv[i], &i)
@@ -113,8 +115,8 @@ int32_t publish_client_config_process_args(publish_client_config *cfg,
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
 void publish_client_config_print_usage(const MqttSnLogger *logger) {
-  log_str(logger,
-          PSTR("client_pub is a simple mqtt-sn client that will publish mqtt-sn messages to a mqtt-sn gateway\n"));
+  log_str(logger, PSTR(MQTT_SN_PUBLISH_CLIENT_EXECUTABLE_NAME));
+  log_str(logger, PSTR(" is a simple mqtt-sn client that will publish mqtt-sn messages to a mqtt-sn gateway\n"));
   mqtt_sn_version_config_print_usage_short(logger);
   publish_client_config_print_usage_short(logger);
   log_flush(logger);
@@ -124,8 +126,10 @@ void publish_client_config_print_usage(const MqttSnLogger *logger) {
   log_flush(logger);
 }
 void publish_client_config_print_usage_short(const MqttSnLogger *logger) {
-  const char *indent = "                  ";
-  log_str(logger, PSTR("Usage: client_pub "));
+  const char *indent = "                     ";
+  log_str(logger, PSTR("Usage: "));
+  log_str(logger, PSTR(MQTT_SN_PUBLISH_CLIENT_EXECUTABLE_NAME));
+  log_str(logger, PSTR(" "));
 
   mqtt_sn_gateway_config_print_usage_short(logger, NULL);
   client_find_mqtt_sn_gateway_config_print_usage_short(logger, indent);
@@ -151,7 +155,7 @@ void publish_client_config_print_usage_long(const MqttSnLogger *logger) {
   mqtt_sn_logger_config_print_usage_long(logger);
 }
 void publish_client_config_print_see_usage(const MqttSnLogger *logger) {
-  log_str(logger, "Use 'client_pub --help' to see usage.");
+  print_see_usage(logger, PSTR(MQTT_SN_PUBLISH_CLIENT_EXECUTABLE_NAME));
 }
 
 

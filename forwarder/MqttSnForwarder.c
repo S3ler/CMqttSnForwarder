@@ -79,7 +79,7 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
   if (ClientNetworkReceive(&forwarder->clientNetwork,
                            &forwarder->clientNetworkReceiveBuffer,
                            forwarder->clientNetworkReceiveTimeout,
-                           forwarder->clientNetworkContext)) {
+                           forwarder->clientNetworkContext) < 0) {
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
 #ifdef Arduino_h
@@ -99,7 +99,7 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
   if (GatewayNetworkSend(&forwarder->gatewayNetwork,
                          &forwarder->gatewayNetworkSendBuffer,
                          forwarder->gatewayNetworkSendTimeout,
-                         forwarder->gatewayNetworkContext)) {
+                         forwarder->gatewayNetworkContext) < 0) {
     GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
 #ifdef Arduino_h
@@ -108,7 +108,7 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
   if (GatewayNetworkReceive(&forwarder->gatewayNetwork,
                             &forwarder->gatewayNetworkReceiveBuffer,
                             forwarder->gatewayNetworkReceiveTimeout,
-                            forwarder->gatewayNetworkContext)) {
+                            forwarder->gatewayNetworkContext) < 0) {
     GatewayNetworkDisconnect(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   }
 #ifdef Arduino_h
@@ -128,7 +128,7 @@ int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {
   if (ClientNetworkSend(&forwarder->clientNetwork,
                         &forwarder->clientNetworkSendBuffer,
                         forwarder->clientNetworkSendTimeout,
-                        forwarder->clientNetworkContext)) {
+                        forwarder->clientNetworkContext) < 0) {
     ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   }
 #ifdef Arduino_h
@@ -219,7 +219,8 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
 
   if (remove_mqtt_sn_forwarder_encapsulation_frame(gatewayMessageData,
                                                    clientMessageData,
-                                                   forwarder->clientNetwork.client_network_broadcast_address, NULL) != 0) {
+                                                   forwarder->clientNetwork.client_network_broadcast_address, NULL)
+      != 0) {
 #ifdef WITH_DEBUG_LOGGING
     log_gateway_mqtt_sn_message_malformed(&forwarder->logger,
                                           &gatewayMessageData->from,

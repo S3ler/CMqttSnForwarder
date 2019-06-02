@@ -6,7 +6,6 @@
 #define CMQTTSNFORWARDER_CONFIG_GATEWAY_NETWORK_CONFIG_H_
 
 #include <stdint.h>
-#include <stddef.h>
 #include <logging/MqttSnLoggingInterface.h>
 
 #ifdef __cplusplus

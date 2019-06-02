@@ -39,7 +39,16 @@ int32_t parse_publish_byte(uint8_t *dup,
                            uint16_t data_max_length,
                            const uint8_t *src,
                            uint16_t src_len);
-
+int32_t generate_publish(uint8_t *dst,
+                         uint16_t dst_len,
+                         uint8_t dup,
+                         int8_t qos,
+                         uint8_t retain,
+                         uint8_t topic_id_type,
+                         uint32_t topic_id,
+                         uint16_t msg_id,
+                         uint8_t *data,
+                         uint16_t data_len);
 #ifdef __cplusplus
 }
 #endif

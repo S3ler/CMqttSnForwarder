@@ -130,6 +130,7 @@ add_library(lib-mqtt-sn-message-parser ${MQTT_SN_MESSAGE_PARSER_FILES})
 target_include_directories(lib-mqtt-sn-message-parser PRIVATE .)
 target_compile_options(lib-mqtt-sn-message-parser PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 target_link_libraries(lib-mqtt-sn-message-parser lib-mqtt-sn-logging)
+
 option(WITH_LINUX_PLUGIN_NETWORK "Include WITH_LINUX_PLUGIN_NETWORK support?" ON)
 if (WITH_LINUX_PLUGIN_NETWORK)
     add_definitions(-DWITH_LINUX_PLUGIN_NETWORK)
@@ -392,127 +393,175 @@ else ()
     target_link_libraries(lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-ring-buffer)
 endif ()
 
-set(MQTT_SN_CLIENT_TEST_FILES
-        client/pub/config/publish_client_config.c client/pub/config/publish_client_config.h
-        config/network/gateway_network_config.c config/network/gateway_network_config.h
-        config/client/mqtt_sn_gateway_config.c config/client/mqtt_sn_gateway_config.h
+add_library(lib-mqtt-sn-common-config
         config/common/config_command_helper.c config/common/config_command_helper.h
         config/common/mqtt_sn_version_config.c config/common/mqtt_sn_version_config.h
-        config/network/client_network_config.c config/network/client_network_config.h
         config/common/mqtt_sn_logger_config.c config/common/mqtt_sn_logger_config.h
-        client/sub/config/subscription_client_config.c client/sub/config/subscription_client_config.h
-        gateway/echogateway/config/echogateway_config.c gateway/echogateway/config/echogateway_config.h
+        config/client/mqtt_sn_gateway_config.c config/client/mqtt_sn_gateway_config.h
+        config/starter/starter_helper.c config/starter/starter_helper.h)
+target_include_directories(lib-mqtt-sn-common-config PRIVATE .)
+target_compile_options(lib-mqtt-sn-common-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(lib-mqtt-sn-common-config lib-mqtt-sn-logging)
+
+add_library(lib-mqtt-sn-client-network-config config/network/client/client_network_config.c config/network/client/client_network_config.h)
+target_include_directories(lib-mqtt-sn-client-network-config PRIVATE .)
+target_compile_options(lib-mqtt-sn-client-network-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(lib-mqtt-sn-client-network-config lib-mqtt-sn-common-config)
+
+add_library(lib-mqtt-sn-gateway-network-config config/network/gateway/gateway_network_config.c config/network/gateway/gateway_network_config.h)
+target_include_directories(lib-mqtt-sn-gateway-network-config PRIVATE .)
+target_compile_options(lib-mqtt-sn-gateway-network-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(lib-mqtt-sn-gateway-network-config lib-mqtt-sn-common-config)
+
+add_library(lib-mqtt-sn-find-gateway-config config/client/client_find_mqtt_sn_gateway_config.c config/client/client_find_mqtt_sn_gateway_config.h)
+target_include_directories(lib-mqtt-sn-find-gateway-config PRIVATE .)
+target_compile_options(lib-mqtt-sn-find-gateway-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(lib-mqtt-sn-find-gateway-config lib-mqtt-sn-common-config)
+
+add_library(lib-mqtt-sn-client-config
         config/client/client_connect_config.c config/client/client_connect_config.h
+        config/client/client_publish_config.c config/client/client_publish_config.h
         config/client/client_register_config.c config/client/client_register_config.h
         config/client/client_subscribe_config.c config/client/client_subscribe_config.h
-        config/client/client_publish_config.c config/client/client_publish_config.h
-        config/client/client_find_mqtt_sn_gateway_config.c config/client/client_find_mqtt_sn_gateway_config.h
-        config/gateway/gateway_advertisment_config.c config/gateway/gateway_advertisment_config.h
-        gateway/echogateway/linux/starter/echogateway_starter.c gateway/echogateway/linux/starter/echogateway_starter.h
-        gateway/echogateway/echogateway.c gateway/echogateway/echogateway.h
-        )
+        config/client/mqtt_sn_gateway_config.c config/client/mqtt_sn_gateway_config.h
+        config/client/MqttSnClient_config.c config/client/MqttSnClient_config.h)
+target_include_directories(lib-mqtt-sn-client-config PRIVATE .)
+target_compile_options(lib-mqtt-sn-client-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(lib-mqtt-sn-client-config lib-mqtt-sn-common-config lib-mqtt-sn-find-gateway-config)
 
-set(MQTT_SN_CLIENT_PUB_FILES client/pub/linux/main.c ${MQTT_SN_CLIENT_TEST_FILES})
-add_executable(MqttSnClientPub ${MQTT_SN_CLIENT_PUB_FILES})
-target_include_directories(MqttSnClientPub PRIVATE .)
-target_compile_options(MqttSnClientPub PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-target_link_libraries(MqttSnClientPub
-        lib-mqtt-sn-ring-buffer
-        lib-mqtt-sn-message-parser
-        lib-mqtt-sn-logging
-        lib-mqtt-sn-linux-client-network
-        lib-mqtt-sn-linux-gateway-network)
+add_library(lib-mqtt-sn-gateway-config config/gateway/gateway_advertisment_config.c config/gateway/gateway_advertisment_config.h)
+target_include_directories(lib-mqtt-sn-gateway-config PRIVATE .)
+target_compile_options(lib-mqtt-sn-gateway-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(lib-mqtt-sn-gateway-config lib-mqtt-sn-common-config)
 
-set(MQTT_SN_CLIENT_SUB_FILES client/sub/linux/main.c ${MQTT_SN_CLIENT_TEST_FILES})
-add_executable(MqttSnClientSub ${MQTT_SN_CLIENT_SUB_FILES})
-target_include_directories(MqttSnClientSub PRIVATE .)
-target_compile_options(MqttSnClientSub PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-target_link_libraries(MqttSnClientSub
-        lib-mqtt-sn-ring-buffer
-        lib-mqtt-sn-message-parser
-        lib-mqtt-sn-logging
-        lib-mqtt-sn-linux-client-network
-        lib-mqtt-sn-linux-gateway-network)
+option(WITH_MQTT_SN_CLIENT "Include WITH_MQTT_SN_CLIENT support?" ON)
+if (WITH_MQTT_SN_CLIENT)
+    add_library(lib-mqtt-sn-client client/MqttSnClient.c client/MqttSnClient.h client/pub/config/publish_client_config.c client/pub/config/publish_client_config.h)
+    target_include_directories(lib-mqtt-sn-client PRIVATE .)
+    target_compile_options(lib-mqtt-sn-client PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(lib-mqtt-sn-client lib-mqtt-sn-message-parser lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-platform-abstraction-layer)
+    if (WITH_LOGGING)
+        target_link_libraries(lib-mqtt-sn-client lib-mqtt-sn-logging)
+    endif ()
+    if (WITH_LINUX_PLUGIN_NETWORK)
+        target_link_libraries(lib-mqtt-sn-client lib-mqtt-sn-linux-plugin-gateway-network)
+    endif ()
 
-set(MQTT_SN_ECHOGATEWAY_FILES gateway/echogateway/linux/main.c         parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h
-         ${MQTT_SN_CLIENT_TEST_FILES})
-add_executable(MqttSnEchoGateway ${MQTT_SN_ECHOGATEWAY_FILES})
-target_include_directories(MqttSnEchoGateway PRIVATE .)
-target_compile_options(MqttSnEchoGateway PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-target_link_libraries(MqttSnEchoGateway
-        lib-mqtt-sn-ring-buffer
-        lib-mqtt-sn-message-parser
-        lib-mqtt-sn-logging
-        lib-mqtt-sn-linux-client-network
-        pthread dl)
-
-set(MQTT_SN_FORWARDER_FILES
-        forwarder/MqttSnForwarder.c
-        forwarder/MqttSnForwarder.h
-        platform/device_address.c
-        platform/device_address.h forwarder/MqttSnForwarderParser.c forwarder/MqttSnForwarderParser.h)
-if (WITH_LOGGING)
-    set(MQTT_SN_FORWARDER_FILES ${MQTT_SN_FORWARDER_FILES}
-            forwarder/MqttSnForwarderLogging.c
-            forwarder/MqttSnForwarderLogging.h
-            parser/logging/MqttSnForwarderLoggingMessages.c
-            parser/logging/MqttSnForwarderLoggingMessages.h)
+    add_executable(MqttSnClientPub client/pub/linux/main.c
+            client/pub/linux/starter/publish_client_starter.c client/pub/linux/starter/publish_client_starter.h
+            parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h)
+    target_include_directories(MqttSnClientPub PRIVATE .)
+    target_compile_options(MqttSnClientPub PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(MqttSnClientPub lib-mqtt-sn-client lib-mqtt-sn-client-config lib-mqtt-sn-gateway-network-config pthread)
 endif ()
-add_library(lib-mqtt-sn-forwarder ${MQTT_SN_FORWARDER_FILES})
-target_include_directories(lib-mqtt-sn-forwarder PRIVATE .)
-target_compile_options(lib-mqtt-sn-forwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-target_link_libraries(lib-mqtt-sn-forwarder
-        lib-mqtt-sn-ring-buffer
-        lib-mqtt-sn-message-parser
-        lib-mqtt-sn-linux-client-network
-        lib-mqtt-sn-linux-gateway-network)
-if (WITH_LOGGING)
-    target_link_libraries(lib-mqtt-sn-forwarder lib-mqtt-sn-logging)
+
+
+option(WITH_MQTT_SN_GATEWAY "Include WITH_MQTT_SN_GATEWAY support?" ON)
+if (WITH_MQTT_SN_GATEWAY)
+    add_library(lib-mqtt-sn-echogateway
+            gateway/echogateway/echogateway.c gateway/echogateway/echogateway.h
+            gateway/echogateway/config/echogateway_config.c gateway/echogateway/config/echogateway_config.h
+            parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h)
+    target_include_directories(lib-mqtt-sn-echogateway PRIVATE .)
+    target_compile_options(lib-mqtt-sn-echogateway PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(lib-mqtt-sn-echogateway lib-mqtt-sn-message-parser lib-mqtt-sn-linux-client-network lib-mqtt-sn-platform-abstraction-layer pthread)
+    if (WITH_LOGGING)
+        target_link_libraries(lib-mqtt-sn-echogateway lib-mqtt-sn-logging)
+    endif ()
+    if (WITH_LINUX_PLUGIN_NETWORK)
+        target_link_libraries(lib-mqtt-sn-echogateway lib-mqtt-sn-linux-plugin-client-network)
+    endif ()
+
+    add_executable(MqttSnEchoGateway gateway/echogateway/linux/main.c
+            parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h
+            gateway/echogateway/linux/starter/echogateway_starter.c gateway/echogateway/linux/starter/echogateway_starter.h)
+    target_include_directories(MqttSnEchoGateway PRIVATE .)
+    target_compile_options(MqttSnEchoGateway PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(MqttSnEchoGateway lib-mqtt-sn-echogateway lib-mqtt-sn-gateway-config lib-mqtt-sn-client-network-config pthread)
 endif ()
-if (WITH_LINUX_PLUGIN_NETWORK)
+
+option(WITH_MQTT_SN_FORWARDER "Include WITH_MQTT_SN_FORWARDER support?" ON)
+if (WITH_MQTT_SN_FORWARDER)
+    set(MQTT_SN_FORWARDER_FILES
+            forwarder/MqttSnForwarder.c
+            forwarder/MqttSnForwarder.h
+            platform/device_address.c
+            platform/device_address.h forwarder/MqttSnForwarderParser.c forwarder/MqttSnForwarderParser.h)
+    if (WITH_LOGGING)
+        set(MQTT_SN_FORWARDER_FILES ${MQTT_SN_FORWARDER_FILES}
+                forwarder/MqttSnForwarderLogging.c
+                forwarder/MqttSnForwarderLogging.h
+                parser/logging/MqttSnForwarderLoggingMessages.c
+                parser/logging/MqttSnForwarderLoggingMessages.h)
+    endif ()
+    add_library(lib-mqtt-sn-forwarder ${MQTT_SN_FORWARDER_FILES})
+    target_include_directories(lib-mqtt-sn-forwarder PRIVATE .)
+    target_compile_options(lib-mqtt-sn-forwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(lib-mqtt-sn-forwarder
-            lib-mqtt-sn-linux-plugin-client-network
-            lib-mqtt-sn-linux-plugin-gateway-network)
+            lib-mqtt-sn-ring-buffer
+            lib-mqtt-sn-message-parser
+            lib-mqtt-sn-linux-client-network
+            lib-mqtt-sn-linux-gateway-network)
+    if (WITH_LOGGING)
+        target_link_libraries(lib-mqtt-sn-forwarder lib-mqtt-sn-logging)
+    endif ()
+
+    if (WITH_LINUX_PLUGIN_NETWORK)
+        target_link_libraries(lib-mqtt-sn-forwarder
+                lib-mqtt-sn-linux-plugin-client-network
+                lib-mqtt-sn-linux-plugin-gateway-network)
+    endif ()
+
+    add_library(lib-mqtt-sn-forwarder-config forwarder/config/forwarder_config.c forwarder/config/forwarder_config.h)
+    target_include_directories(lib-mqtt-sn-forwarder-config PRIVATE .)
+    target_compile_options(lib-mqtt-sn-forwarder-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(lib-mqtt-sn-forwarder-config lib-mqtt-sn-client-network-config lib-mqtt-sn-gateway-network-config lib-mqtt-sn-client-config)
+
+    set(MQTT_SN_FORWARDER_LINUX_STARTER_FILES
+            forwarder/starter/linux/forwarder_starter.h
+            forwarder/starter/linux/forwarder_starter.c
+            network/shared/ip/IpHelper.c
+            network/shared/ip/IpHelper.h)
+    if (WITH_LOGGING)
+        set(MQTT_SN_FORWARDER_LINUX_STARTER_FILES ${MQTT_SN_FORWARDER_LINUX_STARTER_FILES}
+                network/shared/ip/IpHelperLogging.c
+                network/shared/ip/IpHelperLogging.h)
+    endif ()
+    add_library(lib-mqtt-sn-linux-forwarder-starter ${MQTT_SN_FORWARDER_LINUX_STARTER_FILES})
+    target_include_directories(lib-mqtt-sn-linux-forwarder-starter PRIVATE .)
+    target_compile_options(lib-mqtt-sn-linux-forwarder-starter PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(lib-mqtt-sn-linux-forwarder-starter lib-mqtt-sn-forwarder-config lib-mqtt-sn-forwarder pthread)
+
+
+
+    option(WITH_MQTT_SN_FORWADER_CONFIG_FILE "Include WITH_MQTT_SN_FORWADER_CONFIG_FILE support?" ON)
+    if (WITH_MQTT_SN_FORWADER_CONFIG_FILE)
+        message("Building with WITH_MQTT_SN_FORWADER_CONFIG_FILE support")
+        add_definitions(-DWITH_MQTT_SN_FORWADER_CONFIG_FILE)
+    endif ()
+
+
+    add_executable(MqttSnForwarder forwarder/starter/linux/main.c)
+    target_include_directories(MqttSnForwarder PRIVATE .)
+    target_compile_options(MqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(MqttSnForwarder lib-mqtt-sn-forwarder lib-mqtt-sn-forwarder-config lib-mqtt-sn-linux-forwarder-starter lib-mqtt-sn-platform-abstraction-layer)
+
 endif ()
 
-set(MQTT_SN_FORWARDER_LINUX_STARTER_FILES
-        forwarder/starter/linux/forwarder_starter.h
-        forwarder/starter/linux/forwarder_starter.c
-        network/shared/ip/IpHelper.c
-        network/shared/ip/IpHelper.h)
-if (WITH_LOGGING)
-    set(MQTT_SN_FORWARDER_LINUX_STARTER_FILES ${MQTT_SN_FORWARDER_LINUX_STARTER_FILES}
-            network/shared/ip/IpHelperLogging.c
-            network/shared/ip/IpHelperLogging.h)
-endif ()
-add_library(lib-mqtt-sn-linux-forwarder-starter ${MQTT_SN_FORWARDER_LINUX_STARTER_FILES})
-target_include_directories(lib-mqtt-sn-linux-forwarder-starter PRIVATE .)
-target_compile_options(lib-mqtt-sn-linux-forwarder-starter PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-target_link_libraries(lib-mqtt-sn-linux-forwarder-starter lib-mqtt-sn-forwarder pthread)
 
-set(MQTT_SN_FORWADER_CONFIG_FILES
-        forwarder/config/forwarder_config.c
-        forwarder/config/forwarder_config.h)
-if (WITH_LOGGING)
-    set(MQTT_SN_FORWADER_CONFIG_FILES ${MQTT_SN_FORWADER_CONFIG_FILES}
-            forwarder/config/forwarder_config_logger.c
-            forwarder/config/forwarder_config_logger.h)
-endif ()
-add_library(lib-mqtt-sn-forwarder-config ${MQTT_SN_FORWADER_CONFIG_FILES})
-target_include_directories(lib-mqtt-sn-forwarder-config PRIVATE .)
-target_compile_options(lib-mqtt-sn-forwarder-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+#set(MQTT_SN_CLIENT_SUB_FILES client/sub/linux/main.c ${MQTT_SN_CLIENT_TEST_FILES} parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h
+#client/sub/config/subscription_client_config.c client/sub/config/subscription_client_config.h)
+#add_executable(MqttSnClientSub ${MQTT_SN_CLIENT_SUB_FILES})
+#target_include_directories(MqttSnClientSub PRIVATE .)
+#target_compile_options(MqttSnClientSub PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+#target_link_libraries(MqttSnClientSub
+#        lib-mqtt-sn-ring-buffer
+#        lib-mqtt-sn-message-parser
+#        lib-mqtt-sn-logging
+#        lib-mqtt-sn-linux-client-network
+#        lib-mqtt-sn-linux-gateway-network
+#        pthread dl)
 
-option(WITH_MQTT_SN_FORWADER_CONFIG_FILE "Include WITH_MQTT_SN_FORWADER_CONFIG_FILE support?" ON)
-if (WITH_MQTT_SN_FORWADER_CONFIG_FILE)
-    message("Building with WITH_MQTT_SN_FORWADER_CONFIG_FILE support")
-    add_definitions(-DWITH_MQTT_SN_FORWADER_CONFIG_FILE)
-endif ()
-
-
-add_executable(MqttSnForwarder forwarder/starter/linux/main.c)
-target_include_directories(MqttSnForwarder PRIVATE .)
-target_compile_options(MqttSnForwarder PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-target_link_libraries(MqttSnForwarder lib-mqtt-sn-forwarder lib-mqtt-sn-forwarder-config lib-mqtt-sn-linux-forwarder-starter lib-mqtt-sn-platform-abstraction-layer)
 
 add_executable(TcpCMqttSnForwarderTester testclients/tcptestermain.c platform/device_address.h)
 target_include_directories(TcpCMqttSnForwarderTester PRIVATE .)
@@ -756,12 +805,12 @@ if (WITH_ARDUINO)
             target_include_directories(lib-arduino-linux-fake PRIVATE ${Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES})
         endif ()
         set(MQTT_SN_ARDUINO_ESP8266_EEPROM_CONFIG_LINE_LOADER_FILES
-                utility/arduino/eeprom/eeprom_config.h
-                utility/arduino/eeprom/eeprom_config.c)
+                config/common/arduino/eeprom/eeprom_config.h
+                config/common/arduino/eeprom/eeprom_config.c)
         if (WITH_LOGGING)
             set(MQTT_SN_ARDUINO_ESP8266_EEPROM_CONFIG_LINE_LOADER_FILES ${MQTT_SN_ARDUINO_ESP8266_EEPROM_CONFIG_LINE_LOADER_FILES}
-                    utility/arduino/eeprom/eeprom_config_logging.c
-                    utility/arduino/eeprom/eeprom_config_logging.h)
+                    config/common/arduino/eeprom/eeprom_config_logging.c
+                    config/common/arduino/eeprom/eeprom_config_logging.h)
         endif ()
         add_library(lib-mqtt-sn-arduino-esp8266-eeprom-config-line-loader ${MQTT_SN_ARDUINO_ESP8266_EEPROM_CONFIG_LINE_LOADER_FILES})
         target_include_directories(lib-mqtt-sn-arduino-esp8266-eeprom-config-line-loader PRIVATE .)
@@ -773,14 +822,14 @@ if (WITH_ARDUINO)
         endif ()
 
         set(MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES
-                utility/arduino/eeprom/eeprom_config.h
-                utility/arduino/eeprom/eeprom_config.c
-                utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.c
-                utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.h)
+                config/common/arduino/eeprom/eeprom_config.h
+                config/common/arduino/eeprom/eeprom_config.c
+                config/common/arduino/eeprom/forwarder/forwarder_eeprom_loader.c
+                config/common/arduino/eeprom/forwarder/forwarder_eeprom_loader.h)
         if (WITH_LOGGING)
             set(MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES ${MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES}
-                    utility/arduino/eeprom/forwarder/forwarder_eeprom_loader_logging.c
-                    utility/arduino/eeprom/forwarder/forwarder_eeprom_loader_logging.h)
+                    config/common/arduino/eeprom/forwarder/forwarder_eeprom_loader_logging.c
+                    config/common/arduino/eeprom/forwarder/forwarder_eeprom_loader_logging.h)
         endif ()
         add_library(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader ${MQTT_SN_ARDUINO_ESP8266_EEPROM_FORWADER_CONFIG_LINE_LOADER_FILES})
         target_include_directories(lib-mqtt-sn-arduino-esp8266-eeprom-forwarder-config-line-loader PRIVATE .)
@@ -793,16 +842,16 @@ if (WITH_ARDUINO)
         endif ()
 
         set(MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES
-                utility/arduino/system/system.c
-                utility/arduino/system/system.h
+                config/common/arduino/system/system.c
+                config/common/arduino/system/system.h
                 network/arduino/shared/ip/ArduinoIpAddressHelper.cpp
                 network/arduino/shared/ip/ArduinoIpAddressHelper.hpp
-                utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.c
-                utility/arduino/eeprom/forwarder/forwarder_eeprom_loader.h)
+                config/common/arduino/eeprom/forwarder/forwarder_eeprom_loader.c
+                config/common/arduino/eeprom/forwarder/forwarder_eeprom_loader.h)
         if (WITH_LOGGING)
             set(MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES ${MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES}
-                    utility/arduino/system/system_logging.c
-                    utility/arduino/system/system_logging.h)
+                    config/common/arduino/system/system_logging.c
+                    config/common/arduino/system/system_logging.h)
         endif ()
         add_library(lib-mqtt-sn-arduino-esp8266-system ${MQTT_SN_ARDUINO_ESP8266_SYSTEM_FILES})
         target_include_directories(lib-mqtt-sn-arduino-esp8266-system PRIVATE .)

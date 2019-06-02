@@ -77,6 +77,14 @@ int32_t GatewayNetworkSend(MqttSnGatewayNetworkInterface *n,
                            int timeout_ms,
                            void *context);
 
+int32_t GatewayNetworkSendTo(MqttSnGatewayNetworkInterface *n,
+                             device_address *to,
+                             uint8_t *data,
+                             uint16_t data_length,
+                             uint8_t signal_strength,
+                             int32_t timeout_ms,
+                             void *context);
+
 int32_t GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
                               MqttSnFixedSizeRingBuffer *receiveBuffer,
                               int timeout_ms,

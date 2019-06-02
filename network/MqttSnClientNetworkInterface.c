@@ -125,14 +125,7 @@ int32_t ClientNetworkSend(MqttSnClientNetworkInterface *n,
     return 0;
   }
 
-  int send_rc = n->send(n,
-                        &msg.from,
-                        &msg.to,
-                        msg.data,
-                        msg.data_length,
-                        msg.signal_strength,
-                        timeout_ms,
-                        context);
+  int send_rc = n->send(n, &msg.from, &msg.to, msg.data, msg.data_length, msg.signal_strength, timeout_ms, context);
   if (send_rc < 0) {
     n->status = MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS_DISCONNECTED;
   }
@@ -164,14 +157,8 @@ int32_t ClientNetworkReceive(MqttSnClientNetworkInterface *n,
   }
   MqttSnMessageData msg = {0};
 
-  int32_t receive_rc = n->receive(n,
-                                  &msg.from,
-                                  &msg.to,
-                                  msg.data,
-                                  n->max_data_length,
-                                  &msg.signal_strength,
-                                  timeout_ms,
-                                  context);
+  int32_t receive_rc =
+      n->receive(n, &msg.from, &msg.to, msg.data, n->max_data_length, &msg.signal_strength, timeout_ms, context);
   if (receive_rc < 0) {
     n->status = MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS_DISCONNECTED;
   }

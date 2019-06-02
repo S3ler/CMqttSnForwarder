@@ -29,12 +29,12 @@ MQTT_SN_MESSAGE_TYPE get_mqtt_sn_message_type(const uint8_t *data) {
   }
   return (MQTT_SN_MESSAGE_TYPE) type;
 }
-int is_valid_three_bytes_header(const uint8_t *data, ssize_t data_length) {
+int is_valid_three_bytes_header(const uint8_t *data, size_t data_len) {
   MqttSnMessageHeaderThreeOctetsLengthField
       *threeOctetsLengthField = (MqttSnMessageHeaderThreeOctetsLengthField *) data;
   if (threeOctetsLengthField->indicator == 0x01
-      && data_length > 2
-      && ntohs(threeOctetsLengthField->length) == data_length) {
+      && data_len > 2
+      && ntohs(threeOctetsLengthField->length) == data_len) {
     return 1;
   }
   return 0;
@@ -220,14 +220,6 @@ int32_t generate_mqtt_sn_header(uint8_t *dst,
   return 0;
 }
 
-int32_t generate_publish_header(uint8_t *dst, uint16_t dst_len, uint16_t data_len, int32_t *used_bytes) {
-  uint16_t total_length = data_len + MQTT_SN_PUBLISH_MESSAGE_HEADER_LENGTH(0) <= UINT8_MAX ? data_len
-      + MQTT_SN_PUBLISH_MESSAGE_HEADER_LENGTH(0) : data_len + MQTT_SN_PUBLISH_MESSAGE_HEADER_LENGTH(1);
-  if (dst_len < total_length) {
-    return -1;
-  }
-  return generate_mqtt_sn_header(dst, 0, used_bytes, total_length, PUBLISH);
-}
 
 int32_t generate_flags(uint8_t *dst,
                        uint16_t dst_len,
@@ -282,6 +274,8 @@ int32_t generate_flags(uint8_t *dst,
   return *used_bytes;
 }
 
+
+
 int32_t generate_topic_id(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes) {
   *used_bytes += MQTT_SN_TOPIC_ID_LENGTH;
   if (dst_len < *used_bytes) {
@@ -290,7 +284,6 @@ int32_t generate_topic_id(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int
   *dst = topic_id;
   return (*used_bytes);
 }
-
 int32_t generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, int32_t *used_bytes) {
   *used_bytes += MQTT_SN_MESSAGE_ID_LENGTH;
   if (dst_len < *used_bytes) {
@@ -299,8 +292,7 @@ int32_t generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, int32_t
   *dst = msg_id;
   return (*used_bytes);
 }
-
-int generate_data(uint8_t *dst, uint16_t dst_len, const uint8_t *data, uint16_t data_len, int32_t *used_bytes) {
+int32_t generate_data(uint8_t *dst, uint16_t dst_len, const uint8_t *data, uint16_t data_len, int32_t *used_bytes) {
   *used_bytes += data_len;
   if (dst_len < *used_bytes) {
     return -1;
@@ -309,6 +301,7 @@ int generate_data(uint8_t *dst, uint16_t dst_len, const uint8_t *data, uint16_t 
   return (*used_bytes);
 }
 
+/*
 int generate_publish(uint8_t *dst,
                      uint16_t dst_len,
                      uint8_t dup,
@@ -345,7 +338,7 @@ int generate_publish(uint8_t *dst,
   }
   return 0;
 }
-
+*/
 int32_t generate_encapsulation_header(uint8_t *dst,
                                       uint16_t dst_len,
                                       uint8_t broadcast,

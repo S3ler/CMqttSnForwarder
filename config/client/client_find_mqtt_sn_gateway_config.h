@@ -70,6 +70,7 @@ typedef struct client_find_mqtt_sn_gateway_config_ {
   char *gw_add_whitelist[CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ADD_WHITELIST_LENGTH];
   uint16_t gw_add_whitelist_len;
 
+  // TODO not implemented yet: search_gw_radius parameter
   // TODO not implemented yet: char *gw_id_blacklist[CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ID_BLACKLIST_LENGTH];
   // TODO not implemented yet: char *gw_addr_blaclist[CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ADD_BLACKLIST_LENGTH];
 } client_find_mqtt_sn_gateway_config;

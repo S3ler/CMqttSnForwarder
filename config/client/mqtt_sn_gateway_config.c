@@ -40,6 +40,7 @@ int32_t mqtt_sn_gateway_config_process_args(mqtt_sn_gateway_config *msgcfg,
                                             const MqttSnLogger *logger,
                                             int argc,
                                             char **argv) {
+  int32_t parsed_args = 0;
   for (int i = 0; i < argc; i++) {
     if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--mqtt_sn_gateway_host")) {
       if (i == argc - 1) {
@@ -52,6 +53,7 @@ int32_t mqtt_sn_gateway_config_process_args(mqtt_sn_gateway_config *msgcfg,
         msgcfg->mqtt_sn_gateway_host = strdup(argv[i + 1]);
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--mqtt_sn_gateway_port")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "port");
@@ -62,6 +64,7 @@ int32_t mqtt_sn_gateway_config_process_args(mqtt_sn_gateway_config *msgcfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-L") || !strcmp(argv[i], "--url")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "URL");
@@ -92,9 +95,10 @@ int32_t mqtt_sn_gateway_config_process_args(mqtt_sn_gateway_config *msgcfg,
 
       }
       i++;
+      parsed_args += 2;
     }
   }
-  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+  return parsed_args;
 }
 void mqtt_sn_gateway_config_print_usage_short(const MqttSnLogger *logger, const char *indent) {
   if(indent) {
@@ -103,13 +107,13 @@ void mqtt_sn_gateway_config_print_usage_short(const MqttSnLogger *logger, const 
   log_str(logger, PSTR("{[[-h mqtt_sn_gateway_host] [-p mqtt_sn_gateway_port]] | -L URL}\n"));
 }
 void mqtt_sn_gateway_config_print_usage_long(const MqttSnLogger *logger) {
-  log_str(logger, PSTR(" -h : mqtt-sn gateway host to connect to.\n"));
-  log_str(logger, PSTR("       Defaults to "));
+  log_str(logger, PSTR(" -h : mqtt-sn gateway host to connect to. Defaults to "));
   log_str(logger, DEFAULT_MQTT_SN_GATEWAY_HOST);
   log_str(logger, PSTR(".\n"));
 
-  log_str(logger, PSTR(" -p : mqtt-sn gateway network port to connect to.\n"));
-  log_str(logger, PSTR("      Defaults to 8888 for plain MQTT-SN.\n"));
+  log_str(logger, PSTR(" -p : mqtt-sn gateway network port to connect to. Defaults to "));
+  log_int32(logger, DEFAULT_MQTT_SN_GATEWAY_PORT);
+  log_str(logger, PSTR(" for plain MQTT-SN.\n"));
 
   log_str(logger, PSTR(" -L : specify hostname, port as a URL in the form:\n"));
   log_str(logger, PSTR("      mqtt-sn(s)://host[:port]\n"));

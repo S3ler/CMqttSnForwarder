@@ -47,7 +47,7 @@ int32_t print_invalid_radius_given(const MqttSnLogger *logger, const char *given
 
 int32_t print_config_parser_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
 
-int32_t print_config_parser_invalid_qos_given(const MqttSnLogger *logger, long qos);
+int32_t print_config_parser_invalid_qos_given(const MqttSnLogger *logger, uint64_t given_qos);
 
 int32_t print_argument_value_not_specified(const MqttSnLogger *logger, const char *argument, const char *argument_name);
 
@@ -70,6 +70,8 @@ int32_t print_config_list_full(const MqttSnLogger *logger, char *arg_list, uint1
 int32_t parse_client_subscription_config_qos(const MqttSnLogger *logger, char *qos_str, int8_t *qos_dst);
 
 int32_t parse_client_publish_config_qos(const MqttSnLogger *logger, char *qos_str, int8_t *qos_dst);
+
+int32_t print_see_usage(const MqttSnLogger *logger, const char* executable_name);
 
 
 // TODO parse protocol version

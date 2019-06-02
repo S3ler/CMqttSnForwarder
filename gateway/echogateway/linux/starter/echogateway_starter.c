@@ -13,6 +13,7 @@
 #include <network/shared/ip/IpHelper.h>
 #include <network/linux/client/plugin/client_network_plugin_interface.h>
 #include <network/linux/client/plugin/MqttSnClientPluginNetwork.h>
+#include <config/starter/starter_helper.h>
 #include "echogateway_starter.h"
 
 static volatile sig_atomic_t keep_running = 1;
@@ -23,13 +24,24 @@ static void sig_handler(int _) {
 }
 
 void *inc_c(void *egw_fcfg_ptr) {
-  EchoGateway *egw = ((EchoGateway_fcfg_ptr *) egw_fcfg_ptr)->egw_ptr;
-
-  while ((EchoGatewayLoop(egw) >= 0) & keep_running) {}
+  EchoGateway *echo_gateway = ((EchoGateway_fcfg_ptr *) egw_fcfg_ptr)->egw_ptr;
+  if (EchoGatewayConnect(echo_gateway) < 0) {
+    EchoGatewayDisconnect(echo_gateway);
 #ifdef WITH_LOGGING
-  log_echogateway_terminated(&egw->logger, &((EchoGateway_fcfg_ptr *) egw_fcfg_ptr)->egw_cfg->msvcfg);
+    const echogateway_config *cfg = ((EchoGateway_fcfg_ptr *) egw_fcfg_ptr)->egw_cfg;
+    print_program_terminated(&echo_gateway->logger, &cfg->msvcfg, cfg->executable_name);
 #endif
-  EchoGatewayDeinit(egw);
+    EchoGatewayDeinit(echo_gateway);
+    return (void *) EXIT_SUCCESS;
+  }
+
+  while ((EchoGatewayLoop(echo_gateway) >= 0) & keep_running) {}
+  EchoGatewayDisconnect(echo_gateway);
+#ifdef WITH_LOGGING
+  const echogateway_config *cfg = ((EchoGateway_fcfg_ptr *) egw_fcfg_ptr)->egw_cfg;
+  print_program_terminated(&echo_gateway->logger, &cfg->msvcfg, cfg->executable_name);
+#endif
+  EchoGatewayDeinit(echo_gateway);
   return (void *) EXIT_SUCCESS;
 }
 
@@ -63,7 +75,7 @@ int start_echogateway(const echogateway_config *fcfg,
   echo_gateway->clientNetworkSendTimeout = fcfg->cncfg.client_network_send_timeout;
   echo_gateway->clientNetworkReceiveTimeout = fcfg->cncfg.client_network_receive_timeout;
 #ifdef WITH_LOGGING
-  log_echogateway_started(logger, &fcfg->msvcfg);
+  print_program_started(logger, &fcfg->msvcfg, fcfg->executable_name);
 #endif
   if (EchoGatewayInit(echo_gateway, fcfg->mslcfg.log_lvl, clientNetworkContext) < 0) {
     EchoGatewayDeinit(echo_gateway);

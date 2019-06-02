@@ -7,9 +7,8 @@
 #include <string.h>
 #include <assert.h>
 #include <platform/platform_compatibility.h>
-#include <forwarder/config/forwarder_config.h>
-#include <forwarder/config/forwarder_config_logger.h>
-#include <utility/arduino/system/system.h>
+#include <config/common/arduino/system/system.h>
+#include <config/common/config_command_helper.h>
 #include "eeprom_config_logging.h"
 
 void eeprom_config_init(EEPROM_cfg **ecfg) {

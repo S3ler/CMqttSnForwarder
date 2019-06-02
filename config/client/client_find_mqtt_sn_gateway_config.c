@@ -92,10 +92,10 @@ int32_t client_find_mqtt_sn_gateway_config_process_args(client_find_mqtt_sn_gate
           cfg->find_pattern_type = ADVERTISMENT_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE;
         } else if (strcmp(argv[i + 1], "search")) {
           cfg->find_pattern_type = SEARCH_GW_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE;
-        } else if (strcmp(argv[i + 1], "search")) {
+        } else if (strcmp(argv[i + 1], "connect")) {
           cfg->find_pattern_type = CONNECT_CREDENTIALS_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE;
         } else {
-          print_argument_value_not_specified(logger, argv[i], "valid pattern");
+          print_argument_value_not_specified(logger, argv[i], "valid pattern type");
           return MQTT_SN_PARSE_CONFIG_FAILURE;
         }
       }
@@ -158,15 +158,27 @@ void client_find_mqtt_sn_gateway_config_print_usage_short(const MqttSnLogger *lo
   if (indent) {
     log_str(logger, indent);
   }
-  log_str(logger, PSTR("[-gfp --gateway_find_pattern] [-awd --advertisement_wait_duration]"
-                       "[--gw_id_filter] [--gw_add_filter] [--gw_id_whitelist] [--gw_add_whitelist]\n"));
+  log_str(logger, PSTR("[-gfp --gateway_find_pattern] [-awd --advertisement_wait_duration]\n"));
+  if (indent) {
+    log_str(logger, indent);
+  }
+  log_str(logger, PSTR("[--gw_id_filter] [--gw_add_filter] [--gw_id_whitelist] [--gw_add_whitelist]\n"));
 }
 void client_find_mqtt_sn_gateway_config_print_usage_long(const MqttSnLogger *logger) {
-  log_str(logger, PSTR(" -gfp : TODO .\n"));
-  log_str(logger, PSTR(" -awd : TODO .\n"));
-  log_str(logger, PSTR(" --gw_id_filter : TODO .\n"));
-  log_str(logger, PSTR(" --gw_add_filter : TODO .\n"));
-  log_str(logger, PSTR(" --gw_id_whitelist : TODO .\n"));
-  log_str(logger, PSTR(" --gw_add_whitelist : TODO .\n"));
+  log_str(logger, PSTR(" -gfp : specify the mqtt-sn gateway find pattern.\n"));
+  log_str(logger, PSTR("        Can be any, advertisement, search, connect. Default is connect.\n"));
+  log_str(logger, PSTR(" -awd : specify advertisement wait duration in s. Default is "));
+  log_uint64(logger, CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_ADVERTISEMENT_WAIT_DURATION);
+  log_str(logger, PSTR(" s.\n"));
+  log_str(logger, PSTR(" --gw_id_filter : specify regex for filtering mqtt-sn gateway id.\n"));
+  log_str(logger, PSTR(" --gw_add_filter : specify regex for mqtt-sn gateway address filter.\n"));
+  log_str(logger, PSTR(" --gw_id_whitelist : specify whitelist for mqtt-sn gateway ids. Can be used repeatedly."));
+  log_str(logger, PSTR(" Maximum entry count is "));
+  log_uint64(logger, CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ID_WHITELIST_LENGTH);
+  log_str(logger, PSTR(".\n"));
+  log_str(logger, PSTR(" --gw_add_whitelist : specify whitelist for mqtt-sn gateway addresses."));
+  log_str(logger, PSTR(" Can be used repeatedly. Maximum entry count is "));
+  log_uint64(logger, CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ADD_WHITELIST_LENGTH);
+  log_str(logger, PSTR(".\n"));
 }
 

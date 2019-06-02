@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_MQTTSNMESSAGEPARSER_H
 
 #include <platform/device_address.h>
-#include <unistd.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,7 +91,7 @@ typedef enum MQTT_SN_RETURN_CODE_ {
 
 #define MQTT_SN_MESSAGE_HEADER_SHORT_LENGTH   (MQTT_SN_MESSAGE_HEADER_SHORT_LENGTHFIELD_LENGTH + MQTT_SN_MESSAGE_MSG_TYPE_LENGTH)
 #define MQTT_SN_MESSAGE_HEADER_LONG_LENGTH    (MQTT_SN_MESSAGE_HEADER_LONG_LENGTHFIELD_LENGTH + MQTT_SN_MESSAGE_MSG_TYPE_LENGTH)
-#define MQTT_SN_HEADER_LENGTH(indicator)      (indicator ? MQTT_SN_MESSAGE_HEADER_SHORT_LENGTH : MQTT_SN_MESSAGE_HEADER_LONG_LENGTH)
+#define MQTT_SN_HEADER_LENGTH(indicator)      (indicator ? MQTT_SN_MESSAGE_HEADER_LONG_LENGTH : MQTT_SN_MESSAGE_HEADER_SHORT_LENGTH)
 
 // Field length
 #define MQTT_SN_GWID_LENGTH                   1
@@ -153,7 +153,7 @@ typedef enum MQTT_SN_RETURN_CODE_ {
 #define MQTT_SN_FLAG_RETAIN_FALSE 0x00 // 0b0
 
 #define MQTT_SN_FLAG_WILL_TRUE 0x01 // 0b01
-#define MQTT_SN_FLAG_WILL_FALSE 0x01 // 0b01
+#define MQTT_SN_FLAG_WILL_FALSE 0x00 // 0b00
 
 #define MQTT_SN_FLAG_CLEAN_SESSION_TRUE   0x01 // 0b1
 #define MQTT_SN_FLAG_CLEAN_SESSION_FALSE  0x00 // 0b0
@@ -163,27 +163,27 @@ typedef enum MQTT_SN_RETURN_CODE_ {
 #define MQTT_SN_FLAG_TOPIC_ID_TYPE_PREDEFINED_TOPIC_ID  0x01 // 0b01
 #define MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME           0x00 // 0b00
 
-#define SET_MQTT_SN_DUP_FLAG_FIRST_TIME(flags)    ((MQTT_SN_FLAG_DUP_FIRST_TIME << MQTT_SN_FLAG_DUP_SHIFT) | flags)
-#define SET_MQTT_SN_DUP_FLAG_RETRANSMITTED(flags) ((MQTT_SN_FLAG_DUB_RETRANSMITTED << MQTT_SN_FLAG_DUP_SHIFT) | flags)
+#define SET_MQTT_SN_DUP_FLAG_FIRST_TIME(flags)    (flags = (MQTT_SN_FLAG_DUP_FIRST_TIME << MQTT_SN_FLAG_DUP_SHIFT) | flags)
+#define SET_MQTT_SN_DUP_FLAG_RETRANSMITTED(flags) (flags = (MQTT_SN_FLAG_DUB_RETRANSMITTED << MQTT_SN_FLAG_DUP_SHIFT) | flags)
 
-#define SET_MQTT_SN_FLAG_QOS_M1(flags)  ((MQTT_SN_FLAG_QOS_M1 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
-#define SET_MQTT_SN_FLAG_QOS_2(flags)   ((MQTT_SN_FLAG_QOS_2 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
-#define SET_MQTT_SN_FLAG_QOS_1(flags)   ((MQTT_SN_FLAG_QOS_1 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
-#define SET_MQTT_SN_FLAG_QOS_0(flags)   ((MQTT_SN_FLAG_QOS_0 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_QOS_M1(flags)  (flags = (MQTT_SN_FLAG_QOS_M1 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_QOS_2(flags)   (flags = (MQTT_SN_FLAG_QOS_2 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_QOS_1(flags)   (flags = (MQTT_SN_FLAG_QOS_1 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_QOS_0(flags)   (flags = (MQTT_SN_FLAG_QOS_0 << MQTT_SN_FLAG_QOS_SHIFT) | flags)
 
-#define SET_MQTT_SN_FLAG_RETAIN_TRUE(flags) ((MQTT_SN_FLAG_RETAIN_TRUE << MQTT_SN_FLAG_RETAIN_SHIFT) | flags)
-#define SET_MQTT_SN_FLAG_RETAIN_FALSE(flags) ((MQTT_SN_FLAG_RETAIN_FALSE << MQTT_SN_FLAG_RETAIN_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_RETAIN_TRUE(flags) (flags = (MQTT_SN_FLAG_RETAIN_TRUE << MQTT_SN_FLAG_RETAIN_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_RETAIN_FALSE(flags) (flags = (MQTT_SN_FLAG_RETAIN_FALSE << MQTT_SN_FLAG_RETAIN_SHIFT) | flags)
 
-#define SET_MQTT_SN_FLAG_WILL_TRUE(flags) ((MQTT_SN_FLAG_WILL_TRUE << MQTT_SN_FLAG_WILL_SHIFT) | flags)
-#define SET_MQTT_SN_FLAG_WILL_FALSE(flags) ((MQTT_SN_FLAG_CLEAN_SESSION_FALSE << MQTT_SN_FLAG_WILL_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_WILL_TRUE(flags) (flags = (MQTT_SN_FLAG_WILL_TRUE << MQTT_SN_FLAG_WILL_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_WILL_FALSE(flags) (flags = (MQTT_SN_FLAG_CLEAN_SESSION_FALSE << MQTT_SN_FLAG_WILL_SHIFT) | flags)
 
-#define SET_MQTT_SN_CLEAN_SESSION_TRUE(flags) ((MQTT_SN_FLAG_CLEAN_SESSION_TRUE << MQTT_SN_FLAG_CLEAN_SESSION_SHIFT) | flags)
-#define SET_MQTT_SN_CLEAN_SESSION_FALSE(flags) ((MQTT_SN_FLAG_CLEAN_SESSION_FALSE << MQTT_SN_FLAG_CLEAN_SESSION_SHIFT) | flags)
+#define SET_MQTT_SN_CLEAN_SESSION_TRUE(flags) (flags = (MQTT_SN_FLAG_CLEAN_SESSION_TRUE << MQTT_SN_FLAG_CLEAN_SESSION_SHIFT) | flags)
+#define SET_MQTT_SN_CLEAN_SESSION_FALSE(flags) (flags = (MQTT_SN_FLAG_CLEAN_SESSION_FALSE << MQTT_SN_FLAG_CLEAN_SESSION_SHIFT) | flags)
 
-#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_RESERVED(flags)              ((MQTT_SN_FLAG_TOPIC_ID_TYPE_RESERVED << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
-#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_SHORT_TOPIC_NAME(flags)      ((MQTT_SN_FLAG_TOPIC_ID_TYPE_SHORT_TOPIC_NAME << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
-#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_PREDEFINED_TOPIC_ID(flags)   ((MQTT_SN_FLAG_TOPIC_ID_TYPE_PREDEFINED_TOPIC_ID << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
-#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME(flags)            ((MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_RESERVED(flags)              (flags = (MQTT_SN_FLAG_TOPIC_ID_TYPE_RESERVED << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_SHORT_TOPIC_NAME(flags)      (flags = (MQTT_SN_FLAG_TOPIC_ID_TYPE_SHORT_TOPIC_NAME << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_PREDEFINED_TOPIC_ID(flags)   (flags = (MQTT_SN_FLAG_TOPIC_ID_TYPE_PREDEFINED_TOPIC_ID << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
+#define SET_MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME(flags)            (flags = (MQTT_SN_FLAG_TOPIC_ID_TYPE_TOPIC_NAME << MQTT_SN_FLAG_TOPIC_ID_TYPE_SHIFT) | flags)
 
 #define MQTT_SN_PINGREQ_MESSAGE_HEADER_LENGTH 2
 #define MQTT_SN_MAX_CLIENT_ID_STRING_LENGTH 23 // without null terminator
@@ -373,7 +373,7 @@ uint16_t get_message_length(const uint8_t *data);
 
 MQTT_SN_MESSAGE_TYPE get_mqtt_sn_message_type(const uint8_t *data);
 
-int is_valid_three_bytes_header(const uint8_t *data, ssize_t data_len);
+int is_valid_three_bytes_header(const uint8_t *data, size_t data_len);
 
 uint8_t is_three_bytes_header(const uint8_t *data);
 
@@ -383,6 +383,20 @@ int32_t generate_mqtt_sn_header(uint8_t *dst,
                                 uint16_t msg_len,
                                 MQTT_SN_MESSAGE_TYPE msg_type);
 
+int32_t generate_flags(uint8_t *dst,
+                       uint16_t dst_len,
+                       uint8_t dup,
+                       int8_t qos,
+                       uint8_t retain,
+                       uint8_t will,
+                       uint8_t clean_session,
+                       uint8_t topic_id_type,
+                       int32_t *used_bytes);
+int32_t generate_topic_id(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes);
+int32_t generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, int32_t *used_bytes);
+int32_t generate_data(uint8_t *dst, uint16_t dst_len, const uint8_t *data, uint16_t data_len, int32_t *used_bytes);
+
+/*
 int generate_publish(uint8_t *dst,
                      uint16_t dst_len,
                      uint8_t dup,
@@ -393,7 +407,7 @@ int generate_publish(uint8_t *dst,
                      uint32_t topic_id,
                      uint8_t *data,
                      uint16_t data_len);
-
+*/
 /**
  * Generates a MQTT-SN Forwarder Encapsulation frame.
  * @param dst pointer to the destination buffer.

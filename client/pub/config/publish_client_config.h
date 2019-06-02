@@ -8,7 +8,7 @@
 #include <logging/MqttSnLoggingInterface.h>
 #include <config/common/mqtt_sn_version_config.h>
 #include <config/client/mqtt_sn_gateway_config.h>
-#include <config/network/gateway_network_config.h>
+#include <config/network/gateway/gateway_network_config.h>
 #include <config/common/mqtt_sn_logger_config.h>
 #include <config/client/client_find_mqtt_sn_gateway_config.h>
 #include <config/client/client_connect_config.h>
@@ -19,7 +19,13 @@
 extern "C" {
 #endif
 
+#ifndef MQTT_SN_PUBLISH_CLIENT_EXECUTABLE_NAME
+#define MQTT_SN_PUBLISH_CLIENT_EXECUTABLE_NAME "msclient_pub"
+#endif
+
 typedef struct publish_client_config_ {
+  char executable_name[sizeof(MQTT_SN_PUBLISH_CLIENT_EXECUTABLE_NAME)];
+
   mqtt_sn_version_config msvcfg;
   mqtt_sn_gateway_config msgcfg;
   gateway_network_config gncfg;

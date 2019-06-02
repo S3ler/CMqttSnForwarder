@@ -17,6 +17,7 @@ int32_t client_publish_config_init(client_publish_config *cfg) {
   cfg->default_topic_id_type = 1; // predefined
   cfg->publish_list_max_len = CLIENT_MQTT_SN_MAX_PUBLISH;
   cfg->publish_list_len = 0;
+  cfg->console_in = CLIENT_MQTT_SN_PUBLISH_FROM_CONSOLE_IN_DEFAULT;
 
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
@@ -41,6 +42,7 @@ int32_t client_publish_config_process_args(client_publish_config *cfg,
                                            const MqttSnLogger *logger,
                                            int argc,
                                            char **argv) {
+  int32_t parsed_args = 0;
   for (int i = 0; i < argc; i++) {
     /*
     // TODO
@@ -80,9 +82,10 @@ int32_t client_publish_config_process_args(client_publish_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     }
   }
-  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+  return parsed_args;
 }
 int parse_client_publish_single_client_publish_config(const MqttSnLogger *logger,
                                                       char *url,
@@ -148,7 +151,8 @@ void client_publish_config_print_usage_long(const MqttSnLogger *logger) {
   log_str(logger, PSTR(" -pr : message should be retained.\n"));
   log_str(logger, PSTR(" -pm : message payload to send.\n"));
   log_str(logger, PSTR(" -pf : send the contents of a file as the message.\n"));
-  log_str(logger, PSTR(" -pc : read messages from stdin, sending a separate message for each line.\n"));
+  log_str(logger, PSTR(" -pc : reads and publish one message from stdin.\n"));
+  log_str(logger, PSTR(" -pci : read messages from stdin, sending a separate message for each line.\n"));
   log_str(logger, PSTR(" -pmL : publish message URL schema: <topic_id_type>://<qos>:<retain>:<topic_id>:<data>.\n"));
   log_str(logger, PSTR("        <topic_id_type> can be: predefined or shorttopic.\n"));
   log_str(logger, PSTR("        <qos> can be: -1, 0, 1, 2.\n"));

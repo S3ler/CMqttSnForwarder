@@ -10,6 +10,8 @@
 int32_t echogateway_config_init(echogateway_config *cfg) {
   memset(cfg, 0, sizeof(*cfg));
 
+  memcpy(&cfg->executable_name, MQTT_SN_ECHOGATEWAY_EXECUTABLE_NAME, sizeof(MQTT_SN_ECHOGATEWAY_EXECUTABLE_NAME));
+
   mqtt_sn_version_config_init(&cfg->msvcfg);
   client_network_config_init(&cfg->cncfg);
   gateway_advertisement_config_init(&cfg->gacfg);
@@ -24,8 +26,8 @@ void echogateway_config_cleanup(echogateway_config *cfg) {
   mqtt_sn_logger_config_cleanup(&cfg->mslcfg);
 }
 void echogateway_config_print_usage(const MqttSnLogger *logger) {
-  log_str(logger,
-          PSTR("echogateway is a simple mqtt-sn gateway that will send mqtt-sn messages back to the receiver\n"));
+  log_str(logger, PSTR(MQTT_SN_ECHOGATEWAY_EXECUTABLE_NAME));
+  log_str(logger, PSTR(" is a simple mqtt-sn gateway that will send mqtt-sn messages back to the receiver\n"));
   mqtt_sn_version_config_print_usage_short(logger);
   echogateway_config_print_usage_short(logger);
   log_flush(logger);
@@ -34,7 +36,9 @@ void echogateway_config_print_usage(const MqttSnLogger *logger) {
 }
 void echogateway_config_print_usage_short(const MqttSnLogger *logger) {
   const char *indent = "                   ";
-  log_str(logger, PSTR("Usage: echogateway "));
+  log_str(logger, PSTR("Usage: "));
+  log_str(logger, PSTR(MQTT_SN_ECHOGATEWAY_EXECUTABLE_NAME));
+  log_str(logger, PSTR(" "));
   gateway_advertisement_config_print_usage_short(logger, NULL);
   client_network_config_print_usage_short(logger, indent);
   mqtt_sn_logger_config_print_usage_short(logger, indent);
@@ -45,7 +49,7 @@ void echogateway_config_print_usage_long(const MqttSnLogger *logger) {
   mqtt_sn_logger_config_print_usage_long(logger);
 }
 void echogateway_config_print_see_usage(const MqttSnLogger *logger) {
-  log_str(logger, "Use 'echogateway --help' to see usage.");
+  print_see_usage(logger, PSTR(MQTT_SN_ECHOGATEWAY_EXECUTABLE_NAME));
 }
 int32_t echogateway_config_file_process_command_callback(void *cfg,
                                                          const MqttSnLogger *logger,
@@ -59,7 +63,7 @@ int32_t process_echogateway_config_line(echogateway_config *cfg, const MqttSnLog
     return MQTT_SN_PARSE_CONFIG_HELP;
   }
 
-  int32_t client_file_rc = 0;
+  int32_t config_file_rc = 0;
   int32_t config_file_index = get_config_argument_file_index(argc, argv, logger);
   if (config_file_index == MQTT_SN_PARSE_CONFIG_FAILURE) {
     return MQTT_SN_PARSE_CONFIG_FAILURE;
@@ -70,7 +74,7 @@ int32_t process_echogateway_config_line(echogateway_config *cfg, const MqttSnLog
         == MQTT_SN_PARSE_CONFIG_FAILURE) {
       return MQTT_SN_PARSE_CONFIG_FAILURE;
     }
-    client_file_rc = 2;
+    config_file_rc = 2;
   }
 
   int32_t gacfg_rc = gateway_advertisement_config_process_args(&cfg->gacfg, logger, argc, argv);
@@ -83,7 +87,7 @@ int32_t process_echogateway_config_line(echogateway_config *cfg, const MqttSnLog
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
 
-  if (client_file_rc + gacfg_rc + cnfg_rc + mslcfg_rc + mslcfg_rc != (argc - 1)) {
+  if (config_file_rc + gacfg_rc + cnfg_rc + mslcfg_rc != (argc - 1)) {
     // there is an unknown option
     for (int i = 1; i < argc; i++) {
       if (!is_gateway_advertisement_config_command(argv[i], &i)
@@ -95,6 +99,5 @@ int32_t process_echogateway_config_line(echogateway_config *cfg, const MqttSnLog
     }
   }
 
-// TODO implement me own parsing
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }

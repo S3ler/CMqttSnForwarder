@@ -27,10 +27,10 @@
 #include <logging/arduino/ArduinoSerial.hpp>
 
 // forwarder
-#include <forwarder/config/forwarder_config.c>
-#include <forwarder/config/forwarder_config.h>
-#include <forwarder/config/forwarder_config_logger.c>
-#include <forwarder/config/forwarder_config_logger.h>
+#include <forwarder/config/old/forwarder_config.c>
+#include <forwarder/config/old/forwarder_config.h>
+#include <forwarder/config/old/forwarder_config_logger.c>
+#include <forwarder/config/old/forwarder_config_logger.h>
 #include <forwarder/MqttSnForwarder.c>
 #include <forwarder/MqttSnForwarder.h>
 

@@ -12,9 +12,9 @@
 #include <gateway/echogateway/linux/starter/echogateway_starter.h>
 
 int main(int argc, char *argv[]) {
-  MqttSnLogger cpfg_logger = {0};
+  MqttSnLogger logger = {0};
 
-  if (MqttSnLoggerInit(&cpfg_logger, LOG_LEVEL_VERBOSE, stdout_log_init)) {
+  if (MqttSnLoggerInit(&logger, LOG_LEVEL_VERBOSE, stdout_log_init)) {
     return -1;
   }
 
@@ -22,12 +22,12 @@ int main(int argc, char *argv[]) {
   if (echogateway_config_init(&egwcfg)) {
     return EXIT_FAILURE;
   }
-  int rc = process_echogateway_config_line(&egwcfg, &cpfg_logger, argc, argv);
+  int rc = process_echogateway_config_line(&egwcfg, &logger, argc, argv);
   if (rc) {
     if (rc == MQTT_SN_PARSE_CONFIG_HELP) {
-      echogateway_config_print_usage(&cpfg_logger);
+      echogateway_config_print_usage(&logger);
     } else {
-      echogateway_config_print_see_usage(&cpfg_logger);
+      echogateway_config_print_see_usage(&logger);
       echogateway_config_cleanup(&egwcfg);
       return EXIT_FAILURE;
     }
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 
   EchoGateway egw = {0};
   void *clientNetworkContext = NULL;
-  rc = start_echogateway(&egwcfg, &cpfg_logger, &egw, clientNetworkContext);
+  rc = start_echogateway(&egwcfg, &logger, &egw, clientNetworkContext);
   echogateway_config_cleanup(&egwcfg);
 
   echogateway_config_cleanup(&egwcfg);

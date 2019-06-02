@@ -8,6 +8,10 @@
 #include <gateway/echogateway/config/echogateway_config.h>
 #include <gateway/echogateway/echogateway.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct EchoGateway_fcfg_ptr_ {
   EchoGateway *egw_ptr;
   const echogateway_config *egw_cfg;
@@ -33,6 +37,7 @@ int start_echogateway_client_tcp(const echogateway_config *fcfg,
                                  EchoGateway *echo_gateway,
                                  void *clientNetworkContext);
 
-
-
+#ifdef __cplusplus
+}
+#endif
 #endif //CMQTTSNFORWARDER_GATEWAY_ECHOGATEWAY_LINUX_STARTER_ECHOGATEWAY_STARTER_H_

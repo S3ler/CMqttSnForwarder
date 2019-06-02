@@ -23,11 +23,6 @@ int32_t EchoGatewayInit(EchoGateway *egw, log_level_t log_level, void *clientNet
   MqttSnFixedSizeRingBufferInit(&egw->clientNetworkReceiveBuffer);
   MqttSnFixedSizeRingBufferInit(&egw->clientNetworkSendBuffer);
 
-  if (ClientNetworkConnect(&egw->clientNetwork, egw->clientNetworkContext) != 0) {
-    EchoGatewayDeinit(egw);
-    return -1;
-  }
-
 #ifdef WITH_LOGGING
   if (log_status(&egw->logger)) {
     EchoGatewayDeinit(egw);
@@ -37,8 +32,18 @@ int32_t EchoGatewayInit(EchoGateway *egw, log_level_t log_level, void *clientNet
 
   return 0;
 }
-int32_t EchoGatewayDeinit(EchoGateway *egw) {
+int32_t EchoGatewayConnect(EchoGateway *egw) {
+  if (ClientNetworkConnect(&egw->clientNetwork, egw->clientNetworkContext) != 0) {
+    EchoGatewayDeinit(egw);
+    return -1;
+  }
+  return 0;
+}
+int32_t EchoGatewayDisconnect(EchoGateway *egw) {
   ClientNetworkDisconnect(&egw->clientNetwork, egw->clientNetworkContext);
+  return 0;
+}
+int32_t EchoGatewayDeinit(EchoGateway *egw) {
   ClientNetworkDeinitialize(&egw->clientNetwork, egw->clientNetworkContext);
 #ifdef WITH_LOGGING
   egw->logger.log_deinit(&egw->logger);
@@ -61,6 +66,11 @@ int32_t EchoGatewayLoop(EchoGateway *egw) {
       // should never happen
       return -1;
     }
+
+    device_address tmp_from = msg.from;
+    msg.from = msg.to;
+    msg.to = tmp_from;
+
     if (put(&egw->clientNetworkSendBuffer, &msg) < 0) {
       // should never happen
       return -1;
@@ -76,45 +86,6 @@ int32_t EchoGatewayLoop(EchoGateway *egw) {
     ClientNetworkDisconnect(&egw->clientNetwork, egw->clientNetworkContext);
   }
   return 0;
-}
-
-int32_t log_echogateway_started(const MqttSnLogger *logger, const mqtt_sn_version_config *msvcfg) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
-    return log_status(logger);
-  }
-
-  log_msg_start(logger);
-  log_str(logger, PSTR("echogateway version "));
-  log_str(logger, msvcfg->version);
-  log_str(logger, PSTR(" is "));
-  log_uint32(logger, msvcfg->major);
-  log_str(logger, PSTR("."));
-  log_uint32(logger, msvcfg->minor);
-  log_str(logger, PSTR("."));
-  log_uintmax(logger, msvcfg->tweak);
-  log_str(logger, PSTR(" (build date "));
-  log_str(logger, msvcfg->build_date);
-  log_str(logger, PSTR(") started."));
-  log_flush(logger);
-  return log_status(logger);
-}
-int32_t log_echogateway_terminated(const MqttSnLogger *logger, const mqtt_sn_version_config *msvcfg) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
-    return log_status(logger);
-  }
-
-  log_msg_start(logger);
-  log_str(logger, PSTR("echogateway version "));
-  log_str(logger, msvcfg->version);
-  log_str(logger, PSTR(" is "));
-  log_uint32(logger, msvcfg->major);
-  log_str(logger, PSTR("."));
-  log_uint32(logger, msvcfg->minor);
-  log_str(logger, PSTR("."));
-  log_uintmax(logger, msvcfg->tweak);
-  log_str(logger, PSTR(" terminated."));
-  log_flush(logger);
-  return log_status(logger);
 }
 
 

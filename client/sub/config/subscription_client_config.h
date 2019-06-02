@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_CLIENT_SUB_CONFIG_SUBSCRIBE_CLIENT_CONFIG_H_
 
 #include <config/common/mqtt_sn_version_config.h>
-#include <config/network/gateway_network_config.h>
+#include <config/network/gateway/gateway_network_config.h>
 #include <config/client/mqtt_sn_gateway_config.h>
 #include <config/common/mqtt_sn_logger_config.h>
 #include <config/client/client_connect_config.h>
