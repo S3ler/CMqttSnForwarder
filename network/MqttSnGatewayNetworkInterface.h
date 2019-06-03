@@ -90,6 +90,15 @@ int32_t GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
                               int timeout_ms,
                               void *context);
 
+int32_t GatewayNetworkReceiveFom(MqttSnGatewayNetworkInterface *n,
+                                 device_address *from,
+                                 device_address *to,
+                                 uint8_t *data,
+                                 uint16_t max_data_length,
+                                 uint8_t *signal_strength,
+                                 int32_t timeout_ms,
+                                 void *context);
+
 #ifdef __cplusplus
 }
 #endif

@@ -36,19 +36,6 @@ extern "C" {
 #define MQTT_SN_CLIENT_MAX_REGISTRATION_TOPIC_NAME_LENGTH 255
 #endif
 
-typedef struct MqttSnReceivedAdvertise_ {
-  device_address from;
-  int32_t timeout;
-  MqttSnAdvertise advertise;
-} MqttSnReceivedAdvertise;
-
-// if gw_info.address == from then its from a GW else from a client
-typedef struct MqttSnReceivedGwInfo_ {
-  device_address from;
-  int32_t timeout;
-  MqttSnGwInfo gw_info;
-} MqttSnReceivedGwInfo;
-
 typedef struct MqttSnClientRegistration_ {
   char *topic_name;
   uint16_t topic_id;
@@ -97,38 +84,6 @@ int32_t MqttSnClientDeinit(MqttSnClient *client);
 int32_t MqttSnClientLoop(MqttSnClient *client);
 // disconnect network too
 // deinint network too
-
-/**
- * Receive MqttSnAdvertise messages until either timeout runs out or advertise is full.
- * @param client to use for awaiting MqttSnAdvertise messages
- * @param timeout for receiving MqttSnAdvertise messages. Between -1 and INT32_MAX. Passed to the underlying GatewayNetwork. On -1 waits indefinitely. On 0 returns immediately.
- * @param advertise pointer to an advertise array to store received MqttSnAdvertise messages
- * @param advertise_len length of the advertise array
- * @return negative value on error, 0 on success.
- */
-int32_t MqttSnClientAwaitAdvertise(MqttSnClient *client,
-                                   int32_t timeout,
-                                   MqttSnReceivedAdvertise *advertise,
-                                   uint16_t advertise_len);
-
-/**
- * Sends a MqttSnSearchGw and awaits MqttSnGwInfo as well as MqttSnAdvertise messages. Returns when timeout runs out or gw_info is full.
- * @param client to use for awaiting MqttSnGwInfo and MqttSnAdvertise messages
- * @param radius broadcast radius of the MqttSnSearchGw is limited
- * @param timeout until functions returns
- * @param gw_info to a MqttSnGwInfo array to store the received MqttSnGwInfo messages.
- * @param gw_info_len length of the MqttSnGwInfo array
- * @param advertise pointer to an advertise array to store received MqttSnAdvertise messages. May be NULL when advertise_len is 0.
- * @param advertise_len length of the advertise array. May be 0 then no MqttSnAdvertise messages are saved.
- * @return
- */
-int32_t MqttSnClientSearchGw(MqttSnClient *client,
-                             uint8_t radius,
-                             int32_t timeout,
-                             MqttSnReceivedGwInfo *gw_info,
-                             uint16_t gw_info_len,
-                             MqttSnReceivedAdvertise *advertise,
-                             uint16_t advertise_len);
 
 // uses default_timeout and saves duration as connect_duration
 MQTT_SN_RETURN_CODE MqttSnClientConnect(MqttSnClient *client);

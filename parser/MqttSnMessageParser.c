@@ -217,7 +217,7 @@ int32_t generate_mqtt_sn_header(uint8_t *dst,
   MqttSnMessageHeaderOneOctetLengthField *header = (MqttSnMessageHeaderOneOctetLengthField *) dst;
   header->length = msg_len;
   header->msg_type = msg_type;
-  return 0;
+  return *gen_bytes;
 }
 
 int32_t generate_flags(uint8_t *dst,

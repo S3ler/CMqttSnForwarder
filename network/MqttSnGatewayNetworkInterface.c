@@ -181,7 +181,7 @@ int32_t GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
     return 0;
   }
   MqttSnMessageData msg = {0};
-  int receive_rc =
+  int32_t receive_rc =
       n->receive(n, &msg.from, &msg.to, msg.data, n->max_data_length, &msg.signal_strength, timeout_ms, context);
   if (receive_rc < 0) {
     n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED;
@@ -192,6 +192,32 @@ int32_t GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
     if (put(receiveBuffer, &msg) < 0) {
       // ignored
     }
+  }
+
+  if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED) {
+    return -1;
+  }
+  return receive_rc;
+}
+
+int32_t GatewayNetworkReceiveFom(MqttSnGatewayNetworkInterface *n,
+                                 device_address *from,
+                                 device_address *to,
+                                 uint8_t *data,
+                                 uint16_t max_data_length,
+                                 uint8_t *signal_strength,
+                                 int32_t timeout_ms,
+                                 void *context) {
+  if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED) {
+    return -1;
+  }
+  if (n->receive == NULL) {
+    return -1;
+  }
+
+  int32_t receive_rc = n->receive(n, from, to, data, max_data_length, signal_strength, timeout_ms, context);
+  if (receive_rc < 0) {
+    n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED;
   }
 
   if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED) {

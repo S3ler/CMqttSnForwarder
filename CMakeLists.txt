@@ -434,6 +434,11 @@ target_include_directories(lib-mqtt-sn-gateway-config PRIVATE .)
 target_compile_options(lib-mqtt-sn-gateway-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 target_link_libraries(lib-mqtt-sn-gateway-config lib-mqtt-sn-common-config)
 
+add_library(lib-mqtt-sn-find-gateway client/MqttSnFindGatewayClient.c client/MqttSnFindGatewayClient.h)
+target_include_directories(lib-mqtt-sn-find-gateway PRIVATE .)
+target_compile_options(lib-mqtt-sn-find-gateway PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+target_link_libraries(lib-mqtt-sn-find-gateway lib-mqtt-sn-message-parser lib-mqtt-sn-linux-gateway-network)
+
 option(WITH_MQTT_SN_CLIENT "Include WITH_MQTT_SN_CLIENT support?" ON)
 if (WITH_MQTT_SN_CLIENT)
     add_library(lib-mqtt-sn-client client/MqttSnClient.c client/MqttSnClient.h client/pub/config/publish_client_config.c client/pub/config/publish_client_config.h)
@@ -446,6 +451,16 @@ if (WITH_MQTT_SN_CLIENT)
     if (WITH_LINUX_PLUGIN_NETWORK)
         target_link_libraries(lib-mqtt-sn-client lib-mqtt-sn-linux-plugin-gateway-network)
     endif ()
+
+    add_executable(MqttSnFindGatewayMonitor client/findgatewaymonitor/linux/main.c
+            client/findgatewaymonitor/config/find_gateway_monitor_config.c client/findgatewaymonitor/config/find_gateway_monitor_config.h
+            parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h)
+    target_include_directories(MqttSnFindGatewayMonitor PRIVATE .)
+    target_compile_options(MqttSnFindGatewayMonitor PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(MqttSnFindGatewayMonitor
+            lib-mqtt-sn-find-gateway
+            lib-mqtt-sn-find-gateway-config
+            pthread)
 
     add_executable(MqttSnClientPub client/pub/linux/main.c
             client/pub/linux/starter/publish_client_starter.c client/pub/linux/starter/publish_client_starter.h
