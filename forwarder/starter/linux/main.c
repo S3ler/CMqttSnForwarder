@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
   MqttSnForwarder mqttSnForwarder = {0};
   void *gatewayNetworkContext = NULL;
   void *clientNetworkContext = NULL;
-  rc = start_forwarder(&fcfg, NULL, &mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
+  rc = start_forwarder(&fcfg, &logger, &mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
   forwarder_config_cleanup(&fcfg);
 
   return rc;

@@ -100,7 +100,7 @@ int start_gateway_plugin(const forwarder_config *cfg,
   }
   gatewayNetworkContext = &gatewayPluginContext;
 
-  return start_forwarder(cfg, NULL, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
+  return start_forwarder(cfg, logger, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
 #endif
 
@@ -148,7 +148,7 @@ int start_gateway_tcp(const forwarder_config *cfg,
   }
   gatewayNetworkContext = &tcpGatewayNetworkContext;
 
-  return start_forwarder(cfg, NULL, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
+  return start_forwarder(cfg, logger, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
 #endif
 
@@ -196,7 +196,7 @@ int start_gateway_udp(const forwarder_config *cfg,
   }
   gatewayNetworkContext = &udpGatewayNetworkContext;
 
-  return start_forwarder(cfg, NULL, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
+  return start_forwarder(cfg, logger, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
 #endif
 
@@ -266,7 +266,7 @@ int start_client_plugin(const forwarder_config *fcfg,
   }
   clientNetworkContext = &clientPluginContext;
 
-  return start_forwarder(fcfg, NULL, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
+  return start_forwarder(fcfg, logger, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 
 }
 #endif
@@ -316,7 +316,7 @@ int start_client_tcp(const forwarder_config *fcfg,
   }
   clientNetworkContext = &tcpClientNetworkContext;
 
-  return start_forwarder(fcfg, NULL, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
+  return start_forwarder(fcfg, logger, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
 #endif
 
@@ -365,7 +365,7 @@ int start_client_udp(const forwarder_config *fcfg,
   }
   clientNetworkContext = &udpClientNetworkContext;
 
-  return start_forwarder(fcfg, NULL, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
+  return start_forwarder(fcfg, logger, mqttSnForwarder, gatewayNetworkContext, clientNetworkContext);
 }
 #endif
 

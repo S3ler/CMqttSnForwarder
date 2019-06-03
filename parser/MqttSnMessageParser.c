@@ -104,7 +104,7 @@ int parse_message_tolerant(ParsedMqttSnHeader *h,
                            const uint8_t *data,
                            uint16_t data_len) {
   int32_t parsed_bytes = 0;
-  if (parse_header(h, msg_type, data, data_len, &parsed_bytes)) {
+  if (parse_header(h, msg_type, data, data_len, &parsed_bytes) < 0) {
     return -1;
   }
   int payload_offset = MQTT_SN_HEADER_LENGTH(h->indicator);
@@ -113,7 +113,7 @@ int parse_message_tolerant(ParsedMqttSnHeader *h,
     if (parse_message_tolerant(&encapsulated_header,
                                ANY_MESSAGE_TYPE,
                                data + payload_offset,
-                               data_len - payload_offset)) {
+                               data_len - payload_offset) < 0) {
       return -1;
     }
   }
@@ -220,7 +220,6 @@ int32_t generate_mqtt_sn_header(uint8_t *dst,
   return 0;
 }
 
-
 int32_t generate_flags(uint8_t *dst,
                        uint16_t dst_len,
                        uint8_t dup,
@@ -274,14 +273,12 @@ int32_t generate_flags(uint8_t *dst,
   return *used_bytes;
 }
 
-
-
 int32_t generate_topic_id(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes) {
   *used_bytes += MQTT_SN_TOPIC_ID_LENGTH;
   if (dst_len < *used_bytes) {
     return -1;
   }
-  *dst = topic_id;
+  *dst = htons(topic_id);
   return (*used_bytes);
 }
 int32_t generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, int32_t *used_bytes) {
@@ -289,7 +286,7 @@ int32_t generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, int32_t
   if (dst_len < *used_bytes) {
     return -1;
   }
-  *dst = msg_id;
+  *dst = htons(msg_id);
   return (*used_bytes);
 }
 int32_t generate_data(uint8_t *dst, uint16_t dst_len, const uint8_t *data, uint16_t data_len, int32_t *used_bytes) {

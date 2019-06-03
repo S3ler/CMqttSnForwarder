@@ -13,6 +13,7 @@ int32_t forwarder_config_init(forwarder_config *cfg) {
   memcpy(&cfg->executable_name, MQTT_SN_FORWARDER_EXECUTABLE_NAME, sizeof(MQTT_SN_FORWARDER_EXECUTABLE_NAME));
 
   mqtt_sn_version_config_init(&cfg->msvcfg);
+  mqtt_sn_gateway_config_init(&cfg->msgcfg);
   client_network_config_init(&cfg->cncfg);
   gateway_network_config_init(&cfg->gncfg);
   mqtt_sn_logger_config_init(&cfg->mslcfg);
@@ -22,6 +23,7 @@ int32_t forwarder_config_init(forwarder_config *cfg) {
 
 void forwarder_config_cleanup(forwarder_config *cfg) {
   mqtt_sn_version_config_cleanup(&cfg->msvcfg);
+  mqtt_sn_gateway_config_cleanup(&cfg->msgcfg);
   client_network_config_cleanup(&cfg->cncfg);
   gateway_network_config_cleanup(&cfg->gncfg);
   mqtt_sn_logger_config_cleanup(&cfg->mslcfg);

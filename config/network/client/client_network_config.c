@@ -82,6 +82,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
                                            const MqttSnLogger *logger,
                                            int argc,
                                            char **argv) {
+  int32_t parsed_args = 0;
   for (int i = 0; i < argc; i++) {
     if (!strcmp(argv[i], "-cP") || !strcmp(argv[i], "--client_network_protocol")) {
       if (i == argc - 1) {
@@ -91,6 +92,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         cfg->client_network_protocol = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-cA") || !strcmp(argv[i], "--client_network_bind_address")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "address");
@@ -99,6 +101,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         cfg->client_network_bind_address = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-cp") || !strcmp(argv[i], "--client_network_bind_port")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "port");
@@ -109,6 +112,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-cst") || !strcmp(argv[i], "--client_send_timeout")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "timeout");
@@ -119,6 +123,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-crt") || !strcmp(argv[i], "--client_receive_timeout")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "timeout");
@@ -129,6 +134,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-ct") || !strcmp(argv[i], "--client_network_timeout")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "timeout");
@@ -142,6 +148,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-cL") || !strcmp(argv[i], "--client_network_url")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "URL");
@@ -177,6 +184,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     }
 #if defined(WITH_LINUX_TCP_CLIENT_NETWORK_BROADCAST) || defined(WITH_LINUX_UDP_CLIENT_NETWORK_BROADCAST)
       // client network broadcast
@@ -188,6 +196,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         cfg->client_network_broadcast_protocol = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-cbA") || !strcmp(argv[i], "--client_network_broadcast_address")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "address");
@@ -196,6 +205,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         cfg->client_network_broadcast_address = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-cbp") || !strcmp(argv[i], "--client_network_broadcast_bind_port")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "port");
@@ -241,6 +251,7 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     }
 #endif
 #ifdef WITH_LINUX_PLUGIN_NETWORK
@@ -252,10 +263,11 @@ int32_t client_network_config_process_args(client_network_config *cfg,
         cfg->client_network_plugin_path = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
     }
 #endif
   }
-  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+  return parsed_args;
 }
 
 void client_network_config_print_usage_short(const MqttSnLogger *logger, const char *indent) {

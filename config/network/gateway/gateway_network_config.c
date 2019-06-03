@@ -49,7 +49,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
                                             const MqttSnLogger *logger,
                                             int argc,
                                             char **argv) {
-  int32_t parsed_arguments = 0;
+  int32_t parsed_args = 0;
   for (int i = 0; i < argc; i++) {
     if (!strcmp(argv[i], "-gP") || !strcmp(argv[i], "--gateway_network_protocol")) {
       if (i == argc - 1) {
@@ -62,6 +62,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         cfg->gateway_network_protocol = strdup(argv[i + 1]);
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-gA") || !strcmp(argv[i], "--gateway_network_bind_address")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "address");
@@ -70,6 +71,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         cfg->gateway_network_bind_address = strdup(argv[i + 1]);
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-gp") || !strcmp(argv[i], "--gateway_network_bind_port")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "port");
@@ -80,6 +82,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-gL") || !strcmp(argv[i], "--gateway_network_url")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "URL");
@@ -118,6 +121,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
       // timeout
     } else if (!strcmp(argv[i], "-gst") || !strcmp(argv[i], "--gateway_send_timeout")) {
       if (i == argc - 1) {
@@ -129,6 +133,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-grt") || !strcmp(argv[i], "--gateway_receive_timeout")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "timeout");
@@ -139,6 +144,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-gt") || !strcmp(argv[i], "--gateway_network_timeout")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "timeout");
@@ -152,6 +158,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     }
       // broadcast
 #ifdef WITH_GATEWAY_NETWORK_BROADCAST
@@ -163,6 +170,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         cfg->gateway_network_broadcast_protocol = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-gbA") || !strcmp(argv[i], "--gateway_network_broadcast_address")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "address");
@@ -171,6 +179,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         cfg->gateway_network_broadcast_address = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-gbp") || !strcmp(argv[i], "--gateway_network_broadcast_bind_port")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "port");
@@ -181,6 +190,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-gbL") || !strcmp(argv[i], "--gateway_network_broadcast_url")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "URL");
@@ -216,6 +226,7 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     }
 #endif
       // plugin
@@ -228,10 +239,11 @@ int32_t gateway_network_config_process_args(gateway_network_config *cfg,
         cfg->gateway_network_plugin_path = strdup(argv[i + 1]);
       }
       i++;
+      parsed_args += 2;
     }
 #endif
   }
-  return parsed_arguments;
+  return parsed_args;
 }
 void gateway_network_config_print_usage_short(const MqttSnLogger *logger, const char *indent) {
   if (indent) {

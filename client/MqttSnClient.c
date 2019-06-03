@@ -17,7 +17,7 @@ int32_t MqttSnClientInit(MqttSnClient *client,
   client->default_timeout = MQTT_SN_CLIENT_DEFAULT_TIMEOUT_MS;
   client->default_signal_strength = MQTT_SN_CLIENT_DEFAULT_SIGNAL_STRENGTH;
   client->status = 0;
-  client->msg_id = 0;
+  client->msg_id = 7;
   client->connect_duration = MQTT_SN_CLIENT_DEFAULT_CONNECT_DURATION;
 
 #ifdef WITH_LOGGING

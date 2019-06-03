@@ -33,21 +33,26 @@ int32_t mqtt_sn_logger_config_process_args(mqtt_sn_logger_config *cfg,
                                            const MqttSnLogger *logger,
                                            int argc,
                                            char **argv) {
+  int32_t parsed_args = 0;
   for (int i = 0; i < argc; i++) {
     if (!strcmp(argv[i], "-q") || !strcmp(argv[i], "--quiet")) {
       cfg->log_lvl = LOG_LEVEL_QUIET;
+      parsed_args += 1;
     } else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--default")) {
       cfg->log_lvl = LOG_LEVEL_DEFAULT;
+      parsed_args += 1;
     } else if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--verbose")) {
       cfg->log_lvl = LOG_LEVEL_VERBOSE;
+      parsed_args += 1;
     }
 #if defined(WITH_DEBUG_LOGGING)
     else if (!strcmp(argv[i], "-db") || !strcmp(argv[i], "--debug")) {
       cfg->log_lvl = LOG_LEVEL_DEBUG;
+      parsed_args += 1;
     }
 #endif
   }
-  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+  return parsed_args;
 }
 void mqtt_sn_logger_config_print_usage_short(const MqttSnLogger *logger, const char *indent) {
   if (indent) {
