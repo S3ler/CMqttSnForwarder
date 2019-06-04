@@ -173,7 +173,7 @@ int generate_forwarder_encapsulation_wireless_node_id(uint8_t *dst_pos,
                                                       uint16_t dst_len,
                                                       int32_t *gen_bytes,
                                                       const device_address *wireless_node_id) {
-  return generate_mqtt_sn_device_address(dst_pos, dst_len, gen_bytes, wireless_node_id);
+  return generate_mqtt_sn_device_address(dst_pos, dst_len, gen_bytes, wireless_node_id, sizeof(*wireless_node_id));
 }
 int generate_forwarder_encapsulation_ctrl(uint8_t *dst_pos, uint16_t dst_len, int32_t *gen_bytes, uint8_t radius) {
   if (radius > MQTT_SN_MESSAGE_FORWARDER_ENCAPSULATION_CRTL_BROADCAST_RADIUS) {

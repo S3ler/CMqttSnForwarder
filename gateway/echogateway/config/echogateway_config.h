@@ -23,7 +23,7 @@ typedef struct echogateway_config_ {
   char executable_name[sizeof(MQTT_SN_ECHOGATEWAY_EXECUTABLE_NAME)];
   mqtt_sn_version_config msvcfg;
   client_network_config cncfg;
-  gateway_advertisement_config gacfg;
+  gateway_advertise_config gacfg;
   mqtt_sn_logger_config mslcfg;
 } echogateway_config;
 

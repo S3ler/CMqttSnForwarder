@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include <logging/linux/stdout/StdoutLogging.h>
 #include <platform/platform_compatibility.h>
+#include <parser/logging/MqttSnAdvertiseMessageLogging.h>
+#include <parser/logging/MqttSnGwInfoMessageLogging.h>
 
 static volatile sig_atomic_t keep_running = 1;
 
@@ -24,17 +26,52 @@ static void sig_handler(int _) {
   keep_running = 0;
 }
 
+int32_t find_gateway_monitor_log_received_advertise(const MqttSnLogger *logger,
+                                                    const int32_t timeout_left,
+                                                    const MqttSnReceivedAdvertise *received_advertise) {
+  log_msg_start(logger);
+  log_str(logger, PSTR("timeout left: "));
+  log_int32(logger, timeout_left);
+  log_str(logger, PSTR(" advertise from "));
+  log_device_address(logger, &received_advertise->from);
+  log_str(logger, PSTR(" "));
+  log_advertise_message(logger, received_advertise->advertise.gwId, received_advertise->advertise.duration);
+  log_str(logger, PSTR("\n"));
+  return log_status(logger);
+}
+int32_t find_gateway_monitor_log_received_received_gwinfo(const MqttSnLogger *logger,
+                                                          const int32_t timeout_left,
+                                                          const MqttSnReceivedGwInfo *received_gwinfo) {
+  log_msg_start(logger);
+  log_str(logger, PSTR("timeout left: "));
+  log_int32(logger, timeout_left);
+  log_str(logger, PSTR(" gwinfo from "));
+  log_device_address(logger, &received_gwinfo->from);
+  log_str(logger, PSTR(" "));
+  log_gwinfo_message(logger,
+                     received_gwinfo->gw_info.gwId,
+                     &received_gwinfo->gw_info.gwAdd,
+                     received_gwinfo->gw_info.gwAddLen);
+  log_str(logger, PSTR("\n"));
+  return log_status(logger);
+}
 
 int32_t find_gateway_monitor_adv_cb(const MqttSnFindGatewayClient *client,
                                     const int32_t timeout_left,
                                     const MqttSnReceivedAdvertise *received_advertise) {
-
+  int32_t log_rc = find_gateway_monitor_log_received_advertise(client->logger, timeout_left, received_advertise);
+  if (log_rc < 0) {
+    return -1;
+  }
   return 0;
 }
 int32_t find_gateway_monitor_gwinfo_cb(const MqttSnFindGatewayClient *client,
                                        const int32_t timeout_left,
-                                       const MqttSnReceivedGwInfo *radius) {
-
+                                       const MqttSnReceivedGwInfo *received_gwinfo) {
+  int32_t log_rc = find_gateway_monitor_log_received_received_gwinfo(client->logger, timeout_left, received_gwinfo);
+  if (log_rc < 0) {
+    return -1;
+  }
   return 0;
 }
 void *publish_client_thread_function(void *ptr) {

@@ -63,21 +63,21 @@ int32_t parse_header(ParsedMqttSnHeader *h,
                      int32_t *parsed_bytes) {
   // TODO data_len can be more than parsed header length
   if (data_len < 2) {
-    *parsed_bytes += data_len;
+    (*parsed_bytes) += data_len;
     return -1;
   }
   if (is_three_bytes_header(data) && !is_valid_three_bytes_header(data, data_len)) {
-    *parsed_bytes = MQTT_SN_HEADER_LENGTH(is_three_bytes_header(data));
+    (*parsed_bytes) = MQTT_SN_HEADER_LENGTH(is_three_bytes_header(data));
     return -1;
   }
   h->length = get_message_length(data);
   if (h->length != data_len) {
-    *parsed_bytes = MQTT_SN_HEADER_LENGTH(is_three_bytes_header(data));
+    (*parsed_bytes) = MQTT_SN_HEADER_LENGTH(is_three_bytes_header(data));
     return -1;
   }
   h->indicator = is_three_bytes_header(data);
   h->msg_type = get_mqtt_sn_message_type(data);
-  *parsed_bytes = MQTT_SN_HEADER_LENGTH(h->indicator);
+  (*parsed_bytes) = MQTT_SN_HEADER_LENGTH(h->indicator);
 
   if (h->msg_type == RESERVED_INVALID) {
     return -1;
@@ -88,7 +88,7 @@ int32_t parse_header(ParsedMqttSnHeader *h,
     }
   }
 
-  return *parsed_bytes;
+  return (*parsed_bytes);
 }
 
 /**
@@ -578,9 +578,7 @@ int32_t parse_mqtt_sn_uint16_byte(const uint8_t *src_pos, uint16_t src_len, int3
   if ((*parsed_bytes) > src_len) {
     return -1;
   }
-  (*dst) = (uint16_t) src_pos[0] << 8;
-  (*dst) |= (uint16_t) src_pos[1] << 0;
-  // TODO NTOHS?
+  (*dst) = ntohs((*(uint16_t *)src_pos));
   return *parsed_bytes;
 }
 
@@ -597,14 +595,15 @@ int32_t generate_mqtt_sn_uint16(uint8_t *dst_pos, uint16_t dst_len, uint16_t val
   if ((*used_bytes) > dst_len) {
     return -1;
   }
-  (*dst_pos) = htons(value);
+  (*(uint16_t *) dst_pos) = htons(value);
   return (*used_bytes);
 }
 int32_t generate_mqtt_sn_device_address(uint8_t *dst_pos,
                                         uint16_t dst_len,
                                         int32_t *used_bytes,
-                                        const device_address *address) {
-  return generate_mqtt_sn_uint8_array(dst_pos, dst_len, used_bytes, address->bytes, sizeof(device_address));
+                                        const device_address *address,
+                                        uint16_t address_len) {
+  return generate_mqtt_sn_uint8_array(dst_pos, dst_len, used_bytes, address->bytes, address_len);
 }
 int32_t generate_mqtt_sn_uint8_array(uint8_t *dst_pos,
                                      uint16_t dst_len,

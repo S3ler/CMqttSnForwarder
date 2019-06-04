@@ -98,7 +98,7 @@ int32_t start_publish_client(const publish_client_config *cfg,
     // no connect needed
     for (uint32_t i = 0; i < cfg->cpcfg.publish_list_len; i++) {
       single_client_publish_config publish = cfg->cpcfg.publish_list[i];
-      if (MqttSnClientPublishM1(publish_client, publish.topic_id, 0, publish.data, publish.data_length) < 0) {
+      if (MqttSnClientPublishPredefinedM1(publish_client, publish.topic_id, 0, publish.data, publish.data_length) < 0) {
         MqttSnClientDeinit(publish_client);
         return EXIT_FAILURE;
       }

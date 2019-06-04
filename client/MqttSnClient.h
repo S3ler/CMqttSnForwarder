@@ -47,7 +47,8 @@ typedef struct MqttSnClient_ {
   int32_t default_timeout;
   uint8_t default_signal_strength;
   uint8_t status;
-  uint16_t msg_id;
+  uint16_t msg_counter;
+
   uint16_t connect_duration;
   device_address *mqtt_sn_gateway_address;
   char *client_id;
@@ -96,24 +97,46 @@ MQTT_SN_RETURN_CODE MqttSnClientConnect(MqttSnClient *client);
  * @param data_len length of data to publish
  * @return -1 on error, else the count of bytes send
  */
-int32_t MqttSnClientPublishM1(MqttSnClient *client,
-                              uint16_t predefined_topic_id,
-                              uint8_t retain,
-                              uint8_t *data,
-                              uint16_t data_len);
+int32_t MqttSnClientPublishPredefinedM1(MqttSnClient *client,
+                                        uint16_t predefined_topic_id,
+                                        uint8_t retain,
+                                        uint8_t *data,
+                                        uint16_t data_len);
 
 /**
  * Registers (if not yet) and publishes message
+ * Look up if registered => else registers => then publishes
  */
 int32_t MqttSnClientPublishTopicName(MqttSnClient *client,
-                                     const char* topic_name,
+                                     const char *topic_name,
                                      uint16_t topic_name_length,
                                      uint8_t retain,
+                                     int8_t qos,
                                      uint8_t *data,
                                      uint16_t data_len);
+/**
+ * Publishes to predefined topic id with given qos
+ */
+int32_t MqttSnClientPublishPredefined(MqttSnClient *client,
+                                      uint16_t predefined_topic_id,
+                                      uint8_t retain,
+                                      int8_t qos,
+                                      uint8_t *data,
+                                      uint16_t data_len);
+/**
+ * Publishes to topic id with given qos
+ */
+int32_t MqttSnClientPublishTopicId(MqttSnClient *client,
+                                   uint16_t predefined_topic_id,
+                                   uint8_t retain,
+                                   int8_t qos,
+                                   uint8_t *data,
+                                   uint16_t data_len);
 
-int32_t MqttSnClientRegister(MqttSnClient *client, const char* topic_name, uint16_t topic_name_length);
-
+/**
+ * Registers topic_name to gateway
+ */
+int32_t MqttSnClientRegister(MqttSnClient *client, const char *topic_name);
 
 #ifdef __cplusplus
 }

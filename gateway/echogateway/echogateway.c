@@ -4,9 +4,16 @@
 
 #include <platform/platform_compatibility.h>
 #include <network/MqttSnClientNetworkInterface.h>
+#include <client/MqttSnClientAsync.h>
+#include <parser/MqttSnSearchGwMessage.h>
+#include <parser/MqttSnGwInfoMessage.h>
+#include <parser/MqttSnAdvertiseMessage.h>
 #include "echogateway.h"
 
-int32_t EchoGatewayInit(EchoGateway *egw, log_level_t log_level, void *clientNetworkContext) {
+int32_t EchoGatewayInit(EchoGateway *egw,
+                        log_level_t log_level,
+                        void *clientNetworkContext,
+                        const gateway_advertise_config *advertise_config) {
 #ifdef WITH_LOGGING
 #if defined(Arduino_h) || defined(WITH_PLATFORMIO)
   if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, arduino_serial_log_init) != 0) {
@@ -29,6 +36,13 @@ int32_t EchoGatewayInit(EchoGateway *egw, log_level_t log_level, void *clientNet
     return -1;
   }
 #endif
+
+  if (PlatformCompatibilityGetTimestamp(&egw->last_advertisement_send) < 0) {
+    EchoGatewayDeinit(egw);
+    MqttSnLoggerDeinit(&egw->logger);
+    return -1;
+  }
+  egw->advertisement_config = (*advertise_config);
 
   return 0;
 }
@@ -54,7 +68,7 @@ int32_t EchoGatewayLoop(EchoGateway *egw) {
   if (ClientNetworkReceive(&egw->clientNetwork,
                            &egw->clientNetworkReceiveBuffer,
                            egw->clientNetworkReceiveTimeout,
-                           egw->clientNetworkContext)) {
+                           egw->clientNetworkContext) < 0) {
     ClientNetworkDisconnect(&egw->clientNetwork, egw->clientNetworkContext);
   }
 #ifdef Arduino_h
@@ -67,14 +81,27 @@ int32_t EchoGatewayLoop(EchoGateway *egw) {
       return -1;
     }
 
-    device_address tmp_from = msg.from;
-    msg.from = msg.to;
-    msg.to = tmp_from;
-
-    if (put(&egw->clientNetworkSendBuffer, &msg) < 0) {
-      // should never happen
+    if (EchoGatewayHandleSearchGwMessage(egw, &msg) < 0) {
       return -1;
     }
+
+    if (!memcmp(msg.to.bytes, egw->clientNetwork.client_network_address->bytes, sizeof(device_address))) {
+      device_address tmp_from = msg.from;
+      msg.from = msg.to;
+      msg.to = tmp_from;
+
+      if (put(&egw->clientNetworkSendBuffer, &msg) < 0) {
+        // should never happen
+        return -1;
+      }
+    }
+
+  }
+#ifdef Arduino_h
+  yield();
+#endif
+  if (EchoGatewayHandleAdvertise(egw) < 0) {
+    return -1;
   }
 #ifdef Arduino_h
   yield();
@@ -82,10 +109,55 @@ int32_t EchoGatewayLoop(EchoGateway *egw) {
   if (ClientNetworkSend(&egw->clientNetwork,
                         &egw->clientNetworkSendBuffer,
                         egw->clientNetworkSendTimeout,
-                        egw->clientNetworkContext)) {
+                        egw->clientNetworkContext) < 0) {
     ClientNetworkDisconnect(&egw->clientNetwork, egw->clientNetworkContext);
   }
   return 0;
 }
+int32_t EchoGatewayHandleSearchGwMessage(EchoGateway *egw, MqttSnMessageData *msg) {
+  uint8_t radius = 0;
+  if (parse_searchgw_message_byte(&radius, msg->data, msg->data_length) < 0) {
+    return 0;
+  }
 
+  memset(msg->data, 0, sizeof(msg->data));
+  msg->data_length = 0;
+  int32_t gen_rc = generate_gwinfo_message(msg->data, sizeof(msg->data), egw->advertisement_config.gateway_id, NULL, 0);
+  if (gen_rc < 0) {
+    return -1;
+  }
+  msg->data_length = gen_rc;
+  msg->from = (*egw->clientNetwork.client_network_address);
+  msg->to = (*egw->clientNetwork.client_network_broadcast_address);
 
+  put(&egw->clientNetworkSendBuffer, msg);
+  return 0;
+}
+int32_t EchoGatewayHandleAdvertise(EchoGateway *egw) {
+  uint64_t current_timestamp = 0;
+  if (PlatformCompatibilityGetTimestamp(&current_timestamp) < 0) {
+    return -1;
+  }
+  if (current_timestamp - egw->last_advertisement_send < (uint64_t) egw->advertisement_config.advertisement_duration) {
+    return 0;
+  }
+  if (PlatformCompatibilityGetTimestamp(&egw->last_advertisement_send) < 0) {
+    return -1;
+  }
+  MqttSnMessageData msg = {0};
+  int32_t gen_rc = generate_advertise_message(msg.data,
+                                              sizeof(msg.data),
+                                              egw->advertisement_config.gateway_id,
+                                              egw->advertisement_config.advertisement_duration);
+  if (gen_rc < 0) {
+    return -1;
+  }
+  msg.data_length = gen_rc;
+  msg.from = (*egw->clientNetwork.client_network_address);
+  msg.to = (*egw->clientNetwork.client_network_broadcast_address);
+  msg.signal_strength = egw->advertisement_config.advertisement_radius;
+
+  put(&egw->clientNetworkSendBuffer, &msg);
+  // TODO think about: too much messages in message buffer that advertisement time out (not send fast enough)
+  return 0;
+}

@@ -4,10 +4,9 @@
 
 #include <assert.h>
 #include "MqttSnFindGatewayClient.h"
-#include <time.h>
 #include <parser/logging/MqttSnForwarderLoggingMessages.h>
 #include <parser/MqttSnSearchGwMessage.h>
-
+#include <platform/platform_compatibility.h>
 
 int32_t MqttSnFindGatewayClientInit(MqttSnFindGatewayClient *client,
                                     MqttSnLogger *logger,
@@ -25,14 +24,7 @@ int32_t MqttSnFindGatewayClientInit(MqttSnFindGatewayClient *client,
 int32_t MqttSnFindGatewayClientDeinit(MqttSnFindGatewayClient *client) {
   return 0;
 }
-int32_t MqttSnFindGatewayClientGetTimestamp(uint64_t *t) {
-  time_t result = time(NULL);
-  if (result == -1) {
-    return -1;
-  }
-  *t = result;
-  return 0;
-}
+
 int32_t MqttSnFindGatewayClientParseAndCGwInfoCb(MqttSnFindGatewayClient *client,
                                                  MqttSnMessageData *msg,
                                                  uint64_t start_timestamp,
@@ -45,15 +37,14 @@ int32_t MqttSnFindGatewayClientParseAndCGwInfoCb(MqttSnFindGatewayClient *client
     return 0;
   }
   MqttSnReceivedGwInfo rec_gwinfo = {0};
-  uint16_t parsed_gw_add_len = 0;
   if (parse_gwinfo_message_byte(&rec_gwinfo.gw_info.gwId,
                                 &rec_gwinfo.gw_info.gwAdd,
-                                &parsed_gw_add_len,
+                                &rec_gwinfo.gw_info.gwAddLen,
                                 msg->data,
                                 msg->data_length) < 0) {
     return 0;
   }
-  if (parsed_gw_add_len > sizeof(rec_gwinfo.gw_info.gwAdd)) {
+  if (rec_gwinfo.gw_info.gwAddLen > sizeof(rec_gwinfo.gw_info.gwAdd)) {
     // incompatible gateway device address as it is too long
     return 0;
   }
@@ -117,7 +108,7 @@ int32_t MqttSnFindGatewayClientReceiveAndParse(MqttSnFindGatewayClient *client,
                                                     &msg.signal_strength,
                                                     client->gatewayNetworkReceiveTimeout,
                                                     client->gatewayNetworkContext);
-  if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
+  if (PlatformCompatibilityGetTimestamp(&current_timestamp) < 0) {
     return -1;
   }
   if (received_bytes < 0) {
@@ -165,7 +156,7 @@ int32_t MqttSnClientAwaitAdvertise(MqttSnFindGatewayClient *client,
 
   uint64_t start_timestamp = 0;
   uint64_t current_timestamp = 0;
-  if (MqttSnFindGatewayClientGetTimestamp(&start_timestamp) < 0) {
+  if (PlatformCompatibilityGetTimestamp(&start_timestamp) < 0) {
     return -1;
   }
 
@@ -176,7 +167,7 @@ int32_t MqttSnClientAwaitAdvertise(MqttSnFindGatewayClient *client,
 
   // with timeout == -1
   if (timeout == -1) {
-    if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
+    if (PlatformCompatibilityGetTimestamp(&current_timestamp) < 0) {
       return -1;
     }
     while (1) {
@@ -191,7 +182,7 @@ int32_t MqttSnClientAwaitAdvertise(MqttSnFindGatewayClient *client,
   }
 
   // with timeout > 0
-  if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
+  if (PlatformCompatibilityGetTimestamp(&current_timestamp) < 0) {
     return -1;
   }
   while (((current_timestamp - start_timestamp) < (uint64_t) timeout)) {
@@ -202,7 +193,7 @@ int32_t MqttSnClientAwaitAdvertise(MqttSnFindGatewayClient *client,
     if (rec_rc > 0) {
       return 0;
     }
-    if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
+    if (PlatformCompatibilityGetTimestamp(&current_timestamp) < 0) {
       return -1;
     }
   }
@@ -244,7 +235,7 @@ int32_t MqttSnClientSearchGw(MqttSnFindGatewayClient *client,
 
   uint64_t start_timestamp = 0;
   uint64_t current_timestamp = 0;
-  int32_t get_timestamp_rc = MqttSnFindGatewayClientGetTimestamp(&start_timestamp);
+  int32_t get_timestamp_rc = PlatformCompatibilityGetTimestamp(&start_timestamp);
   if (get_timestamp_rc < 0) {
     return -1;
   }
@@ -256,7 +247,7 @@ int32_t MqttSnClientSearchGw(MqttSnFindGatewayClient *client,
 
   // with timeout == -1
   if (timeout == -1) {
-    if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
+    if (PlatformCompatibilityGetTimestamp(&current_timestamp) < 0) {
       return -1;
     }
     while (1) {
@@ -271,7 +262,7 @@ int32_t MqttSnClientSearchGw(MqttSnFindGatewayClient *client,
   }
 
   // with timeout > 0
-  if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
+  if (PlatformCompatibilityGetTimestamp(&current_timestamp) < 0) {
     return -1;
   }
   while (((current_timestamp - start_timestamp) < (uint64_t) timeout)) {
@@ -282,7 +273,7 @@ int32_t MqttSnClientSearchGw(MqttSnFindGatewayClient *client,
     if (rec_rc > 0) {
       return 0;
     }
-    if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
+    if (PlatformCompatibilityGetTimestamp(&current_timestamp) < 0) {
       return -1;
     }
   }

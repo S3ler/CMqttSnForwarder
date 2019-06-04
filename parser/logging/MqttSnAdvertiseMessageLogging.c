@@ -12,7 +12,7 @@ int32_t log_advertise_message(const MqttSnLogger *logger, uint8_t gw_id, uint16_
   log_advertise_gw_id(logger, gw_id);
   log_comma(logger);
   log_advertise_duration(logger, duration);
-  log_close_braked_dot(logger);
+  log_close_braked(logger);
   return log_status(logger);
 }
 

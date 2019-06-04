@@ -485,7 +485,8 @@ int32_t generate_mqtt_sn_uint8_array(uint8_t *dst_pos,
 int32_t generate_mqtt_sn_device_address(uint8_t *dst_pos,
                                         uint16_t dst_len,
                                         int32_t *used_bytes,
-                                        const device_address *address);
+                                        const device_address *address,
+                                        uint16_t address_len);
 #ifdef __cplusplus
 }
 #endif

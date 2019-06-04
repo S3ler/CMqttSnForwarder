@@ -31,19 +31,18 @@ int32_t log_gwinfo_message(const MqttSnLogger *logger,
                            uint16_t gw_add_len) {
   log_open_braked(logger);
   log_gwinfo_gw_id(logger, gw_id);
-  log_comma(logger);
-  if (gw_add) {
+  if (gw_add != NULL && gw_add_len > 0) {
+    log_comma(logger);
     log_gwinfo_gw_add(logger, gw_add, gw_add_len);
   }
-  log_close_braked_dot(logger);
+  log_close_braked(logger);
   return log_status(logger);
 }
 int32_t log_gwinfo_message_byte(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_len) {
-  int32_t parsed_bytes = 0;
   uint8_t gw_id = 0;
   device_address gw_add = {0};
   uint16_t gw_add_len = 0;
-  if ((parsed_bytes = parse_gwinfo_message_byte(&gw_id, &gw_add, &gw_add_len, data, data_len)) < 0) {
+  if (parse_gwinfo_message_byte(&gw_id, &gw_add, &gw_add_len, data, data_len) < 0) {
     return log_status(logger);
   }
   return log_gwinfo_message(logger, gw_id, &gw_add, gw_add_len);

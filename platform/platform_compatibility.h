@@ -18,6 +18,7 @@ extern "C" {
 #include <netinet/in.h>
 #include <logging/linux/stdout/StdoutLogging.h>
 #endif
+#include <time.h>
 #include <string.h>
 #define MQTT_SN_PARSE_CONFIG_FAILURE -1
 #define MQTT_SN_PARSE_SUCCESS 1
@@ -35,6 +36,7 @@ int strcmp_P(const char *a, const char *b);
 }
 #endif
 #endif
+int32_t PlatformCompatibilityGetTimestamp(uint64_t *t);
 #endif
 
 #endif //CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_

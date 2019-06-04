@@ -77,7 +77,7 @@ int start_echogateway(const echogateway_config *fcfg,
 #ifdef WITH_LOGGING
   print_program_started(logger, &fcfg->msvcfg, fcfg->executable_name);
 #endif
-  if (EchoGatewayInit(echo_gateway, fcfg->mslcfg.log_lvl, clientNetworkContext) < 0) {
+  if (EchoGatewayInit(echo_gateway, fcfg->mslcfg.log_lvl, clientNetworkContext, &fcfg->gacfg) < 0) {
     EchoGatewayDeinit(echo_gateway);
     return EXIT_FAILURE;
   }

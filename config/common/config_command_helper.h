@@ -39,6 +39,10 @@ int32_t parse_timeout(const MqttSnLogger *logger, char *timeout_str, int32_t *ds
 
 int32_t parse_topic_id(const MqttSnLogger *logger, char* topic_id_str, uint16_t *dst);
 
+int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst);
+
+int32_t print_invalid_retain_given(const MqttSnLogger *logger, const char *given_str);
+
 int32_t print_invalid_topic_id_given(const MqttSnLogger* logger, const char* given_str);
 
 int32_t print_invalid_duration_given(const MqttSnLogger* logger, const char* given_str);

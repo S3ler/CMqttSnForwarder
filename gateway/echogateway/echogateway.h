@@ -13,6 +13,9 @@
 
 typedef struct EchoGateway_ {
 
+  uint64_t last_advertisement_send;
+  gateway_advertise_config advertisement_config;
+
   MqttSnClientNetworkInterface clientNetwork;
   MqttSnFixedSizeRingBuffer clientNetworkReceiveBuffer;
   MqttSnFixedSizeRingBuffer clientNetworkSendBuffer;
@@ -27,10 +30,16 @@ typedef struct EchoGateway_ {
 
 } EchoGateway;
 
-int32_t EchoGatewayInit(EchoGateway *egw, log_level_t log_level, void *clientNetworkContext);
+int32_t EchoGatewayInit(EchoGateway *egw,
+                        log_level_t log_level,
+                        void *clientNetworkContext,
+                        const gateway_advertise_config *advertise_config);
 int32_t EchoGatewayConnect(EchoGateway *egw);
 int32_t EchoGatewayDisconnect(EchoGateway *egw);
 int32_t EchoGatewayDeinit(EchoGateway *egw);
 int32_t EchoGatewayLoop(EchoGateway *egw);
+
+int32_t EchoGatewayHandleSearchGwMessage(EchoGateway *egw, MqttSnMessageData *msg);
+int32_t EchoGatewayHandleAdvertise(EchoGateway *egw);
 
 #endif //CMQTTSNFORWARDER_GATEWAY_ECHOGATEWAY_ECHOGATEWAY_H_

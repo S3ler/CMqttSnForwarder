@@ -44,6 +44,7 @@ int log_msg_from(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type, cons
 int log_msg_to(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type, const device_address *from);
 
 int log_open_braked(const MqttSnLogger *logger);
+int log_close_braked(const MqttSnLogger *logger);
 int log_close_braked_dot(const MqttSnLogger *logger);
 int log_comma(const MqttSnLogger *logger);
 

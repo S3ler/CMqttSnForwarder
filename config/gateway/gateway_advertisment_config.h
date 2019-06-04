@@ -13,23 +13,27 @@ extern "C" {
 #endif
 
 #ifndef MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION
-#define MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION 600
+#define MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION 60
 #endif
 
 #ifndef MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_RADIUS
-#define MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_RADIUS UINT8_MAX
+#define MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_RADIUS 1
 #endif
 
+#ifndef MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID
+#define MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID 1
+#endif
 typedef struct gateway_advertisement_config_ {
   uint16_t advertisement_duration;
   uint8_t advertisement_radius;
-} gateway_advertisement_config;
+  uint8_t gateway_id;
+} gateway_advertise_config;
 
-int32_t gateway_advertisement_config_init(gateway_advertisement_config *cfg);
-void gateway_advertisement_config_cleanup(gateway_advertisement_config *cfg);
+int32_t gateway_advertisement_config_init(gateway_advertise_config *cfg);
+void gateway_advertisement_config_cleanup(gateway_advertise_config *cfg);
 
 int32_t is_gateway_advertisement_config_command(const char* arg, int *i);
-int32_t gateway_advertisement_config_process_args(gateway_advertisement_config *cfg,
+int32_t gateway_advertisement_config_process_args(gateway_advertise_config *cfg,
                                                   const MqttSnLogger *logger,
                                                   int argc,
                                                   char **argv);

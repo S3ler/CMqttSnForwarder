@@ -26,10 +26,10 @@ typedef struct single_client_publish_config_ {
   int8_t qos;
   uint8_t topic_id_type;
   uint16_t topic_id;
+  uint8_t retain;
+  char* topic_name;
   uint8_t *data;
   uint16_t data_length;
-  // TODO retain
-  // TODO qos
 } single_client_publish_config;
 
 typedef struct client_publish_config_ {

@@ -121,6 +121,9 @@ int log_msg_to(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type, const 
 int log_open_braked(const MqttSnLogger *logger) {
   return log_str(logger, PSTR("( "));
 }
+int log_close_braked(const MqttSnLogger *logger) {
+  return log_str(logger, PSTR(")"));
+}
 int log_close_braked_dot(const MqttSnLogger *logger) {
   return log_str(logger, PSTR(")."));
 }

@@ -190,6 +190,24 @@ int32_t parse_topic_id(const MqttSnLogger *logger, char *topic_id_str, uint16_t 
   *dst = n;
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
+int32_t print_invalid_retain_given(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: Invalid retain given: "));
+  log_str(logger, given_str);
+  log_flush(logger);
+  return log_status(logger);
+}
+int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst) {
+  if (!strcmp(retain_str, "false")) {
+    (*dst) = 0;
+  } else if (!strcmp(retain_str, "true")) {
+    (*dst) = 1;
+  } else {
+    print_invalid_retain_given(logger, retain_str);
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
 int32_t print_invalid_topic_id_given(const MqttSnLogger *logger, const char *given_str) {
   log_str(logger, PSTR("Error: Invalid topic id given: "));
   log_str(logger, given_str);

@@ -17,7 +17,7 @@ int32_t MqttSnClientInit(MqttSnClient *client,
   client->default_timeout = MQTT_SN_CLIENT_DEFAULT_TIMEOUT_MS;
   client->default_signal_strength = MQTT_SN_CLIENT_DEFAULT_SIGNAL_STRENGTH;
   client->status = 0;
-  client->msg_id = 7;
+  client->msg_counter = 7;
   client->connect_duration = MQTT_SN_CLIENT_DEFAULT_CONNECT_DURATION;
 
 #ifdef WITH_LOGGING
@@ -50,11 +50,11 @@ int32_t MqttSnClientLoop(MqttSnClient *client) {
   // TODO do stuff
   return 0;
 }
-int32_t MqttSnClientPublishM1(MqttSnClient *client,
-                              uint16_t predefined_topic_id,
-                              uint8_t retain,
-                              uint8_t *data,
-                              uint16_t data_len) {
+int32_t MqttSnClientPublishPredefinedM1(MqttSnClient *client,
+                                        uint16_t predefined_topic_id,
+                                        uint8_t retain,
+                                        uint8_t *data,
+                                        uint16_t data_len) {
   uint8_t msg_data[MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH];
   memset(&msg_data, 0, sizeof(msg_data));
 
@@ -65,7 +65,7 @@ int32_t MqttSnClientPublishM1(MqttSnClient *client,
                                 retain,
                                 MQTT_SN_FLAG_TOPIC_ID_TYPE_PREDEFINED_TOPIC_ID,
                                 predefined_topic_id,
-                                client->msg_id++,
+                                client->msg_counter++,
                                 data,
                                 data_len);
   if (gen_rc < 0) {

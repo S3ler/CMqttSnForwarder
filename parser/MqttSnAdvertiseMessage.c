@@ -19,13 +19,13 @@ static int32_t parse_advertise_duration_byte(const uint8_t *src_pos,
 int32_t parse_advertise_byte(uint8_t *gw_id, uint16_t *duration, const uint8_t *data, uint16_t data_len) {
   int32_t parsed_bytes = 0;
   ParsedMqttSnHeader h = {0};
-  if ((parsed_bytes = parse_advertise_header(&h, data, data_len, &parsed_bytes) < 0)) {
+  if (parse_advertise_header(&h, data, data_len, &parsed_bytes) < 0) {
     return -1;
   }
-  if ((parsed_bytes = parse_advertise_gw_id_byte(data + parsed_bytes, data_len, &parsed_bytes, gw_id) < 0)) {
+  if (parse_advertise_gw_id_byte(data + parsed_bytes, data_len, &parsed_bytes, gw_id) < 0) {
     return -1;
   }
-  if ((parsed_bytes = parse_advertise_duration_byte(data + parsed_bytes, data_len, &parsed_bytes, duration)) < 0) {
+  if (parse_advertise_duration_byte(data + parsed_bytes, data_len, &parsed_bytes, duration) < 0) {
     return -1;
   }
   return parsed_bytes;
@@ -38,7 +38,7 @@ int32_t parse_advertise_header(ParsedMqttSnHeader *h, const uint8_t *data, uint1
     // invalid message length for advertise
     return -1;
   }
-  return *parsed_bytes;
+  return (*parsed_bytes);
 }
 int32_t parse_advertise_gw_id_byte(const uint8_t *src_pos, uint16_t src_len, int32_t *parsed_bytes, uint8_t *gw_id) {
   return parse_mqtt_sn_uint8_byte(src_pos, src_len, parsed_bytes, gw_id);

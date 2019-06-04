@@ -6,15 +6,16 @@
 #include "gateway_advertisment_config.h"
 #include "config/common/config_command_helper.h"
 
-int32_t gateway_advertisement_config_init(gateway_advertisement_config *cfg) {
+int32_t gateway_advertisement_config_init(gateway_advertise_config *cfg) {
   memset(cfg, 0, sizeof(*cfg));
 
   cfg->advertisement_duration = MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION;
   cfg->advertisement_radius = MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_RADIUS;
+  cfg->gateway_id = MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID;
 
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
-void gateway_advertisement_config_cleanup(gateway_advertisement_config *cfg) {
+void gateway_advertisement_config_cleanup(gateway_advertise_config *cfg) {
   // nothing to do here
 }
 int32_t is_gateway_advertisement_config_command(const char *arg, int *i) {
@@ -27,7 +28,7 @@ int32_t is_gateway_advertisement_config_command(const char *arg, int *i) {
   }
   return 0;
 }
-int32_t gateway_advertisement_config_process_args(gateway_advertisement_config *cfg,
+int32_t gateway_advertisement_config_process_args(gateway_advertise_config *cfg,
                                                   const MqttSnLogger *logger,
                                                   int argc,
                                                   char **argv) {
@@ -62,6 +63,12 @@ void gateway_advertisement_config_print_usage_short(const MqttSnLogger *logger, 
   log_str(logger, PSTR("[-ad --advertisement_duration] [-ar --advertisement_radius]\n"));
 }
 void gateway_advertisement_config_print_usage_long(const MqttSnLogger *logger) {
-  log_str(logger, PSTR(" -ad : specify the advertisement duration in s. Defaults to 600 s.\n"));
-  log_str(logger, PSTR(" -ar : specify the advertisement radius between 0 and 255. Defaults to 255.\n"));
+  log_str(logger, PSTR(" -ad : specify the advertisement duration in s. Defaults to "));
+  log_int32(logger, MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION);
+  log_str(logger, PSTR(" s.\n"));
+
+  log_str(logger, PSTR(" -ar : specify the advertisement radius between 0 and 255. Defaults to "));
+  log_uint8(logger, MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_RADIUS);
+  log_str(logger, PSTR(".\n"));
+
 }

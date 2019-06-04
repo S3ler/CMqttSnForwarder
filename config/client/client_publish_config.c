@@ -93,6 +93,7 @@ int parse_client_publish_single_client_publish_config(const MqttSnLogger *logger
   char *topic_id_type_str = strtok(url, "://");
   char *qos_str = strtok(NULL, "://");
   char *topic_id_str = strtok(NULL, ":");
+  char *retain_str = strtok(NULL, ":");
   char *data_str = strtok(NULL, ":");
   char *null_token = strtok(NULL, "://");
 
@@ -101,7 +102,7 @@ int parse_client_publish_single_client_publish_config(const MqttSnLogger *logger
       cfg->topic_id_type = 0;
     } else if (!strcmp(topic_id_type_str, "predefined")) {
       cfg->topic_id_type = 1;
-    } else if (!strcmp(topic_id_type_str, "shorttopic")) {
+    } else if (!strcmp(topic_id_type_str, "short")) {
       cfg->topic_id_type = 2;
     } else {
       return MQTT_SN_PARSE_CONFIG_FAILURE;
@@ -119,7 +120,19 @@ int parse_client_publish_single_client_publish_config(const MqttSnLogger *logger
   }
 
   if (topic_id_str) {
-    if (parse_topic_id(logger, topic_id_str, &cfg->topic_id) == MQTT_SN_PARSE_CONFIG_FAILURE) {
+    if (cfg->topic_id_type == 0) {
+      cfg->topic_name = topic_id_str;
+    } else {
+      if (parse_topic_id(logger, topic_id_str, &cfg->topic_id) == MQTT_SN_PARSE_CONFIG_FAILURE) {
+        return MQTT_SN_PARSE_CONFIG_FAILURE;
+      }
+    }
+  } else {
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+
+  if (retain_str) {
+    if (parse_retain(logger, retain_str, &cfg->retain) == MQTT_SN_PARSE_CONFIG_FAILURE) {
       return MQTT_SN_PARSE_CONFIG_FAILURE;
     }
   } else {
@@ -128,7 +141,7 @@ int parse_client_publish_single_client_publish_config(const MqttSnLogger *logger
 
   if (data_str) {
     cfg->data_length = strlen(data_str);
-    cfg->data = (uint8_t *) strdup(data_str);
+    cfg->data = (uint8_t *) data_str;
   } else {
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
@@ -145,6 +158,7 @@ void client_publish_config_print_usage_short(const MqttSnLogger *logger, const c
   log_str(logger, PSTR("{[-pq --publish_qos][-pm --publish_message] | [-pmL --publish_message_URL ... ]}\n"));
 }
 void client_publish_config_print_usage_long(const MqttSnLogger *logger) {
+  /* TODO implement
   log_str(logger, PSTR(" -pq : quality of service level to use for the publish messages. Defaults to -1.\n"));
   log_str(logger, PSTR(" -ptn : topic name to publish to. Will be registered."));
   log_str(logger, PSTR(" -pi : predefined topic id to publish to. Defaults to 0."));
@@ -153,14 +167,12 @@ void client_publish_config_print_usage_long(const MqttSnLogger *logger) {
   log_str(logger, PSTR(" -pf : send the contents of a file as the message.\n"));
   log_str(logger, PSTR(" -pc : reads and publish one message from stdin.\n"));
   log_str(logger, PSTR(" -pci : read messages from stdin, sending a separate message for each line.\n"));
+  */
   log_str(logger, PSTR(" -pmL : publish message URL schema: <topic_id_type>://<qos>:<retain>:<topic_id>:<data>.\n"));
-  log_str(logger, PSTR("        <topic_id_type> can be: predefined or shorttopic.\n"));
+  log_str(logger, PSTR("        <topic_id_type> can be: topicname, predefined or short.\n"));
   log_str(logger, PSTR("        <qos> can be: -1, 0, 1, 2.\n"));
-  //log_str(logger, PSTR("        <retain> can be: 0, 1.\n"));
-  log_str(logger, PSTR("        <topic_id> can be: topic_id for predefined, shorttopic.\n"));
-  log_str(logger, PSTR("        <data> as characters.\n"));
+  log_str(logger, PSTR("        <retain> can be: true, false.\n"));
+  log_str(logger, PSTR("        <topic_id> can be: string for topicname, topic_id for predefined and short.\n"));
+  log_str(logger, PSTR("        <data> as string.\n"));
   log_str(logger, PSTR("        URL schema overwrites default and global config.\n"));
 }
-
-
-

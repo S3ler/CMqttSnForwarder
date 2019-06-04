@@ -454,6 +454,7 @@ if (WITH_MQTT_SN_CLIENT)
 
     add_executable(MqttSnFindGatewayMonitor client/findgatewaymonitor/linux/main.c
             client/findgatewaymonitor/linux/starter/publish_client_starter.c client/findgatewaymonitor/linux/starter/publish_client_starter.h
+            platform/platform_compatibility.c platform/platform_compatibility.h
             client/findgatewaymonitor/config/find_gateway_monitor_config.c client/findgatewaymonitor/config/find_gateway_monitor_config.h
             parser/logging/MqttSnForwarderLoggingMessages.c parser/logging/MqttSnForwarderLoggingMessages.h
             parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h)
@@ -461,6 +462,7 @@ if (WITH_MQTT_SN_CLIENT)
     target_include_directories(MqttSnFindGatewayMonitor PRIVATE .)
     target_compile_options(MqttSnFindGatewayMonitor PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(MqttSnFindGatewayMonitor
+            lib-mqtt-sn-platform-abstraction-layer
             lib-mqtt-sn-find-gateway
             lib-mqtt-sn-find-gateway-config
             lib-mqtt-sn-gateway-network-config

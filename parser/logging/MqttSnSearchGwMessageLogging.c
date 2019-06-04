@@ -16,7 +16,7 @@ int32_t log_searchgw_message_byte(const MqttSnLogger *logger, const uint8_t *dat
 int32_t log_searchgw_message(const MqttSnLogger *logger, uint8_t radius) {
   log_open_braked(logger);
   log_searchgw_radius(logger, radius);
-  log_close_braked_dot(logger);
+  log_close_braked(logger);
   return log_status(logger);
 }
 int32_t log_searchgw_radius(const MqttSnLogger *logger, uint8_t radius) {

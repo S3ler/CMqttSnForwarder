@@ -112,10 +112,6 @@ static int32_t generate_publish_header(uint8_t *dst, uint16_t dst_len, uint16_t 
   if (total_length > UINT8_MAX) {
     total_length = MQTT_SN_MESSAGE_PUBLISH_WO_DATA_MAX_LENGTH + data_len;
   }
-  /*
-  uint16_t total_length = data_len + MQTT_SN_PUBLISH_MESSAGE_HEADER_LENGTH(0) <= UINT8_MAX ? data_len
-      + MQTT_SN_PUBLISH_MESSAGE_HEADER_LENGTH(0) : data_len + MQTT_SN_PUBLISH_MESSAGE_HEADER_LENGTH(1);
-  */
   if (dst_len < total_length) {
     return -1;
   }
