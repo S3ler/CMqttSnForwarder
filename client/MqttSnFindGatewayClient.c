@@ -7,9 +7,26 @@
 #include <time.h>
 #include <parser/logging/MqttSnForwarderLoggingMessages.h>
 #include <parser/MqttSnSearchGwMessage.h>
+
+
+int32_t MqttSnFindGatewayClientInit(MqttSnFindGatewayClient *client,
+                                    MqttSnLogger *logger,
+                                    MqttSnGatewayNetworkInterface *gatewayNetwork,
+                                    void *gatewayNetworkContext,
+                                    int32_t gatewayNetworkSendTimeout,
+                                    int32_t gatewayNetworkReceiveTimeout) {
+  client->logger = logger;
+  client->gatewayNetwork = gatewayNetwork;
+  client->gatewayNetworkContext = gatewayNetworkContext;
+  client->gatewayNetworkSendTimeout = gatewayNetworkSendTimeout;
+  client->gatewayNetworkReceiveTimeout = gatewayNetworkReceiveTimeout;
+  return 0;
+}
+int32_t MqttSnFindGatewayClientDeinit(MqttSnFindGatewayClient *client) {
+  return 0;
+}
 int32_t MqttSnFindGatewayClientGetTimestamp(uint64_t *t) {
   time_t result = time(NULL);
-  // TODO error handling and logging strerror
   if (result == -1) {
     return -1;
   }
@@ -96,7 +113,7 @@ int32_t MqttSnFindGatewayClientReceiveAndParse(MqttSnFindGatewayClient *client,
                                                     &msg.from,
                                                     &msg.to,
                                                     msg.data,
-                                                    sizeof(*msg.data),
+                                                    sizeof(msg.data),
                                                     &msg.signal_strength,
                                                     client->gatewayNetworkReceiveTimeout,
                                                     client->gatewayNetworkContext);
@@ -138,30 +155,17 @@ int32_t MqttSnFindGatewayClientReceiveAndParse(MqttSnFindGatewayClient *client,
   return 0;
 }
 
-int32_t MqttSnClientAwaitAdvertiseReceiveCallback(const MqttSnFindGatewayClient *client,
-                                                  const int32_t timeout_left,
-                                                  const MqttSnReceivedAdvertise *received_advertise) {
-
-  return 0;
-}
 int32_t MqttSnClientAwaitAdvertise(MqttSnFindGatewayClient *client,
                                    int32_t timeout,
-                                   MqttSnReceivedAdvertise *advertise,
-                                   uint16_t advertise_len) {
-  return 0;
-}
-int32_t MqttSnClientAwaitAdvertiseCb(MqttSnFindGatewayClient *client,
-                                     int32_t timeout,
-                                     int32_t (*adv_cb)(const MqttSnFindGatewayClient *,
-                                                       const int32_t,
-                                                       const MqttSnReceivedAdvertise *)) {
+                                   int32_t (*adv_cb)(const MqttSnFindGatewayClient *,
+                                                     const int32_t,
+                                                     const MqttSnReceivedAdvertise *)) {
   assert(client != NULL);
-  assert(timeout < -1);
+  assert(timeout >= -1);
 
   uint64_t start_timestamp = 0;
   uint64_t current_timestamp = 0;
-  int32_t get_timestamp_rc = MqttSnFindGatewayClientGetTimestamp(&start_timestamp);
-  if (get_timestamp_rc < 0) {
+  if (MqttSnFindGatewayClientGetTimestamp(&start_timestamp) < 0) {
     return -1;
   }
 
@@ -190,7 +194,7 @@ int32_t MqttSnClientAwaitAdvertiseCb(MqttSnFindGatewayClient *client,
   if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
     return -1;
   }
-  while (((current_timestamp - start_timestamp) > (uint64_t) timeout)) {
+  while (((current_timestamp - start_timestamp) < (uint64_t) timeout)) {
     int32_t rec_rc = MqttSnFindGatewayClientReceiveAndParse(client, start_timestamp, timeout, NULL, adv_cb);
     if (rec_rc < 0) {
       return -1;
@@ -198,7 +202,7 @@ int32_t MqttSnClientAwaitAdvertiseCb(MqttSnFindGatewayClient *client,
     if (rec_rc > 0) {
       return 0;
     }
-    if (MqttSnFindGatewayClientGetTimestamp(&start_timestamp) < 0) {
+    if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
       return -1;
     }
   }
@@ -216,7 +220,7 @@ int32_t MqttSnClientSearchGw(MqttSnFindGatewayClient *client,
                                                const MqttSnReceivedAdvertise *)) {
   assert(client != NULL);
   assert(gwinfo_cb != NULL);
-  assert(timeout < -1);
+  assert(timeout >= -1);
 
   MqttSnMessageData toSend = {0};
   int32_t gen_rc = generate_searchgw_message(toSend.data, sizeof(toSend.data), radius);
@@ -270,7 +274,7 @@ int32_t MqttSnClientSearchGw(MqttSnFindGatewayClient *client,
   if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
     return -1;
   }
-  while (((current_timestamp - start_timestamp) > (uint64_t) timeout)) {
+  while (((current_timestamp - start_timestamp) < (uint64_t) timeout)) {
     int32_t rec_rc = MqttSnFindGatewayClientReceiveAndParse(client, start_timestamp, timeout, gwinfo_cb, adv_cb);
     if (rec_rc < 0) {
       return -1;
@@ -278,10 +282,14 @@ int32_t MqttSnClientSearchGw(MqttSnFindGatewayClient *client,
     if (rec_rc > 0) {
       return 0;
     }
-    if (MqttSnFindGatewayClientGetTimestamp(&start_timestamp) < 0) {
+    if (MqttSnFindGatewayClientGetTimestamp(&current_timestamp) < 0) {
       return -1;
     }
   }
 
   return 0;
 }
+int32_t MqttSnFindGatewayClientLoop(MqttSnFindGatewayClient *client) {
+  return 0;
+}
+

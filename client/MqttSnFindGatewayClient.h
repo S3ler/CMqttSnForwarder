@@ -34,14 +34,39 @@ typedef struct MqttSnFindGatewayClient_ {
   void *gatewayNetworkContext;
   int32_t gatewayNetworkSendTimeout;
   int32_t gatewayNetworkReceiveTimeout;
-  MqttSnLogger* logger;
+  MqttSnLogger *logger;
 } MqttSnFindGatewayClient;
 
-int32_t MqttSnClientAwaitAdvertiseCb(MqttSnFindGatewayClient *client,
-                                     int32_t timeout,
-                                     int32_t (*adv_cb)(const MqttSnFindGatewayClient *,
-                                                       const int32_t,
-                                                       const MqttSnReceivedAdvertise *));
+/**
+ * Sets only values - does not connect or initializes any
+ * @param client
+ * @param gatewayNetwork
+ * @param sendTimoeut
+ * @param gatewayNetworkReceiveTimeout
+ * @param logger
+ * @return
+ */
+int32_t MqttSnFindGatewayClientInit(MqttSnFindGatewayClient *client,
+                                    MqttSnLogger *logger,
+                                    MqttSnGatewayNetworkInterface *gatewayNetwork,
+                                    void *gatewayNetworkContext,
+                                    int32_t gatewayNetworkSendTimeout,
+                                    int32_t gatewayNetworkReceiveTimeout);
+
+/**
+ * Deinitializes internal datastructures - does not change networks or anythings
+ * @param client
+ * @return
+ */
+int32_t MqttSnFindGatewayClientDeinit(MqttSnFindGatewayClient *client);
+
+int32_t MqttSnFindGatewayClientLoop(MqttSnFindGatewayClient *client);
+
+int32_t MqttSnClientAwaitAdvertise(MqttSnFindGatewayClient *client,
+                                   int32_t timeout,
+                                   int32_t (*adv_cb)(const MqttSnFindGatewayClient *,
+                                                     const int32_t,
+                                                     const MqttSnReceivedAdvertise *));
 
 int32_t MqttSnClientSearchGw(MqttSnFindGatewayClient *client,
                              int32_t timeout,

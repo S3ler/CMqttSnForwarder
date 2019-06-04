@@ -453,15 +453,21 @@ if (WITH_MQTT_SN_CLIENT)
     endif ()
 
     add_executable(MqttSnFindGatewayMonitor client/findgatewaymonitor/linux/main.c
+            client/findgatewaymonitor/linux/starter/publish_client_starter.c client/findgatewaymonitor/linux/starter/publish_client_starter.h
             client/findgatewaymonitor/config/find_gateway_monitor_config.c client/findgatewaymonitor/config/find_gateway_monitor_config.h
+            parser/logging/MqttSnForwarderLoggingMessages.c parser/logging/MqttSnForwarderLoggingMessages.h
             parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h)
+    target_compile_definitions(MqttSnFindGatewayMonitor PUBLIC CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_FIND_PATTERN=ADVERTISMENT_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE)
     target_include_directories(MqttSnFindGatewayMonitor PRIVATE .)
     target_compile_options(MqttSnFindGatewayMonitor PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(MqttSnFindGatewayMonitor
             lib-mqtt-sn-find-gateway
             lib-mqtt-sn-find-gateway-config
+            lib-mqtt-sn-gateway-network-config
             pthread)
-
+    if (WITH_LINUX_PLUGIN_NETWORK)
+        target_link_libraries(MqttSnFindGatewayMonitor lib-mqtt-sn-linux-plugin-gateway-network)
+    endif ()
     add_executable(MqttSnClientPub client/pub/linux/main.c
             client/pub/linux/starter/publish_client_starter.c client/pub/linux/starter/publish_client_starter.h
             parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h)
@@ -546,7 +552,6 @@ if (WITH_MQTT_SN_FORWARDER)
     target_include_directories(lib-mqtt-sn-linux-forwarder-starter PRIVATE .)
     target_compile_options(lib-mqtt-sn-linux-forwarder-starter PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(lib-mqtt-sn-linux-forwarder-starter lib-mqtt-sn-forwarder-config lib-mqtt-sn-forwarder pthread)
-
 
 
     option(WITH_MQTT_SN_FORWADER_CONFIG_FILE "Include WITH_MQTT_SN_FORWADER_CONFIG_FILE support?" ON)
