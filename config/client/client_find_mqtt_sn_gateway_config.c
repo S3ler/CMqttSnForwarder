@@ -240,6 +240,8 @@ void client_find_mqtt_sn_gateway_config_print_usage_long(const MqttSnLogger *log
   } else if (CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_FIND_PATTERN
       == CONNECT_CREDENTIALS_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE) {
     log_str(logger, PSTR("connect"));
+  } else if (CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_FIND_PATTERN == ANY_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE) {
+    log_str(logger, PSTR("any"));
   } else {
     log_str(logger, PSTR("undefined"));
   }

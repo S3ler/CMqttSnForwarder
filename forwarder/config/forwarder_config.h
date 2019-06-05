@@ -10,7 +10,7 @@
 #include <config/common/mqtt_sn_logger_config.h>
 #include <config/network/gateway/gateway_network_config.h>
 #include <config/network/client/client_network_config.h>
-
+#include <config/client/client_find_mqtt_sn_gateway_config.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,6 +26,7 @@ typedef struct forwarder_config_ {
 
   mqtt_sn_version_config msvcfg;
   mqtt_sn_gateway_config msgcfg;
+  client_find_mqtt_sn_gateway_config cfmsngcfg;
   mqtt_sn_logger_config mslcfg;
 
   gateway_network_config gncfg;

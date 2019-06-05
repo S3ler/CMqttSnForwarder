@@ -14,6 +14,7 @@ int32_t forwarder_config_init(forwarder_config *cfg) {
 
   mqtt_sn_version_config_init(&cfg->msvcfg);
   mqtt_sn_gateway_config_init(&cfg->msgcfg);
+  client_find_mqtt_sn_gateway_config_init(&cfg->cfmsngcfg);
   client_network_config_init(&cfg->cncfg);
   gateway_network_config_init(&cfg->gncfg);
   mqtt_sn_logger_config_init(&cfg->mslcfg);
@@ -24,6 +25,7 @@ int32_t forwarder_config_init(forwarder_config *cfg) {
 void forwarder_config_cleanup(forwarder_config *cfg) {
   mqtt_sn_version_config_cleanup(&cfg->msvcfg);
   mqtt_sn_gateway_config_cleanup(&cfg->msgcfg);
+  client_find_mqtt_sn_gateway_config_cleanup(&cfg->cfmsngcfg);
   client_network_config_cleanup(&cfg->cncfg);
   gateway_network_config_cleanup(&cfg->gncfg);
   mqtt_sn_logger_config_cleanup(&cfg->mslcfg);
@@ -53,23 +55,26 @@ int32_t forwarder_config_process_line(forwarder_config *cfg, const MqttSnLogger 
 
   int32_t msgcfg_rc = mqtt_sn_gateway_config_process_args(&cfg->msgcfg, logger, argc, argv);
   int32_t cnfg_rc = client_network_config_process_args(&cfg->cncfg, logger, argc, argv);
+  int32_t cfmsngcfg_rc = client_find_mqtt_sn_gateway_config_process_args(&cfg->cfmsngcfg, logger, argc, argv);
   int32_t gnfg_rc = gateway_network_config_process_args(&cfg->gncfg, logger, argc, argv);
   int32_t mslcfg_rc = mqtt_sn_logger_config_process_args(&cfg->mslcfg, logger, argc, argv);
   int32_t fcfg_rc = forwarder_config_process_args(cfg, logger, argc, argv);
 
   if (msgcfg_rc == MQTT_SN_PARSE_CONFIG_FAILURE
       || cnfg_rc == MQTT_SN_PARSE_CONFIG_FAILURE
+      || cfmsngcfg_rc == MQTT_SN_PARSE_CONFIG_FAILURE
       || gnfg_rc == MQTT_SN_PARSE_CONFIG_FAILURE
       || mslcfg_rc == MQTT_SN_PARSE_CONFIG_FAILURE
       || fcfg_rc == MQTT_SN_PARSE_CONFIG_FAILURE) {
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
 
-  if (config_file_rc + msgcfg_rc + cnfg_rc + gnfg_rc + mslcfg_rc + fcfg_rc != (argc - 1)) {
+  if (config_file_rc + msgcfg_rc + cnfg_rc + cfmsngcfg_rc + gnfg_rc + mslcfg_rc + fcfg_rc != (argc - 1)) {
     // there is an unknown option
     for (int i = 1; i < argc; i++) {
       if (!is_mqtt_sn_gateway_config_command(argv[i], &i)
           && !is_client_network_config_command(argv[i], &i)
+          && !is_client_find_mqtt_sn_gateway_config_command(argv[i], &i)
           && !is_gateway_network_config_command(argv[i], &i)
           && !is_mqtt_sn_logger_config_command(argv[i], &i)
           && !is_forwarder_config_command(argv[i], &i)) {
@@ -102,12 +107,14 @@ void forwarder_config_print_usage_short(const MqttSnLogger *logger) {
   const char *indent = "                        ";
   log_str(logger, PSTR("Usage: cmqttsnforwarder "));
   mqtt_sn_gateway_config_print_usage_short(logger, NULL);
+  client_find_mqtt_sn_gateway_config_print_usage_short(logger, indent);
   gateway_network_config_print_usage_short(logger, indent);
   client_network_config_print_usage_short(logger, indent);
   mqtt_sn_logger_config_print_usage_short(logger, indent);
 }
 void forwarder_config_print_usage_long(const MqttSnLogger *logger) {
   mqtt_sn_gateway_config_print_usage_long(logger);
+  client_find_mqtt_sn_gateway_config_print_usage_long(logger);
   gateway_network_config_print_usage_long(logger);
   client_network_config_print_usage_long(logger);
   mqtt_sn_logger_config_print_usage_long(logger);
