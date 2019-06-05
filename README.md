@@ -14,7 +14,10 @@ arduino
 * enable es32 compatibility
 
 
-
+ToDo Parser: message logging, message generating, check message parsing
+ToDo Forwarder: Same Broadcast Address and Port in Gateway and Client Network
+ToDo ClientPublish: Read lines from file and publish (including some delay)
+ToDo ClientSub: Load config from file and Read Linkes from file for subscribe
 // TODO enable GW MQTT-SN message header check?
 
 // https://stackoverflow.com/questions/6688909/c-program-to-get-the-values-of-ip-header-fields-from-linux-ip-stack/6689064#6689064

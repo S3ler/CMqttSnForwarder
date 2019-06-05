@@ -219,8 +219,8 @@ int RemoveForwardingHeaderFromGatewayMessages(MqttSnForwarder *forwarder,
 
   if (remove_mqtt_sn_forwarder_encapsulation_frame(gatewayMessageData,
                                                    clientMessageData,
-                                                   forwarder->clientNetwork.client_network_broadcast_address, NULL)
-      != 0) {
+                                                   forwarder->clientNetwork.client_network_broadcast_address,
+                                                   NULL) != 0) {
 #ifdef WITH_DEBUG_LOGGING
     log_gateway_mqtt_sn_message_malformed(&forwarder->logger,
                                           &gatewayMessageData->from,
