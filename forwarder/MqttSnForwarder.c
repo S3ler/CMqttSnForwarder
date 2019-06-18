@@ -15,21 +15,28 @@
 #include <parser/MqttSnForwarderEncapsulationMessage.h>
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
+                        MqttSnLogger *logger,
                         log_level_t log_level,
                         void *clientNetworkContext,
                         void *gatewayNetworkContext) {
-
 #ifdef WITH_LOGGING
+  if (!logger) {
+
 #if defined(Arduino_h) || defined(WITH_PLATFORMIO)
-  if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, arduino_serial_log_init) != 0) {
+    if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, arduino_serial_log_init) != 0) {
 #else
-  if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, stdout_log_init) != 0) {
+    if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, stdout_log_init) != 0) {
 #endif
-    MqttSnLoggerDeinit(&mqttSnForwarder->logger);
-    return -1;
+      MqttSnLoggerDeinit(&mqttSnForwarder->logger);
+      return -1;
+    }
+    mqttSnForwarder->gatewayNetwork.logger = &mqttSnForwarder->logger;
+    mqttSnForwarder->clientNetwork.logger = &mqttSnForwarder->logger;
+  }else{
+    memcpy(&mqttSnForwarder->logger, logger, sizeof(MqttSnLogger));
+    mqttSnForwarder->gatewayNetwork.logger = &mqttSnForwarder->logger;
+    mqttSnForwarder->clientNetwork.logger = &mqttSnForwarder->logger;
   }
-  mqttSnForwarder->gatewayNetwork.logger = &mqttSnForwarder->logger;
-  mqttSnForwarder->clientNetwork.logger = &mqttSnForwarder->logger;
 #endif
 
   mqttSnForwarder->clientNetworkContext = clientNetworkContext;

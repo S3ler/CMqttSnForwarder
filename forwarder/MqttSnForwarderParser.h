@@ -9,6 +9,7 @@
 #include <platform/device_address.h>
 #include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
 #include <parser/MqttSnForwarderEncapsulationMessage.h>
+#include <parser/MqttSnMessageParser.h>
 #include <logging/MqttSnLoggingInterface.h>
 
 #ifdef __cplusplus

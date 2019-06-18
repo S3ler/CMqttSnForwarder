@@ -7,6 +7,7 @@
 
 #ifdef WITH_UDP_BROADCAST
 #include <WiFiUdp.h>
+#include <WiFi.h>
 #else
 #include <Udp.h>
 #endif

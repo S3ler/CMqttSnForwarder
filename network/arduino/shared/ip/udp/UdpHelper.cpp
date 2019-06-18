@@ -7,7 +7,6 @@
 #include <platform/device_address.h>
 #include <network/arduino/shared/ip/ArduinoIpAddressHelper.hpp>
 #include <string.h>
-#include <CMqttSnForwarderArduino.h>
 
 int32_t arduino_init_udp(WiFiUDP *wiFiUdp, uint16_t port) {
   if (wiFiUdp->begin(port) == 1) {
@@ -59,8 +58,15 @@ int32_t arduino_receive_udp(WiFiUDP *wiFiUdp,
       IPAddress remoteIP = wiFiUdp->remoteIP();
       uint16_t remotePort = wiFiUdp->remotePort();
       arduino_ipv4_and_port_to_device_address(&remoteIP, remotePort, from);
+      // ESP32 only:
+      IPAddress destinationIP = wiFiUdp->remoteIP();
+      uint16_t destinationPort = wiFiUdp->remotePort();
+      // ESP8266 only:
+      /*
       IPAddress destinationIP = wiFiUdp->destinationIP();
       uint16_t destinationPort = wiFiUdp->localPort();
+      */
+
       arduino_ipv4_and_port_to_device_address(&destinationIP, destinationPort, to);
       return available;
     }
@@ -70,10 +76,17 @@ int32_t arduino_receive_udp(WiFiUDP *wiFiUdp,
 
 #ifdef WITH_UDP_BROADCAST
 int arduino_join_multicast_udp(WiFiUDP *wiFiUdp, IPAddress bc_ip, uint16_t bc_port) {
+  // ESP32
+  if (wiFiUdp->beginMulticast(bc_ip, bc_port) == 1) {
+    return 0;
+  }
+  // ESP8266
+  /*
   IPAddress localIP = WiFi.localIP();
   if (wiFiUdp->beginMulticast(localIP, bc_ip, bc_port) == 1) {
     return 0;
   }
+  */
   return -1;
 }
 
@@ -83,12 +96,22 @@ int32_t arduino_send_multicast_udp(WiFiUDP *wiFiUdp, const device_address *desti
 
   arduino_device_address_to_IPAddress_and_port(destination, &destination_IPAddress, &destination_port);
 
+  // ESP32
+  if (wiFiUdp->beginMulticastPacket() == 1) {
+    uint16_t write_rc = wiFiUdp->write(bytes, bytes_len);
+    if (wiFiUdp->endPacket()) {
+      return write_rc;
+    }
+  }
+  // ESP8266
+  /*
   if (wiFiUdp->beginPacketMulticast(destination_IPAddress, destination_port, WiFi.localIP()) == 1) {
     uint16_t write_rc = wiFiUdp->write(bytes, bytes_len);
     if (wiFiUdp->endPacket()) {
         return write_rc;
     }
   }
+  */
   return -1;
 }
 #endif

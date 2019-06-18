@@ -514,7 +514,17 @@ int32_t parse_mqtt_sn_return_code_byte(const uint8_t *src_pos,
 #pragma GCC diagnostic pop
     return -1;
   }
-  (*return_code) = dst_return_code;
+  if (dst_return_code == RETURN_CODE_ACCEPTED) {
+    (*return_code) = RETURN_CODE_ACCEPTED;
+  } else if (dst_return_code == RETURN_CODE_REJECTED_CONGESTION) {
+    (*return_code) = RETURN_CODE_REJECTED_CONGESTION;
+  } else if (dst_return_code == RETURN_CODE_REJECTED_INVALID_TOPIC_ID) {
+    (*return_code) = RETURN_CODE_REJECTED_INVALID_TOPIC_ID;
+  } else if (dst_return_code == RETURN_CODE_REJCETED_NOT_SUPPORTED) {
+    (*return_code) = RETURN_CODE_REJCETED_NOT_SUPPORTED;
+  } else {
+    return -1;
+  }
   return *parsed_bytes;
 }
 int32_t parse_mqtt_sn_flags(const uint8_t *src_pos,
@@ -578,7 +588,7 @@ int32_t parse_mqtt_sn_uint16_byte(const uint8_t *src_pos, uint16_t src_len, int3
   if ((*parsed_bytes) > src_len) {
     return -1;
   }
-  (*dst) = ntohs((*(uint16_t *)src_pos));
+  (*dst) = ntohs((*(uint16_t *) src_pos));
   return *parsed_bytes;
 }
 

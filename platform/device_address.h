@@ -9,7 +9,7 @@
 
 typedef struct device_address_ {
   uint8_t bytes[MQTT_SN_DEVICE_ADDRESS_LENGTH];
-  uint16_t len;
+  //uint16_t len;
 } device_address;
 
 #endif //CMQTTSNFORWARDER_GLOBAL_DEFINES_H

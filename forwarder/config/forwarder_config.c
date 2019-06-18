@@ -31,7 +31,7 @@ void forwarder_config_cleanup(forwarder_config *cfg) {
   mqtt_sn_logger_config_cleanup(&cfg->mslcfg);
 }
 int32_t forwarder_config_file_process_command_callback(void *cfg, const MqttSnLogger *logger, int argc, char **argv) {
-  forwarder_config *fcfg = cfg;
+  forwarder_config *fcfg = (forwarder_config *) cfg;
   return forwarder_config_process_line(fcfg, logger, argc, argv);
 }
 int32_t forwarder_config_process_line(forwarder_config *cfg, const MqttSnLogger *logger, int argc, char **argv) {

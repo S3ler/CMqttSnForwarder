@@ -8,7 +8,9 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdbool.h>
+#include <assert.h>
 
 int32_t contains_config_argument_help(int argc, char **argv) {
   for (int i = 0; i < argc; i++) {
@@ -59,7 +61,7 @@ int32_t process_config_file(const char *config_file_path,
     }
   }
   config_file.close();
-#else
+#elif defined(linux)
   FILE *config_file = fopen(config_file_path, "r");
   if (!config_file) {
     print_could_not_read_config_file(logger, strerror(errno));
@@ -69,7 +71,14 @@ int32_t process_config_file(const char *config_file_path,
   char *line;
   size_t len = 0;
   ssize_t read;
+  // ESP8266   while ((read = getline(&line, &len, config_file)) != -1) {
+  // while ((read = __getline(&line, &len, config_file)) != -1) {
   while ((read = getline(&line, &len, config_file)) != -1) {
+    log_str(logger, line);
+    log_flush(logger);
+    log_uint16(logger, len);
+    log_flush(logger);
+
     if (process_config_file_line(logger, line, len, argv_0, cfg, callback) == MQTT_SN_PARSE_CONFIG_FAILURE) {
       fclose(config_file);
       print_could_not_read_config_file(logger, strerror(errno));
@@ -93,17 +102,21 @@ int32_t process_config_file_line(const MqttSnLogger *logger,
                                  void *cfg,
                                  int32_t (*callback)(void *, const MqttSnLogger *, int, char **)) {
   if (line == NULL) {
+    assert(!(line == NULL));
     return -1;
   }
   if (len == 0) {
+    assert(!(len == 0));
     return -1;
   }
 
   if (strlen(line) + 1 != len) {
+    assert(!(strlen(line) + 1 != len));
     return -1;
   }
 
   if (strlen(line) == 0) {
+    assert(!(strlen(line) == 0));
     return -1;
   }
 

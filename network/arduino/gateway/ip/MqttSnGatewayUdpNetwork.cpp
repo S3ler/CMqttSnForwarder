@@ -76,7 +76,7 @@ int32_t GatewayArduinoUdpConnect(MqttSnGatewayNetworkInterface *n, void *context
 
 int32_t GatewayArduinoUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *context) {
   MqttSnGatewayUdpNetwork *udpContext = (MqttSnGatewayUdpNetwork *) context;
-  if ((*udpContext->unicast_socket)) {
+  if ((udpContext->unicast_socket)) {
     arduino_deinit_udp(udpContext->unicast_socket);
 #ifdef WITH_LOGGING
     log_close_unicast_socket(n->logger, udpContext->protocol, n->gateway_network_address);
@@ -84,7 +84,7 @@ int32_t GatewayArduinoUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *cont
   }
 #ifdef WITH_UDP_BROADCAST_GATEWAY
   if (n->gateway_network_broadcast_address) {
-    if ((*udpContext->multicast_socket)) {
+    if ((udpContext->multicast_socket)) {
       arduino_deinit_udp(udpContext->multicast_socket);
       log_close_multicast_socket(n->logger, udpContext->protocol, n->gateway_network_broadcast_address);
     }

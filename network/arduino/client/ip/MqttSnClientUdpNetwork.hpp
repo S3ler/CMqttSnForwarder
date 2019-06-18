@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_FORWARDER_NETWORK_ARDUINO_CLIENT_IP_MQTTSNCLIENTUDPNETWORK_H_
 
 #include <network/MqttSnClientNetworkInterface.h>
-#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_CLIENT)
+#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_CLIENT) || defined(_WIFIUDP_H_)
 #include <WiFiUdp.h>
 extern WiFiUDP *clientUdp;
 extern WiFiUDP *clientBCUdp;
@@ -25,7 +25,7 @@ extern "C" {
 
 typedef struct MqttSnClientUdpNetwork_ {
   uint16_t port;
-#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_CLIENT)
+#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_CLIENT) || defined(_WIFIUDP_H_)
   WiFiUDP *unicast_socket;
   WiFiUDP *multicast_socket;
 #elif defined(WITH_UDP_BROADCAST_CLIENT)

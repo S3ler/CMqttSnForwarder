@@ -205,11 +205,11 @@ int log_msg_start(const MqttSnLogger *logger) {
 
 int log_device_address(const MqttSnLogger *logger, const device_address *address) {
   const char *dot = ".";
-  for (size_t i = 0; i < sizeof(device_address); ++i) {
+  for (size_t   i = 0; i < MQTT_SN_DEVICE_ADDRESS_LENGTH; i++) {
     if (log_uint8(logger, address->bytes[i])) {
       return -1;
     }
-    if (i + 1 < sizeof(device_address)) {
+    if (i + 1 < MQTT_SN_DEVICE_ADDRESS_LENGTH) {
       if (log_str(logger, dot)) {
         return -1;
       }

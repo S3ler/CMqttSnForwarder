@@ -7,7 +7,8 @@
 
 #include <logging/MqttSnLoggingInterface.h>
 #include <IPAddress.h>
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
+//#include <ESP8266WiFi.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,7 +24,6 @@ int print_wifi_connecting_to(const MqttSnLogger *logger, const char *ssid, const
 int print_wifi_could_not_connect(const MqttSnLogger *logger);
 int print_wifi_connected(const MqttSnLogger *logger);
 int print_arduino_IPAddress(const MqttSnLogger *logger, const IPAddress *ipAddress);
-int connect_wifi(const char *ssid, const char *password, uint32_t timeout_ms, const MqttSnLogger *logger);
 int print_cannot_convert_or_resolve_network_address(const MqttSnLogger *logger,
                                                     const char *hostname,
                                                     const char *address_name);

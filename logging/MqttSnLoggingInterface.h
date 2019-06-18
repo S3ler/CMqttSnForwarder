@@ -37,6 +37,7 @@ typedef struct MqttSnLoggerInterface_ {
 
   int (*log_char)(char c);
 
+  void* context;
   int log_level;
   int status;
 } MqttSnLogger;

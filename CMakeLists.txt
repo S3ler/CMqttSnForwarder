@@ -886,5 +886,15 @@ if (WITH_ARDUINO)
             target_compile_definitions(lib-mqtt-sn-arduino-esp8266-system PRIVATE WITH_LINUX_FAKE_ARDUINO_CLASSES)
             target_include_directories(lib-mqtt-sn-arduino-esp8266-system PRIVATE ${Linux_FAKE_ARDUINO_CLASSES_INCLUDE_DIRECTORIES})
         endif ()
+
+        if (WITH_LOGGING)
+            set(MQTT_SN_ARDUINO_SSD1306_SCREEN_FILES
+                    logging/arduino/SSD1306/SSD1306Logger.hpp
+                    logging/arduino/SSD1306/SSD1306Logger.cpp)
+            add_library(lib-mqtt-sn-arduino-ssd1306-screen-logger ${MQTT_SN_ARDUINO_SSD1306_SCREEN_FILES})
+            target_include_directories(lib-mqtt-sn-arduino-ssd1306-screen-logger PRIVATE .)
+
+        endif ()
+
     endif ()
 endif ()

@@ -3,7 +3,8 @@
 //
 
 #include "MqttSnAdvertiseMessage.h"
-#include <arpa/inet.h>
+// //TODO only linux? #include <arpa/inet.h>
+
 static int32_t parse_advertise_header(ParsedMqttSnHeader *h,
                                       const uint8_t *data,
                                       uint16_t data_len,

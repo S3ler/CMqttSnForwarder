@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_FORWARDER_NETWORK_ARDUINO_GATEWAY_IP_MQTTSNGATEWAYUDPNETWORK_H_
 
 #include <network/MqttSnGatewayNetworkInterface.h>
-#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_GATEWAY)
+#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_GATEWAY) || defined(_WIFIUDP_H_)
 #include <WiFiUdp.h>
 extern WiFiUDP *gatewayUdp;
 extern WiFiUDP *gatewayBCUdp;
@@ -25,7 +25,7 @@ extern "C" {
 
 typedef struct MqttSnGatewayUdpNetwork_ {
   uint16_t port;
-#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_GATEWAY)
+#if defined(WIFIUDP_H) || defined(WITH_UDP_BROADCAST_GATEWAY) || defined(_WIFIUDP_H_)
   WiFiUDP *unicast_socket;
   WiFiUDP *multicast_socket;
 #elif defined(WITH_UDP_BROADCAST_GATEWAY)

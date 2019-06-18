@@ -92,8 +92,8 @@ int arduino_serial_eval_process(EEPROM_cfg *ecfg,
   }
 #endif
 
-  int fcfg_rc = eeprom_save_forwarder_config_line(ecfg, fcfg, nullptr, line, line_pos);
-  if (fcfg_rc != MQTT_SN_PARSE_CONFIG_FAILURE) {
+  int fcfg_rc = eeprom_save_forwarder_config_line(ecfg, fcfg, logger, line, line_pos);
+  if (fcfg_rc == MQTT_SN_PARSE_SUCCESS) {
     print_system_restarting(logger);
     eeprom_config_cleanup(&ecfg);
     ESP.restart();
@@ -151,10 +151,18 @@ int get_device_address_from_hostname(const char *hostname, device_address *dst) 
   // resolve via DNS
   IPAddress remote_addr;
   uint32_t timeout_ms = 30000;
+  // ESP32
+  if (WiFi.hostByName(hostname, remote_addr)) {
+    arduino_ipv4_and_port_to_device_address(&remote_addr, 0, dst);
+    return EXIT_SUCCESS;
+  }
+  // ESP8266
+  /*
   if (WiFi.hostByName(hostname, remote_addr, timeout_ms)) {
     arduino_ipv4_and_port_to_device_address(&remote_addr, 0, dst);
     return EXIT_SUCCESS;
   }
+  */
   return EXIT_FAILURE;
 }
 

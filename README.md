@@ -13,6 +13,7 @@ arduino
 * default configuration (on error)
 * enable es32 compatibility
 
+TODO morgen: screen output, logger in forwarder refactoren
 
 ToDo Parser: message logging, message generating, check message parsing
 ToDo Forwarder: Same Broadcast Address and Port in Gateway and Client Network

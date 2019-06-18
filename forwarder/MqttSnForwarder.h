@@ -36,6 +36,7 @@ void sendBufferedMessagesToGateway(MqttSnForwarder *forwarder);
 void sendBufferedMessagesToClients(MqttSnForwarder *forwarder);
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
+                        MqttSnLogger *logger,
                         log_level_t log_level,
                         void *clientNetworkContext,
                         void *gatewayNetworkContext);

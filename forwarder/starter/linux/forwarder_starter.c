@@ -451,7 +451,17 @@ int start_forwarder(const forwarder_config *fcfg,
   mqttSnForwarder->gatewayNetworkSendTimeout = fcfg->gncfg.gateway_network_send_timeout;
   mqttSnForwarder->gatewayNetworkReceiveTimeout = fcfg->gncfg.gateway_network_receive_timeout;
 
-  if (MqttSnForwarderInit(mqttSnForwarder, fcfg->mslcfg.log_lvl, clientNetworkContext, gatewayNetworkContext) != 0) {
+  MqttSnLogger forwarder_logger = {0};
+  if (MqttSnLoggerInit(&forwarder_logger, fcfg->mslcfg.log_lvl, stdout_log_init)) {
+    MqttSnLoggerDeinit(&forwarder_logger);
+    return EXIT_FAILURE;
+  }
+
+  if (MqttSnForwarderInit(mqttSnForwarder,
+                          &forwarder_logger,
+                          fcfg->mslcfg.log_lvl,
+                          clientNetworkContext,
+                          gatewayNetworkContext) != 0) {
     MqttSnForwarderDeinit(mqttSnForwarder);
     return EXIT_FAILURE;
   }

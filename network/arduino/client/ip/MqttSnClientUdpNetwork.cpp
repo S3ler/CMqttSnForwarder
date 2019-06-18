@@ -72,7 +72,7 @@ int32_t ClientArduinoUdpConnect(MqttSnClientNetworkInterface *n, void *context) 
 
 int32_t ClientArduinoUdpDisconnect(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *udpContext = (MqttSnClientUdpNetwork *) context;
-  if ((*udpContext->unicast_socket)) {
+  if ((udpContext->unicast_socket)) {
     arduino_deinit_udp(udpContext->unicast_socket);
 #ifdef WITH_LOGGING
     log_close_unicast_socket(n->logger, udpContext->protocol, n->client_network_address);
@@ -81,7 +81,7 @@ int32_t ClientArduinoUdpDisconnect(MqttSnClientNetworkInterface *n, void *contex
 #ifdef WITH_UDP_BROADCAST_CLIENT
   if (n->client_network_broadcast_address)
   {
-    if (*udpContext->multicast_socket)
+    if (udpContext->multicast_socket)
     {
       log_close_multicast_socket(n->logger, udpContext->protocol, n->client_network_broadcast_address);
     }

@@ -24,7 +24,7 @@ int eeprom_load_forwarder_config(EEPROM_cfg *ecfg, forwarder_config *fcfg, const
 
   int32_t fcfg_rc = process_config_file_line(logger,
                                              ecfg->fcfg_line,
-                                             strlen(ecfg->fcfg_line),
+                                             strlen(ecfg->fcfg_line) + 1,
                                              fcfg->executable_name,
                                              fcfg,
                                              forwarder_config_file_process_command_callback);
@@ -59,8 +59,8 @@ int eeprom_save_forwarder_config_line(EEPROM_cfg *ecfg,
   memcpy(line_copy, fcfg_line, fcfg_line_len);
 
   int32_t fcfg_rc = process_config_file_line(logger,
-                                             ecfg->fcfg_line,
-                                             strlen(ecfg->fcfg_line),
+                                             line_copy,
+                                             fcfg_line_len,
                                              fcfg->executable_name,
                                              fcfg,
                                              forwarder_config_file_process_command_callback);
