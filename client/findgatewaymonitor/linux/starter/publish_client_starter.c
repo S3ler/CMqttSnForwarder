@@ -52,7 +52,7 @@ int32_t find_gateway_monitor_log_received_received_gwinfo(const MqttSnLogger *lo
                      received_gwinfo->gw_info.gwId,
                      &received_gwinfo->gw_info.gwAdd,
                      received_gwinfo->gw_info.gwAddLen);
-  log_str(logger, PSTR("\n"));
+  log_flush(logger);
   return log_status(logger);
 }
 

@@ -17,6 +17,9 @@ static int32_t parse_advertise_duration_byte(const uint8_t *src_pos,
                                              uint16_t src_len,
                                              int32_t *parsed_bytes,
                                              uint16_t *duration);
+int32_t parse_advertise(MqttSnAdvertise *mqtt_sn_advertise, const uint8_t *data, uint16_t data_len) {
+  return parse_advertise_byte(&mqtt_sn_advertise->gwId, &mqtt_sn_advertise->duration, data, data_len);
+}
 int32_t parse_advertise_byte(uint8_t *gw_id, uint16_t *duration, const uint8_t *data, uint16_t data_len) {
   int32_t parsed_bytes = 0;
   ParsedMqttSnHeader h = {0};
@@ -68,6 +71,7 @@ int32_t generate_advertise_message(uint8_t *dst, uint16_t dst_len, uint8_t gw_id
   }
   return used_bytes;
 }
+
 int32_t generate_advertise_header(uint8_t *dst_pos, uint16_t dst_len, int32_t *used_bytes) {
   return generate_mqtt_sn_header(dst_pos, dst_len, used_bytes, MQTT_SN_MESSAGE_ADVERTISE_LENGTH, ADVERTISE);
 }

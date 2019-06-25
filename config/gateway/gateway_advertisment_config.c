@@ -52,6 +52,15 @@ int32_t gateway_advertisement_config_process_args(gateway_advertise_config *cfg,
       }
       i++;
       parsed_args += 2;
+    }else if(!strcmp(argv[i], "-gi") || !strcmp(argv[i], "--gateway_id")) {
+      if (i == argc - 1) {
+        print_argument_value_not_specified(logger, argv[i], "gateway id");
+        return MQTT_SN_PARSE_CONFIG_FAILURE;
+      } else {
+        parse_gateway_id(logger, argv[i + 1], &cfg->gateway_id);
+      }
+      i++;
+      parsed_args += 2;
     }
   }
   return parsed_args;
@@ -60,7 +69,7 @@ void gateway_advertisement_config_print_usage_short(const MqttSnLogger *logger, 
   if (indent) {
     log_str(logger, indent);
   }
-  log_str(logger, PSTR("[-ad --advertisement_duration] [-ar --advertisement_radius]\n"));
+  log_str(logger, PSTR("[-ad --advertisement_duration] [-ar --advertisement_radius] [-gi --gateway_id]\n"));
 }
 void gateway_advertisement_config_print_usage_long(const MqttSnLogger *logger) {
   log_str(logger, PSTR(" -ad : specify the advertisement duration in s. Defaults to "));
@@ -71,4 +80,7 @@ void gateway_advertisement_config_print_usage_long(const MqttSnLogger *logger) {
   log_uint8(logger, MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_RADIUS);
   log_str(logger, PSTR(".\n"));
 
+  log_str(logger, PSTR(" -gi : specify the gateway id (GwId) between 0 and 255. Defaults to "));
+  log_uint8(logger, MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID);
+  log_str(logger, PSTR(".\n"));
 }

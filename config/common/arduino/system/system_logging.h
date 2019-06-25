@@ -8,7 +8,6 @@
 #include <logging/MqttSnLoggingInterface.h>
 #include <IPAddress.h>
 #include <WiFi.h>
-//#include <ESP8266WiFi.h>
 
 #ifdef __cplusplus
 extern "C" {

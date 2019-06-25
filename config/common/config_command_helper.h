@@ -35,19 +35,23 @@ int32_t parse_duration(const MqttSnLogger *logger, char *duration_str, uint16_t 
 
 int32_t parse_radius(const MqttSnLogger *logger, char *radius_str, uint8_t *radius_dst);
 
+int32_t parse_gateway_id(const MqttSnLogger *logger, char *gateway_id_str, uint8_t *gateway_id_dst);
+
 int32_t parse_timeout(const MqttSnLogger *logger, char *timeout_str, int32_t *dst);
 
-int32_t parse_topic_id(const MqttSnLogger *logger, char* topic_id_str, uint16_t *dst);
+int32_t parse_topic_id(const MqttSnLogger *logger, char *topic_id_str, uint16_t *dst);
 
 int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst);
 
 int32_t print_invalid_retain_given(const MqttSnLogger *logger, const char *given_str);
 
-int32_t print_invalid_topic_id_given(const MqttSnLogger* logger, const char* given_str);
+int32_t print_invalid_topic_id_given(const MqttSnLogger *logger, const char *given_str);
 
-int32_t print_invalid_duration_given(const MqttSnLogger* logger, const char* given_str);
+int32_t print_invalid_duration_given(const MqttSnLogger *logger, const char *given_str);
 
 int32_t print_invalid_radius_given(const MqttSnLogger *logger, const char *given_str);
+
+int32_t print_invalid_gateway_id_given(const MqttSnLogger *logger, const char *given_str);
 
 int32_t print_config_parser_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
 
@@ -63,7 +67,7 @@ int32_t print_invalid_protocol_version_given(const MqttSnLogger *logger);
 
 int32_t print_argc_argv(const MqttSnLogger *logger, int argc, char *argv[]);
 
-int32_t print_show_help(const MqttSnLogger* logger);
+int32_t print_show_help(const MqttSnLogger *logger);
 
 int32_t print_unknown_option(const MqttSnLogger *logger, const char *unknown_option);
 
@@ -75,7 +79,7 @@ int32_t parse_client_subscription_config_qos(const MqttSnLogger *logger, char *q
 
 int32_t parse_client_publish_config_qos(const MqttSnLogger *logger, char *qos_str, int8_t *qos_dst);
 
-int32_t print_see_usage(const MqttSnLogger *logger, const char* executable_name);
+int32_t print_see_usage(const MqttSnLogger *logger, const char *executable_name);
 
 
 // TODO parse protocol version

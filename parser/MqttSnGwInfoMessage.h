@@ -28,6 +28,7 @@ typedef struct MqttSnGwInfo_ {
   uint16_t gwAddLen;
 } MqttSnGwInfo;
 #pragma pack(pop)
+int32_t parse_gwinfo(MqttSnGwInfo *gw_info, const uint8_t *data, uint16_t data_len);
 int32_t parse_gwinfo_message_byte(uint8_t *gw_id,
                                   device_address *gw_add,
                                   uint16_t *gw_add_len,

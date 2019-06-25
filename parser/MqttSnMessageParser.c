@@ -175,7 +175,7 @@ int parse_publish(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len)
   return parse_message_tolerant(h, PUBLISH, data, data_len);
 }
 
-int parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
+int header_parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   return parse_message_tolerant(h, CONNECT, data, data_len);
 }
 
@@ -220,6 +220,29 @@ int32_t generate_mqtt_sn_header(uint8_t *dst,
   return *gen_bytes;
 }
 
+int32_t generate_mqtt_sn_return_code(uint8_t *dst,
+                                     uint16_t dst_len,
+                                     MQTT_SN_RETURN_CODE return_code,
+                                     int32_t *used_bytes) {
+  *used_bytes += MQTT_SN_RETURNCODE_LENGTH;
+  if (dst_len < *used_bytes) {
+    return -1;
+  }
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtype-limits"
+  if (!MQTT_SN_RETURN_CODE_VALID(return_code)) {
+#pragma GCC diagnostic pop
+    return -1;
+  }
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtype-limits"
+  if (MQTT_SN_RETURN_CODE_RESERVED(return_code)) {
+#pragma GCC diagnostic pop
+    return -1;
+  }
+  dst[0] = (uint8_t) return_code;
+  return (*used_bytes);
+}
 int32_t generate_flags(uint8_t *dst,
                        uint16_t dst_len,
                        uint8_t dup,
@@ -272,7 +295,6 @@ int32_t generate_flags(uint8_t *dst,
   }
   return *used_bytes;
 }
-
 int32_t generate_topic_id(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes) {
   *used_bytes += MQTT_SN_TOPIC_ID_LENGTH;
   if (dst_len < *used_bytes) {
@@ -527,6 +549,7 @@ int32_t parse_mqtt_sn_return_code_byte(const uint8_t *src_pos,
   }
   return *parsed_bytes;
 }
+
 int32_t parse_mqtt_sn_flags(const uint8_t *src_pos,
                             uint16_t src_len,
                             int32_t *parsed_bytes,

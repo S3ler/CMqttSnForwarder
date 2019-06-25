@@ -85,6 +85,10 @@ int32_t MqttSnClientPublishPredefinedM1(MqttSnClient *client,
   return send_rc;
 }
 MQTT_SN_RETURN_CODE MqttSnClientConnect(MqttSnClient *client) {
+    // gen
+    // send
+   // message inflight - await
+   // await
   // TODO implement me
   return RETURN_CODE_RESERVED_INVALID;
 }

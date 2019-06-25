@@ -10,6 +10,7 @@
 #ifndef Arduino_h
 #include <netinet/in.h>
 #include <parser/MqttSnAdvertiseMessage.h>
+#include <parser/logging/common/MqttSnMessageLogging.h>
 #endif
 
 #define MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET 2
@@ -143,54 +144,8 @@ int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger *logger,
                                        data_len,
                                        signal_strength);
 }
-int log_client_mqtt_sn_message_malformed(const MqttSnLogger *logger,
-                                         const device_address *from,
-                                         const uint8_t *data,
-                                         uint16_t data_len,
-                                         uint8_t signal_strength) {
-  return log_mqtt_sn_message_malformed(logger, MQTT_SN_FORWARDER_NETWORK_CLIENT, from, data, data_len, signal_strength);
-}
-int log_mqtt_sn_message_malformed(const MqttSnLogger *logger,
-                                  MQTT_SN_FORWARDER_NETWORK network,
-                                  const device_address *from,
-                                  const uint8_t *data,
-                                  uint16_t data_len,
-                                  uint8_t signal_strength) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
-    return log_status(logger);
-  }
-  log_msg_start(logger);
-  log_str(logger, PSTR("received malformed "));
-  if (network == MQTT_SN_FORWARDER_NETWORK_CLIENT) {
-    log_str(logger, PSTR("client"));
-  }
-  if (network == MQTT_SN_FORWARDER_NETWORK_GATEWAY) {
-    log_str(logger, PSTR("gateway"));
-  }
-  if (signal_strength) {
-    log_str(logger, PSTR(" signal strength: "));
-    log_uint8(logger, signal_strength);
-  }
-  log_str(logger, PSTR(" message"));
-  if (from) {
-    log_str(logger, PSTR(" from "));
-    log_device_address(logger, from);
-  }
-  log_str(logger, PSTR(" ( len"));
-  log_uint16(logger, data_len);
 
-#ifdef WITH_DEBUG_LOGGING
-  if (!shall_not_be_logged(logger, LOG_LEVEL_DEBUG)) {
-    log_str(logger, PSTR(", data( "));
-    log_uint8_array(logger, data, data_len);
-    log_str(logger, PSTR(")"));
-  }
-#endif
 
-  log_close_braked_dot(logger);
-  log_flush(logger);
-  return log_status(logger);
-}
 
 int log_could_not_generate_encapsulation_message(const MqttSnLogger *logger,
                                                  const MQTT_SN_FORWARDER_NETWORK network,

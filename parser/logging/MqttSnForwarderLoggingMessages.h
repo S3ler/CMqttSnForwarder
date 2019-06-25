@@ -53,17 +53,8 @@ int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger *logger,
                                           const uint8_t *data,
                                           uint16_t data_len,
                                           uint8_t signal_strength);
-int log_client_mqtt_sn_message_malformed(const MqttSnLogger *logger,
-                                         const device_address *from,
-                                         const uint8_t *data,
-                                         uint16_t data_len,
-                                         uint8_t signal_strength);
-int log_mqtt_sn_message_malformed(const MqttSnLogger *logger,
-                                  MQTT_SN_FORWARDER_NETWORK network,
-                                  const device_address *from,
-                                  const uint8_t *data,
-                                  uint16_t data_len,
-                                  uint8_t signal_strength);
+
+
 
 int log_client_mqtt_sn_message(const MqttSnLogger *logger,
                                const device_address *from,

@@ -15,13 +15,13 @@ int32_t log_mqtt_sn_comma(const MqttSnLogger *logger);
 
 // mqtt-sn specific logging
 
-int32_t log_mqtt_sn_flags(const MqttSnLogger *logger,
-                          uint8_t dup,
-                          int8_t qos,
-                          uint8_t retain,
-                          uint8_t will,
-                          uint8_t clean_session,
-                          uint8_t topic_id_type);
+int32_t log_mqtt_sn_flags_single(const MqttSnLogger *logger,
+                                 uint8_t dup,
+                                 int8_t qos,
+                                 uint8_t retain,
+                                 uint8_t will,
+                                 uint8_t clean_session,
+                                 uint8_t topic_id_type);
 
 int32_t log_mqtt_sn_dup_flag(const MqttSnLogger *logger, uint8_t dup);
 
@@ -41,7 +41,17 @@ int32_t log_mqtt_sn_duration(const MqttSnLogger *logger, uint16_t duration);
 
 int32_t log_mqtt_sn_message_id(const MqttSnLogger *logger, uint16_t msgId);
 
-
+int log_client_mqtt_sn_message_malformed(const MqttSnLogger *logger,
+                                         const device_address *from,
+                                         const uint8_t *data,
+                                         uint16_t data_len,
+                                         uint8_t signal_strength);
+int log_mqtt_sn_message_malformed(const MqttSnLogger *logger,
+                                  MQTT_SN_FORWARDER_NETWORK network,
+                                  const device_address *from,
+                                  const uint8_t *data,
+                                  uint16_t data_len,
+                                  uint8_t signal_strength);
 #ifdef __cplusplus
 }
 #endif

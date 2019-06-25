@@ -26,6 +26,7 @@ typedef struct MqttSnAdvertise_ {
 } MqttSnAdvertise;
 #pragma pack(pop)
 
+int32_t parse_advertise(MqttSnAdvertise *mqtt_sn_advertise, const uint8_t *data, uint16_t data_len);
 int32_t parse_advertise_byte(uint8_t *gw_id, uint16_t *duration, const uint8_t *data, uint16_t data_len);
 
 /*

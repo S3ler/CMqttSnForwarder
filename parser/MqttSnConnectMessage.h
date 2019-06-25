@@ -27,6 +27,17 @@ extern "C" {
 #define MQTT_SN_MESSAGE_CONNECT_MAX_LENGTH            (MQTT_SN_MESSAGE_CONNECT_WO_CLIENTID_LENGTH + \
                                                        MQTT_SN_MESSAGE_CONNECT_CLIENTID_MAX_LENGTH)
 
+typedef struct ParsedMqttSnConnect_ {
+  uint8_t will;
+  uint8_t clean_session;
+  uint8_t protocol_id;
+  uint16_t duration;
+  char client_id[MQTT_SN_MESSAGE_CONNECT_CLIENTID_MAX_LENGTH];
+  uint16_t client_id_length;
+} ParsedMqttSnConnect;
+
+int32_t parse_connect(ParsedMqttSnConnect *mqtt_sn_connect, const uint8_t *data, uint16_t data_len);
+
 int32_t parse_connect_message_byte(uint8_t *will,
                                    uint8_t *clean_session,
                                    uint8_t *protocol_id,
@@ -36,6 +47,14 @@ int32_t parse_connect_message_byte(uint8_t *will,
                                    uint8_t client_id_max_length,
                                    const uint8_t *data,
                                    uint16_t data_len);
+int32_t generate_connect(uint8_t dst,
+                         uint16_t dst_len,
+                         uint8_t will,
+                         uint8_t clean_session,
+                         uint8_t protocol_id,
+                         uint16_t duration,
+                         const char client_id,
+                         uint16_t client_id_length);
 
 #ifdef __cplusplus
 }

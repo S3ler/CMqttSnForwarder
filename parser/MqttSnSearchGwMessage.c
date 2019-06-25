@@ -8,6 +8,9 @@ static int32_t parse_searchgw_radius_byte(const uint8_t *src_pos,
                                           int32_t *parsed_bytes,
                                           uint8_t *radius);
 int32_t parse_searchgw_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len, int32_t *parsed_bytes);
+int32_t parse_searchgw(MqttSnSearchGw *search_gw, const uint8_t *data, uint16_t data_len) {
+  return parse_searchgw_message_byte(&search_gw->radius, data, data_len);
+}
 int32_t parse_searchgw_message_byte(uint8_t *radius, const uint8_t *data, uint16_t data_len) {
   int32_t parsed_bytes = 0;
   ParsedMqttSnHeader h = {0};
@@ -46,6 +49,7 @@ int32_t generate_searchgw_message(uint8_t *dst, uint16_t dst_len, uint8_t radius
   }
   return used_bytes;
 }
+
 int32_t generate_searchgw_radius(uint8_t *dst_pos, uint16_t dst_len, int32_t *used_bytes, uint8_t radius) {
   *used_bytes += 1;
   if (*used_bytes > dst_len) {

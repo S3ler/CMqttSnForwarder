@@ -14,6 +14,7 @@
 #include <network/linux/shared/ip/udphelper/MqttSnUdpNetworkMessageParser.h>
 #include <errno.h>
 #include <parser/MqttSnMessageParser.h>
+#include <stdio.h>
 
 #include "MqttSnUdpMulticastMessageParser.h"
 

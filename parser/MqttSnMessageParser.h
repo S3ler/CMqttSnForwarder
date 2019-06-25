@@ -363,7 +363,7 @@ int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t dat
 
 int parse_publish(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
-int parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
+int header_parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
 int parse_connack(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
@@ -383,6 +383,10 @@ int32_t generate_mqtt_sn_header(uint8_t *dst,
                                 uint16_t msg_len,
                                 MQTT_SN_MESSAGE_TYPE msg_type);
 
+int32_t generate_mqtt_sn_return_code(uint8_t *dst,
+                                     uint16_t dst_len,
+                                     MQTT_SN_RETURN_CODE return_code,
+                                     int32_t *used_bytes);
 int32_t generate_flags(uint8_t *dst,
                        uint16_t dst_len,
                        uint8_t dup,

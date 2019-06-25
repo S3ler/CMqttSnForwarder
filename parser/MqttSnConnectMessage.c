@@ -27,7 +27,17 @@ static int32_t parse_connect_client_id(const uint8_t *src_pos,
                                        char *client_id,
                                        uint16_t *client_id_length,
                                        uint8_t client_id_max_length);
-
+int32_t parse_connect(ParsedMqttSnConnect *mqtt_sn_connect, const uint8_t *data, uint16_t data_len) {
+  return parse_connect_message_byte(&mqtt_sn_connect->will,
+                                    &mqtt_sn_connect->clean_session,
+                                    &mqtt_sn_connect->protocol_id,
+                                    &mqtt_sn_connect->duration,
+                                    mqtt_sn_connect->client_id,
+                                    &mqtt_sn_connect->client_id_length,
+                                    sizeof(mqtt_sn_connect->client_id),
+                                    data,
+                                    data_len);
+}
 int32_t parse_connect_message_byte(uint8_t *will,
                                    uint8_t *clean_session,
                                    uint8_t *protocol_id,
@@ -65,6 +75,7 @@ int32_t parse_connect_message_byte(uint8_t *will,
   }
   return parsed_bytes;
 }
+
 int32_t parse_connect_header(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len, int32_t *parsed_bytes) {
   if ((*parsed_bytes = parse_header(h, CONNECT, data, data_len, parsed_bytes)) < 0) {
     return -1;

@@ -25,6 +25,9 @@ static int32_t generate_gwinfo_gw_add(uint8_t *dst_pos,
                                       const device_address *gw_add,
                                       uint16_t gw_add_len,
                                       int32_t *used_bytes);
+int32_t parse_gwinfo(MqttSnGwInfo *gw_info, const uint8_t *data, uint16_t data_len) {
+  return parse_gwinfo_message_byte(&gw_info->gwId, &gw_info->gwAdd, &gw_info->gwAddLen, data, data_len);
+}
 int32_t parse_gwinfo_message_byte(uint8_t *gw_id,
                                   device_address *gw_add,
                                   uint16_t *gw_add_len,
@@ -127,6 +130,7 @@ int32_t generate_gwinfo_client_message(uint8_t *dst,
   }
   return 0;
 }
+
 int32_t generate_gwinfo_gw_add(uint8_t *dst_pos,
                                uint16_t dst_len,
                                const device_address *gw_add,

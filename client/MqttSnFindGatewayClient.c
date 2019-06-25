@@ -4,9 +4,10 @@
 
 #include <assert.h>
 #include "MqttSnFindGatewayClient.h"
-#include <parser/logging/MqttSnForwarderLoggingMessages.h>
 #include <parser/MqttSnSearchGwMessage.h>
 #include <platform/platform_compatibility.h>
+#include <parser/logging/common/MqttSnMessageLogging.h>
+#include <parser/logging/MqttSnForwarderLoggingMessages.h>
 
 int32_t MqttSnFindGatewayClientInit(MqttSnFindGatewayClient *client,
                                     MqttSnLogger *logger,

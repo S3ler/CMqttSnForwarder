@@ -17,6 +17,7 @@ extern "C" {
 #endif
 
 typedef struct MqttSnMessageData_ {
+  uint64_t received_time;
   device_address from;
   device_address to;
   uint16_t data_length;

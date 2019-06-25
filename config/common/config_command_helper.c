@@ -176,11 +176,21 @@ int32_t parse_duration(const MqttSnLogger *logger, char *duration_str, uint16_t 
 int32_t parse_radius(const MqttSnLogger *logger, char *radius_str, uint8_t *radius_dst) {
   char *endprt;
   long int n = strtol(radius_str, &endprt, 10);
-  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < 0 || n > UINT16_MAX)) {
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < 0 || n > UINT8_MAX)) {
     print_invalid_radius_given(logger, radius_str);
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
   *radius_dst = n;
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
+int32_t parse_gateway_id(const MqttSnLogger *logger, char *gateway_id_str, uint8_t *gateway_id_dst) {
+  char *endprt;
+  long int n = strtol(gateway_id_str, &endprt, 10);
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < 0 || n > UINT8_MAX)) {
+    print_invalid_gateway_id_given(logger, gateway_id_str);
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+  *gateway_id_dst = n;
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
 int32_t parse_timeout(const MqttSnLogger *logger, char *timeout_str, int32_t *dst) {
@@ -235,6 +245,12 @@ int32_t print_invalid_duration_given(const MqttSnLogger *logger, const char *giv
 }
 int32_t print_invalid_radius_given(const MqttSnLogger *logger, const char *given_str) {
   log_str(logger, PSTR("Error: Invalid radius given: "));
+  log_str(logger, given_str);
+  log_flush(logger);
+  return log_status(logger);
+}
+int32_t print_invalid_gateway_id_given(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: Invalid gateway id given: "));
   log_str(logger, given_str);
   log_flush(logger);
   return log_status(logger);
