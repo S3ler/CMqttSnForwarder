@@ -295,6 +295,14 @@ int32_t generate_flags(uint8_t *dst,
   }
   return *used_bytes;
 }
+int32_t generate_duration(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes) {
+  *used_bytes += MQTT_SN_DURATION_LENGTH;
+  if (dst_len < *used_bytes) {
+    return -1;
+  }
+  *dst = htons(topic_id);
+  return (*used_bytes);
+}
 int32_t generate_topic_id(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes) {
   *used_bytes += MQTT_SN_TOPIC_ID_LENGTH;
   if (dst_len < *used_bytes) {

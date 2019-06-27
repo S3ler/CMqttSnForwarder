@@ -396,6 +396,7 @@ int32_t generate_flags(uint8_t *dst,
                        uint8_t clean_session,
                        uint8_t topic_id_type,
                        int32_t *used_bytes);
+int32_t generate_duration(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes);
 int32_t generate_topic_id(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes);
 int32_t generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, int32_t *used_bytes);
 int32_t generate_data(uint8_t *dst, uint16_t dst_len, const uint8_t *data, uint16_t data_len, int32_t *used_bytes);

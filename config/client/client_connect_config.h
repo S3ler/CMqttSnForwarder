@@ -19,12 +19,18 @@ extern "C" {
 #endif
 #endif
 
+#ifndef DEFAULT_MQTT_SN_CLIENT_CONNECT_TIMEOUT
+#define DEFAULT_MQTT_SN_CLIENT_CONNECT_TIMEOUT 30000
+#endif
+
 typedef struct client_connect_config_ {
   uint16_t duration;
   char default_client_id[24];
   char *client_id;
   char *will_topic;
   char *will_msg;
+  uint8_t clean_session;
+  int32_t client_connect_timeout;
 } client_connect_config;
 
 int32_t client_connect_config_init(client_connect_config *cfg);

@@ -219,6 +219,12 @@ int32_t print_invalid_retain_given(const MqttSnLogger *logger, const char *given
   log_flush(logger);
   return log_status(logger);
 }
+int32_t print_invalid_clean_session_given(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: Invalid clean session given: "));
+  log_str(logger, given_str);
+  log_flush(logger);
+  return log_status(logger);
+}
 int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst) {
   if (!strcmp(retain_str, "false")) {
     (*dst) = 0;
@@ -226,6 +232,18 @@ int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst)
     (*dst) = 1;
   } else {
     print_invalid_retain_given(logger, retain_str);
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
+int32_t parse_clean_session(const MqttSnLogger *logger, char *clean_session_str, uint8_t *dst) {
+  if (!strcmp(clean_session_str, "false")) {
+    (*dst) = 0;
+  } else if (!strcmp(clean_session_str, "true")) {
+    (*dst) = 1;
+  } else {
+    print_invalid_clean_session_given(logger, clean_session_str);
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
 

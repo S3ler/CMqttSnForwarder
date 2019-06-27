@@ -59,7 +59,7 @@ int32_t start_publish_client(const publish_client_config *cfg,
 #ifdef WITH_LOGGING
   print_program_started(logger, &cfg->msvcfg, cfg->executable_name);
 #endif
-  if (MqttSnClientInit(publish_client, cfg->mslcfg.log_lvl, NULL, gatewayNetworkContext) < 0) {
+  if (MqttSnClientInit(publish_client, cfg->mslcfg.log_lvl, gatewayNetworkContext) < 0) {
     MqttSnClientDeinit(publish_client);
     return EXIT_FAILURE;
   }
@@ -81,7 +81,7 @@ int32_t start_publish_client(const publish_client_config *cfg,
       // read from console in until STRG+C?
       // publish
       // return
-    }else{
+    } else {
       // multiple messages
       // TODO
       // read from console in until STRG+C?
@@ -109,8 +109,13 @@ int32_t start_publish_client(const publish_client_config *cfg,
     return EXIT_SUCCESS;
   }
 
-
-  if (MqttSnClientConnect(publish_client) != RETURN_CODE_ACCEPTED) {
+  if (MqttSnClientConnect(publish_client,
+                          publish_client->gatewayNetwork.mqtt_sn_gateway_address,
+                          cfg->cccfg.client_connect_timeout,
+                          cfg->cccfg.clean_session,
+                          cfg->cccfg.client_id,
+                          cfg->cccfg.duration) != RETURN_CODE_ACCEPTED) {
+    // TODO log error here
 #ifdef WITH_LOGGING
     print_program_terminated(&publish_client->logger, &cfg->msvcfg, cfg->executable_name);
 #endif

@@ -43,7 +43,11 @@ int32_t parse_topic_id(const MqttSnLogger *logger, char *topic_id_str, uint16_t 
 
 int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst);
 
+int32_t parse_clean_session(const MqttSnLogger *logger, char *clean_session_str, uint8_t *dst);
+
 int32_t print_invalid_retain_given(const MqttSnLogger *logger, const char *given_str);
+
+int32_t print_invalid_clean_session_given(const MqttSnLogger *logger, const char *given_str);
 
 int32_t print_invalid_topic_id_given(const MqttSnLogger *logger, const char *given_str);
 

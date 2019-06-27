@@ -11,6 +11,7 @@
 #include <parser/MqttSnAdvertiseMessage.h>
 #include <parser/MqttSnGwInfoMessage.h>
 #include <network/MqttSnGatewayNetworkInterface.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -50,7 +51,6 @@ typedef struct MqttSnClient_ {
   uint16_t msg_counter;
 
   uint16_t connect_duration;
-  device_address *mqtt_sn_gateway_address;
   char *client_id;
   char *will_topic;
   uint8_t *will_msg;
@@ -73,22 +73,24 @@ typedef struct MqttSnClient_ {
 #ifdef WITH_LOGGING
   MqttSnLogger logger;
 #endif
+  bool connected;
+  MQTT_SN_RETURN_CODE connect_return_code;
 } MqttSnClient;
 
 // init network too
-int32_t MqttSnClientInit(MqttSnClient *client,
-                         log_level_t log_level,
-                         int32_t (*publish_cb)(MqttSnClient, const char *, uint16_t, uint8_t *, uint16_t),
-                         void *gatewayNetworkContext);
+int32_t MqttSnClientInit(MqttSnClient *client, log_level_t log_level, void *gatewayNetworkContext);
 int32_t MqttSnClientDeinit(MqttSnClient *client);
 
 int32_t MqttSnClientLoop(MqttSnClient *client);
 // disconnect network too
 // deinint network too
 
-// uses default_timeout and saves duration as connect_duration
-MQTT_SN_RETURN_CODE MqttSnClientConnect(MqttSnClient *client);
-
+MQTT_SN_RETURN_CODE MqttSnClientConnect(MqttSnClient *client,
+                                        const device_address *mqtt_sn_gateway_address,
+                                        int32_t timeout_ms,
+                                        bool clean_session,
+                                        const char *client_id,
+                                        uint16_t duration);
 /**
  * Sends a MqttSnPublish with Quality of Service (qos) -1 to a predefined topic. Works with disconnected MqttSnClients.
  * @param client to use for sending
