@@ -33,6 +33,10 @@ typedef struct MqttSnGateway_ {
 
   // TODO gateway configs
   gateway_advertise_config advertisement_config;
+
+  uint64_t last_client_timeout_check;
+  uint64_t client_timeout_check_period;
+  int32_t connection_timeout_offset;
 } MqttSnGateway;
 
 int32_t MqttSnGatewayInitialize(MqttSnGateway *mqttSnGateway,

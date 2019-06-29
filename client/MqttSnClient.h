@@ -5,13 +5,15 @@
 #ifndef CMQTTSNFORWARDER_CLIENT_MQTTSNCLIENT_H_
 #define CMQTTSNFORWARDER_CLIENT_MQTTSNCLIENT_H_
 
+
 #include <stdint.h>
+#include <stdbool.h>
+#include "MqttSnClientAwaitMessage.h"
 #include <platform/device_address.h>
 #include <parser/MqttSnMessageParser.h>
 #include <parser/MqttSnAdvertiseMessage.h>
 #include <parser/MqttSnGwInfoMessage.h>
 #include <network/MqttSnGatewayNetworkInterface.h>
-#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,6 +39,23 @@ extern "C" {
 #define MQTT_SN_CLIENT_MAX_REGISTRATION_TOPIC_NAME_LENGTH 255
 #endif
 
+#ifndef MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT
+#define MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT 5
+#endif
+
+#ifndef MQTT_SN_CLIENT_PING_REQ_ADVANCE_TIME_S
+#define MQTT_SN_CLIENT_PING_REQ_ADVANCE_TIME_S 10
+#endif
+
+
+
+typedef enum MQTT_SN_CLIENT_RETURN_CODE_ {
+  MQTT_SN_CLIENT_RETURN_SUCCESS = 0,
+  MQTT_SN_CLIENT_RETURN_CONJESTION,
+  MQTT_SN_CLIENT_RETURN_NOT_SUPPORTED,
+  MQTT_SN_CLIENT_RETURN_TIMEOUT,
+  MQTT_SN_CLIENT_RETURN_ERROR
+} MQTT_SN_CLIENT_RETURN_CODE;
 typedef struct MqttSnClientRegistration_ {
   char *topic_name;
   uint16_t topic_id;
@@ -75,6 +94,14 @@ typedef struct MqttSnClient_ {
 #endif
   bool connected;
   MQTT_SN_RETURN_CODE connect_return_code;
+  MqttSnClientAwaitMessage await_msg[MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT];
+
+  uint64_t last_ping_req_received;
+  uint64_t last_ping_resp_received;
+  MqttSnClientAwaitMessage ping_req_await_msg;
+
+  uint8_t client_protocol_id;
+  int32_t connect_timeout_offset;
 } MqttSnClient;
 
 // init network too
@@ -85,12 +112,14 @@ int32_t MqttSnClientLoop(MqttSnClient *client);
 // disconnect network too
 // deinint network too
 
-MQTT_SN_RETURN_CODE MqttSnClientConnect(MqttSnClient *client,
-                                        const device_address *mqtt_sn_gateway_address,
-                                        int32_t timeout_ms,
-                                        bool clean_session,
-                                        const char *client_id,
-                                        uint16_t duration);
+void MqttSnClientTimeoutOffset(MqttSnClient *client, int32_t connect_timeout_offset);
+
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientConnect(MqttSnClient *client,
+                                               device_address *mqtt_sn_gateway_address,
+                                               int32_t connect_timeout_ms,
+                                               bool clean_session,
+                                               const char *client_id,
+                                               uint16_t connect_duration);
 /**
  * Sends a MqttSnPublish with Quality of Service (qos) -1 to a predefined topic. Works with disconnected MqttSnClients.
  * @param client to use for sending
@@ -139,6 +168,14 @@ int32_t MqttSnClientPublishTopicId(MqttSnClient *client,
  * Registers topic_name to gateway
  */
 int32_t MqttSnClientRegister(MqttSnClient *client, const char *topic_name);
+
+int32_t MqttSnPingGateway(MqttSnClient *client);
+
+int32_t is_await_msg(MqttSnClient *client, MQTT_SN_MESSAGE_TYPE msg_type, uint16_t msg_id);
+int32_t set_await_msg_status(MqttSnClient *client, int32_t await_fd, MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS status);
+MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS get_await_status(MqttSnClient *client, int32_t await_fd);
+int32_t free_await_msg(MqttSnClient *client, int32_t await_fd);
+int32_t new_await_msg(MqttSnClient *client, MQTT_SN_MESSAGE_TYPE msg_type, uint16_t msg_id);
 
 #ifdef __cplusplus
 }

@@ -138,7 +138,7 @@ int32_t get_client_id_length(const char *client_id) {
     return -1;
   }
   if (client_id_len == MQTT_SN_MESSAGE_CONNECT_CLIENTID_MAX_LENGTH
-      && client_id[client_id_len] != '\0') { // TODO if this works
+      && client_id[client_id_len] != '\0') {
     return -1;
   }
 

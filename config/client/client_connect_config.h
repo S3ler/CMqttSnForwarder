@@ -15,8 +15,19 @@ extern "C" {
 #ifndef DEFAULT_CLIENT_CONNECT_MQTT_SN_GATEWAY_CONFIG_CLIENT_ID
 #if defined(Arduino_h)
 #else
-#define DEFAULT_CLIENT_CONNECT_MQTT_SN_GATEWAY_CONFIG_CLIENT_ID {(char)('a' + (random() % (2*26))), (char)('a' + (random() % (2*26))), '\0'}
+#define DEFAULT_CLIENT_CONNECT_MQTT_SN_GATEWAY_CONFIG_CLIENT_ID { (char)('a' + (random() % (2*26))), \
+                                                                  (char)('a' + (random() % (2*26))), \
+                                                                  (char)('a' + (random() % (2*26))), \
+                                                                  (char)('a' + (random() % (2*26))), '\0'}
 #endif
+#endif
+
+#ifndef DEFAULT_MQTT_SN_CLIENT_CONNECT_DURATION
+#define DEFAULT_MQTT_SN_CLIENT_CONNECT_DURATION 60
+#endif
+
+#ifndef DEFAULT_MQTT_SN_CLIENT_PING_REQUEST_OFFSET_TIME_DEFAULT_VALUE
+#define DEFAULT_MQTT_SN_CLIENT_PING_REQUEST_OFFSET_TIME_DEFAULT_VALUE -10
 #endif
 
 #ifndef DEFAULT_MQTT_SN_CLIENT_CONNECT_TIMEOUT
@@ -24,13 +35,14 @@ extern "C" {
 #endif
 
 typedef struct client_connect_config_ {
-  uint16_t duration;
+  uint16_t connect_duration;
   char default_client_id[24];
   char *client_id;
   char *will_topic;
   char *will_msg;
   uint8_t clean_session;
-  int32_t client_connect_timeout;
+  int32_t client_connect_timeout_ms;
+  int32_t connect_timeout_offset;
 } client_connect_config;
 
 int32_t client_connect_config_init(client_connect_config *cfg);

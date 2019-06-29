@@ -18,10 +18,10 @@ int32_t f_read_at(const char *path, UINT pos, void *buf, UINT btr);
 int32_t f_write_at(const char *path, UINT pos, void *buf, UINT btr);
 int32_t f_delete(const char *path);
 
+int32_t read_db_entry_client(FIL *f, uint64_t position, DB_ENTRY_MQTT_SN_CLIENT *client_entry);
 int32_t write_db_entry_client(FIL *f, DB_ENTRY_MQTT_SN_CLIENT *client_entry);
 int32_t delete_db_entry_client(FIL *f, DB_ENTRY_MQTT_SN_CLIENT *client_entry);
 
-int32_t delete_db_entry_client(FIL *f, DB_ENTRY_MQTT_SN_CLIENT *client_entry);
 int32_t f_go_to_start(FIL *f, const char *path, BYTE mode);
 
 int32_t find_empty_entry_space_in_registry(DB_ENTRY_MQTT_SN_CLIENT *entry_client, FIL *fil, const char *file_name);

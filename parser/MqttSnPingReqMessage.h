@@ -16,15 +16,18 @@ extern "C" {
 #define MQTT_SN_MESSAGE_PINGREQ_CLIENTID_MIN_LENGTH       MQTT_SN_CLIENTID_MIN_LENGTH
 #define MQTT_SN_MESSAGE_PINGREQ_CLIENTID_MAX_LENGTH       MQTT_SN_CLIENTID_MAX_LENGTH
 #define MQTT_SN_MESSAGE_PINGREQ_WO_CLIENTID_LENGTH        MQTT_SN_MESSAGE_PINGREQ_HEADER_LENGTH
+#define MQTT_SN_MESSAGE_PINGREQ_LENGTH                    MQTT_SN_MESSAGE_PINGREQ_WO_CLIENTID_LENGTH
 #define MQTT_SN_MESSAGE_PINGREQ_MIN_LENGTH                MQTT_SN_MESSAGE_PINGREQ_HEADER_LENGTH
 #define MQTT_SN_MESSAGE_PINGREQ_W_CLIENTID_MIN_LENGTH     (MQTT_SN_MESSAGE_PINGREQ_WO_CLIENTID_LENGTH + MQTT_SN_MESSAGE_PINGREQ_CLIENTID_MIN_LENGTH)
 #define MQTT_SN_MESSAGE_PINGREQ_W_CLIENTID_MAX_LENGTH     (MQTT_SN_MESSAGE_PINGREQ_WO_CLIENTID_LENGTH + MQTT_SN_MESSAGE_PINGREQ_CLIENTID_MAX_LENGTH)
 
-int32_t parse_ping_req_byte(char *client_id,
-                            uint16_t *client_id_length,
-                            uint8_t client_id_max_length,
-                            const uint8_t *data,
-                            uint16_t data_len);
+int32_t parse_ping_req_w_client_id_byte(char *client_id,
+                                        uint16_t *client_id_length,
+                                        uint8_t client_id_max_length,
+                                        const uint8_t *data,
+                                        uint16_t data_len);
+int32_t parse_ping_req_byte(const uint8_t *data, uint16_t data_len);
+int32_t generate_ping_req(uint8_t *dst, uint16_t dst_len);
 #ifdef __cplusplus
 }
 #endif

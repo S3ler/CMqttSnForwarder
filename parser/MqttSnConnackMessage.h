@@ -16,8 +16,13 @@ extern "C" {
 #define MQTT_SN_MESSAGE_CONNACK_LENGTH              (MQTT_SN_MESSAGE_CONNACK_HEADER_LENGTH + \
                                                      MQTT_SN_MESSAGE_CONNACK_RETURNCODE_LENGTH)
 
+typedef struct ParsedMqttSnConnack_ {
+  MQTT_SN_RETURN_CODE return_code;
+} ParsedMqttSnConnack;
+
+int32_t parse_connack(ParsedMqttSnConnack* mqtt_sn_connack, const uint8_t *data, uint16_t data_len);
 int32_t parse_connack_byte(MQTT_SN_RETURN_CODE *return_code, const uint8_t *data, uint16_t data_len);
-int32_t generate_connack(uint8_t* dst, uint16_t dst_len, MQTT_SN_RETURN_CODE return_code);
+int32_t generate_connack(uint8_t *dst, uint16_t dst_len, MQTT_SN_RETURN_CODE return_code);
 #ifdef __cplusplus
 }
 #endif

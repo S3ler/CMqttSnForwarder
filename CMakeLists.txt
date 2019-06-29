@@ -464,6 +464,7 @@ add_library(lib-fatfs ${FATFS_FILES})
 #target_include_directories(lib-fatfs PRIVATE external/linux/gadget114514/fatfs-example-c00d2f9a408f195182f63c79a160ddbad37a5201/fatfs/source)
 
 set(DATABASE_FILES
+        gateway/database/db_entry_mqtt_sn_client.c
         gateway/database/db_entry_mqtt_sn_client.h
         gateway/database/db_entry_mqtt_sn_client_publish.h
         gateway/database/db_entry_mqtt_sn_client_registration.h
@@ -512,7 +513,11 @@ endif ()
 
 option(WITH_MQTT_SN_CLIENT "Include WITH_MQTT_SN_CLIENT support?" ON)
 if (WITH_MQTT_SN_CLIENT)
-    add_library(lib-mqtt-sn-client client/MqttSnClient.c client/MqttSnClient.h client/pub/config/publish_client_config.c client/pub/config/publish_client_config.h)
+    add_library(lib-mqtt-sn-client
+            client/MqttSnClient.c client/MqttSnClient.h
+            client/MqttSnClientAwaitMessage.c client/MqttSnClientAwaitMessage.h
+            client/MqttSnClientLogger.c client/MqttSnClientLogger.h
+            client/pub/config/publish_client_config.c client/pub/config/publish_client_config.h)
     target_include_directories(lib-mqtt-sn-client PRIVATE .)
     target_compile_options(lib-mqtt-sn-client PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(lib-mqtt-sn-client lib-mqtt-sn-message-parser lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-platform-abstraction-layer)

@@ -92,7 +92,7 @@ int32_t mqtt_sn_gateway_config_process_args(mqtt_sn_gateway_config *msgcfg,
             return MQTT_SN_PARSE_CONFIG_FAILURE;
           }
         }
-
+        msgcfg->mqtt_sn_gateway_host = strdup(msgcfg->mqtt_sn_gateway_host);
       }
       i++;
       parsed_args += 2;
@@ -116,7 +116,7 @@ void mqtt_sn_gateway_config_print_usage_long(const MqttSnLogger *logger) {
   log_str(logger, PSTR(" for plain MQTT-SN.\n"));
 
   log_str(logger, PSTR(" -L : specify hostname, port as a URL in the form:\n"));
-  log_str(logger, PSTR("      mqtt-sn(s)://host[:port]\n"));
-  log_str(logger, PSTR("      mqtt-sn(s) uses the same protocol as the gateway network.\n"));
+  log_str(logger, PSTR("      mqttsn(s)://host[:port]\n"));
+  log_str(logger, PSTR("      mqttsn(s) uses the same protocol as the gateway network.\n"));
 }
 

@@ -13,9 +13,11 @@
 #include <network/linux/gateway/plugin/gateway_network_plugin_interface.h>
 #include <network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h>
 #include <network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
+#include <client/MqttSnClientLogger.h>
 
 static volatile sig_atomic_t keep_running = 1;
 
+int32_t send_single_mqtt_sn_m1_publish(MqttSnClient *publish_client, const publish_client_config *cfg);
 static void sig_handler(int _) {
   (void) _;
   keep_running = 0;
@@ -67,10 +69,14 @@ int32_t start_publish_client(const publish_client_config *cfg,
   // configure Mqtt-Sn Client
 
   uint8_t only_M1_publishes = 1;
-  for (uint16_t i = 0; i < cfg->cpcfg.publish_list_len; i++) {
-    if (cfg->cpcfg.publish_list[i].qos != -1) {
-      only_M1_publishes = 0;
-      break;
+  if (cfg->cpcfg.publish_list_len == 0) {
+    only_M1_publishes = 0;
+  } else {
+    for (uint16_t i = 0; i < cfg->cpcfg.publish_list_len; i++) {
+      if (cfg->cpcfg.publish_list[i].qos != -1) {
+        only_M1_publishes = 0;
+        break;
+      }
     }
   }
 
@@ -95,26 +101,20 @@ int32_t start_publish_client(const publish_client_config *cfg,
   }
 
   if (only_M1_publishes) {
-    // no connect needed
-    for (uint32_t i = 0; i < cfg->cpcfg.publish_list_len; i++) {
-      single_client_publish_config publish = cfg->cpcfg.publish_list[i];
-      if (MqttSnClientPublishPredefinedM1(publish_client, publish.topic_id, 0, publish.data, publish.data_length) < 0) {
-        MqttSnClientDeinit(publish_client);
-        return EXIT_FAILURE;
-      }
-    }
-#ifdef WITH_LOGGING
-    print_program_terminated(&publish_client->logger, &cfg->msvcfg, cfg->executable_name);
-#endif
-    return EXIT_SUCCESS;
+    return send_single_mqtt_sn_m1_publish(publish_client, cfg);
   }
 
-  if (MqttSnClientConnect(publish_client,
-                          publish_client->gatewayNetwork.mqtt_sn_gateway_address,
-                          cfg->cccfg.client_connect_timeout,
-                          cfg->cccfg.clean_session,
-                          cfg->cccfg.client_id,
-                          cfg->cccfg.duration) != RETURN_CODE_ACCEPTED) {
+
+  MQTT_SN_CLIENT_RETURN_CODE connect_rc;
+  MqttSnClientTimeoutOffset(publish_client, cfg->cccfg.connect_timeout_offset);
+  if ((connect_rc = MqttSnClientConnect(publish_client,
+                                         publish_client->gatewayNetwork.mqtt_sn_gateway_address,
+                                         cfg->cccfg.client_connect_timeout_ms,
+                                         cfg->cccfg.clean_session,
+                                         cfg->cccfg.client_id,
+                                         cfg->cccfg.connect_duration)) != MQTT_SN_CLIENT_RETURN_SUCCESS) {
+
+    log_mqtt_sn_client(&publish_client->logger, connect_rc);
     // TODO log error here
 #ifdef WITH_LOGGING
     print_program_terminated(&publish_client->logger, &cfg->msvcfg, cfg->executable_name);
@@ -143,6 +143,21 @@ int32_t start_publish_client(const publish_client_config *cfg,
   MqttSnClientDeinit(publish_client);
 
   return rc;
+}
+
+int32_t send_single_mqtt_sn_m1_publish(MqttSnClient *publish_client,
+                                       const publish_client_config *cfg) {// no connect needed
+  for (uint32_t i = 0; i < cfg->cpcfg.publish_list_len; i++) {
+    single_client_publish_config publish = cfg->cpcfg.publish_list[i];
+    if (MqttSnClientPublishPredefinedM1(publish_client, publish.topic_id, 0, publish.data, publish.data_length) < 0) {
+      MqttSnClientDeinit(publish_client);
+      return EXIT_FAILURE;
+    }
+  }
+#ifdef WITH_LOGGING
+  print_program_terminated(&publish_client->logger, &cfg->msvcfg, cfg->executable_name);
+#endif
+  return EXIT_SUCCESS;
 }
 #ifdef WITH_LINUX_PLUGIN_NETWORK
 int32_t start_publish_client_plugin(const publish_client_config *cfg,

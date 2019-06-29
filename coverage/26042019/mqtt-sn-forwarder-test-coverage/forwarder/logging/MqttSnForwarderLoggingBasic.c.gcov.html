@@ -182,7 +182,7 @@
 <span class="lineNum">     120 </span><span class="lineNoCov">          0 :   return 0;</span>
 <a name="121"><span class="lineNum">     121 </span>            : }</a>
 <span class="lineNum">     122 </span>            : 
-<span class="lineNum">     123 </span><span class="lineNoCov">          0 : int get_timestamp(uint64_t *t) {</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 : int get_timestamp_s(uint64_t *t) {</span>
 <span class="lineNum">     124 </span><span class="lineNoCov">          0 :   time_t result = time(NULL);</span>
 <span class="lineNum">     125 </span><span class="lineNoCov">          0 :   if (result == -1) {</span>
 <span class="lineNum">     126 </span><span class="lineNoCov">          0 :     return -1;</span>
@@ -193,7 +193,7 @@
 <span class="lineNum">     131 </span>            : 
 <span class="lineNum">     132 </span><span class="lineNoCov">          0 : int log_current_time(const MqttSnLogger *logger) {</span>
 <span class="lineNum">     133 </span>            :   uintmax_t t;
-<span class="lineNum">     134 </span><span class="lineNoCov">          0 :   if (get_timestamp(&amp;t)) {</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :   if (get_timestamp_s(&amp;t)) {</span>
 <span class="lineNum">     135 </span><span class="lineNoCov">          0 :     return -1;</span>
 <span class="lineNum">     136 </span>            :   }
 <span class="lineNum">     137 </span><span class="lineNoCov">          0 :   return log_uintmax(logger, t);</span>

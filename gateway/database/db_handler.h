@@ -66,11 +66,38 @@ extern "C" {
 #define SECCOUNT 128
 #endif
 
+#define DB_HANDLER_CK_CLIENT_RC(cmd) if((cmd) != DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS){return -1;}
+
+#define DB_HANDLER_CK__CLIENT_DB_ERROR(h)   if (h->database_error) { \
+                                              h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR; \
+                                              h->transaction_result = DB_HANDLER_RESULT_ERROR; \
+                                              return h->client_transaction_result; \
+                                            } \
+
+#define DB_HANDLER_SET_CLIENT_TRANSACTION_ERROR(h)  h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR; \
+                                                    h->transaction_result = DB_HANDLER_RESULT_ERROR; \
+                                                    h->database_error = true; \
+                                                    log_database_error(h->logger, NULL); \
+                                                    return h->client_transaction_result; \
+
+#if WITH_LOGGING
+#define DB_HANDLER_SET_CLIENT_TRANSACTION_ERROR(h)  h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR; \
+                                                    h->transaction_result = DB_HANDLER_RESULT_ERROR; \
+                                                    h->database_error = true; \
+                                                    log_database_error(h->logger, NULL); \
+                                                    return h->client_transaction_result; \
+
+#else
+#define DB_HANDLER_SET_CLIENT_TRANSACTION_ERROR(h)  h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR; \
+                                                    h->transaction_result = DB_HANDLER_RESULT_ERROR; \
+                                                    h->database_error = true; \
+                                                    return h->client_transaction_result; \
+
+#endif
+
 typedef enum DB_HANDLER_RESULT_ {
   DB_HANDLER_RESULT_SUCCESS = 0,
-  DB_HANDLER_RESULT_CLIENT_NOT_FOUND,
   DB_HANDLER_RESULT_NO_TRANSACTION_STARTED,
-  DB_HANDLER_RESULT_FULL,
   DB_HANDLER_RESULT_ERROR
 } DB_HANDLER_RESULT;
 
@@ -95,6 +122,8 @@ typedef struct db_handler_ {
   DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_RESULT gateway_discovered_result;
   DB_HANDLER_RESULT gateway_discovered_transaction_result;
 
+  uint64_t client_count;
+
 #if WITH_LOGGING
   MqttSnLogger *logger;
 #endif
@@ -116,14 +145,16 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_start_client_transaction(db_handler *h,
                                                            const char *client_id);
 
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_end_client_transaction(db_handler *h);
-DB_ENTRY_MQTT_SN_CLIENT_RESULT get_client_result(db_handler *h);
+
+bool db_is_client_transaction_started(db_handler *h);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_transaction_result(db_handler *h);
 
 // crud
 DB_ENTRY_MQTT_SN_CLIENT_RESULT add_client(db_handler *h,
                                           const char *client_id,
                                           device_address *address,
-                                          uint16_t duration,
-                                          uint64_t current_time);
+                                          uint16_t connect_duration,
+                                          uint64_t connect_time);
 
 DB_ENTRY_MQTT_SN_CLIENT_RESULT client_exist(db_handler *h);
 
@@ -132,8 +163,26 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT delete_client(db_handler *h);
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_reset_client(db_handler *h,
                                                const char *client_id,
                                                device_address *address,
-                                               uint16_t duration,
-                                               uint64_t current_time);
+                                               uint16_t connect_duration,
+                                               uint64_t connect_time);
+
+// DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_count(db_handler *h, uint64_t *client_count);
+// DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_address(db_handler *h, device_address *address, uint64_t client_count);
+
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_count(db_handler *h, uint64_t *client_count);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_start_client_transaction_by_client_count(db_handler *h, uint64_t client_count);
+
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_last_ping_req_received(db_handler *h, uint64_t *last_ping_req_received);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_last_ping_req_received(db_handler *h, uint64_t last_ping_req_received);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_last_ping_resp_received(db_handler *h, uint64_t *last_ping_resp_awaited);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_last_ping_resp_received(db_handler *h, uint64_t last_ping_resp_awaited);
+
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_address(db_handler *h, device_address *client_address);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_connect_duration(db_handler *h, uint16_t *connect_duration);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_status(db_handler *h, DB_ENTRY_MQTT_SN_CLIENT_STATUS client_status);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_status(db_handler *h, DB_ENTRY_MQTT_SN_CLIENT_STATUS *client_status);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_ping_req_await_msg_type(db_handler *h, MQTT_SN_MESSAGE_TYPE *await_message_type);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_ping_req_await_msg_type(db_handler *h, MQTT_SN_MESSAGE_TYPE await_message_type);
 
 void set_client_await_message(MQTT_SN_MESSAGE_TYPE msg_type);
 
@@ -169,8 +218,6 @@ void get_nth_client(uint64_t n,
 void set_client_state(DB_ENTRY_MQTT_SN_CLIENT_STATUS status);
 
 void set_client_duration(uint32_t duration);
-
-DB_ENTRY_MQTT_SN_CLIENT_STATUS get_client_status();
 
 uint16_t get_client_await_msg_id();
 
