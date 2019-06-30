@@ -197,9 +197,28 @@ int log_current_time(const MqttSnLogger *logger) {
   return log_uintmax(logger, t);
 }
 
+int log_current_date_time(const MqttSnLogger *logger) {
+  /*
+  uintmax_t t;
+  if (get_timestamp_s(&t)) {
+    return -1;
+  }
+  return log_uintmax(logger, t);
+  */
+  time_t rawtime;
+  struct tm *info;
+  char buffer[80];
+  time(&rawtime);
+  info = localtime(&rawtime);
+  strftime(buffer, sizeof(buffer), "%F %H:%M:%S", info);
+  log_str(logger, buffer);
+  return log_status(logger);
+}
+
 int log_msg_start(const MqttSnLogger *logger) {
-  if (log_current_time(logger)) { return -1; }
-  const char *ds = ": ";
+  //if (log_current_time(logger)) { return -1; }
+  if (log_current_date_time(logger) < 0) { return -1; }
+  const char *ds = " : ";
   return log_str(logger, ds);
 }
 
