@@ -82,7 +82,7 @@ int log_str_key_uint16_value(const MqttSnLogger *logger, const char *key, uint16
 
 int log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length);
 
-int get_timestamp(uint64_t *t);
+int32_t get_timestamp_s(uint64_t *t_s);
 
 int log_current_time(const MqttSnLogger *logger);
 

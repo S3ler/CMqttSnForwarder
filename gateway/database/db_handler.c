@@ -40,6 +40,8 @@ static int32_t remove_file_if_exists(const char *path) {
 
 int32_t db_handler_initialize(db_handler *h, MqttSnLogger *logger) {
   memset(h, 0, sizeof(*h));
+
+  h->client_count = 0;
   h->logger = logger;
   FRESULT mount_result;
   char fname[sizeof(MQTT_SN_GATEWAY_DB_DEFAULT_DATABASE_FILE_NAME)

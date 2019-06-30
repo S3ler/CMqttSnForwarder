@@ -74,6 +74,9 @@ int32_t publish_client_config_process_line(publish_client_config *cfg,
   int32_t crcfg_rc = client_register_config_process_args(&cfg->crcfg, logger, argc, argv);
   int32_t cpcfg_rc = client_publish_config_process_args(&cfg->cpcfg, logger, argc, argv);
 
+  // FIXME fixes strange bug
+  cfg->cccfg.client_id = cfg->cccfg.default_client_id;
+
   int32_t cfg_rc = publish_client_config_process_args(cfg, logger, argc, argv);
 
   if (msgfg_rc == MQTT_SN_PARSE_CONFIG_FAILURE

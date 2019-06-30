@@ -179,10 +179,6 @@ int header_parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t da
   return parse_message_tolerant(h, CONNECT, data, data_len);
 }
 
-int parse_connack(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
-  return parse_message_tolerant(h, CONNACK, data, data_len);
-}
-
 int parse_disconnect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   return parse_message_tolerant(h, DISCONNECT, data, data_len);
 }
@@ -295,12 +291,20 @@ int32_t generate_flags(uint8_t *dst,
   }
   return *used_bytes;
 }
+int32_t generate_duration(uint8_t *dst, uint16_t dst_len, uint16_t duration, int32_t *used_bytes) {
+  *used_bytes += MQTT_SN_DURATION_LENGTH;
+  if (dst_len < *used_bytes) {
+    return -1;
+  }
+  ((uint16_t *) dst)[0] = htons(duration);
+  return (*used_bytes);
+}
 int32_t generate_topic_id(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes) {
   *used_bytes += MQTT_SN_TOPIC_ID_LENGTH;
   if (dst_len < *used_bytes) {
     return -1;
   }
-  *dst = htons(topic_id);
+  ((uint16_t *) dst)[0] = htons(topic_id);
   return (*used_bytes);
 }
 int32_t generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, int32_t *used_bytes) {
@@ -308,7 +312,7 @@ int32_t generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, int32_t
   if (dst_len < *used_bytes) {
     return -1;
   }
-  *dst = htons(msg_id);
+  ((uint16_t *) dst)[0] = htons(msg_id);
   return (*used_bytes);
 }
 int32_t generate_data(uint8_t *dst, uint16_t dst_len, const uint8_t *data, uint16_t data_len, int32_t *used_bytes) {
@@ -440,22 +444,23 @@ int32_t parse_mqtt_sn_device_address_until_end(const uint8_t *src_pos,
 int32_t parse_mqtt_sn_char_until_end_byte(const uint8_t *src_pos,
                                           uint16_t src_len,
                                           int32_t *parsed_bytes,
-                                          char *c_buf,
-                                          uint16_t *c_buf_length,
-                                          uint16_t c_buf_max_length) {
-  if (src_len > (*parsed_bytes)) {
+                                          char *dst_c_buf,
+                                          uint16_t *dst_c_buf_length,
+                                          uint16_t dst_c_buf_max_length) {
+  // if (src_len > (*parsed_bytes)) {
+  //  return -1;
+  //}
+
+  (*dst_c_buf_length) = src_len - (*parsed_bytes);
+  *parsed_bytes += (*dst_c_buf_length);
+
+  if ((*dst_c_buf_length) > dst_c_buf_max_length) {
     return -1;
   }
-  (*c_buf_length) = src_len - (*parsed_bytes);
-  *parsed_bytes += (*c_buf_length);
 
-  if ((*c_buf_length) > c_buf_max_length) {
-    return -1;
-  }
-
-  if ((*c_buf_length) > 0) {
-    c_buf[0] = '\0'; // TODO test for length incl null terminator and not
-    strncat(c_buf, (const char *) src_pos, (*c_buf_length));
+  if ((*dst_c_buf_length) > 0) {
+    dst_c_buf[0] = '\0'; // TODO test for length incl null terminator and not
+    strncat(dst_c_buf, (const char *) src_pos, (*dst_c_buf_length));
   }
 
   return *parsed_bytes;
@@ -506,48 +511,48 @@ int32_t parse_mqtt_sn_uint8_array_byte(const uint8_t *src_pos,
 int32_t parse_mqtt_sn_client_id_byte(const uint8_t *src_pos,
                                      uint16_t src_len,
                                      int32_t *parsed_bytes,
-                                     char *client_id,
-                                     uint16_t *client_id_length,
-                                     uint8_t client_id_max_length) {
+                                     char *dst_client_id,
+                                     uint16_t *dst_client_id_length,
+                                     uint8_t dst_client_id_max_length) {
   return parse_mqtt_sn_char_until_end_byte(src_pos,
                                            src_len,
                                            parsed_bytes,
-                                           client_id,
-                                           client_id_length,
-                                           client_id_max_length);
+                                           dst_client_id,
+                                           dst_client_id_length,
+                                           dst_client_id_max_length);
 }
 int32_t parse_mqtt_sn_return_code_byte(const uint8_t *src_pos,
                                        uint16_t src_len,
                                        int32_t *parsed_bytes,
                                        MQTT_SN_RETURN_CODE *return_code) {
-  uint8_t dst_return_code = RETURN_CODE_ANY;
-  if (parse_mqtt_sn_uint8_byte(src_pos, src_len, parsed_bytes, &dst_return_code) < 0) {
+  uint8_t tmp_return_code = RETURN_CODE_ANY;
+  if (parse_mqtt_sn_uint8_byte(src_pos, src_len, parsed_bytes, &tmp_return_code) < 0) {
     return -1;
   }
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wtype-limits"
-  if (!MQTT_SN_RETURN_CODE_VALID(dst_return_code)) {
+  if (!MQTT_SN_RETURN_CODE_VALID(tmp_return_code)) {
 #pragma GCC diagnostic pop
     return -1;
   }
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wtype-limits"
-  if (MQTT_SN_RETURN_CODE_RESERVED(dst_return_code)) {
+  if (MQTT_SN_RETURN_CODE_RESERVED(tmp_return_code)) {
 #pragma GCC diagnostic pop
     return -1;
   }
-  if (dst_return_code == RETURN_CODE_ACCEPTED) {
+  if (tmp_return_code == RETURN_CODE_ACCEPTED) {
     (*return_code) = RETURN_CODE_ACCEPTED;
-  } else if (dst_return_code == RETURN_CODE_REJECTED_CONGESTION) {
+  } else if (tmp_return_code == RETURN_CODE_REJECTED_CONGESTION) {
     (*return_code) = RETURN_CODE_REJECTED_CONGESTION;
-  } else if (dst_return_code == RETURN_CODE_REJECTED_INVALID_TOPIC_ID) {
+  } else if (tmp_return_code == RETURN_CODE_REJECTED_INVALID_TOPIC_ID) {
     (*return_code) = RETURN_CODE_REJECTED_INVALID_TOPIC_ID;
-  } else if (dst_return_code == RETURN_CODE_REJCETED_NOT_SUPPORTED) {
+  } else if (tmp_return_code == RETURN_CODE_REJCETED_NOT_SUPPORTED) {
     (*return_code) = RETURN_CODE_REJCETED_NOT_SUPPORTED;
   } else {
     return -1;
   }
-  return *parsed_bytes;
+  return (*parsed_bytes);
 }
 
 int32_t parse_mqtt_sn_flags(const uint8_t *src_pos,

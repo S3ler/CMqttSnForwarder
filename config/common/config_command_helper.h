@@ -39,11 +39,17 @@ int32_t parse_gateway_id(const MqttSnLogger *logger, char *gateway_id_str, uint8
 
 int32_t parse_timeout(const MqttSnLogger *logger, char *timeout_str, int32_t *dst);
 
+int32_t parse_timeout_offset(const MqttSnLogger *logger, char *timeout_offset_str, int32_t *dst);
+
 int32_t parse_topic_id(const MqttSnLogger *logger, char *topic_id_str, uint16_t *dst);
 
 int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst);
 
+int32_t parse_clean_session(const MqttSnLogger *logger, char *clean_session_str, uint8_t *dst);
+
 int32_t print_invalid_retain_given(const MqttSnLogger *logger, const char *given_str);
+
+int32_t print_invalid_clean_session_given(const MqttSnLogger *logger, const char *given_str);
 
 int32_t print_invalid_topic_id_given(const MqttSnLogger *logger, const char *given_str);
 
@@ -62,6 +68,8 @@ int32_t print_argument_value_not_specified(const MqttSnLogger *logger, const cha
 int32_t print_unsupported_url_scheme(const MqttSnLogger *logger);
 
 int32_t print_invalid_timeout_given(const MqttSnLogger *logger, long timeout);
+
+int32_t print_invalid_timeout_offset_given(const MqttSnLogger *logger, long timeout);
 
 int32_t print_invalid_protocol_version_given(const MqttSnLogger *logger);
 

@@ -203,6 +203,16 @@ int32_t parse_timeout(const MqttSnLogger *logger, char *timeout_str, int32_t *ds
   *dst = n;
   return 0;
 }
+int32_t parse_timeout_offset(const MqttSnLogger *logger, char *timeout_offset_str, int32_t *dst) {
+  char *endprt;
+  long int n = strtol(timeout_offset_str, &endprt, 10);
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > INT32_MAX)) {
+    print_invalid_timeout_offset_given(logger, n);
+    return -1;
+  }
+  *dst = n;
+  return 0;
+}
 int32_t parse_topic_id(const MqttSnLogger *logger, char *topic_id_str, uint16_t *dst) {
   char *endprt;
   long int n = strtol(topic_id_str, &endprt, 10);
@@ -219,6 +229,12 @@ int32_t print_invalid_retain_given(const MqttSnLogger *logger, const char *given
   log_flush(logger);
   return log_status(logger);
 }
+int32_t print_invalid_clean_session_given(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: Invalid clean session given: "));
+  log_str(logger, given_str);
+  log_flush(logger);
+  return log_status(logger);
+}
 int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst) {
   if (!strcmp(retain_str, "false")) {
     (*dst) = 0;
@@ -226,6 +242,18 @@ int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst)
     (*dst) = 1;
   } else {
     print_invalid_retain_given(logger, retain_str);
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
+int32_t parse_clean_session(const MqttSnLogger *logger, char *clean_session_str, uint8_t *dst) {
+  if (!strcmp(clean_session_str, "false")) {
+    (*dst) = 0;
+  } else if (!strcmp(clean_session_str, "true")) {
+    (*dst) = 1;
+  } else {
+    print_invalid_clean_session_given(logger, clean_session_str);
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
 
@@ -284,7 +312,13 @@ int32_t print_unsupported_url_scheme(const MqttSnLogger *logger) {
   return log_status(logger);
 }
 int32_t print_invalid_timeout_given(const MqttSnLogger *logger, long timeout) {
-  log_str(logger, PSTR("Error: Invalid port given: "));
+  log_str(logger, PSTR("Error: Invalid timeout given: "));
+  log_uint16(logger, timeout);
+  log_flush(logger);
+  return log_status(logger);
+}
+int32_t print_invalid_timeout_offset_given(const MqttSnLogger *logger, long timeout) {
+  log_str(logger, PSTR("Error: Invalid timeout offset given: "));
   log_uint16(logger, timeout);
   log_flush(logger);
   return log_status(logger);

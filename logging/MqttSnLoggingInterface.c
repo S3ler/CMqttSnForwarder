@@ -180,18 +180,18 @@ int log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t da
   return 0;
 }
 
-int get_timestamp(uint64_t *t) {
+int32_t get_timestamp_s(uint64_t *t_s) {
   time_t result = time(NULL);
   if (result == -1) {
     return -1;
   }
-  *t = result;
+  *t_s = result;
   return 0;
 }
 
 int log_current_time(const MqttSnLogger *logger) {
   uintmax_t t;
-  if (get_timestamp(&t)) {
+  if (get_timestamp_s(&t)) {
     return -1;
   }
   return log_uintmax(logger, t);
@@ -205,7 +205,7 @@ int log_msg_start(const MqttSnLogger *logger) {
 
 int log_device_address(const MqttSnLogger *logger, const device_address *address) {
   const char *dot = ".";
-  for (size_t   i = 0; i < MQTT_SN_DEVICE_ADDRESS_LENGTH; i++) {
+  for (size_t i = 0; i < MQTT_SN_DEVICE_ADDRESS_LENGTH; i++) {
     if (log_uint8(logger, address->bytes[i])) {
       return -1;
     }

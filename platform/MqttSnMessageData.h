@@ -17,13 +17,19 @@ extern "C" {
 #endif
 
 typedef struct MqttSnMessageData_ {
-  uint64_t received_time;
+  uint64_t create_time_s;
   device_address from;
   device_address to;
   uint16_t data_length;
-  uint8_t signal_strength;
+  uint8_t signal_strength; // TODO not really useful atm
   uint8_t data[MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH];
 } MqttSnMessageData;
+
+/**
+ * swaps from and to, reset the data_length and data, renews the create_time_ms
+ * @returns 0 on success, -1 on error
+ */
+int32_t reuse_mqtt_sn_message_data(MqttSnMessageData *mqtt_sn_message_data);
 
 #ifdef __cplusplus
 }

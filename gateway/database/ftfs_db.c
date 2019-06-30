@@ -79,6 +79,38 @@ int32_t f_write_at(const char *path, UINT pos, void *buf, UINT btr) {
   }
   return result;
 }
+int32_t read_db_entry_client(FIL *f, uint64_t position, DB_ENTRY_MQTT_SN_CLIENT *client_entry) {
+
+  if (f_open(f, MQTT_SN_GATEWAY_DB_CLIENT_REGISTRY_FILE_NAME, FA_READ) != FR_OK) {
+#if WITH_DEBUG_LOGGING
+    // TODO log reopen error
+#endif
+    return -1;
+  }
+
+  if (f_lseek(f, position * sizeof(DB_ENTRY_MQTT_SN_CLIENT_STATUS)) != FR_OK) {
+#if WITH_DEBUG_LOGGING
+    // TODO log seek error
+#endif
+    return -1;
+  }
+
+  UINT read_bytes = 0;
+  if (f_read(f, client_entry, sizeof(DB_ENTRY_MQTT_SN_CLIENT), &read_bytes) != FR_OK) {
+#if WITH_DEBUG_LOGGING
+    // TODO log write error
+#endif
+    return -1;
+  }
+
+  if (read_bytes != sizeof(DB_ENTRY_MQTT_SN_CLIENT)) {
+#if WITH_DEBUG_LOGGING
+    // TODO log written bytes miss match
+#endif
+    return -1;
+  }
+  return 0;
+}
 int32_t write_db_entry_client(FIL *f, DB_ENTRY_MQTT_SN_CLIENT *client_entry) {
   assert(client_entry->position >= 0);
 
@@ -125,10 +157,8 @@ int32_t f_delete(const char *path) {
 }
 
 int32_t f_go_to_start(FIL *f, const char *path, BYTE mode) {
-  if (f_sync(f) != FR_OK) {
-    return -1;
-  }
-  if (f_close(f) != FR_OK) {
+  FRESULT close_rc;
+  if ((close_rc = f_close(f)) != FR_OK) {
     return -1;
   }
   if (f_open(f, path, mode) != FR_OK) {
@@ -174,9 +204,11 @@ int32_t find_empty_entry_space_in_registry(DB_ENTRY_MQTT_SN_CLIENT *entry_client
     // TODO log success
   }
 #endif
+  /*
   if (f_close(fil) != FR_OK) {
     line_number = -1;
   }
+  */
   return line_number;
 }
 int32_t get_registration_file_name(const char *file_number, char *dst, uint16_t dst_len) {

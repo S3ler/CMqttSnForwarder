@@ -8,9 +8,15 @@
 #include <stdint.h>
 #include <platform/device_address.h>
 #include <parser/MqttSnMessageParser.h>
-
+#include <assert.h>
+#include <string.h>
+#include <stdio.h>
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifndef DB_ENTRY_MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT
+#define DB_ENTRY_MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT 5
 #endif
 
 typedef enum DB_ENTRY_MQTT_SN_CLIENT_RESULT_ {
@@ -30,18 +36,47 @@ typedef enum DB_ENTRY_MQTT_SN_CLIENT_STATUS_ {
   DB_ENTRY_MQTT_SN_CLIENT_STATUS_LOST = 5,
 } DB_ENTRY_MQTT_SN_CLIENT_STATUS;
 
+typedef enum DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_ {
+  DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_SUCCESS = 0,
+  DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_AWAIT,
+  DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_ERROR
+} DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS;
+
+typedef struct DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE_ {
+  MQTT_SN_MESSAGE_TYPE type;
+  uint16_t msg_id;
+  DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS status;
+} DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE;
+
+
+
 typedef struct DB_ENTRY_MQTT_SN_CLIENT_ {
   char client_id[24];
-  char file_number[9]; // TODO better name like key
   device_address client_address;
-  DB_ENTRY_MQTT_SN_CLIENT_STATUS client_status;
-  uint16_t duration; // changed
-  uint32_t timeout;
-  uint64_t last_message_time;
-  uint16_t await_message_id;
-  MQTT_SN_MESSAGE_TYPE await_message;
+  uint16_t connect_duration;
+  uint64_t last_ping_req_received;
+  uint64_t last_ping_resp_received;
+  char file_number[9];
   int32_t position;
+  DB_ENTRY_MQTT_SN_CLIENT_STATUS client_status;
+
+  MQTT_SN_MESSAGE_TYPE ping_req_await_message_type;
+  DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE await_messages[DB_ENTRY_MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT];
+
 } DB_ENTRY_MQTT_SN_CLIENT;
+
+void init_db_entry_mqtt_sn_client_await_message(DB_ENTRY_MQTT_SN_CLIENT_AWAIT_MESSAGE* await_message);
+void init_db_entry_mqtt_sn_client(DB_ENTRY_MQTT_SN_CLIENT *client,
+                                  const char *client_id,
+                                  device_address *address,
+                                  uint16_t connect_duration,
+                                  uint64_t connect_time,
+                                  int32_t position);
+void reset_db_entry_mqtt_sn_client(DB_ENTRY_MQTT_SN_CLIENT *client,
+                                   const char *client_id,
+                                   device_address *address,
+                                   uint16_t connect_duration,
+                                   uint64_t connect_time);
 
 #ifdef __cplusplus
 }
