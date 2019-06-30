@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(CMqttSnForwarder C CXX)
 
-option(WITH_ARDUINO "Include WITH_ARDUINO support?" ON)
+option(WITH_ARDUINO "Include WITH_ARDUINO support?" OFF)
 if (NOT WITH_TESTING AND NOT WITH_ARDUINO)
     project(CMqttSnForwarder C)
 elseif (WITH_TESTING)
@@ -663,7 +663,7 @@ if (WITH_MQTT_SN_GATEWAY)
             gateway_old/implementation/LinuxLogger.cpp gateway_old/implementation/LinuxLogger.h
             gateway_old/implementation/LinuxPersistent.cpp gateway_old/implementation/LinuxPersistent.h
             gateway_old/implementation/LinuxSystem.cpp gateway_old/implementation/LinuxSystem.h
-            gateway_old/udp/LinuxUdpSocket.cpp gateway_old/udp/LinuxUdpSocket.h)
+            gateway_old/Udp/LinuxUdpSocket.cpp gateway_old/Udp/LinuxUdpSocket.h)
     if (WITH_LOGGING)
         set(MQTT_SN_GATEWAY_FILES ${MQTT_SN_GATEWAY_FILES}
                 gateway_old/implementation/LinuxLogger.cpp

@@ -13,6 +13,7 @@
 #include <logging/MqttSnLoggingInterface.h>
 #include <parser/logging/MqttSnForwarderLoggingMessages.h>
 #include <parser/MqttSnForwarderEncapsulationMessage.h>
+#include <parser/logging/common/MqttSnMessageLogging.h>
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
                         MqttSnLogger *logger,

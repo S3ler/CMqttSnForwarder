@@ -13,7 +13,7 @@
 #include "LinuxLogger.h"
 #include "LinuxSystem.h"
 #if defined(GATEWAY_TRANSMISSION_PROTOCOL_UDP)
-#include <gateway_old/udp/LinuxUdpSocket.h>
+#include <gateway_old/Udp/LinuxUdpSocket.h>
 #endif
 #if defined(GATEWAY_TRANSMISSION_PROTOCOL_SERIAL)
 #include <Serial/LinuxSerialSocket.h>

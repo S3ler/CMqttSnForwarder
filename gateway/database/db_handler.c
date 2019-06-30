@@ -61,7 +61,11 @@ int32_t db_handler_initialize(db_handler *h, MqttSnLogger *logger) {
     int i = 0;
     char buf[512] = {0};
     while (i < SECCOUNT) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
       write(fno, buf, 512);
+#pragma GCC diagnostic pop
+
       i++;
     }
     close(fno);
