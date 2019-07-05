@@ -10,6 +10,7 @@
 int32_t client_connect_config_init(client_connect_config *cfg) {
   memset(cfg, 0, sizeof(*cfg));
 
+  srand(time(NULL));
   char default_client_id[] = DEFAULT_CLIENT_CONNECT_MQTT_SN_GATEWAY_CONFIG_CLIENT_ID;
   memcpy(cfg->default_client_id, default_client_id, sizeof(default_client_id));
   cfg->client_id = default_client_id;

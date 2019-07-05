@@ -143,8 +143,7 @@ int32_t generate_forwarder_encapsulation_byte(uint8_t *dst,
                                               const uint8_t *mqtt_sn_message,
                                               uint16_t mqtt_sn_message_length) {
   int32_t gen_bytes = 0;
-  if (generate_forwarder_encapsulation_header(dst, dst_len, &gen_bytes, mqtt_sn_message_length)
-      < 0) {
+  if (generate_forwarder_encapsulation_header(dst, dst_len, &gen_bytes, mqtt_sn_message_length) < 0) {
     return -1;
   }
   if (generate_forwarder_encapsulation_ctrl(dst + gen_bytes, dst_len, &gen_bytes, radius) < 0) {
@@ -161,6 +160,40 @@ int32_t generate_forwarder_encapsulation_byte(uint8_t *dst,
     return -1;
   }
   return gen_bytes;
+}
+int32_t parse_forwarder_encapsulation(ParseMqttSnEncapsulationMessage *mqtt_sn_encapsulation_message,
+                                      const uint8_t *data,
+                                      uint16_t data_len) {
+  return parse_forwarder_encapsulation_byte(&mqtt_sn_encapsulation_message->radius,
+                                            &mqtt_sn_encapsulation_message->wireless_node_id,
+                                            mqtt_sn_encapsulation_message->mqtt_sn_message,
+                                            &mqtt_sn_encapsulation_message->mqtt_sn_message_len,
+                                            sizeof(mqtt_sn_encapsulation_message->mqtt_sn_message),
+                                            data,
+                                            data_len);
+}
+int32_t parse_forwarder_encapsulation_message_header(ParsedMqttSnEncapsulationMessageHeader *mqtt_sn_encapsulation_message_header,
+                                                     const uint8_t *data,
+                                                     uint16_t data_len) {
+  int32_t parsed_bytes = 0;
+  ParsedMqttSnHeader h = {0};
+  if ((parsed_bytes = parse_forwarder_encapsulation_header(&h, data, data_len, &parsed_bytes)) < 0) {
+    return -1;
+  }
+  if ((parsed_bytes = parse_forwarder_encapsulation_ctrl(data + parsed_bytes,
+                                                         data_len,
+                                                         &parsed_bytes,
+                                                         &mqtt_sn_encapsulation_message_header->radius)) < 0) {
+    return -1;
+  }
+  if ((parsed_bytes = parse_forwarder_encapsulation_wireless_node_id(data + parsed_bytes,
+                                                                     data_len,
+                                                                     &parsed_bytes,
+                                                                     &mqtt_sn_encapsulation_message_header->wireless_node_id))
+      < 0) {
+    return -1;
+  }
+  return parsed_bytes;
 }
 int generate_forwarder_encapsulation_mqtt_sn_message(uint8_t *dst_pos,
                                                      uint16_t dst_len,

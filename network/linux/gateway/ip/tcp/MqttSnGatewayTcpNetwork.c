@@ -104,7 +104,7 @@ int32_t GatewayLinuxTcpDisconnect(MqttSnGatewayNetworkInterface *n, void *contex
     memset(tcpNetwork->gateway_buffer, 0, CMQTTSNFORWARDER_MQTTSNGATEWAYTCPNETWORK_MAX_DATA_LENGTH);
     tcpNetwork->gateway_buffer_bytes = 0;
 #ifdef WITH_LOGGING
-    log_close_unicast_socket(n->logger, tcpNetwork->protocol, n->mqtt_sn_gateway_address);
+    log_close_unicast_socket(n->logger, tcpNetwork->protocol, n->gateway_network_address);
 #endif
   }
 

@@ -92,7 +92,7 @@ int32_t GatewayLinuxUdpDisconnect(MqttSnGatewayNetworkInterface *n, void *contex
     close(udpNetwork->unicast_socket);
     udpNetwork->unicast_socket = -1;
 #ifdef WITH_LOGGING
-    log_close_unicast_socket(n->logger, udpNetwork->protocol, n->mqtt_sn_gateway_address);
+    log_close_unicast_socket(n->logger, udpNetwork->protocol, n->gateway_network_address);
 #endif
   }
 #ifdef WITH_UDP_BROADCAST

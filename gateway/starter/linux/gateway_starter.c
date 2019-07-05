@@ -83,8 +83,13 @@ int start_mqtt_sn_gateway(const mqtt_sn_gateway__config *fcfg,
     return -1;
   }
   // FIXME MqttClient
-  if (MqttSnGatewayInitialize(mqtt_sn_gateway, &mqtt_sn_gateway_logger, NULL, clientNetworkContext, &fcfg->gacfg)
-      < 0) {
+  if (MqttSnGatewayInitialize(mqtt_sn_gateway,
+                              &mqtt_sn_gateway_logger,
+                              NULL,
+                              clientNetworkContext,
+                              &fcfg->gacfg,
+                              &fcfg->gccccfg) < 0) {
+
     MqttSnGatewayDeinitialize(mqtt_sn_gateway);
     return EXIT_FAILURE;
   }

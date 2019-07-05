@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include "MqttSnMessageParser.h"
 #include <platform/device_address.h>
+#include <platform/MqttSnMessageData.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,6 +26,26 @@ extern "C" {
                                                                           MQTT_SN_MESSAGE_FORWARDER_ENCAPSULATION_CTRL_LENGTH + \
                                                                           MQTT_SN_MESSAGE_FORWARDER_ENCAPSULATION_WIRELESSNODEID_LENGTH)
 #define MQTT_SN_MESSAGE_FORWARDER_ENCAPSULATION_CRTL_BROADCAST_RADIUS     1
+
+typedef struct ParseMqttSnEncapsulationMessage_ {
+  uint8_t radius;
+  device_address wireless_node_id;
+  uint8_t mqtt_sn_message[MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH];
+  uint16_t mqtt_sn_message_len;
+} ParseMqttSnEncapsulationMessage;
+
+typedef struct ParsedMqttSnEncapsulationMessageHeader_ {
+  uint8_t radius;
+  device_address wireless_node_id;
+} ParsedMqttSnEncapsulationMessageHeader;
+
+int32_t parse_forwarder_encapsulation(ParseMqttSnEncapsulationMessage *mqtt_sn_encapsulation_message,
+                                      const uint8_t *data,
+                                      uint16_t data_len);
+
+int32_t parse_forwarder_encapsulation_message_header(ParsedMqttSnEncapsulationMessageHeader *mqtt_sn_encapsulation_message_header,
+                                             const uint8_t *data,
+                                             uint16_t data_len);
 
 int32_t parse_forwarder_encapsulation_byte(uint8_t *radius,
                                            device_address *wireless_node_id,

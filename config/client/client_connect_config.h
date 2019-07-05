@@ -15,13 +15,20 @@ extern "C" {
 #ifndef DEFAULT_CLIENT_CONNECT_MQTT_SN_GATEWAY_CONFIG_CLIENT_ID
 #if defined(Arduino_h)
 #else
-#define DEFAULT_CLIENT_CONNECT_MQTT_SN_GATEWAY_CONFIG_CLIENT_ID { (char)('a' + (random() % (2*26))), \
-                                                                  (char)('a' + (random() % (2*26))), \
-                                                                  (char)('a' + (random() % (2*26))), \
-                                                                  (char)('a' + (random() % (2*26))), '\0'}
+#define DEFAULT_CLIENT_CONNECT_MQTT_SN_GATEWAY_CONFIG_CLIENT_ID { (char)('A' + (rand() % (2*26))), \
+                                                                  (char)('A' + (rand() % (2*26))), \
+                                                                  (char)('A' + (rand() % (2*26))), \
+                                                                  (char)('A' + (rand() % (2*26))), \
+                                                                  (char)('A' + (rand() % (2*26))), \
+                                                                  (char)('A' + (rand() % (2*26))), '\0'}
 #endif
 #endif
 
+/* // ToDO
+#ifndef DEFAULT_MQTT_SN_CLIENT_PING_REQUEST_DEFAULT_ENABLED
+#define DEFAULT_MQTT_SN_CLIENT_PING_REQUEST_DEFAULT_ENABLED 1
+#endif
+*/
 #ifndef DEFAULT_MQTT_SN_CLIENT_CONNECT_DURATION
 #define DEFAULT_MQTT_SN_CLIENT_CONNECT_DURATION 60
 #endif
