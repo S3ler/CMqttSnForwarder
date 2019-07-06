@@ -431,6 +431,7 @@ target_link_libraries(lib-mqtt-sn-client-config lib-mqtt-sn-common-config lib-mq
 
 add_library(lib-mqtt-sn-gateway-config
         config/gateway/gateway_advertisment_config.c config/gateway/gateway_advertisment_config.h
+        config/gateway/gateway_client_connection_config.c config/gateway/gateway_client_connection_config.h
         gateway/config/gateway_config.c gateway/config/gateway_config.h
         #config/gateway/broker/broker_config.c config/gateway/broker/broker_config.h
         )
@@ -485,6 +486,7 @@ if (WITH_LOGGING)
             gateway/database/logging/db_logging.h)
 endif ()
 add_library(lib-mqtt-sn-gateway-database ${DATABASE_FILES})
+target_compile_definitions(lib-mqtt-sn-gateway-database PUBLIC WITH_DB_DEBUG_LOGGING)
 target_compile_options(lib-mqtt-sn-gateway-database PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 target_include_directories(lib-mqtt-sn-gateway-database PRIVATE .)
 target_link_libraries(lib-mqtt-sn-gateway-database lib-fatfs lib-mqtt-sn-message-parser lib-mqtt-sn-logging)
@@ -495,6 +497,8 @@ endif ()
 set(MQTT_SN_GATEWAY_FILES
         gateway/MqttSnGateway.c
         gateway/MqttSnGateway.h
+        gateway/MqttSnGatewayClientConnectionHandler.c gateway/MqttSnGatewayClientConnectionHandler.h
+
         gateway/MqttClient.c
         gateway/MqttClient.h
         )

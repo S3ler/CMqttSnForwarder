@@ -99,9 +99,9 @@ typedef struct MqttSnClient_ {
   uint64_t last_ping_req_received;
   uint64_t last_ping_resp_received;
   MqttSnClientAwaitMessage ping_req_await_msg;
+  int32_t connect_timeout_offset;
 
   uint8_t client_protocol_id;
-  int32_t connect_timeout_offset;
 } MqttSnClient;
 
 // init network too
@@ -176,6 +176,9 @@ int32_t set_await_msg_status(MqttSnClient *client, int32_t await_fd, MQTT_SN_CLI
 MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS get_await_status(MqttSnClient *client, int32_t await_fd);
 int32_t free_await_msg(MqttSnClient *client, int32_t await_fd);
 int32_t new_await_msg(MqttSnClient *client, MQTT_SN_MESSAGE_TYPE msg_type, uint16_t msg_id);
+
+
+
 
 #ifdef __cplusplus
 }

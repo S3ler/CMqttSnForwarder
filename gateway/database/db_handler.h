@@ -152,7 +152,9 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_transaction_result(db_handler *h);
 // crud
 DB_ENTRY_MQTT_SN_CLIENT_RESULT add_client(db_handler *h,
                                           const char *client_id,
-                                          device_address *address,
+                                          device_address *client_address,
+                                          device_address *forwarder_addresses,
+                                          uint16_t forwarder_address_len,
                                           uint16_t connect_duration,
                                           uint64_t connect_time);
 
@@ -162,7 +164,9 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT delete_client(db_handler *h);
 
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_reset_client(db_handler *h,
                                                const char *client_id,
-                                               device_address *address,
+                                               device_address *client_address,
+                                               device_address *forwarder_addresses,
+                                               uint16_t forwarder_address_len,
                                                uint16_t connect_duration,
                                                uint64_t connect_time);
 

@@ -26,7 +26,7 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_start_client_transaction(db_handler *h,
   if (h->database_error) {
     h->transaction_result = DB_HANDLER_RESULT_ERROR;
     h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR;
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
     log_database_error(h->logger, NULL);
 #endif
     return h->client_transaction_result;
@@ -37,7 +37,7 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_start_client_transaction(db_handler *h,
   if (f_open(&h->_client_registry_file, MQTT_SN_GATEWAY_DB_CLIENT_REGISTRY_FILE_NAME, FA_READ) != FR_OK) {
     h->transaction_result = DB_HANDLER_RESULT_ERROR;
     h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR;
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
     log_database_error(h->logger, NULL);
 #endif
     return h->client_transaction_result;
@@ -52,7 +52,7 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_start_client_transaction(db_handler *h,
     if (f_read(&h->_client_registry_file, &h->_entry_client, buffer_size, &readChars) != FR_OK) {
       h->transaction_result = DB_HANDLER_RESULT_ERROR;
       h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR;
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
       log_database_error(h->logger, NULL);
 #endif
       return h->client_transaction_result;
@@ -100,7 +100,8 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_end_client_transaction(db_handler *h) {
   assert(h->client_transaction_started);
 
   if (write_db_entry_client(&h->_client_registry_file, &h->_entry_client) < 0) {
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
+    log_database_error(h->logger, NULL);
     // TODO log write db entry client error
 #endif
     h->client_transaction_started = false;
@@ -111,7 +112,8 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_end_client_transaction(db_handler *h) {
   }
 
   if (f_close(&h->_client_registry_file) != FR_OK) {
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
+    log_database_error(h->logger, NULL);
     // TODO log db error
 #endif
     h->client_transaction_started = false;
@@ -120,9 +122,9 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_end_client_transaction(db_handler *h) {
     h->database_error = true;
     return h->client_transaction_result;
   }
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
   // TODO uncommend later
-  // log_apply_client_transaction(h->logger, h->transaction_result, h->client_transaction_result, h->database_error);
+  log_apply_client_transaction(h->logger, h->transaction_result, h->client_transaction_result, h->database_error);
 #endif
   // TODO close all files
   // TODO check what happens if we close file twice
@@ -132,7 +134,9 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_end_client_transaction(db_handler *h) {
 
 DB_ENTRY_MQTT_SN_CLIENT_RESULT add_client(db_handler *h,
                                           const char *client_id,
-                                          device_address *address,
+                                          device_address *client_address,
+                                          device_address *forwarder_addresses,
+                                          uint16_t forwarder_address_len,
                                           uint16_t connect_duration,
                                           uint64_t connect_time) {
   assert(h->client_transaction_started);
@@ -160,7 +164,7 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT add_client(db_handler *h,
                                                            &h->_client_registry_file,
                                                            MQTT_SN_GATEWAY_DB_CLIENT_REGISTRY_FILE_NAME);
   if (empty_space < 0) {
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
     // TODO log error
 #endif
     h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR;
@@ -169,7 +173,14 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT add_client(db_handler *h,
     return h->client_transaction_result;
   }
 
-  init_db_entry_mqtt_sn_client(&h->_entry_client, client_id, address, connect_duration, connect_time, empty_space);
+  init_db_entry_mqtt_sn_client(&h->_entry_client,
+                               client_id,
+                               client_address,
+                               forwarder_addresses,
+                               forwarder_address_len,
+                               connect_duration,
+                               connect_time,
+                               empty_space);
 
   if (h->client_count < (uint64_t) empty_space + 1) {
     h->client_count = (uint64_t) empty_space + 1;
@@ -221,14 +232,16 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT add_client(db_handler *h,
     h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS;
   }
 
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
   // TODO log success
 #endif
   return h->client_transaction_result;
 }
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_reset_client(db_handler *h,
                                                const char *client_id,
-                                               device_address *address,
+                                               device_address *client_address,
+                                               device_address *forwarder_addresses,
+                                               uint16_t forwarder_address_len,
                                                uint16_t connect_duration,
                                                uint64_t connect_time) {
   assert(h->client_transaction_started);
@@ -250,9 +263,15 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_reset_client(db_handler *h,
     return h->client_transaction_result;
   }
 
-  reset_db_entry_mqtt_sn_client(&h->_entry_client, client_id, address, connect_duration, connect_time);
+  reset_db_entry_mqtt_sn_client(&h->_entry_client,
+                                client_id,
+                                client_address,
+                                forwarder_addresses,
+                                forwarder_address_len,
+                                connect_duration,
+                                connect_time);
 
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
   // TODO log success
 #endif
   return h->client_transaction_result;
@@ -285,7 +304,7 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT delete_client(db_handler *h) {
   f_delete(filename_with_extension);
 
   if (delete_db_entry_client(&h->_client_registry_file, &h->_entry_client) < 0) {
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
     // TODO log write db entry client error
 #endif
     h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR;
@@ -294,7 +313,7 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT delete_client(db_handler *h) {
     return h->client_transaction_result;
   }
 
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
   // TODO log success
 #endif
   return h->client_transaction_result;
@@ -395,12 +414,15 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_count(db_handler *h, uint64_t *clie
   if (h->database_error) {
     h->transaction_result = DB_HANDLER_RESULT_ERROR;
     h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR;
+#if WITH_DB_DEBUG_LOGGING
+    log_database_error(h->logger, NULL);
+#endif
     return h->client_transaction_result;
   }
 
   (*client_count) = h->client_count;
 
-  return h->client_transaction_result;
+  return DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS;
 }
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_start_client_transaction_by_client_count(db_handler *h, uint64_t client_count) {
   assert(h->client_count > client_count);
@@ -410,18 +432,27 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_start_client_transaction_by_client_count(db_ha
   if (h->database_error) {
     h->transaction_result = DB_HANDLER_RESULT_ERROR;
     h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR;
-#if WITH_DEBUG_LOGGING
+#if WITH_DB_DEBUG_LOGGING
     log_database_error(h->logger, NULL);
 #endif
     return h->client_transaction_result;
   }
+  h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS;
   h->client_transaction_started = true;
 
   if (read_db_entry_client(&h->_client_registry_file, client_count, &h->_entry_client) < 0) {
     // TODO read error
     DB_HANDLER_SET_CLIENT_TRANSACTION_ERROR(h)
   }
-
+#if WITH_DB_DEBUG_LOGGING
+  // TODO log
+  log_start_client_transaction(h->logger,
+                               h->transaction_result,
+                               NULL,
+                               h->client_transaction_result,
+                               h->_entry_client.client_id,
+                               h->_entry_client.file_number);
+#endif
   return h->client_transaction_result;
 }
 

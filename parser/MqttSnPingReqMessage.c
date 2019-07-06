@@ -49,7 +49,7 @@ int32_t parse_ping_req_byte(const uint8_t *data, uint16_t data_len) {
   if ((parsed_bytes = parse_ping_req_header(&h, data, data_len, &parsed_bytes) < 0)) {
     return -1;
   }
-  return 0;
+  return parsed_bytes;
 }
 int32_t generate_ping_req_header(uint8_t *dst, uint16_t dst_len, int32_t *used_bytes) {
   return generate_mqtt_sn_header(dst, dst_len, used_bytes, MQTT_SN_MESSAGE_PINGREQ_WO_CLIENTID_LENGTH, PINGREQ);

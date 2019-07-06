@@ -4,6 +4,7 @@
 
 #include "MqttSnClient.h"
 #include "MqttSnClientAwaitMessage.h"
+#include "MqttSnClientLogger.h"
 #include <string.h>
 #include <stdbool.h>
 #include <logging/MqttSnLoggingInterface.h>
@@ -21,6 +22,7 @@ int32_t parse_and_handle_ping_req(MqttSnClient *client, MqttSnMessageData *msg);
 
 int32_t send_to_gateway(MqttSnClient *client, const uint8_t *msg_data, int32_t gen_rc);
 uint64_t get_last_timeout_reset(MqttSnClient *client);
+uint64_t get_tolerance_timeout(uint16_t timeout);
 int32_t MqttSnClientInit(MqttSnClient *client, log_level_t log_level, void *gatewayNetworkContext) {
   //memset(client, 0, sizeof(*client));
   client->client_protocol_id = 0x01; // TODO define
@@ -161,15 +163,28 @@ int32_t handle_client_connection(MqttSnClient *client) {
   if (!client->connected) {
     return 0;
   }
-  if (client->ping_req_await_msg.msg_type == PINGRESP) {
-    // ping request already in flight
-    return 0;
-  }
+
   uint64_t current_time = 0;
   if (get_timestamp_s(&current_time) < 0) {
     return -1;
   }
   uint64_t elapsed_time = current_time - get_last_timeout_reset(client);
+
+  if (client->ping_req_await_msg.msg_type == PINGRESP) {
+    // ping request already in flight
+
+    // check if ping request timed out
+    if (elapsed_time > get_tolerance_timeout(client->connect_duration)) {
+      client->connected = false;
+#if WITH_LOGGING
+      log_mqtt_sn_client_connection_status(&client->logger,
+                                           client->connected,
+                                           client->gatewayNetwork.mqtt_sn_gateway_address);
+#endif
+    }
+    return 0;
+  }
+
   /*
   uint64_t tolerance_timeout = client->connect_duration;
   if (tolerance_timeout <= 60) {
@@ -196,16 +211,24 @@ int32_t handle_client_connection(MqttSnClient *client) {
     // TODO log
     return -1;
   }
-
   int32_t send_rc = send_to_gateway(client, msg_data, gen_rc);
 
   if (send_rc < 0 || send_rc != gen_rc) {
     // TODO log etc
     return -1;
   }
-
   client->ping_req_await_msg.msg_type = PINGRESP;
+
   return 0;
+}
+uint64_t get_tolerance_timeout(uint16_t timeout) {
+  uint64_t result = timeout;
+  if (timeout <= 60) {
+    result += (uint64_t) ((double) timeout * (double) 0.5);
+  } else {
+    result += (uint64_t) ((double) timeout * (double) 0.1);
+  }
+  return result;
 }
 uint64_t get_last_timeout_reset(MqttSnClient *client) {
   uint64_t result = client->last_ping_resp_received;
@@ -240,7 +263,7 @@ int32_t parse_and_handle_connack(MqttSnClient *client, MqttSnMessageData *msg) {
 }
 int32_t parse_and_handle_ping_req(MqttSnClient *client, MqttSnMessageData *msg) {
 
-  int32_t parse_rc = parse_ping_resp_byte(msg->data, msg->data_length);
+  int32_t parse_rc = parse_ping_req_byte(msg->data, msg->data_length);
   if (parse_rc < 0) {
     return 0;
   }
@@ -378,6 +401,11 @@ MQTT_SN_CLIENT_RETURN_CODE MqttSnClientConnect(MqttSnClient *client,
   switch (client->connect_return_code) {
     case RETURN_CODE_ACCEPTED: {
       client->connected = true;
+#if WITH_LOGGING
+      log_mqtt_sn_client_connection_status(&client->logger,
+                                           client->connected,
+                                           client->gatewayNetwork.mqtt_sn_gateway_address);
+#endif
       return MQTT_SN_CLIENT_RETURN_SUCCESS;
     }
     case RETURN_CODE_REJECTED_CONGESTION:return MQTT_SN_CLIENT_RETURN_CONJESTION;

@@ -88,7 +88,7 @@ int32_t read_db_entry_client(FIL *f, uint64_t position, DB_ENTRY_MQTT_SN_CLIENT 
     return -1;
   }
 
-  if (f_lseek(f, position * sizeof(DB_ENTRY_MQTT_SN_CLIENT_STATUS)) != FR_OK) {
+  if (f_lseek(f, position * sizeof(DB_ENTRY_MQTT_SN_CLIENT)) != FR_OK) {
 #if WITH_DEBUG_LOGGING
     // TODO log seek error
 #endif
@@ -120,7 +120,7 @@ int32_t write_db_entry_client(FIL *f, DB_ENTRY_MQTT_SN_CLIENT *client_entry) {
 #endif
     return -1;
   }
-  if (f_lseek(f, client_entry->position * sizeof(DB_ENTRY_MQTT_SN_CLIENT_STATUS)) != FR_OK) {
+  if (f_lseek(f, client_entry->position * sizeof(DB_ENTRY_MQTT_SN_CLIENT)) != FR_OK) {
 #if WITH_DEBUG_LOGGING
     // TODO log seek error
 #endif

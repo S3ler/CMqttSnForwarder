@@ -10,11 +10,14 @@
 #include <network/MqttSnClientNetworkInterface.h>
 #include <gateway/database/db_handler.h>
 #include <config/gateway/gateway_advertisment_config.h>
+#include <config/gateway/gateway_client_connection_config.h>
 #include "MqttClient.h"
+#include "MqttSnGatewayClientConnectionHandler.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 typedef struct MqttSnGateway_ {
   db_handler db_handler_;
   MqttClient *mqttClient;
@@ -33,23 +36,22 @@ typedef struct MqttSnGateway_ {
 
   // TODO gateway configs
   gateway_advertise_config advertisement_config;
-
-  uint64_t last_client_timeout_check;
-  uint64_t client_timeout_check_period;
-  int32_t connection_timeout_offset;
+  MqttSnGatewayClientConnectionHandler client_connection_handler_;
 } MqttSnGateway;
 
 int32_t MqttSnGatewayInitialize(MqttSnGateway *mqttSnGateway,
                                 const MqttSnLogger *logger,
                                 MqttClient *mqttClient,
                                 void *clientNetworkContext,
-                                const gateway_advertise_config *gacfg);
+                                const gateway_advertise_config *gacfg,
+                                const gateway_client_connection_config *gccccfg);
 int32_t MqttSnGatewayDeinitialize(MqttSnGateway *mqttSnGateway);
 
 int32_t MqttSnGatewayConnect(MqttSnGateway *mqttSnGateway);
 int32_t MqttSnGatewayDisconnect(MqttSnGateway *mqttSnGateway);
 
 int32_t MqttSnGatewayLoop(MqttSnGateway *mqttSnGateway);
+
 
 #ifdef __cplusplus
 }

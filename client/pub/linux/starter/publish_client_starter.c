@@ -25,7 +25,7 @@ static void sig_handler(int _) {
 
 void *publish_client_thread_function(void *ptr) {
   MqttSnClient *publish_client = ((PublishClient_cfg_ptr *) ptr)->c_ptr;
-  while ((MqttSnClientLoop(publish_client) >= 0) & keep_running) {}
+  while ((MqttSnClientLoop(publish_client) >= 0 && publish_client->connected) & keep_running) {}
   return (void *) EXIT_SUCCESS;
 }
 

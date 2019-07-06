@@ -65,7 +65,7 @@ int32_t process_config_file(const char *config_file_path,
   FILE *config_file = fopen(config_file_path, "r");
   if (!config_file) {
     print_could_not_read_config_file(logger, strerror(errno));
-    fclose(config_file);
+    // fclose(config_file);
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
   char *line;
@@ -203,10 +203,20 @@ int32_t parse_timeout(const MqttSnLogger *logger, char *timeout_str, int32_t *ds
   *dst = n;
   return 0;
 }
+int32_t parse_client_connection_timeout_period(const MqttSnLogger *logger, char *timeout_str, uint32_t *dst) {
+  char *endprt;
+  long int n = strtol(timeout_str, &endprt, 10);
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < 0 || n > UINT32_MAX)) {
+    print_invalid_client_connection_timeout_period_given(logger, n);
+    return -1;
+  }
+  *dst = n;
+  return 0;
+}
 int32_t parse_timeout_offset(const MqttSnLogger *logger, char *timeout_offset_str, int32_t *dst) {
   char *endprt;
   long int n = strtol(timeout_offset_str, &endprt, 10);
-  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > INT32_MAX)) {
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < INT32_MIN || n > INT32_MAX)) {
     print_invalid_timeout_offset_given(logger, n);
     return -1;
   }
@@ -229,22 +239,40 @@ int32_t print_invalid_retain_given(const MqttSnLogger *logger, const char *given
   log_flush(logger);
   return log_status(logger);
 }
+int32_t print_invalid_client_connection_timeout_enabled_given(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: client connection timeout enabled given: "));
+  log_str(logger, given_str);
+  log_flush(logger);
+  return log_status(logger);
+}
 int32_t print_invalid_clean_session_given(const MqttSnLogger *logger, const char *given_str) {
   log_str(logger, PSTR("Error: Invalid clean session given: "));
   log_str(logger, given_str);
   log_flush(logger);
   return log_status(logger);
 }
-int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst) {
-  if (!strcmp(retain_str, "false")) {
+int32_t parse_boolean(char *boolean_str, uint8_t *dst) {
+  if (!strcmp(boolean_str, "false")) {
     (*dst) = 0;
-  } else if (!strcmp(retain_str, "true")) {
+  } else if (!strcmp(boolean_str, "true")) {
     (*dst) = 1;
   } else {
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
+int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst) {
+  if (parse_boolean(retain_str, dst) == MQTT_SN_PARSE_CONFIG_FAILURE) {
     print_invalid_retain_given(logger, retain_str);
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
-
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
+int32_t parse_client_connection_timeout_enabled(const MqttSnLogger *logger, char *retain_str, uint8_t *dst) {
+  if (parse_boolean(retain_str, dst) == MQTT_SN_PARSE_CONFIG_FAILURE) {
+    print_invalid_client_connection_timeout_enabled_given(logger, retain_str);
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
 int32_t parse_clean_session(const MqttSnLogger *logger, char *clean_session_str, uint8_t *dst) {
@@ -256,7 +284,6 @@ int32_t parse_clean_session(const MqttSnLogger *logger, char *clean_session_str,
     print_invalid_clean_session_given(logger, clean_session_str);
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
-
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
 int32_t print_invalid_topic_id_given(const MqttSnLogger *logger, const char *given_str) {
@@ -317,12 +344,19 @@ int32_t print_invalid_timeout_given(const MqttSnLogger *logger, long timeout) {
   log_flush(logger);
   return log_status(logger);
 }
+int32_t print_invalid_client_connection_timeout_period_given(const MqttSnLogger *logger, long timeout) {
+  log_str(logger, PSTR("Error: Invalid client connection timeout period given: "));
+  log_uint16(logger, timeout);
+  log_flush(logger);
+  return log_status(logger);
+}
 int32_t print_invalid_timeout_offset_given(const MqttSnLogger *logger, long timeout) {
   log_str(logger, PSTR("Error: Invalid timeout offset given: "));
   log_uint16(logger, timeout);
   log_flush(logger);
   return log_status(logger);
 }
+
 int32_t print_invalid_protocol_version_given(const MqttSnLogger *logger) {
   log_str(logger, PSTR("Error: Invalid protocol id version given."));
   log_flush(logger);

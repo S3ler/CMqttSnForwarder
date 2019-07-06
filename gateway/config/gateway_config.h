@@ -9,6 +9,7 @@
 #include <config/common/mqtt_sn_logger_config.h>
 #include <config/network/client/client_network_config.h>
 #include <config/gateway/gateway_advertisment_config.h>
+#include <config/gateway/gateway_client_connection_config.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +25,7 @@ typedef struct mqtt_sn_gateway__config_ {
   mqtt_sn_logger_config mslcfg;
   client_network_config cncfg;
   gateway_advertise_config gacfg;
+  gateway_client_connection_config gccccfg;
 } mqtt_sn_gateway__config;
 
 int32_t mqtt_sn_gateway__config_init(mqtt_sn_gateway__config *cfg);
