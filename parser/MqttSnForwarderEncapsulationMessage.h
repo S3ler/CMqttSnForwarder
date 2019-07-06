@@ -33,6 +33,18 @@ int32_t parse_forwarder_encapsulation_byte(uint8_t *radius,
                                            uint16_t max_mqtt_sn_message_len,
                                            const uint8_t *data,
                                            uint16_t data_len);
+int32_t parse_multiple_forwarder_encapsulation_byte(uint8_t *radiuses,
+                                                    uint16_t *radiuses_len,
+                                                    uint16_t radiuses_max_len,
+                                                    device_address *forwarder_addresses,
+                                                    uint16_t *forwarder_addresses_len,
+                                                    uint16_t forwarder_addresses_max_len,
+                                                    device_address *wireless_node_id,
+                                                    uint8_t *mqtt_sn_message,
+                                                    uint16_t *mqtt_sn_message_len,
+                                                    uint16_t max_mqtt_sn_message_len,
+                                                    const uint8_t *data,
+                                                    uint16_t data_len);
 
 int32_t generate_forwarder_encapsulation_byte(uint8_t *dst,
                                               uint16_t dst_len,
@@ -40,6 +52,15 @@ int32_t generate_forwarder_encapsulation_byte(uint8_t *dst,
                                               const device_address *wireless_node_id,
                                               const uint8_t *mqtt_sn_message,
                                               uint16_t mqtt_sn_message_length);
+int32_t generate_multiple_forwarder_encapsulation_byte(uint8_t *dst,
+                                                       uint16_t dst_len,
+                                                       const uint8_t *radiuses,
+                                                       uint16_t radiuses_len,
+                                                       const device_address *forwarder_addresses,
+                                                       uint16_t forwarder_addresses_len,
+                                                       const device_address *wireless_node_id,
+                                                       const uint8_t *mqtt_sn_message,
+                                                       uint16_t mqtt_sn_message_length);
 
 #ifdef __cplusplus
 }
