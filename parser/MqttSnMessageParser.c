@@ -196,17 +196,17 @@ int32_t generate_mqtt_sn_header(uint8_t *dst,
     return -1;
   }
   if (msg_len > UINT8_MAX) {
-    *gen_bytes = sizeof(MqttSnMessageHeaderThreeOctetsLengthField);
+    *gen_bytes += sizeof(MqttSnMessageHeaderThreeOctetsLengthField);
     if (dst_len < *gen_bytes) {
       return -1;
     }
     MqttSnMessageHeaderThreeOctetsLengthField *header = (MqttSnMessageHeaderThreeOctetsLengthField *) dst;
     header->indicator = 1;
-    header->length = msg_len;
+    header->length = htons(msg_len);
     header->msg_type = msg_type;
     return 0;
   }
-  *gen_bytes = sizeof(MqttSnMessageHeaderOneOctetLengthField);
+  *gen_bytes += sizeof(MqttSnMessageHeaderOneOctetLengthField);
   if (dst_len < *gen_bytes) {
     return -1;
   }
