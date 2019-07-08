@@ -498,7 +498,7 @@ set(MQTT_SN_GATEWAY_FILES
         gateway/MqttSnGateway.c
         gateway/MqttSnGateway.h
         gateway/MqttSnGatewayClientConnectionHandler.c gateway/MqttSnGatewayClientConnectionHandler.h
-
+        gateway/MqttSnGatewayForwarder.c gateway/MqttSnGatewayForwarder.h
         gateway/MqttClient.c
         gateway/MqttClient.h
         )
@@ -835,11 +835,13 @@ if (WITH_MQTT_SN_PARSER_TESTING)
 
     enable_testing()
 
-    add_executable(mqtt-sn-message-parser-tests
-            test/parser/MqttSnParserEncapsulationMessageParseTests.cpp test/parser/MqttSnParserEncapsulationMessageParseTests.h
-            )
+    add_executable(mqtt-sn-message-parser-tests test/parser/MqttSnParserEncapsulationMessageParseTests.cpp test/parser/MqttSnParserEncapsulationMessageParseTests.h)
     target_include_directories(mqtt-sn-message-parser-tests PRIVATE .)
     target_link_libraries(mqtt-sn-message-parser-tests gtest gtest_main gmock lib-mqtt-sn-message-parser)
+
+    add_executable(mqtt-sn-multiple-forwarder-tests test/MqttSnMultipleForwarderTest/MqttSnMultipleForwarderTests.cpp test/MqttSnMultipleForwarderTest/MqttSnMultipleForwarderTests.h)
+    target_include_directories(mqtt-sn-multiple-forwarder-tests PRIVATE .)
+    target_link_libraries(mqtt-sn-multiple-forwarder-tests gtest gtest_main gmock lib-mqtt-sn-client lib-mqtt-sn-forwarder lib-mqtt-sn-gateway )
 endif (WITH_MQTT_SN_PARSER_TESTING)
 
 if (WITH_TESTING)

@@ -233,53 +233,46 @@ int32_t generate_forwarder_encapsulation_header(uint8_t *dst,
 }
 
 int32_t parse_multiple_forwarder_encapsulation_headers_byte(uint8_t *radiuses,
-                                                            uint16_t *radiuses_len,
-                                                            uint16_t radiuses_max_len,
                                                             device_address *forwarder_addresses,
-                                                            uint16_t *forwarder_addresses_len,
-                                                            uint16_t forwarder_addresses_max_len,
+                                                            uint16_t *forwarders_len,
+                                                            uint16_t forwarders_max_len,
                                                             device_address *first_forwarder_address,
                                                             device_address *wireless_node_id,
                                                             const uint8_t *data,
                                                             uint16_t data_len) {
-  assert(radiuses_max_len == forwarder_addresses_max_len);
-  assert(forwarder_addresses_max_len > 0);
-  assert(forwarder_addresses_max_len < 8000);
+  assert(forwarders_max_len > 0);
+  assert(forwarders_max_len < 8000);
 
-  if (radiuses_max_len != forwarder_addresses_max_len) {
-    return -1;
-  }
-  (*forwarder_addresses_len) = 0;
-  (*radiuses_len) = 0;
+  (*forwarders_len) = 0;
   int32_t parsed_bytes = 0;
 
   // parse encapsulated message header until: no encapsulated message or forwarder_addresses_max_len+1
-  for (uint16_t i = 0; i < forwarder_addresses_max_len + 1; i++) {
+  for (uint16_t i = 0; i < forwarders_max_len + 1; i++) {
     ParsedMqttSnEncapsulationMessageHeader h;
     int32_t parse_rc = parse_forwarder_encapsulation_message_header(&h, data + parsed_bytes, data_len - parsed_bytes);
     if (parse_rc < 0) {
       break;
     }
-    if (i == forwarder_addresses_max_len) {
+    if (i == forwarders_max_len) {
       // more encapsulation message as we can handle
       return -1;
     }
-    forwarder_addresses[(*forwarder_addresses_len)++] = h.wireless_node_id;
-    radiuses[(*radiuses_len)++] = h.radius;
+    radiuses[(*forwarders_len)] = h.radius;
+    forwarder_addresses[(*forwarders_len)++] = h.wireless_node_id;
     parsed_bytes += parse_rc;
   }
 
-  if ((*forwarder_addresses_len) == 0) {
+  if ((*forwarders_len) == 0) {
     return -1;
   }
 
   // reverse forwarder_addresses order
-  for (uint16_t i = 0; i < (*forwarder_addresses_len) / 2; i++) {
-    device_address tmp_addr = forwarder_addresses[(*forwarder_addresses_len) - 1 - i];
-    uint8_t tmp_radius = radiuses[(*radiuses_len) - 1 - i];
+  for (uint16_t i = 0; i < (*forwarders_len) / 2; i++) {
+    device_address tmp_addr = forwarder_addresses[(*forwarders_len) - 1 - i];
+    uint8_t tmp_radius = radiuses[(*forwarders_len) - 1 - i];
 
-    forwarder_addresses[(*forwarder_addresses_len) - 1 - i] = forwarder_addresses[i];
-    radiuses[(*radiuses_len) - 1 - i] = radiuses[i];
+    forwarder_addresses[(*forwarders_len) - 1 - i] = forwarder_addresses[i];
+    radiuses[(*forwarders_len) - 1 - i] = radiuses[i];
 
     forwarder_addresses[i] = tmp_addr;
     radiuses[i] = tmp_radius;
@@ -293,30 +286,19 @@ int32_t parse_multiple_forwarder_encapsulation_headers_byte(uint8_t *radiuses,
 int32_t generate_multiple_forwarder_encapsulation_headers_byte(uint8_t *dst,
                                                                uint16_t dst_len,
                                                                const uint8_t *radiuses,
-                                                               uint16_t radiuses_len,
                                                                const device_address *forwarder_addresses,
-                                                               uint16_t forwarder_addresses_len,
+                                                               uint16_t forwarders_len,
                                                                const device_address *wireless_node_id,
                                                                const uint8_t *mqtt_sn_message,
                                                                uint16_t mqtt_sn_message_length) {
-  assert(radiuses_len == forwarder_addresses_len);
-  assert(radiuses_len > 0);
-  assert(forwarder_addresses_len > 0);
-
-  if (radiuses_len != forwarder_addresses_len) {
-    return -1;
-  }
-  if (radiuses_len == 0) {
-    return -1;
-  }
-  if (forwarder_addresses_len == 0) {
+  assert(forwarders_len > 0);
+  if (forwarders_len == 0) {
     return -1;
   }
 
-  uint16_t enc_mqtt_sn_message_lengths[forwarder_addresses_len];
-  // enc_mqtt_sn_message_lengths[0] = mqtt_sn_message_length;
+  uint16_t enc_mqtt_sn_message_lengths[forwarders_len];
 
-  for (uint16_t i = 0; i < forwarder_addresses_len; i++) {
+  for (uint16_t i = 0; i < forwarders_len; i++) {
     int32_t gen_bytes = 0;
     device_address forwarder_address;
     uint8_t forwarder_radius;
@@ -352,8 +334,8 @@ int32_t generate_multiple_forwarder_encapsulation_headers_byte(uint8_t *dst,
   }
 
   int32_t gen_bytes = 0;
-  for (uint16_t i = 0; i < forwarder_addresses_len; i++) {
-    uint16_t forwarder_index = forwarder_addresses_len - 1 - i;
+  for (uint16_t i = 0; i < forwarders_len; i++) {
+    uint16_t forwarder_index = forwarders_len - 1 - i;
     device_address forwarder_address;
     uint8_t forwarder_radius;
     uint16_t current_mqtt_sn_message_length;
@@ -391,6 +373,6 @@ int32_t generate_multiple_forwarder_encapsulation_headers_byte(uint8_t *dst,
                                                        mqtt_sn_message_length) < 0) {
     return -1;
   }
-  assert(gen_bytes == enc_mqtt_sn_message_lengths[forwarder_addresses_len - 1]);
+  assert(gen_bytes == enc_mqtt_sn_message_lengths[forwarders_len - 1]);
   return gen_bytes;
 }

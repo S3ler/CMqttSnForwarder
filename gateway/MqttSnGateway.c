@@ -24,37 +24,18 @@
 int32_t MqttSnGatewayHandleClientMessageData(MqttSnGateway *mqttSnGateway, MqttSnMessageData *clientMessageData);
 int32_t parse_and_handle_advertise(MqttSnGateway *gateway, MqttSnMessageData *msg);
 int32_t parse_and_handle_gwinfo(MqttSnGateway *gateway, MqttSnMessageData *msg);
-int32_t parse_and_handle_connect(MqttSnGateway *gateway,
-                                 MqttSnMessageData *msg,
-                                 int32_t parsed_bytes,
-                                 device_address *client_address,
-                                 device_address *forwarder_addresses,
-                                 uint16_t forwarder_address_len);
-void remove_client_subscriptions(MqttSnGateway *gateway, const char *client_id, device_address *client_address);
+
 int32_t parse_and_handle_searchgw(MqttSnGateway *gateway, MqttSnMessageData *msg);
 int32_t parse_and_handle_ping_req(MqttSnGateway *gateway, MqttSnMessageData *msg);
 int32_t parse_and_handle_ping_resp(MqttSnGateway *gateway, MqttSnMessageData *msg);
-int32_t parse_and_handle_encapsulated_message(MqttSnGateway *gateway,
-                                              device_address *forwarder_addresses,
-                                              uint16_t forwarder_address_count,
-                                              const uint8_t *data,
-                                              uint16_t data_length,
-                                              MqttSnMessageData *msg,
-                                              int32_t parsed_bytes);
 int32_t parse_and_handle_encapsulated_messages(MqttSnGateway *gateway,
                                                MqttSnMessageData *msg,
                                                int32_t parsed_bytes,
-                                               device_address *client_address,
-                                               device_address *forwarder_addresses,
-                                               uint16_t forwarder_address_len,
-                                               uint16_t forwarder_address_max_len);
+                                               MqttSnGatewayForwarder *forwarders);
 int32_t parse_and_handle_message(MqttSnGateway *mqttSnGateway,
                                  MqttSnMessageData *clientMessageData,
                                  int32_t parsed_bytes,
-                                 device_address *client_address,
-                                 device_address *forwarder_addresses,
-                                 uint16_t forwarder_address_len,
-                                 uint16_t forwarder_address_max_len);
+                                 MqttSnGatewayForwarder *forwarders);
 int32_t MqttSnGatewayInitialize(MqttSnGateway *mqttSnGateway,
                                 const MqttSnLogger *logger,
                                 MqttClient *mqttClient,
@@ -177,28 +158,18 @@ int32_t MqttSnGatewayHandleClientMessageData(MqttSnGateway *mqttSnGateway, MqttS
   }
   // TODO add receive time to message
 
-  device_address client_address = clientMessageData->from;
-  device_address forwarder_addresses[DB_ENTRY_MQTT_SN_CLIENT_MAX_FORWARDER_COUNT];
-  memset(&forwarder_addresses, 0, sizeof(forwarder_addresses));
-  uint16_t forwarder_address_count = 0;
-  int32_t parsed_bytes = 0;
 
-  return parse_and_handle_message(mqttSnGateway,
-                                  clientMessageData,
-                                  parsed_bytes,
-                                  &client_address,
-                                  forwarder_addresses,
-                                  forwarder_address_count,
-                                  DB_ENTRY_MQTT_SN_CLIENT_MAX_FORWARDER_COUNT);
+
+  int32_t parsed_bytes = 0;
+  MqttSnGatewayForwarder mqtt_sn_gateway_forwarder;
+  MqttSnGatewayForwarderInit(&mqtt_sn_gateway_forwarder);
+  return parse_and_handle_message(mqttSnGateway, clientMessageData, parsed_bytes, &mqtt_sn_gateway_forwarder);
 
 }
 int32_t parse_and_handle_message(MqttSnGateway *mqttSnGateway,
                                  MqttSnMessageData *clientMessageData,
                                  int32_t parsed_bytes,
-                                 device_address *client_address,
-                                 device_address *forwarder_addresses,
-                                 uint16_t forwarder_address_len,
-                                 uint16_t forwarder_address_max_len) {
+                                 MqttSnGatewayForwarder *forwarders) {
   ParsedMqttSnHeader header = {0};
   int32_t parsed_header_bytes = 0;
   if (parse_header(&header,
@@ -234,12 +205,10 @@ int32_t parse_and_handle_message(MqttSnGateway *mqttSnGateway,
     case GWINFO: return parse_and_handle_gwinfo(mqttSnGateway, clientMessageData);
       break;
     case CONNECT:
-      return parse_and_handle_connect(mqttSnGateway,
+      return parse_and_handle_connect(&mqttSnGateway->client_connection_handler_,
                                       clientMessageData,
                                       parsed_bytes,
-                                      client_address,
-                                      forwarder_addresses,
-                                      forwarder_address_len);
+                                      forwarders);
       break;
     case CONNACK:
       // TODO parse_searchgw(address, bytes);
@@ -306,18 +275,11 @@ int32_t parse_and_handle_message(MqttSnGateway *mqttSnGateway,
     case WILLMSGRESP:
       // TODO parse_searchgw(address, bytes);
       break;
-    case ENCAPSULATED_MESSAGE: {
-      // TODO: hier struct draus machen
-      // TODO: methodenaufruf recursiv gestalten
+    case ENCAPSULATED_MESSAGE:
       return parse_and_handle_encapsulated_messages(mqttSnGateway,
                                                     clientMessageData,
                                                     parsed_bytes,
-                                                    client_address,
-                                                    forwarder_addresses,
-                                                    forwarder_address_len,
-                                                    forwarder_address_max_len);
-    }
-      break;
+                                                    forwarders);
     default:break;
   }
   return 0;
@@ -471,147 +433,36 @@ int32_t parse_and_handle_gwinfo(MqttSnGateway *gateway, MqttSnMessageData *msg) 
   }
   return 0;
 }
-int32_t parse_and_handle_connect(MqttSnGateway *gateway,
-                                 MqttSnMessageData *msg,
-                                 int32_t parsed_bytes,
-                                 device_address *client_address,
-                                 device_address *forwarder_addresses,
-                                 uint16_t forwarder_address_len) {
-  if (isFull(&gateway->mqttClientNetworkSendBuffer)) {
-    return 0;
-  }
 
-  // parse
-  ParsedMqttSnConnect connect = {0};
-  if (parse_connect(&connect, msg->data + parsed_bytes, msg->data_length - parsed_bytes) < 0) {
-    return 0;
-  }
-
-  db_start_client_transaction(&gateway->db_handler_, client_address, NULL);
-  if (client_exist(&gateway->db_handler_) == DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS) {
-    if (!connect.clean_session) {
-      db_reset_client(&gateway->db_handler_,
-                      connect.client_id,
-                      client_address,
-                      forwarder_addresses,
-                      forwarder_address_len,
-                      connect.duration,
-                      msg->create_time_s);
-    } else {
-      // before we can remove the client, we must unsubscribe from all subscriptions
-      remove_client_subscriptions(gateway, connect.client_id, client_address);
-      delete_client(&gateway->db_handler_);
-      add_client(&gateway->db_handler_,
-                 connect.client_id,
-                 client_address,
-                 forwarder_addresses,
-                 forwarder_address_len,
-                 connect.duration,
-                 msg->create_time_s);
-    }
-  } else {
-    add_client(&gateway->db_handler_,
-               connect.client_id,
-               client_address,
-               forwarder_addresses,
-               forwarder_address_len,
-               connect.duration,
-               msg->create_time_s);
-  }
-
-  DB_ENTRY_MQTT_SN_CLIENT_RESULT client_result = db_end_client_transaction(&gateway->db_handler_);
-  if (client_result != DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS) {
-#if WITH_LOGGING
-    // TODO log error
-#endif
-    return -1;
-  }
-
-  if (connect.will) {
-
-    // TODO await WILL_TOPIC_RESP
-  } else {
-    // TODO await ANY_MESSAGE
-  }
-
-  if (connect.will) {
-    // TODO send will topic request
-  } else {
-    if (reuse_mqtt_sn_message_data(msg) < 0) {
-      return -1;
-    }
-
-    // int32_t enc_header_length =
-    // TODO continue here
-    int32_t gen_bytes = 0;
-    if ((gen_bytes = generate_connack(msg->data + gen_bytes, sizeof(msg->data) + gen_bytes, RETURN_CODE_ACCEPTED))
-        < 0) {
-      // should never happen
-#if WITH_LOGGING
-      // TODO log internal error + where
-#endif
-      return -1;
-    }
-    for (uint16_t i = 0; i < forwarder_address_len; i++) {
-      // TODO broadcast
-      //uint8_t radius = 0;
-      //int32_t enc_gen_rc = generate_encapsulation_message_byte(msg->data + gen_bytes, sizeof(msg->data) + gen_bytes, radius, NULL, 0);
-    }
-    msg->data_length = gen_bytes;
-    if (put(&gateway->clientNetworkSendBuffer, msg) < 0) {
-      // should never happen
-#if WITH_LOGGING
-      // TODO log internal error + where
-#endif
-      return -1;
-    }
-  }
-
-#if WITH_LOGGING
-  // TODO log success
-#endif
-  return 0;
-}
-void remove_client_subscriptions(MqttSnGateway *gateway, const char *client_id, device_address *client_address) {
-  // TODO implement me
-}
 int32_t parse_and_handle_encapsulated_messages(MqttSnGateway *gateway,
                                                MqttSnMessageData *msg,
                                                int32_t parsed_bytes,
-                                               device_address *client_address,
-                                               device_address *forwarder_addresses,
-                                               uint16_t forwarder_address_len,
-                                               uint16_t forwarder_address_max_len) {
-  if (forwarder_address_max_len == 0) {
+                                               MqttSnGatewayForwarder *forwarders) {
+  if (forwarders->forwarder_max_len == 0) {
     return 0;
   }
 
-  while (forwarder_address_len < forwarder_address_max_len) {
-    ParsedMqttSnEncapsulationMessageHeader mqtt_sn_encapsulation_message_header = {0};
-    int32_t enc_msg_header_parse_rc = 0;
-    enc_msg_header_parse_rc = parse_forwarder_encapsulation_message_header(&mqtt_sn_encapsulation_message_header,
-                                                                           msg->data + parsed_bytes,
-                                                                           msg->data_length - parsed_bytes);
-    if (enc_msg_header_parse_rc < 0) {
-      // no header or no encapsulation header
-      break;
-    }
-    forwarder_addresses[forwarder_address_len++] = (*client_address);
-    (*client_address) = mqtt_sn_encapsulation_message_header.wireless_node_id;
-    parsed_bytes += enc_msg_header_parse_rc;
+  int32_t parse_rc = parse_multiple_forwarder_encapsulation_headers_byte(forwarders->forwarder_radiuses,
+                                                                         forwarders->forwarder_addresses,
+                                                                         &forwarders->forwarder_len,
+                                                                         forwarders->forwarder_max_len,
+                                                                         &msg->from,
+                                                                         &forwarders->wireless_node_id,
+                                                                         msg->data,
+                                                                         msg->data_length);
+  if (parse_rc < 0) {
+    return 0;
   }
 
-  ParsedMqttSnHeader header = {0};
-  int32_t p_h_bytes = 0;
-  int32_t p_h_rc = 0;
-  p_h_rc =
-      parse_header(&header, ANY_MESSAGE_TYPE, msg->data + parsed_bytes, msg->data_length - parsed_bytes, &p_h_bytes);
-  if (p_h_rc < 0) {
+  ParsedMqttSnHeader h = {0};
+  int32_t h_bytes = 0;
+  int32_t h_rc = 0;
+  h_rc = parse_header(&h, ANY_MESSAGE_TYPE, msg->data + parsed_bytes, msg->data_length - parsed_bytes, &h_bytes);
+  if (h_rc < 0) {
     // TODO log
     return 0;
   }
-
-  if (header.msg_type == ENCAPSULATED_MESSAGE) {
+  if (h.msg_type == ENCAPSULATED_MESSAGE) {
     // too much encapsulation messages
     // we cannot save all forwarder_addresses
     // TODO log
@@ -619,11 +470,5 @@ int32_t parse_and_handle_encapsulated_messages(MqttSnGateway *gateway,
   }
 
   // update database
-  return parse_and_handle_message(gateway,
-                                  msg,
-                                  parsed_bytes,
-                                  client_address,
-                                  forwarder_addresses,
-                                  forwarder_address_len,
-                                  forwarder_address_max_len);
+  return parse_and_handle_message(gateway, msg, parsed_bytes, forwarders);
 }

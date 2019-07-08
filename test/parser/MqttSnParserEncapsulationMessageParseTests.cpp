@@ -29,15 +29,15 @@ TEST_F(MqttSnParserEncapsulationMessageParseTests, gen_parse_test) {
     mqtt_sn_message[i] = mqtt_sn_message_length - i;
   }
 
-  const uint16_t forwarder_addresses_len = 3;
-  array<device_address, forwarder_addresses_len> forwarder_addresses;
-  for (uint16_t i = 0; i < forwarder_addresses_len; i++) {
+  const uint16_t forwarders_len = 3;
+  array<device_address, forwarders_len> forwarder_addresses;
+  for (uint16_t i = 0; i < forwarders_len; i++) {
     memset(&forwarder_addresses[i], i, sizeof(device_address));
   }
   device_address wireless_node_id = {0};
   memset(wireless_node_id.bytes, UINT8_MAX, sizeof(wireless_node_id.bytes));
 
-  const uint16_t radiuses_len = forwarder_addresses_len;
+  const uint16_t radiuses_len = forwarders_len;
   array<uint8_t, radiuses_len> radiuses;
   //memset(&radiuses[0], 0, sizeof(radiuses));
 
@@ -53,9 +53,8 @@ TEST_F(MqttSnParserEncapsulationMessageParseTests, gen_parse_test) {
   int32_t gen_rc = generate_multiple_forwarder_encapsulation_headers_byte(&dst[0],
                                                                           dst_len,
                                                                           &radiuses[0],
-                                                                          radiuses_len,
                                                                           &forwarder_addresses[0],
-                                                                          forwarder_addresses_len,
+                                                                          forwarders_len,
                                                                           &wireless_node_id,
                                                                           &mqtt_sn_message[0],
                                                                           mqtt_sn_message_length);
@@ -67,24 +66,21 @@ TEST_F(MqttSnParserEncapsulationMessageParseTests, gen_parse_test) {
 
 
 
-  uint16_t actual_forwarder_addresses_len = 0;
-  const uint16_t actual_forwarder_addresses_max_len = forwarder_addresses_len + 1; // TODO
-  array<device_address, actual_forwarder_addresses_max_len> actual_forwarder_addresses;
+  uint16_t actual_forwarders_len = 0;
+  const uint16_t actual_forwarders_max_len = forwarders_len + 1; // TODO
+  array<device_address, actual_forwarders_max_len> actual_forwarder_addresses;
   memset(&actual_forwarder_addresses[0], 0, sizeof(actual_forwarder_addresses));
 
-  uint16_t actual_radiuses_len = 0;
-  const uint16_t actual_radiuses_max_len = actual_forwarder_addresses_max_len;
+  const uint16_t actual_radiuses_max_len = actual_forwarders_max_len;
   array<uint8_t, actual_radiuses_max_len> actual_radiuses;
   //memset(actual_radiuses, 0, actual_radiuses_len);
 
   device_address actual_wireless_node_id = {0};
 
   int32_t parse_rc = parse_multiple_forwarder_encapsulation_headers_byte(&actual_radiuses[0],
-                                                                         &actual_radiuses_len,
-                                                                         actual_radiuses_max_len,
                                                                          &actual_forwarder_addresses[0],
-                                                                         &actual_forwarder_addresses_len,
-                                                                         actual_forwarder_addresses_max_len,
+                                                                         &actual_forwarders_len,
+                                                                         actual_forwarders_max_len,
                                                                          &forwarder_addresses[0],
                                                                          &actual_wireless_node_id,
                                                                          &dst[0],
@@ -94,10 +90,7 @@ TEST_F(MqttSnParserEncapsulationMessageParseTests, gen_parse_test) {
 
   ASSERT_GT(parse_rc, 0);
 
-  //ASSERT_THAT(actual_radiuses, testing::ElementsAreArray(radiuses));
-  //ASSERT_EQ(actual_forwarder_addresses_len, forwarder_addresses_len);
-
-  for (uint16_t i = 0; i < forwarder_addresses_len; i++) {
+  for (uint16_t i = 0; i < forwarders_len; i++) {
 
     device_address actual_fw_addr = actual_forwarder_addresses[i];
     device_address expected_fw_addr = forwarder_addresses[i];

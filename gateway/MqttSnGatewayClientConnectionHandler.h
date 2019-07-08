@@ -10,6 +10,7 @@
 #include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
 #include <gateway/database/db_handler.h>
 #include <config/gateway/gateway_client_connection_config.h>
+#include "MqttSnGatewayForwarder.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,6 +34,13 @@ int32_t init_client_connection_handler(MqttSnGatewayClientConnectionHandler *han
                                        const gateway_client_connection_config *cfg);
 
 int32_t check_client_connection_timeouts(MqttSnGatewayClientConnectionHandler *handler);
+
+int32_t parse_and_handle_connect(MqttSnGatewayClientConnectionHandler *handler,
+                                 MqttSnMessageData *msg,
+                                 int32_t parsed_bytes,
+                                 MqttSnGatewayForwarder *forwarders);
+
+int32_t remove_client_subscriptions(MqttSnGatewayClientConnectionHandler *gateway, const char *handler, device_address *client_address);
 
 #ifdef __cplusplus
 }

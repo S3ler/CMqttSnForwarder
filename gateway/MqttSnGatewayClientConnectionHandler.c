@@ -6,6 +6,9 @@
 #include <parser/MqttSnPingReqMessage.h>
 #include <gateway/database/db_handler.h>
 #include <platform/MqttSnMessageData.h>
+#include <parser/MqttSnConnectMessage.h>
+#include <parser/MqttSnForwarderEncapsulationMessage.h>
+#include <parser/MqttSnConnackMessage.h>
 
 int32_t init_client_connection_handler(MqttSnGatewayClientConnectionHandler *handler,
                                        MqttSnClientNetworkInterface *clientNetwork,
@@ -185,5 +188,124 @@ int32_t send_client_connection_ping_req(MqttSnGatewayClientConnectionHandler *ha
   DB_HANDLER_CK_CLIENT_RC(db_set_ping_req_await_msg_type(handler->db_handler_, PINGRESP))
   // TODO log pinging client XYZ
   // TODO  signal strength dropped?
+  return 0;
+}
+int32_t parse_and_handle_connect(MqttSnGatewayClientConnectionHandler *handler,
+                                 MqttSnMessageData *msg,
+                                 int32_t parsed_bytes,
+                                 MqttSnGatewayForwarder *forwarders) {
+  if (isFull(handler->clientNetworkSendBuffer)) {
+    return 0;
+  }
+
+  // parse
+  ParsedMqttSnConnect connect = {0};
+  if (parse_connect(&connect, msg->data + parsed_bytes, msg->data_length - parsed_bytes) < 0) {
+    return 0;
+  }
+
+  db_start_client_transaction(handler->db_handler_, &forwarders->wireless_node_id, NULL);
+  if (client_exist(handler->db_handler_) == DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS) {
+    if (!connect.clean_session) {
+      db_reset_client(handler->db_handler_,
+                      connect.client_id,
+                      &forwarders->wireless_node_id,
+                      forwarders->forwarder_addresses,
+                      forwarders->forwarder_len,
+                      connect.duration,
+                      msg->create_time_s);
+    } else {
+      // before we can remove the client, we must unsubscribe from all subscriptions
+      remove_client_subscriptions(handler, connect.client_id, &forwarders->wireless_node_id);
+      delete_client(handler->db_handler_);
+      add_client(handler->db_handler_,
+                 connect.client_id,
+                 &forwarders->wireless_node_id,
+                 forwarders->forwarder_addresses,
+                 forwarders->forwarder_len,
+                 connect.duration,
+                 msg->create_time_s);
+    }
+  } else {
+    add_client(handler->db_handler_,
+               connect.client_id,
+               &forwarders->wireless_node_id,
+               forwarders->forwarder_addresses,
+               forwarders->forwarder_len,
+               connect.duration,
+               msg->create_time_s);
+  }
+
+  DB_ENTRY_MQTT_SN_CLIENT_RESULT client_result = db_end_client_transaction(handler->db_handler_);
+  if (client_result != DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS) {
+#if WITH_LOGGING
+    // TODO log error
+#endif
+    return -1;
+  }
+
+  if (connect.will) {
+
+    // TODO await WILL_TOPIC_RESP
+  } else {
+    // TODO await ANY_MESSAGE
+  }
+
+  if (connect.will) {
+    // TODO send will topic request
+  } else {
+    if (reuse_mqtt_sn_message_data(msg) < 0) {
+      return -1;
+    }
+
+    // int32_t enc_header_length =
+    // TODO continue here
+    int32_t gen_bytes = 0;
+    if ((gen_bytes = generate_connack(msg->data + gen_bytes, sizeof(msg->data) - gen_bytes, RETURN_CODE_ACCEPTED))
+        < 0) {
+      // should never happen
+#if WITH_LOGGING
+      // TODO log internal error + where
+#endif
+      return -1;
+    }
+    if (forwarders->forwarder_len > 0) {
+      int32_t fw_gen_rc = generate_multiple_forwarder_encapsulation_headers_byte(msg->data + gen_bytes,
+                                                                                 sizeof(msg->data) - gen_bytes,
+                                                                                 forwarders->forwarder_radiuses,
+                                                                                 forwarders->forwarder_addresses,
+                                                                                 forwarders->forwarder_len,
+                                                                                 &forwarders->wireless_node_id,
+                                                                                 msg->data,
+                                                                                 gen_bytes);
+      if (fw_gen_rc < 0) {
+        // the msg->data array was big enough for a connect message, thus is also bug enough for a connack message
+        // should never happen
+#if WITH_LOGGING
+        // TODO log internal error + where
+#endif
+        return -1;
+      }
+      gen_bytes += fw_gen_rc;
+    }
+    msg->data_length = gen_bytes;
+    if (put(handler->clientNetworkSendBuffer, msg) < 0) {
+      // should never happen
+#if WITH_LOGGING
+      // TODO log internal error + where
+#endif
+      return -1;
+    }
+  }
+
+#if WITH_LOGGING
+  // TODO log success
+#endif
+  return 0;
+}
+int32_t remove_client_subscriptions(MqttSnGatewayClientConnectionHandler *gateway,
+                                    const char *handler,
+                                    device_address *client_address) {
+  // TODO implement me
   return 0;
 }

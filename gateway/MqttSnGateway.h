@@ -18,6 +18,7 @@
 extern "C" {
 #endif
 
+
 typedef struct MqttSnGateway_ {
   db_handler db_handler_;
   MqttClient *mqttClient;
@@ -51,7 +52,6 @@ int32_t MqttSnGatewayConnect(MqttSnGateway *mqttSnGateway);
 int32_t MqttSnGatewayDisconnect(MqttSnGateway *mqttSnGateway);
 
 int32_t MqttSnGatewayLoop(MqttSnGateway *mqttSnGateway);
-
 
 #ifdef __cplusplus
 }
