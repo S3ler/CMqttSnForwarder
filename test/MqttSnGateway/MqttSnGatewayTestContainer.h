@@ -11,10 +11,12 @@
 #include <logging/MqttSnLoggingInterface.h>
 #include <gateway/MqttSnGateway.h>
 #include <gateway/config/gateway_config.h>
+#include <network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
 
 using std::thread;
 using std::atomic_bool;
 using std::string;
+using std::shared_ptr;
 
 class MqttSnGatewayTestContainer {
  private:
@@ -29,6 +31,8 @@ class MqttSnGatewayTestContainer {
   thread runner;
   atomic_bool running{false};
   atomic_bool stopped{false};
+
+  shared_ptr<MqttSnClientUdpNetwork> udpClientNetworkContext = nullptr;
  public:
   MqttSnGatewayTestContainer(const string &identifier, const string &cmd);
   int32_t initialize();

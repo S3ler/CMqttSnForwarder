@@ -12,10 +12,13 @@
 #include <forwarder/config/forwarder_config.h>
 #include <client/MqttSnClient.h>
 #include <client/pub/config/publish_client_config.h>
+#include <network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
+#include <network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h>
 
 using std::thread;
 using std::atomic_bool;
 using std::string;
+using std::shared_ptr;
 
 class MqttSnClientTestContainer {
  private:
@@ -30,6 +33,18 @@ class MqttSnClientTestContainer {
   thread runner;
   atomic_bool running{false};
   atomic_bool stopped{false};
+
+#ifdef WITH_LINUX_PLUGIN_NETWORK
+  shared_ptr<MqttSnGatewayPluginContext> gatewayPluginContext = nullptr;
+#endif
+#ifdef WITH_LINUX_TCP_GATEWAY_NETWORK
+  shared_ptr<MqttSnGatewayTcpNetwork> tcpGatewayNetworkContext = nullptr;
+#endif
+#ifdef WITH_LINUX_UDP_GATEWAY_NETWORK
+  shared_ptr<MqttSnGatewayUdpNetwork> udpGatewayNetworkContext = nullptr;
+#endif
+
+
  public:
   MqttSnClientTestContainer(const string &identifier, const string &cmd);
   int32_t initialize();

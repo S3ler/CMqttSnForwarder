@@ -16,6 +16,9 @@
 #include <network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
 #include <client/MqttSnClientLogger.h>
 #include "MqttSnClientTestContainer.h"
+
+using std::shared_ptr;
+
 MqttSnClientTestContainer::MqttSnClientTestContainer(const string &identifier, const string &cmd) : identifier(
     identifier), cmd(cmd) {}
 int32_t MqttSnClientTestContainer::initialize() {
@@ -129,6 +132,7 @@ void MqttSnClientTestContainer::loop() {
   MqttSnClientDeinit(&client);
 
   publish_client_config_cleanup(&client_cfg);
+
   running = false;
 }
 #ifdef WITH_LINUX_PLUGIN_NETWORK
@@ -177,7 +181,7 @@ int32_t MqttSnClientTestContainer::start_publish_client_plugin(const publish_cli
                                    &pluginForwarderGatewayNetworkAddress,
                                    &pluginForwarderGatewayNetworkBroadcastAddress);
 
-  MqttSnGatewayPluginContext gatewayPluginContext(&plugin_cfg);
+  gatewayPluginContext = shared_ptr<MqttSnGatewayPluginContext>(new MqttSnGatewayPluginContext(&plugin_cfg));
 
   if (GatewayNetworkInitialize(&publish_client
                                    ->gatewayNetwork,
@@ -185,12 +189,12 @@ int32_t MqttSnClientTestContainer::start_publish_client_plugin(const publish_cli
                                &mqttSnGatewayNetworkAddress,
                                &forwarderGatewayNetworkAddress,
                                &forwarderGatewayNetworkBroadcastAddress,
-                               &gatewayPluginContext,
+                               gatewayPluginContext.get(),
                                GatewayLinuxPluginInitialize)) {
     log_str(logger, "Error init gateway network\n");
     return EXIT_FAILURE;
   }
-  gatewayNetworkContext = &gatewayPluginContext;
+  gatewayNetworkContext = gatewayPluginContext.get();
 
   return start();
 }
@@ -203,7 +207,7 @@ int32_t MqttSnClientTestContainer::start_publish_client_udp(const publish_client
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkBroadcastAddress = {0};
-  MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
+  udpGatewayNetworkContext = shared_ptr<MqttSnGatewayUdpNetwork>(new MqttSnGatewayUdpNetwork());
 
   if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,
                                               cfg->msgcfg.mqtt_sn_gateway_port,
@@ -230,12 +234,12 @@ int32_t MqttSnClientTestContainer::start_publish_client_udp(const publish_client
                                &mqttSnGatewayNetworkAddress,
                                &forwarderGatewayNetworkAddress,
                                &forwarderGatewayNetworkBroadcastAddress,
-                               &udpGatewayNetworkContext,
+                               udpGatewayNetworkContext.get(),
                                GatewayLinuxUdpInitialize)) {
     log_str(logger, "Error init gateway network\n");
     return EXIT_FAILURE;
   }
-  gatewayNetworkContext = &udpGatewayNetworkContext;
+  gatewayNetworkContext = udpGatewayNetworkContext.get();
 
   return start();
 }
@@ -247,7 +251,8 @@ int32_t MqttSnClientTestContainer::start_publish_client_tcp(const publish_client
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkBroadcastAddress = {0};
-  MqttSnGatewayTcpNetwork tcpGatewayNetworkContext = {0};
+
+  tcpGatewayNetworkContext = shared_ptr<MqttSnGatewayTcpNetwork>(new MqttSnGatewayTcpNetwork());
 
   if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,
                                               cfg->msgcfg.mqtt_sn_gateway_port,
@@ -274,12 +279,12 @@ int32_t MqttSnClientTestContainer::start_publish_client_tcp(const publish_client
                                &mqttSnGatewayNetworkAddress,
                                &forwarderGatewayNetworkAddress,
                                &forwarderGatewayNetworkBroadcastAddress,
-                               &tcpGatewayNetworkContext,
+                               tcpGatewayNetworkContext.get(),
                                GatewayLinuxTcpInitialize)) {
     log_str(logger, "Error init client network\n");
     return EXIT_FAILURE;
   }
-  gatewayNetworkContext = &tcpGatewayNetworkContext;
+  gatewayNetworkContext = tcpGatewayNetworkContext.get();
 
   return start();
 }

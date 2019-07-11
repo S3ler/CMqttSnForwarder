@@ -262,7 +262,7 @@ int32_t MqttSnForwarderTestContainer::start_client_udp(const forwarder_config *f
   device_address forwarderClientNetworkAddress = {0};
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderClientNetworkBroadcastAddress = {0};
-  MqttSnClientUdpNetwork udpClientNetworkContext = {0};
+  udpClientNetworkContext = shared_ptr<MqttSnClientUdpNetwork>(new MqttSnClientUdpNetwork());
 
   if (convert_hostname_port_to_device_address(fcfg->msgcfg.mqtt_sn_gateway_host,
                                               fcfg->msgcfg.mqtt_sn_gateway_port,
@@ -290,12 +290,12 @@ int32_t MqttSnForwarderTestContainer::start_client_udp(const forwarder_config *f
                               &mqttSnGatewayNetworkAddress,
                               &forwarderClientNetworkAddress,
                               &forwarderClientNetworkBroadcastAddress,
-                              &udpClientNetworkContext,
+                              udpClientNetworkContext.get(),
                               ClientLinuxUdpInitialize)) {
     log_str(logger, "Error init client network\n");
     return EXIT_FAILURE;
   }
-  clientNetworkContext = &udpClientNetworkContext;
+  clientNetworkContext = udpClientNetworkContext.get();
 
   return start();
 }
@@ -420,7 +420,7 @@ int32_t MqttSnForwarderTestContainer::start_gateway_udp(const forwarder_config *
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkAddress = {0};
   device_address forwarderGatewayNetworkBroadcastAddress = {0};
-  MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
+  udpGatewayNetworkContext = shared_ptr<MqttSnGatewayUdpNetwork>(new MqttSnGatewayUdpNetwork());
 
   if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,
                                               cfg->msgcfg.mqtt_sn_gateway_port,
@@ -447,12 +447,12 @@ int32_t MqttSnForwarderTestContainer::start_gateway_udp(const forwarder_config *
                                &mqttSnGatewayNetworkAddress,
                                &forwarderGatewayNetworkAddress,
                                &forwarderGatewayNetworkBroadcastAddress,
-                               &udpGatewayNetworkContext,
+                               udpGatewayNetworkContext.get(),
                                GatewayLinuxUdpInitialize)) {
     log_str(logger, "Error init gateway network\n");
     return EXIT_FAILURE;
   }
-  gatewayNetworkContext = &udpGatewayNetworkContext;
+  gatewayNetworkContext = udpGatewayNetworkContext.get();
 
   return start();
 }

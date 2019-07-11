@@ -9,10 +9,13 @@
 #include <forwarder/config/forwarder_config.h>
 #include <thread>
 #include <atomic>
+#include <network/linux/gateway/ip/udp/MqttSnGatewayUdpNetwork.h>
+#include <network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
 
 using std::thread;
 using std::atomic_bool;
 using std::string;
+using std::shared_ptr;
 
 class MqttSnForwarderTestContainer {
  private:
@@ -28,16 +31,20 @@ class MqttSnForwarderTestContainer {
   thread runner;
   atomic_bool running{false};
   atomic_bool stopped{false};
+
+  shared_ptr<MqttSnGatewayUdpNetwork> udpGatewayNetworkContext = nullptr;
+  shared_ptr<MqttSnClientUdpNetwork> udpClientNetworkContext = nullptr;
+
  private:
   int32_t start_client_plugin(const forwarder_config *fcfg,
-                          const MqttSnLogger *logger,
-                          MqttSnForwarder *mqttSnForwarder);
+                              const MqttSnLogger *logger,
+                              MqttSnForwarder *mqttSnForwarder);
   int32_t start_client_tcp(const forwarder_config *fcfg,
-                       const MqttSnLogger *logger,
-                       MqttSnForwarder *mqttSnForwarder);
+                           const MqttSnLogger *logger,
+                           MqttSnForwarder *mqttSnForwarder);
   int32_t start_client_udp(const forwarder_config *fcfg,
-                       const MqttSnLogger *logger,
-                       MqttSnForwarder *mqttSnForwarder);
+                           const MqttSnLogger *logger,
+                           MqttSnForwarder *mqttSnForwarder);
  public:
   MqttSnForwarderTestContainer(const string &identifier, const string &cmd);
   int32_t initialize();
