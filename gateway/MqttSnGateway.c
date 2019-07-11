@@ -197,6 +197,10 @@ int32_t parse_and_handle_message(MqttSnGateway *mqttSnGateway,
     return 0;
   }
 
+  if (forwarders->forwarder_len == 0) {
+    forwarders->wireless_node_id = clientMessageData->from;
+  }
+
   switch (header.msg_type) {
     case ADVERTISE: return parse_and_handle_advertise(mqttSnGateway, clientMessageData);
       break;

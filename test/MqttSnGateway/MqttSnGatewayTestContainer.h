@@ -44,6 +44,9 @@ class MqttSnGatewayTestContainer {
   void loop();
 
  private:
+  device_address forwarderClientNetworkAddress = {0};
+  device_address mqttSnGatewayNetworkAddress = {0};
+  device_address forwarderClientNetworkBroadcastAddress = {0};
   int start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
                                    const MqttSnLogger *logger,
                                    MqttSnGateway *mqtt_sn_gateway);
