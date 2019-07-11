@@ -1,71 +1,66 @@
 //
-// Created by SomeDude on 18.06.2019.
+// Created by SomeDude on 09.07.2019.
 //
 
+#include <logging/linux/stdout/StdoutLogging.h>
 #include <gateway/config/gateway_config.h>
-#include <bits/types/sig_atomic_t.h>
-#include <stdlib.h>
-#include <config/starter/starter_helper.h>
+#include <config/common/config_command_helper.h>
+#include <gateway/starter/linux/gateway_starter.h>
 #include <platform/platform_compatibility.h>
-#include <pthread.h>
-#include <signal.h>
-#include <network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
+#include <config/starter/starter_helper.h>
 #include <network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 #include <network/shared/ip/IpHelper.h>
 #include <network/linux/client/plugin/client_network_plugin_interface.h>
 #include <network/linux/client/plugin/MqttSnClientPluginNetwork.h>
 #include <network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h>
-#include "gateway_starter.h"
+#include "MqttSnGatewayTestContainer.h"
 
-static volatile sig_atomic_t keep_running = 1;
+MqttSnGatewayTestContainer::MqttSnGatewayTestContainer(const string &identifier, const string &cmd)
+    : identifier(identifier), cmd(cmd) {}
 
-static void sig_handler(int _) {
-  (void) _;
-  keep_running = 0;
-}
-
-void *gateway_inc_c(void *egw_fcfg_ptr) {
-  MqttSnGateway *mqtt_sn_gateway = ((MqttSnGateway_fcfg_ptr *) egw_fcfg_ptr)->msgw_ptr;
-  if (MqttSnGatewayConnect(mqtt_sn_gateway) < 0) {
-    MqttSnGatewayDisconnect(mqtt_sn_gateway);
-#ifdef WITH_LOGGING
-    const mqtt_sn_gateway__config *cfg = ((MqttSnGateway_fcfg_ptr *) egw_fcfg_ptr)->msgw_cfg;
-    print_program_terminated(&mqtt_sn_gateway->logger, &cfg->msvcfg, cfg->executable_name);
-#endif
-    MqttSnGatewayDeinitialize(mqtt_sn_gateway);
-    return (void *) EXIT_SUCCESS;
+int32_t MqttSnGatewayTestContainer::initialize() {
+  if (isRunning()) {
+    return EXIT_FAILURE;
+  }
+  if (MqttSnLoggerInit(&gw_logger, LOG_LEVEL_VERBOSE, stdout_log_init)) {
+    return EXIT_FAILURE;
   }
 
-  while ((MqttSnGatewayLoop(mqtt_sn_gateway) >= 0) & keep_running) {}
-
-  MqttSnGatewayDisconnect(mqtt_sn_gateway);
-#ifdef WITH_LOGGING
-  const mqtt_sn_gateway__config *cfg = ((MqttSnGateway_fcfg_ptr *) egw_fcfg_ptr)->msgw_cfg;
-  print_program_terminated(&mqtt_sn_gateway->logger, &cfg->msvcfg, cfg->executable_name);
-#endif
-  MqttSnGatewayDeinitialize(mqtt_sn_gateway);
-  return (void *) EXIT_SUCCESS;
+  if (mqtt_sn_gateway__config_init(&gateway_config) < 0) {
+    return EXIT_FAILURE;
+  }
+  int32_t rc = process_config_file_line(&gw_logger,
+                                        cmd.data(),
+                                        cmd.length() + 1,
+                                        identifier.data(),
+                                        &gateway_config,
+                                        mqtt_sn_gateway__config_file_process_command_callback);
+  if (rc) {
+    mqtt_sn_gateway__config_cleanup(&gateway_config);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
 
-int start_mqtt_sn_gateway(const mqtt_sn_gateway__config *fcfg,
-                          const MqttSnLogger *logger,
-                          MqttSnGateway *mqtt_sn_gateway,
-                          void *clientNetworkContext) {
+int32_t MqttSnGatewayTestContainer::start() {
+  const mqtt_sn_gateway__config *fcfg = &gateway_config;
+  MqttSnGateway *mqtt_sn_gateway = &gateway;
+  const MqttSnLogger *logger = &gw_logger;
 
   if (clientNetworkContext == NULL) {
 #ifdef WITH_LINUX_PLUGIN_NETWORK
     if (fcfg->cncfg.client_network_plugin_path != NULL) {
-      return start_mqtt_sn_gateway_plugin(fcfg, logger, mqtt_sn_gateway, clientNetworkContext);
+      return start_mqtt_sn_gateway_plugin(fcfg, logger, mqtt_sn_gateway);
     }
 #endif
 #ifdef WITH_LINUX_TCP_CLIENT_NETWORK
     if (!strcmp(fcfg->cncfg.client_network_protocol, "tcp")) {
-      return start_mqtt_sn_gateway_tcp(fcfg, logger, mqtt_sn_gateway, clientNetworkContext);
+      return start_mqtt_sn_gateway_tcp(fcfg, logger, mqtt_sn_gateway);
     }
 #endif
 #ifdef WITH_LINUX_UDP_CLIENT_NETWORK
     if (!strcmp(fcfg->cncfg.client_network_protocol, "udp")) {
-      return start_mqtt_sn_gateway_client_udp(fcfg, logger, mqtt_sn_gateway, clientNetworkContext);
+      return start_mqtt_sn_gateway_client_udp(fcfg, logger, mqtt_sn_gateway);
     }
 #endif
     log_str(logger, PSTR("Error init client network unknown protocol:"));
@@ -76,9 +71,7 @@ int start_mqtt_sn_gateway(const mqtt_sn_gateway__config *fcfg,
 
   mqtt_sn_gateway->clientNetworkSendTimeout = fcfg->cncfg.client_network_send_timeout;
   mqtt_sn_gateway->clientNetworkReceiveTimeout = fcfg->cncfg.client_network_receive_timeout;
-#ifdef WITH_LOGGING
-  print_program_started(logger, &fcfg->msvcfg, fcfg->executable_name);
-#endif
+
   MqttSnLogger mqtt_sn_gateway_logger = {0};
   if (MqttSnLoggerInit(&mqtt_sn_gateway_logger, fcfg->mslcfg.log_lvl, stdout_log_init)) {
 #ifdef WITH_LOGGING
@@ -86,6 +79,11 @@ int start_mqtt_sn_gateway(const mqtt_sn_gateway__config *fcfg,
 #endif
     return EXIT_FAILURE;
   }
+
+#ifdef WITH_LOGGING
+  print_program_started(&gateway.logger, &gateway_config.msvcfg, gateway_config.executable_name);
+#endif
+
   // FIXME MqttClient
   if (MqttSnGatewayInitialize(mqtt_sn_gateway,
                               &mqtt_sn_gateway_logger,
@@ -98,28 +96,52 @@ int start_mqtt_sn_gateway(const mqtt_sn_gateway__config *fcfg,
     return EXIT_FAILURE;
   }
 
-  signal(SIGINT, sig_handler);
-  pthread_t thread;
-  MqttSnGateway_fcfg_ptr egw_fcfg_ptr = {.msgw_ptr = mqtt_sn_gateway, .msgw_cfg=fcfg};
-  if (pthread_create(&thread, NULL, gateway_inc_c, &egw_fcfg_ptr)) {
-    log_str(logger, "Error creating thread\n");
+  if (MqttSnGatewayConnect(&gateway) < 0) {
+    MqttSnGatewayDisconnect(&gateway);
+#ifdef WITH_LOGGING
+    print_program_terminated(&gateway.logger, &gateway_config.msvcfg, gateway_config.executable_name);
+#endif
+    MqttSnGatewayDeinitialize(&gateway);
+    running = false;
     return EXIT_FAILURE;
   }
 
-  int rc;
-  if (pthread_join(thread, (void *) &rc)) {
-    log_str(logger, "Error joining thread\n");
-    return EXIT_FAILURE;
-  }
+  runner = thread(&MqttSnGatewayTestContainer::loop, this);
+  runner.detach();
 
-  return rc;
+  return EXIT_SUCCESS;
+}
+void MqttSnGatewayTestContainer::stop() {
+  stopped = true;
+}
+bool MqttSnGatewayTestContainer::isStopped() {
+  return stopped;
+}
+bool MqttSnGatewayTestContainer::isRunning() {
+  return running;
+}
+void MqttSnGatewayTestContainer::loop() {
+  stopped = false;
+  running = false;
+
+
+
+
+  while ((MqttSnGatewayLoop(&gateway) >= 0) & !stopped) {}
+
+  MqttSnGatewayDisconnect(&gateway);
+#ifdef WITH_LOGGING
+  print_program_terminated(&gateway.logger, &gateway_config.msvcfg, gateway_config.executable_name);
+#endif
+  MqttSnGatewayDeinitialize(&gateway);
+  mqtt_sn_gateway__config_cleanup(&gateway_config);
+  running = false;
 }
 
 #ifdef WITH_LINUX_PLUGIN_NETWORK
-int start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
-                                 const MqttSnLogger *logger,
-                                 MqttSnGateway *mqtt_sn_gateway,
-                                 void *clientNetworkContext) {
+int MqttSnGatewayTestContainer::start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
+                                                             const MqttSnLogger *logger,
+                                                             MqttSnGateway *mqtt_sn_gateway) {
 
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderClientNetworkAddress = {0};
@@ -147,27 +169,16 @@ int start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
     return EXIT_FAILURE;
   }
 
-  const client_plugin_device_address pluginMqttSnForwarderNetworkAddress = {
-      .bytes = forwarderClientNetworkAddress.bytes,
-      .length = sizeof(device_address)};
+  client_plugin_device_address
+      pluginMqttSnForwarderNetworkAddress(forwarderClientNetworkAddress.bytes, sizeof(device_address));
 
-  client_plugin_config plugin_cfg = {
-      .plugin_path = fcfg->cncfg.client_network_plugin_path,
-      .protocol = fcfg->cncfg.client_network_protocol,
-      .forwarder_client_network_address = &pluginMqttSnForwarderNetworkAddress,
-      .client_plugin_device_address_length = MQTT_SN_DEVICE_ADDRESS_LENGTH,
-      .forwarder_maximum_message_length = MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH};
+  client_plugin_config plugin_cfg(fcfg->cncfg.client_network_plugin_path,
+                                  fcfg->cncfg.client_network_protocol,
+                                  MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
+                                  MQTT_SN_DEVICE_ADDRESS_LENGTH,
+                                  &pluginMqttSnForwarderNetworkAddress);
 
-  MqttSnClientPluginContext clientPluginContext = {
-      .dl_handle = NULL,
-      .plugin_network_initialize = NULL,
-      .plugin_network_disconnect = NULL,
-      .plugin_network_connect = NULL,
-      .plugin_network_receive = NULL,
-      .plugin_network_send = NULL,
-      .plugin_context = NULL,
-      .plugin_cfg = &plugin_cfg
-  };
+  MqttSnClientPluginContext clientPluginContext(&plugin_cfg);
 
   if (ClientNetworkInitialize(&mqtt_sn_gateway->clientNetwork,
                               MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
@@ -181,16 +192,14 @@ int start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
   }
   clientNetworkContext = &clientPluginContext;
 
-  return start_mqtt_sn_gateway(fcfg, logger, mqtt_sn_gateway, clientNetworkContext);
-
+  return start();
 }
 #endif
 
 #ifdef WITH_LINUX_TCP_CLIENT_NETWORK
-int start_mqtt_sn_gateway_tcp(const mqtt_sn_gateway__config *fcfg,
-                              const MqttSnLogger *logger,
-                              MqttSnGateway *mqtt_sn_gateway,
-                              void *clientNetworkContext) {
+int MqttSnGatewayTestContainer::start_mqtt_sn_gateway_tcp(const mqtt_sn_gateway__config *fcfg,
+                                                          const MqttSnLogger *logger,
+                                                          MqttSnGateway *mqtt_sn_gateway) {
 
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderClientNetworkAddress = {0};
@@ -232,15 +241,14 @@ int start_mqtt_sn_gateway_tcp(const mqtt_sn_gateway__config *fcfg,
   }
   clientNetworkContext = &tcpClientNetworkContext;
 
-  return start_mqtt_sn_gateway(fcfg, logger, mqtt_sn_gateway, clientNetworkContext);
+  return start();
 }
 #endif
 
 #ifdef WITH_LINUX_UDP_CLIENT_NETWORK
-int start_mqtt_sn_gateway_client_udp(const mqtt_sn_gateway__config *fcfg,
-                                     const MqttSnLogger *logger,
-                                     MqttSnGateway *mqtt_sn_gateway,
-                                     void *clientNetworkContext) {
+int MqttSnGatewayTestContainer::start_mqtt_sn_gateway_client_udp(const mqtt_sn_gateway__config *fcfg,
+                                                                 const MqttSnLogger *logger,
+                                                                 MqttSnGateway *mqtt_sn_gateway) {
 
   device_address forwarderClientNetworkAddress = {0};
   device_address mqttSnGatewayNetworkAddress = {0};
@@ -282,6 +290,6 @@ int start_mqtt_sn_gateway_client_udp(const mqtt_sn_gateway__config *fcfg,
   }
   clientNetworkContext = &udpClientNetworkContext;
 
-  return start_mqtt_sn_gateway(fcfg, logger, mqtt_sn_gateway, clientNetworkContext);
+  return start();
 }
 #endif

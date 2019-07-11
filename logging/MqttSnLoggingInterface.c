@@ -13,6 +13,7 @@
 int MqttSnLoggerInit(MqttSnLogger *logger,
                      log_level_t log_level,
                      int (*log_init)(struct MqttSnLoggerInterface_ *logger)) {
+  memset(logger, 0, sizeof(MqttSnLogger));
   logger->log_level = log_level;
   logger->log_init = log_init;
   logger->status = -1;

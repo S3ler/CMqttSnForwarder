@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 #ifndef MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID
-#define MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID 1
+#define MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID 0
 #endif
 typedef struct gateway_advertisement_config_ {
   uint16_t advertisement_duration;

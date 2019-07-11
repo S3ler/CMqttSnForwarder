@@ -39,7 +39,7 @@ void publish_client_config_cleanup(publish_client_config *cfg) {
 int32_t publish_client_config_file_process_command_callback(void *cfg,
                                                             const MqttSnLogger *logger,
                                                             int argc,
-                                                            char *argv[]) {
+                                                            char **argv) {
   publish_client_config *pccfg = cfg;
   return publish_client_config_process_line(pccfg, logger, argc, argv);
 }

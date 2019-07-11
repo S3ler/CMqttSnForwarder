@@ -1,0 +1,286 @@
+//
+// Created by SomeDude on 09.07.2019.
+//
+
+#include <config/starter/starter_helper.h>
+#include <client/pub/config/publish_client_config.h>
+#include <client/pub/linux/starter/publish_client_starter.h>
+#include <logging/linux/stdout/StdoutLogging.h>
+#include <config/common/config_command_helper.h>
+#include <string.h>
+#include <network/linux/shared/ip/MqttSnIpNetworkHelper.h>
+#include <network/shared/ip/IpHelper.h>
+#include <network/linux/gateway/plugin/gateway_network_plugin_interface.h>
+#include <network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h>
+#include <network/linux/gateway/ip/udp/MqttSnGatewayUdpNetwork.h>
+#include <network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
+#include <client/MqttSnClientLogger.h>
+#include "MqttSnClientTestContainer.h"
+MqttSnClientTestContainer::MqttSnClientTestContainer(const string &identifier, const string &cmd) : identifier(
+    identifier), cmd(cmd) {}
+int32_t MqttSnClientTestContainer::initialize() {
+  if (isRunning()) {
+    return -1;
+  }
+  if (MqttSnLoggerInit(&client_logger, LOG_LEVEL_VERBOSE, stdout_log_init)) {
+    return -1;
+  }
+
+  if (publish_client_config_init(&client_cfg) < 0) {
+    return EXIT_FAILURE;
+  }
+
+  int32_t rc = process_config_file_line(&client_logger,
+                                        cmd.data(),
+                                        cmd.length() + 1,
+                                        identifier.data(),
+                                        &client_cfg,
+                                        publish_client_config_file_process_command_callback);
+
+  if (rc) {
+    publish_client_config_cleanup(&client_cfg);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
+}
+int32_t MqttSnClientTestContainer::start() {
+  const publish_client_config *cfg = &client_cfg;
+  const MqttSnLogger *logger = &client_logger;
+  MqttSnClient *publish_client = &client;
+
+  if (gatewayNetworkContext == NULL) {
+#ifdef WITH_LINUX_PLUGIN_NETWORK
+    if (cfg->gncfg.gateway_network_plugin_path != NULL) {
+      return start_publish_client_plugin(cfg, publish_client, logger);
+    }
+#endif
+#ifdef WITH_LINUX_UDP_GATEWAY_NETWORK
+    if (!strcmp(cfg->gncfg.gateway_network_protocol, "udp")) {
+      return start_publish_client_udp(cfg, publish_client, logger);
+    }
+#endif
+#ifdef WITH_LINUX_TCP_GATEWAY_NETWORK
+    if (!strcmp(cfg->gncfg.gateway_network_protocol, "tcp")) {
+      return start_publish_client_tcp(cfg, publish_client, logger);
+    }
+#endif
+    log_str(logger, "Error init gateway network unknown protocol: ");
+    log_str(logger, cfg->gncfg.gateway_network_protocol);
+    log_str(logger, "\n");
+    return EXIT_FAILURE;
+  }
+
+  publish_client->gatewayNetworkSendTimeout = cfg->gncfg.gateway_network_send_timeout;
+  publish_client->gatewayNetworkReceiveTimeout = cfg->gncfg.gateway_network_receive_timeout;
+
+  if (MqttSnClientInit(publish_client, cfg->mslcfg.log_lvl, gatewayNetworkContext) < 0) {
+    MqttSnClientDeinit(publish_client);
+    return EXIT_FAILURE;
+  }
+
+  runner = thread(&MqttSnClientTestContainer::loop, this);
+  runner.detach();
+
+  return EXIT_SUCCESS;
+}
+void MqttSnClientTestContainer::stop() {
+  stopped = true;
+}
+bool MqttSnClientTestContainer::isStopped() {
+  return stopped;
+}
+bool MqttSnClientTestContainer::isRunning() {
+  return running;
+}
+void MqttSnClientTestContainer::loop() {
+  stopped = false;
+  running = false;
+
+  const publish_client_config *cfg = &client_cfg;
+  MqttSnClient *publish_client = &client;
+
+  MQTT_SN_CLIENT_RETURN_CODE connect_rc;
+  MqttSnClientTimeoutOffset(publish_client, cfg->cccfg.connect_timeout_offset);
+  if ((connect_rc = MqttSnClientConnect(publish_client,
+                                        publish_client->gatewayNetwork.mqtt_sn_gateway_address,
+                                        cfg->cccfg.client_connect_timeout_ms,
+                                        cfg->cccfg.clean_session,
+                                        cfg->cccfg.client_id,
+                                        cfg->cccfg.connect_duration)) != MQTT_SN_CLIENT_RETURN_SUCCESS) {
+
+    log_mqtt_sn_client(&publish_client->logger, connect_rc);
+    // TODO log error here
+#ifdef WITH_LOGGING
+    print_program_terminated(&publish_client->logger, &cfg->msvcfg, cfg->executable_name);
+#endif
+    MqttSnClientDeinit(publish_client);
+    return;
+  }
+
+#ifdef WITH_LOGGING
+  print_program_started(&client.logger, &client_cfg.msvcfg, client_cfg.executable_name);
+#endif
+
+  while ((MqttSnClientLoop(&client) >= 0 && client.connected) & !stopped) {}
+
+#ifdef WITH_LOGGING
+  print_program_terminated(&client.logger, &client_cfg.msvcfg, client_cfg.executable_name);
+#endif
+  MqttSnClientDeinit(&client);
+
+  publish_client_config_cleanup(&client_cfg);
+  running = false;
+}
+#ifdef WITH_LINUX_PLUGIN_NETWORK
+int32_t MqttSnClientTestContainer::start_publish_client_plugin(const publish_client_config *cfg,
+                                                               MqttSnClient *publish_client,
+                                                               const MqttSnLogger *logger) {
+  device_address mqttSnGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkBroadcastAddress = {0};
+
+  if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,
+                                              cfg->msgcfg.mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_hostname_port_to_device_address(cfg->gncfg.gateway_network_bind_address,
+                                              cfg->gncfg.gateway_network_bind_port,
+                                              &forwarderGatewayNetworkAddress,
+                                              "gateway")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_string_ip_port_to_device_address(logger,
+                                               cfg->gncfg.gateway_network_broadcast_address,
+                                               cfg->gncfg.gateway_network_broadcast_bind_port,
+                                               &forwarderGatewayNetworkBroadcastAddress,
+                                               "gateway broadcast")) {
+    return EXIT_FAILURE;
+  }
+
+  const gateway_plugin_device_address pluginMqttSnGatewayNetworkAddress(mqttSnGatewayNetworkAddress.bytes,
+                                                                        sizeof(device_address));
+
+  const gateway_plugin_device_address pluginForwarderGatewayNetworkAddress(forwarderGatewayNetworkAddress.bytes,
+                                                                           sizeof(device_address));
+
+  const gateway_plugin_device_address
+      pluginForwarderGatewayNetworkBroadcastAddress(forwarderGatewayNetworkBroadcastAddress.bytes,
+                                                    sizeof(device_address));
+
+  gateway_plugin_config plugin_cfg(cfg->gncfg.gateway_network_plugin_path,
+                                   cfg->gncfg.gateway_network_protocol,
+                                   MQTT_SN_DEVICE_ADDRESS_LENGTH,
+                                   MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
+                                   &pluginMqttSnGatewayNetworkAddress,
+                                   &pluginForwarderGatewayNetworkAddress,
+                                   &pluginForwarderGatewayNetworkBroadcastAddress);
+
+  MqttSnGatewayPluginContext gatewayPluginContext(&plugin_cfg);
+
+  if (GatewayNetworkInitialize(&publish_client
+                                   ->gatewayNetwork,
+                               MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
+                               &mqttSnGatewayNetworkAddress,
+                               &forwarderGatewayNetworkAddress,
+                               &forwarderGatewayNetworkBroadcastAddress,
+                               &gatewayPluginContext,
+                               GatewayLinuxPluginInitialize)) {
+    log_str(logger, "Error init gateway network\n");
+    return EXIT_FAILURE;
+  }
+  gatewayNetworkContext = &gatewayPluginContext;
+
+  return start();
+}
+#endif
+#ifdef WITH_LINUX_UDP_GATEWAY_NETWORK
+int32_t MqttSnClientTestContainer::start_publish_client_udp(const publish_client_config *cfg,
+                                                            MqttSnClient *publish_client,
+                                                            const MqttSnLogger *logger) {
+
+  device_address mqttSnGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkBroadcastAddress = {0};
+  MqttSnGatewayUdpNetwork udpGatewayNetworkContext = {0};
+
+  if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,
+                                              cfg->msgcfg.mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_hostname_port_to_device_address(cfg->gncfg.gateway_network_bind_address,
+                                              cfg->gncfg.gateway_network_bind_port,
+                                              &forwarderGatewayNetworkAddress,
+                                              "gateway unicast")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_string_ip_port_to_device_address(logger,
+                                               cfg->gncfg.gateway_network_broadcast_address,
+                                               cfg->gncfg.gateway_network_broadcast_bind_port,
+                                               &forwarderGatewayNetworkBroadcastAddress,
+                                               "gateway broadcast")) {
+    return EXIT_FAILURE;
+  }
+
+  if (GatewayNetworkInitialize(&publish_client->gatewayNetwork,
+                               MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
+                               &mqttSnGatewayNetworkAddress,
+                               &forwarderGatewayNetworkAddress,
+                               &forwarderGatewayNetworkBroadcastAddress,
+                               &udpGatewayNetworkContext,
+                               GatewayLinuxUdpInitialize)) {
+    log_str(logger, "Error init gateway network\n");
+    return EXIT_FAILURE;
+  }
+  gatewayNetworkContext = &udpGatewayNetworkContext;
+
+  return start();
+}
+#endif
+#ifdef WITH_LINUX_TCP_GATEWAY_NETWORK
+int32_t MqttSnClientTestContainer::start_publish_client_tcp(const publish_client_config *cfg,
+                                                            MqttSnClient *publish_client,
+                                                            const MqttSnLogger *logger) {
+  device_address mqttSnGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkBroadcastAddress = {0};
+  MqttSnGatewayTcpNetwork tcpGatewayNetworkContext = {0};
+
+  if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,
+                                              cfg->msgcfg.mqtt_sn_gateway_port,
+                                              &mqttSnGatewayNetworkAddress,
+                                              "mqtt-sn gateway")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_hostname_port_to_device_address(cfg->gncfg.gateway_network_bind_address,
+                                              cfg->gncfg.gateway_network_bind_port,
+                                              &forwarderGatewayNetworkAddress,
+                                              "gateway")) {
+    return EXIT_FAILURE;
+  }
+  if (convert_string_ip_port_to_device_address(logger,
+                                               cfg->gncfg.gateway_network_broadcast_address,
+                                               cfg->gncfg.gateway_network_broadcast_bind_port,
+                                               &forwarderGatewayNetworkBroadcastAddress,
+                                               "gateway broadcast")) {
+    return EXIT_FAILURE;
+  }
+
+  if (GatewayNetworkInitialize(&publish_client->gatewayNetwork,
+                               MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
+                               &mqttSnGatewayNetworkAddress,
+                               &forwarderGatewayNetworkAddress,
+                               &forwarderGatewayNetworkBroadcastAddress,
+                               &tcpGatewayNetworkContext,
+                               GatewayLinuxTcpInitialize)) {
+    log_str(logger, "Error init client network\n");
+    return EXIT_FAILURE;
+  }
+  gatewayNetworkContext = &tcpGatewayNetworkContext;
+
+  return start();
+}
+#endif

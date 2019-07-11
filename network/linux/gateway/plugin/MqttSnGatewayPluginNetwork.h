@@ -33,6 +33,9 @@ typedef struct MqttSnGatewayPluginContext_ {
                                     int32_t timeout_ms,
                                     const gateway_plugin_config *cfg,
                                     void *plugin_context);
+#ifdef __cplusplus
+  MqttSnGatewayPluginContext_(const gateway_plugin_config *plugin_cfg) : plugin_cfg(plugin_cfg) {}
+#endif
 } MqttSnGatewayPluginContext;
 
 int32_t GatewayLinuxPluginInitialize(MqttSnGatewayNetworkInterface *n, void *context);

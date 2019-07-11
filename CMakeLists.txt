@@ -439,10 +439,16 @@ target_include_directories(lib-mqtt-sn-gateway-config PRIVATE .)
 target_compile_options(lib-mqtt-sn-gateway-config PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 target_link_libraries(lib-mqtt-sn-gateway-config lib-mqtt-sn-client-network-config lib-mqtt-sn-common-config)
 
-add_executable(MqttSnGateway gateway/starter/linux/main.c gateway/starter/linux/gateway_starter.c gateway/starter/linux/gateway_starter.h)
+add_executable(MqttSnGateway gateway/starter/linux/main.c)
 target_compile_options(MqttSnGateway PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 target_include_directories(MqttSnGateway PRIVATE .)
-target_link_libraries(MqttSnGateway lib-mqtt-sn-gateway-config lib-mqtt-sn-gateway lib-mqtt-sn-linux-client-network)
+target_link_libraries(MqttSnGateway lib-mqtt-sn-linux-gateway-starter lib-mqtt-sn-gateway-config lib-mqtt-sn-gateway lib-mqtt-sn-linux-client-network)
+if (WITH_LOGGING)
+    target_link_libraries(MqttSnGateway lib-mqtt-sn-logging)
+endif ()
+if (WITH_LINUX_PLUGIN_NETWORK)
+    target_link_libraries(MqttSnGateway lib-mqtt-sn-linux-plugin-client-network)
+endif ()
 
 
 add_library(lib-mqtt-sn-find-gateway client/MqttSnFindGatewayClient.c client/MqttSnFindGatewayClient.h)
@@ -835,13 +841,36 @@ if (WITH_MQTT_SN_PARSER_TESTING)
 
     enable_testing()
 
+    add_library(LibMqttSnGatewayTestContainer test/MqttSnGateway/MqttSnGatewayTestContainer.cpp test/MqttSnGateway/MqttSnGatewayTestContainer.h)
+    target_include_directories(LibMqttSnGatewayTestContainer PRIVATE .)
+    target_compile_options(LibMqttSnGatewayTestContainer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(LibMqttSnGatewayTestContainer lib-mqtt-sn-linux-gateway-starter lib-mqtt-sn-gateway-config lib-mqtt-sn-gateway lib-mqtt-sn-linux-client-network)
+    if (WITH_LINUX_PLUGIN_NETWORK)
+        target_link_libraries(LibMqttSnGatewayTestContainer lib-mqtt-sn-linux-plugin-client-network)
+    endif ()
+
+    add_library(LibMqttSnForwarderTestContainer test/MqttSnForwarder/MqttSnForwarderTestContainer.cpp test/MqttSnForwarder/MqttSnForwarderTestContainer.h)
+    target_include_directories(LibMqttSnForwarderTestContainer PRIVATE .)
+    target_compile_options(LibMqttSnForwarderTestContainer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(LibMqttSnForwarderTestContainer lib-mqtt-sn-forwarder lib-mqtt-sn-forwarder-config lib-mqtt-sn-linux-forwarder-starter lib-mqtt-sn-platform-abstraction-layer)
+
+    add_library(LibMqttSnClientTestContainer test/MqttSnClient/MqttSnClientTestContainer.cpp test/MqttSnClient/MqttSnClientTestContainer.h
+            client/pub/linux/starter/publish_client_starter.c client/pub/linux/starter/publish_client_starter.h
+            parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h)
+    target_include_directories(LibMqttSnClientTestContainer PRIVATE .)
+    target_compile_options(LibMqttSnClientTestContainer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(LibMqttSnClientTestContainer lib-mqtt-sn-client lib-mqtt-sn-client-config lib-mqtt-sn-gateway-network-config lib-mqtt-sn-platform-abstraction-layer)
+
+
     add_executable(mqtt-sn-message-parser-tests test/parser/MqttSnParserEncapsulationMessageParseTests.cpp test/parser/MqttSnParserEncapsulationMessageParseTests.h)
     target_include_directories(mqtt-sn-message-parser-tests PRIVATE .)
     target_link_libraries(mqtt-sn-message-parser-tests gtest gtest_main gmock lib-mqtt-sn-message-parser)
 
-    add_executable(mqtt-sn-multiple-forwarder-tests test/MqttSnMultipleForwarderTest/MqttSnMultipleForwarderTests.cpp test/MqttSnMultipleForwarderTest/MqttSnMultipleForwarderTests.h)
-    target_include_directories(mqtt-sn-multiple-forwarder-tests PRIVATE .)
-    target_link_libraries(mqtt-sn-multiple-forwarder-tests gtest gtest_main gmock lib-mqtt-sn-client lib-mqtt-sn-forwarder lib-mqtt-sn-gateway )
+    add_executable(MqttSnMultipleForwarderTests test/MqttSnMultipleForwarderTest/MqttSnMultipleForwarderTests.cpp test/MqttSnMultipleForwarderTest/MqttSnMultipleForwarderTests.h)
+    target_include_directories(MqttSnMultipleForwarderTests PRIVATE .)
+    target_link_libraries(MqttSnMultipleForwarderTests gtest gtest_main gmock LibMqttSnClientTestContainer LibMqttSnForwarderTestContainer LibMqttSnGatewayTestContainer)
+
+
 endif (WITH_MQTT_SN_PARSER_TESTING)
 
 if (WITH_TESTING)

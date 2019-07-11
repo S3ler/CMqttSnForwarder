@@ -12,8 +12,11 @@ extern "C" {
 #include <stdint.h>
 
 typedef struct gateway_plugin_device_address_ {
-  uint16_t length;
-  uint8_t *bytes;
+  const uint8_t *bytes;
+  const uint16_t length;
+#ifdef __cplusplus
+  gateway_plugin_device_address_(const uint8_t *bytes, const uint16_t length) : bytes(bytes), length(length) {}
+#endif
 } gateway_plugin_device_address;
 typedef struct gateway_plugin_config_ {
   const char *plugin_path;
@@ -23,6 +26,22 @@ typedef struct gateway_plugin_config_ {
   const gateway_plugin_device_address *mqtt_sn_gateway_network_address;
   const gateway_plugin_device_address *forwarder_gateway_network_address;
   const gateway_plugin_device_address *forwarder_gateway_network_broadcast_address;
+#ifdef __cplusplus
+  gateway_plugin_config_(const char *plugin_path,
+                        const char *protocol,
+                        const uint16_t forwarder_maximum_message_length,
+                        const uint16_t gateway_plugin_device_address_length,
+                        const gateway_plugin_device_address *mqtt_sn_gateway_network_address,
+                        const gateway_plugin_device_address *forwarder_gateway_network_address,
+                        const gateway_plugin_device_address *forwarder_gateway_network_broadcast_address) :
+  plugin_path(plugin_path),
+  protocol(protocol),
+  forwarder_maximum_message_length(forwarder_maximum_message_length),
+  gateway_plugin_device_address_length(gateway_plugin_device_address_length),
+  mqtt_sn_gateway_network_address(mqtt_sn_gateway_network_address),
+  forwarder_gateway_network_address(forwarder_gateway_network_address),
+  forwarder_gateway_network_broadcast_address(forwarder_gateway_network_broadcast_address) {}
+#endif
 } gateway_plugin_config;
 
 typedef struct gateway_plugin_send_device_address_ {
@@ -132,5 +151,4 @@ int32_t gateway_plugin_network_send(const gateway_plugin_send_message *send_mess
 #ifdef __cplusplus
 }
 #endif
-
 #endif //CMQTTSNFORWARDER_GATEWAY_NETWORK_PLUGIN_INTERFACE_H

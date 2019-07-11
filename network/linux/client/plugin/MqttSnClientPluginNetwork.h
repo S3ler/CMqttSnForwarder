@@ -14,7 +14,6 @@ extern "C" {
 typedef struct MqttSnClientPluginContext_ {
   void *dl_handle;
   void *plugin_context;
-  const client_plugin_config *plugin_cfg;
 
   const char *(*plugin_get_short_network_protocol_name)(void);
   uint16_t (*plugin_get_maximum_message_length)(void);
@@ -33,6 +32,12 @@ typedef struct MqttSnClientPluginContext_ {
                                     int32_t timeout_ms,
                                     const client_plugin_config *cfg,
                                     void *plugin_context);
+
+  const client_plugin_config *plugin_cfg;
+
+#ifdef __cplusplus
+  MqttSnClientPluginContext_(client_plugin_config* plugin_cfg) :  plugin_cfg(plugin_cfg) {}
+#endif
 } MqttSnClientPluginContext;
 
 int32_t ClientLinuxPluginInitialize(MqttSnClientNetworkInterface *n, void *context);

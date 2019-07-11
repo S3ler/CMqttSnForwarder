@@ -1,7 +1,6 @@
 //
 // Created by SomeDude on 07.04.2019.
 //
-#ifndef WITH_PLATFORMIO
 
 #include "forwarder_starter.h"
 #include <stdlib.h>
@@ -376,7 +375,7 @@ static void sig_handler(int _) {
   keep_running = 0;
 }
 
-void *inc_c(void *mqttSnForwarderFcfgPtr_ptr) {
+void *forwarder_inc_c(void *mqttSnForwarderFcfgPtr_ptr) {
   MqttSnForwarder_fcfg_ptr *mqttSnForwarderFcfgPtr = (MqttSnForwarder_fcfg_ptr *) mqttSnForwarderFcfgPtr_ptr;
   MqttSnForwarder *mqttSnForwarder = mqttSnForwarderFcfgPtr->mqttSnForwarder_ptr;
 
@@ -469,7 +468,7 @@ int start_forwarder(const forwarder_config *fcfg,
   signal(SIGINT, sig_handler);
   pthread_t mqttSnForwarder_thread;
   MqttSnForwarder_fcfg_ptr mqttSnForwarderFcfgPtr = {.mqttSnForwarder_ptr = mqttSnForwarder, .fcfg_ptr = fcfg};
-  if (pthread_create(&mqttSnForwarder_thread, NULL, inc_c, &mqttSnForwarderFcfgPtr)) {
+  if (pthread_create(&mqttSnForwarder_thread, NULL, forwarder_inc_c, &mqttSnForwarderFcfgPtr)) {
     log_str(logger, "Error creating thread\n");
     return EXIT_FAILURE;
   }
@@ -483,4 +482,3 @@ int start_forwarder(const forwarder_config *fcfg,
   return rc;
 }
 
-#endif

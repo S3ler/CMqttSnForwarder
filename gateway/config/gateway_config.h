@@ -41,6 +41,10 @@ void mqtt_sn_gateway__config_print_usage_short(const MqttSnLogger *logger);
 void mqtt_sn_gateway__config_print_usage_long(const MqttSnLogger *logger);
 void mqtt_sn_gateway__config_print_see_usage(const MqttSnLogger *logger);
 
+int32_t mqtt_sn_gateway__config_file_process_command_callback(void *cfg,
+                                                              const MqttSnLogger *logger,
+                                                              int argc,
+                                                              char *argv[]);
 #ifdef __cplusplus
 }
 #endif

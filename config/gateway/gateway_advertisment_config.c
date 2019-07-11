@@ -25,6 +25,9 @@ int32_t is_gateway_advertisement_config_command(const char *arg, int *i) {
   } else if (!strcmp(arg, "-ar") || !strcmp(arg, "--advertisement_radius")) {
     (*i)++;
     return 1;
+  } else if (!strcmp(arg, "-gi") || !strcmp(arg, "--gateway_id")) {
+    (*i)++;
+    return 1;
   }
   return 0;
 }
@@ -52,7 +55,7 @@ int32_t gateway_advertisement_config_process_args(gateway_advertise_config *cfg,
       }
       i++;
       parsed_args += 2;
-    }else if(!strcmp(argv[i], "-gi") || !strcmp(argv[i], "--gateway_id")) {
+    } else if (!strcmp(argv[i], "-gi") || !strcmp(argv[i], "--gateway_id")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "gateway id");
         return MQTT_SN_PARSE_CONFIG_FAILURE;

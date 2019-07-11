@@ -27,7 +27,7 @@ int32_t parse_and_handle_gwinfo(MqttSnGateway *gateway, MqttSnMessageData *msg);
 
 int32_t parse_and_handle_searchgw(MqttSnGateway *gateway, MqttSnMessageData *msg);
 int32_t parse_and_handle_ping_req(MqttSnGateway *gateway, MqttSnMessageData *msg);
-int32_t parse_and_handle_ping_resp(MqttSnGateway *gateway, MqttSnMessageData *msg);
+int32_t mgw_parse_and_handle_ping_resp(MqttSnGateway *gateway, MqttSnMessageData *msg);
 int32_t parse_and_handle_encapsulated_messages(MqttSnGateway *gateway,
                                                MqttSnMessageData *msg,
                                                int32_t parsed_bytes,
@@ -259,7 +259,7 @@ int32_t parse_and_handle_message(MqttSnGateway *mqttSnGateway,
       // TODO parse_searchgw(address, bytes);
       break;
     case PINGREQ:return parse_and_handle_ping_req(mqttSnGateway, clientMessageData);
-    case PINGRESP:return parse_and_handle_ping_resp(mqttSnGateway, clientMessageData);
+    case PINGRESP:return mgw_parse_and_handle_ping_resp(mqttSnGateway, clientMessageData);
     case DISCONNECT:
       // TODO parse_searchgw(address, bytes);
       break;
@@ -294,7 +294,7 @@ int32_t parse_and_handle_encapsulated_message(MqttSnGateway *gateway,
   return -1;
 }
 
-int32_t parse_and_handle_ping_resp(MqttSnGateway *gateway, MqttSnMessageData *msg) {
+int32_t mgw_parse_and_handle_ping_resp(MqttSnGateway *gateway, MqttSnMessageData *msg) {
   if (parse_ping_resp_byte(msg->data, msg->data_length) < 0) {
 #ifdef WITH_DEBUG_LOGGING
     // TODO log cannot parse ping resp

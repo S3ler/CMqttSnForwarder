@@ -23,7 +23,7 @@ static void sig_handler(int _) {
   keep_running = 0;
 }
 
-void *inc_c(void *egw_fcfg_ptr) {
+void *echogateway_inc_c(void *egw_fcfg_ptr) {
   EchoGateway *echo_gateway = ((EchoGateway_fcfg_ptr *) egw_fcfg_ptr)->egw_ptr;
   if (EchoGatewayConnect(echo_gateway) < 0) {
     EchoGatewayDisconnect(echo_gateway);
@@ -85,7 +85,7 @@ int start_echogateway(const echogateway_config *fcfg,
   signal(SIGINT, sig_handler);
   pthread_t thread;
   EchoGateway_fcfg_ptr egw_fcfg_ptr = {.egw_ptr = echo_gateway, .egw_cfg=fcfg};
-  if (pthread_create(&thread, NULL, inc_c, &egw_fcfg_ptr)) {
+  if (pthread_create(&thread, NULL, echogateway_inc_c, &egw_fcfg_ptr)) {
     log_str(logger, "Error creating thread\n");
     return EXIT_FAILURE;
   }

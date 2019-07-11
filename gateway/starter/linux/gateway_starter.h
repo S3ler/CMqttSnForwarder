@@ -21,10 +21,18 @@ int start_mqtt_sn_gateway(const mqtt_sn_gateway__config *fcfg,
                           const MqttSnLogger *logger,
                           MqttSnGateway *mqtt_sn_gateway,
                           void *clientNetworkContext);
+int start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
+                                 const MqttSnLogger *logger,
+                                 MqttSnGateway *mqtt_sn_gateway,
+                                 void *clientNetworkContext);
 int start_mqtt_sn_gateway_client_udp(const mqtt_sn_gateway__config *fcfg,
                                      const MqttSnLogger *logger,
                                      MqttSnGateway *echo_gateway,
                                      void *clientNetworkContext);
+int start_mqtt_sn_gateway_tcp(const mqtt_sn_gateway__config *fcfg,
+                              const MqttSnLogger *logger,
+                              MqttSnGateway *mqtt_sn_gateway,
+                              void *clientNetworkContext);
 #ifdef __cplusplus
 }
 #endif

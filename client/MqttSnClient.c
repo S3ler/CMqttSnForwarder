@@ -17,8 +17,8 @@
 
 int32_t parse_and_handle_connack(MqttSnClient *client, MqttSnMessageData *msg);
 int32_t handle_client_connection(MqttSnClient *client);
-int32_t parse_and_handle_ping_resp(MqttSnClient *client, MqttSnMessageData *msg);
-int32_t parse_and_handle_ping_req(MqttSnClient *client, MqttSnMessageData *msg);
+int32_t client_parse_and_handle_ping_resp(MqttSnClient *client, MqttSnMessageData *msg);
+int32_t client_parse_and_handle_ping_req(MqttSnClient *client, MqttSnMessageData *msg);
 
 int32_t send_to_gateway(MqttSnClient *client, const uint8_t *msg_data, int32_t gen_rc);
 uint64_t get_last_timeout_reset(MqttSnClient *client);
@@ -97,8 +97,8 @@ int32_t MqttSnClientLoop(MqttSnClient *client) {
     return 0;
   }
   switch (header.msg_type) {
-    case PINGRESP: return parse_and_handle_ping_resp(client, &msg);
-    case PINGREQ: return parse_and_handle_ping_req(client, &msg);
+    case PINGRESP: return client_parse_and_handle_ping_resp(client, &msg);
+    case PINGREQ: return client_parse_and_handle_ping_req(client, &msg);
       break;
     case ADVERTISE:
       // TODO update observed gateway
@@ -111,7 +111,7 @@ int32_t MqttSnClientLoop(MqttSnClient *client) {
   }
   return 0;
 }
-int32_t parse_and_handle_ping_resp(MqttSnClient *client, MqttSnMessageData *msg) {
+int32_t client_parse_and_handle_ping_resp(MqttSnClient *client, MqttSnMessageData *msg) {
   int32_t await_fd = 0;
   if (client->ping_req_await_msg.msg_type != PINGRESP && (await_fd = is_await_msg(client, PINGREQ, 0)) < 0) {
     return 0;
@@ -261,7 +261,7 @@ int32_t parse_and_handle_connack(MqttSnClient *client, MqttSnMessageData *msg) {
 
   return 0;
 }
-int32_t parse_and_handle_ping_req(MqttSnClient *client, MqttSnMessageData *msg) {
+int32_t client_parse_and_handle_ping_req(MqttSnClient *client, MqttSnMessageData *msg) {
 
   int32_t parse_rc = parse_ping_req_byte(msg->data, msg->data_length);
   if (parse_rc < 0) {

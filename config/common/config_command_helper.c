@@ -96,7 +96,7 @@ int32_t process_config_file(const char *config_file_path,
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
 int32_t process_config_file_line(const MqttSnLogger *logger,
-                                 char *line,
+                                 const char *line,
                                  size_t len,
                                  const char *argv_0,
                                  void *cfg,
