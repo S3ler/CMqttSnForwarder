@@ -8,8 +8,6 @@ using std::to_string;
 
 void MqttSnMultipleForwarderTests::SetUp() {
 
-  // TODO initialize broker
-
   for (size_t i = 1; i <= 1; ++i) {
     string gw_identifier = "gateway" + to_string(i);
     string gw_cmd = "-db -cp 2000" + to_string(i) + " --gateway_id " + to_string(i);
@@ -18,7 +16,7 @@ void MqttSnMultipleForwarderTests::SetUp() {
     gateways.push_back(gw_prt);
   }
 
-  for (size_t i = 1; i <= 5; ++i) {
+  for (size_t i = 1; i <= 0; ++i) {
     string fw_identifier = "forwarder" + to_string(i);
     string fw_cmd = "-db -cp 3000" + to_string(i) + " -gp 4000" + to_string(i);
     std::shared_ptr<MqttSnForwarderTestContainer> fw_ptr(new MqttSnForwarderTestContainer(fw_identifier, fw_cmd));
@@ -45,10 +43,6 @@ void MqttSnMultipleForwarderTests::SetUp() {
   for (auto &client : clients) {
     ASSERT_EQ(client->start(), 0);
   }
-  // initialize gateway
-  // intialize gateway
-  // initialize forwarder (does not matter)
-  // start client
 
 }
 void MqttSnMultipleForwarderTests::TearDown() {

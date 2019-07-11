@@ -6,6 +6,7 @@
       <file path="$PROJECT_DIR$/client" />
       <file path="$PROJECT_DIR$/forwarder" />
       <file path="$PROJECT_DIR$/gateway" />
+      <file path="$PROJECT_DIR$/test" />
     </sourceRoots>
     <libraryRoots>
       <file path="$PROJECT_DIR$/plugins/external" />

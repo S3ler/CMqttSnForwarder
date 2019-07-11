@@ -124,9 +124,6 @@ void MqttSnGatewayTestContainer::loop() {
   stopped = false;
   running = false;
 
-
-
-
   while ((MqttSnGatewayLoop(&gateway) >= 0) & !stopped) {}
 
   MqttSnGatewayDisconnect(&gateway);
