@@ -143,6 +143,8 @@ void MqttSnClientTestContainer::loop() {
 int32_t MqttSnClientTestContainer::start_publish_client_plugin(const publish_client_config *cfg,
                                                                MqttSnClient *publish_client,
                                                                const MqttSnLogger *logger) {
+  // TODO adept - do not use atm
+
   mqttSnGatewayNetworkAddress = {0};
   forwarderGatewayNetworkAddress = {0};
   forwarderGatewayNetworkBroadcastAddress = {0};
@@ -254,7 +256,6 @@ int32_t MqttSnClientTestContainer::start_publish_client_tcp(const publish_client
   mqttSnGatewayNetworkAddress = {0};
   forwarderGatewayNetworkAddress = {0};
   forwarderGatewayNetworkBroadcastAddress = {0};
-
   tcpGatewayNetworkContext = shared_ptr<MqttSnGatewayTcpNetwork>(new MqttSnGatewayTcpNetwork());
 
   if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,

@@ -154,11 +154,7 @@ void MqttSnForwarderTestContainer::loop() {
 int32_t MqttSnForwarderTestContainer::start_client_plugin(const forwarder_config *fcfg,
                                                           const MqttSnLogger *logger,
                                                           MqttSnForwarder *mqttSnForwarder) {
-
-  device_address mqttSnGatewayNetworkAddress = {0};
-  device_address forwarderClientNetworkAddress = {0};
-  device_address forwarderClientNetworkBroadcastAddress = {0};
-
+  // TODO adept - do not use atm
   if (convert_hostname_port_to_device_address(fcfg->msgcfg.mqtt_sn_gateway_host,
                                               fcfg->msgcfg.mqtt_sn_gateway_port,
                                               &mqttSnGatewayNetworkAddress,
@@ -180,8 +176,8 @@ int32_t MqttSnForwarderTestContainer::start_client_plugin(const forwarder_config
     return EXIT_FAILURE;
   }
 
-  const client_plugin_device_address
-      pluginMqttSnForwarderNetworkAddress(forwarderClientNetworkAddress.bytes, sizeof(device_address));
+  const client_plugin_device_address pluginMqttSnForwarderNetworkAddress(forwarderClientNetworkAddress.bytes,
+                                                                         sizeof(device_address));
 
   client_plugin_config plugin_cfg(fcfg->cncfg.client_network_plugin_path,
                                   fcfg->cncfg.client_network_protocol,
@@ -189,7 +185,7 @@ int32_t MqttSnForwarderTestContainer::start_client_plugin(const forwarder_config
                                   MQTT_SN_DEVICE_ADDRESS_LENGTH,
                                   &pluginMqttSnForwarderNetworkAddress);
 
-  MqttSnClientPluginContext clientPluginContext(&plugin_cfg);
+  clientPluginContext = shared_ptr<MqttSnClientPluginContext>(new MqttSnClientPluginContext(&plugin_cfg));
 
   if (ClientNetworkInitialize(&mqttSnForwarder->clientNetwork,
                               MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
@@ -212,10 +208,7 @@ int32_t MqttSnForwarderTestContainer::start_client_tcp(const forwarder_config *f
                                                        const MqttSnLogger *logger,
                                                        MqttSnForwarder *mqttSnForwarder) {
 
-  device_address mqttSnGatewayNetworkAddress = {0};
-  device_address forwarderClientNetworkAddress = {0};
-  device_address forwarderClientNetworkBroadcastAddress = {0};
-  MqttSnClientTcpNetwork tcpClientNetworkContext = {0};
+  tcpClientNetworkContext = shared_ptr<MqttSnClientTcpNetwork>(new MqttSnClientTcpNetwork());
 
   if (convert_hostname_port_to_device_address(fcfg->msgcfg.mqtt_sn_gateway_host,
                                               fcfg->msgcfg.mqtt_sn_gateway_port,
@@ -259,9 +252,6 @@ int32_t MqttSnForwarderTestContainer::start_client_udp(const forwarder_config *f
                                                        const MqttSnLogger *logger,
                                                        MqttSnForwarder *mqttSnForwarder) {
 
-  device_address forwarderClientNetworkAddress = {0};
-  device_address mqttSnGatewayNetworkAddress = {0};
-  device_address forwarderClientNetworkBroadcastAddress = {0};
   udpClientNetworkContext = shared_ptr<MqttSnClientUdpNetwork>(new MqttSnClientUdpNetwork());
 
   if (convert_hostname_port_to_device_address(fcfg->msgcfg.mqtt_sn_gateway_host,
@@ -295,6 +285,7 @@ int32_t MqttSnForwarderTestContainer::start_client_udp(const forwarder_config *f
     log_str(logger, "Error init client network\n");
     return EXIT_FAILURE;
   }
+
   clientNetworkContext = udpClientNetworkContext.get();
 
   return start();
@@ -305,11 +296,7 @@ int32_t MqttSnForwarderTestContainer::start_client_udp(const forwarder_config *f
 int32_t MqttSnForwarderTestContainer::start_gateway_plugin(const forwarder_config *cfg,
                                                            const MqttSnLogger *logger,
                                                            MqttSnForwarder *mqttSnForwarder) {
-
-  device_address mqttSnGatewayNetworkAddress = {0};
-  device_address forwarderGatewayNetworkAddress = {0};
-  device_address forwarderGatewayNetworkBroadcastAddress = {0};
-
+  // TODO adept - do not use atm
   if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,
                                               cfg->msgcfg.mqtt_sn_gateway_port,
                                               &mqttSnGatewayNetworkAddress,
@@ -330,32 +317,38 @@ int32_t MqttSnForwarderTestContainer::start_gateway_plugin(const forwarder_confi
     return EXIT_FAILURE;
   }
 
-  const gateway_plugin_device_address pluginMqttSnGatewayNetworkAddress(mqttSnGatewayNetworkAddress.bytes,
-                                                                        sizeof(device_address));
+  pluginMqttSnGatewayNetworkAddress = shared_ptr<gateway_plugin_device_address>(
+      new gateway_plugin_device_address(
+          mqttSnGatewayNetworkAddress.bytes,
+          sizeof(device_address)));
 
-  const gateway_plugin_device_address pluginForwarderGatewayNetworkAddress(forwarderGatewayNetworkAddress.bytes,
-                                                                           sizeof(device_address));
+  pluginForwarderGatewayNetworkAddress = shared_ptr<gateway_plugin_device_address>(
+      new gateway_plugin_device_address(
+          forwarderGatewayNetworkAddress.bytes,
+          sizeof(device_address)));
 
-  const gateway_plugin_device_address
-      pluginForwarderGatewayNetworkBroadcastAddress(forwarderGatewayNetworkBroadcastAddress.bytes,
-                                                    sizeof(device_address));
+  pluginForwarderGatewayNetworkBroadcastAddress = shared_ptr<gateway_plugin_device_address>(
+      new gateway_plugin_device_address(
+          forwarderGatewayNetworkBroadcastAddress.bytes,
+          sizeof(device_address)));
 
-  gateway_plugin_config plugin_cfg(cfg->gncfg.gateway_network_plugin_path,
-                                   cfg->gncfg.gateway_network_protocol,
-                                   MQTT_SN_DEVICE_ADDRESS_LENGTH,
-                                   MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
-                                   &pluginMqttSnGatewayNetworkAddress,
-                                   &pluginForwarderGatewayNetworkAddress,
-                                   &pluginForwarderGatewayNetworkBroadcastAddress);
+  plugin_cfg = shared_ptr<gateway_plugin_config>(
+      new gateway_plugin_config(cfg->gncfg.gateway_network_plugin_path,
+                                cfg->gncfg.gateway_network_protocol,
+                                MQTT_SN_DEVICE_ADDRESS_LENGTH,
+                                MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
+                                pluginMqttSnGatewayNetworkAddress.get(),
+                                pluginForwarderGatewayNetworkAddress.get(),
+                                pluginForwarderGatewayNetworkBroadcastAddress.get()));
 
-  MqttSnGatewayPluginContext gatewayPluginContext(&plugin_cfg);
+  gatewayPluginContext = shared_ptr<MqttSnGatewayPluginContext>(new MqttSnGatewayPluginContext(plugin_cfg.get()));
 
   if (GatewayNetworkInitialize(&mqttSnForwarder->gatewayNetwork,
                                MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH,
                                &mqttSnGatewayNetworkAddress,
                                &forwarderGatewayNetworkAddress,
                                &forwarderGatewayNetworkBroadcastAddress,
-                               &gatewayPluginContext,
+                               gatewayPluginContext.get(),
                                GatewayLinuxPluginInitialize)) {
     log_str(logger, "Error init gateway network\n");
     return EXIT_FAILURE;
@@ -371,10 +364,7 @@ int32_t MqttSnForwarderTestContainer::start_gateway_tcp(const forwarder_config *
                                                         const MqttSnLogger *logger,
                                                         MqttSnForwarder *mqttSnForwarder) {
 
-  device_address mqttSnGatewayNetworkAddress = {0};
-  device_address forwarderGatewayNetworkAddress = {0};
-  device_address forwarderGatewayNetworkBroadcastAddress = {0};
-  MqttSnGatewayTcpNetwork tcpGatewayNetworkContext = {0};
+  tcpGatewayNetworkContext = shared_ptr<MqttSnGatewayTcpNetwork>(new MqttSnGatewayTcpNetwork());
 
   if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,
                                               cfg->msgcfg.mqtt_sn_gateway_port,
@@ -417,9 +407,6 @@ int32_t MqttSnForwarderTestContainer::start_gateway_udp(const forwarder_config *
                                                         const MqttSnLogger *logger,
                                                         MqttSnForwarder *mqttSnForwarder) {
 
-  device_address mqttSnGatewayNetworkAddress = {0};
-  device_address forwarderGatewayNetworkAddress = {0};
-  device_address forwarderGatewayNetworkBroadcastAddress = {0};
   udpGatewayNetworkContext = shared_ptr<MqttSnGatewayUdpNetwork>(new MqttSnGatewayUdpNetwork());
 
   if (convert_hostname_port_to_device_address(cfg->msgcfg.mqtt_sn_gateway_host,

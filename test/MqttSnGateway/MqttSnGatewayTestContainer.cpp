@@ -133,6 +133,7 @@ void MqttSnGatewayTestContainer::loop() {
 int MqttSnGatewayTestContainer::start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
                                                              const MqttSnLogger *logger,
                                                              MqttSnGateway *mqtt_sn_gateway) {
+  // TODO adept - do not use atm
 
   /*
   if (convert_hostname_port_to_device_address(fcfg->msgcfg.mqtt_sn_gateway_host,

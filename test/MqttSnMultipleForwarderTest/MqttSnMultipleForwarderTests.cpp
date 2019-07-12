@@ -16,9 +16,9 @@ void MqttSnMultipleForwarderTests::SetUp() {
     gateways.push_back(gw_prt);
   }
 
-  for (size_t i = 1; i <= 0; ++i) {
+  for (size_t i = 1; i <= 1; ++i) {
     string fw_identifier = "forwarder" + to_string(i);
-    string fw_cmd = "-db -cp 3000" + to_string(i) + " -gp 4000" + to_string(i);
+    string fw_cmd = "-db -cp 3000" + to_string(i) + " -gp 4000" + to_string(i) + " -p 20001";
     std::shared_ptr<MqttSnForwarderTestContainer> fw_ptr(new MqttSnForwarderTestContainer(fw_identifier, fw_cmd));
     ASSERT_EQ(fw_ptr->initialize(), 0);
     forwarders.push_back(fw_ptr);
@@ -26,7 +26,7 @@ void MqttSnMultipleForwarderTests::SetUp() {
 
   for (size_t i = 1; i <= 1; ++i) {
     string client_identifier = "client" + to_string(i);
-    string client_cmd = "-db -gp 1000" + to_string(i) + " -p 20001";
+    string client_cmd = "-db -gp 1000" + to_string(i) + " -p 30001";
     std::shared_ptr<MqttSnClientTestContainer> client_ptr(new MqttSnClientTestContainer(client_identifier, client_cmd));
     ASSERT_EQ(client_ptr->initialize(), 0);
     clients.push_back(client_ptr);

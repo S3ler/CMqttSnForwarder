@@ -11,6 +11,10 @@
 #include <atomic>
 #include <network/linux/gateway/ip/udp/MqttSnGatewayUdpNetwork.h>
 #include <network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
+#include <network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
+#include <network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h>
+#include <network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h>
+#include <network/linux/client/plugin/MqttSnClientPluginNetwork.h>
 
 using std::thread;
 using std::atomic_bool;
@@ -32,9 +36,6 @@ class MqttSnForwarderTestContainer {
   atomic_bool running{false};
   atomic_bool stopped{false};
 
-  shared_ptr<MqttSnGatewayUdpNetwork> udpGatewayNetworkContext = nullptr;
-  shared_ptr<MqttSnClientUdpNetwork> udpClientNetworkContext = nullptr;
-
  private:
   int32_t start_client_plugin(const forwarder_config *fcfg,
                               const MqttSnLogger *logger,
@@ -54,6 +55,30 @@ class MqttSnForwarderTestContainer {
   bool isRunning();
 
   void loop();
+
+ private:
+  device_address mqttSnGatewayNetworkAddress = {0};
+  device_address forwarderClientNetworkAddress = {0};
+  device_address forwarderClientNetworkBroadcastAddress = {0};
+
+  device_address forwarderGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkBroadcastAddress = {0};
+#ifdef WITH_LINUX_PLUGIN_NETWORK
+  shared_ptr<gateway_plugin_device_address> pluginMqttSnGatewayNetworkAddress = nullptr;
+  shared_ptr<gateway_plugin_device_address> pluginForwarderGatewayNetworkAddress = nullptr;
+  shared_ptr<gateway_plugin_device_address> pluginForwarderGatewayNetworkBroadcastAddress = nullptr;
+  shared_ptr<gateway_plugin_config> plugin_cfg = nullptr;
+  shared_ptr<MqttSnGatewayPluginContext> gatewayPluginContext = nullptr;
+  shared_ptr<MqttSnClientPluginContext> clientPluginContext = nullptr;
+#endif
+#ifdef WITH_LINUX_TCP_CLIENT_NETWORK
+  shared_ptr<MqttSnGatewayTcpNetwork> tcpGatewayNetworkContext = nullptr;
+  shared_ptr<MqttSnClientTcpNetwork> tcpClientNetworkContext = nullptr;
+#endif
+#ifdef WITH_LINUX_UDP_CLIENT_NETWORK
+  shared_ptr<MqttSnGatewayUdpNetwork> udpGatewayNetworkContext = nullptr;
+  shared_ptr<MqttSnClientUdpNetwork> udpClientNetworkContext = nullptr;
+#endif
 
   int32_t start_gateway_plugin(const forwarder_config *cfg,
                                const MqttSnLogger *logger,
