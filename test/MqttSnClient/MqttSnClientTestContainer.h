@@ -34,6 +34,20 @@ class MqttSnClientTestContainer {
   atomic_bool running{false};
   atomic_bool stopped{false};
 
+ public:
+  MqttSnClientTestContainer(const string &identifier, const string &cmd);
+  int32_t initialize();
+  int32_t start();
+  void stop();
+  bool isStopped();
+  bool isRunning();
+  void loop();
+
+ private:
+  device_address mqttSnGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkAddress = {0};
+  device_address forwarderGatewayNetworkBroadcastAddress = {0};
+
 #ifdef WITH_LINUX_PLUGIN_NETWORK
   shared_ptr<MqttSnGatewayPluginContext> gatewayPluginContext = nullptr;
 #endif
@@ -44,16 +58,6 @@ class MqttSnClientTestContainer {
   shared_ptr<MqttSnGatewayUdpNetwork> udpGatewayNetworkContext = nullptr;
 #endif
 
-
- public:
-  MqttSnClientTestContainer(const string &identifier, const string &cmd);
-  int32_t initialize();
-  int32_t start();
-  void stop();
-  bool isStopped();
-  bool isRunning();
-
-  void loop();
   int32_t start_publish_client_plugin(const publish_client_config *cfg,
                                       MqttSnClient *publish_client,
                                       const MqttSnLogger *logger);

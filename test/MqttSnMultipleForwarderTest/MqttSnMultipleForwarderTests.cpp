@@ -24,7 +24,7 @@ void MqttSnMultipleForwarderTests::SetUp() {
     forwarders.push_back(fw_ptr);
   }
 
-  for (size_t i = 1; i <= 0; ++i) {
+  for (size_t i = 1; i <= 1; ++i) {
     string client_identifier = "client" + to_string(i);
     string client_cmd = "-db -gp 1000" + to_string(i) + " -p 20001";
     std::shared_ptr<MqttSnClientTestContainer> client_ptr(new MqttSnClientTestContainer(client_identifier, client_cmd));
