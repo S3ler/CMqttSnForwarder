@@ -6,6 +6,7 @@
 #define CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYTESTCONTAINER_H_
 
 #include <string>
+#include <vector>
 #include <thread>
 #include <atomic>
 #include <logging/MqttSnLoggingInterface.h>
@@ -16,12 +17,21 @@
 using std::thread;
 using std::atomic_bool;
 using std::string;
+using std::vector;
 using std::shared_ptr;
 
 class MqttSnGatewayTestContainer {
  private:
   string identifier;
   string cmd;
+
+  vector<char> line_str;
+  uint16_t argc = 0;
+  const static uint16_t argv_max_len = 1024;
+  char *argv[argv_max_len];
+  FileLoggingContext file_logging_context_= {0};
+  FileStdoutLoggingContext file_stdout_logging_context_ = {0};
+  int32_t start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger);
 
   MqttSnLogger gw_logger;
   mqtt_sn_gateway__config gateway_config;

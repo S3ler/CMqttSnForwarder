@@ -61,7 +61,7 @@ int32_t start_publish_client(const publish_client_config *cfg,
 #ifdef WITH_LOGGING
   print_program_started(logger, &cfg->msvcfg, cfg->executable_name);
 #endif
-  if (MqttSnClientInit(publish_client, cfg->mslcfg.log_lvl, gatewayNetworkContext) < 0) {
+  if (MqttSnClientInit(publish_client, logger, gatewayNetworkContext) < 0) {
     MqttSnClientDeinit(publish_client);
     return EXIT_FAILURE;
   }

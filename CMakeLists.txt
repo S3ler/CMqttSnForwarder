@@ -70,14 +70,24 @@ if (WITH_LOGGING)
     set(ARDUINO_LOGGING_FILES
             logging/linux/stdout/StdoutLogging.c
             logging/linux/stdout/StdoutLogging.h)
+
+    set(FILE_LOGGING_FILES
+            logging/linux/file/FileLogging.c
+            logging/linux/file/FileLogging.h)
+    set(FILE_STDOUT_LOGGING_FILES
+            logging/linux/filestdout/FileStdoutLogging.c
+            logging/linux/filestdout/FileStdoutLogging.h)
     set(STDOUT_LOGGING_FILES
             logging/linux/stdout/StdoutLogging.c
             logging/linux/stdout/StdoutLogging.h)
     set(STDERR_LOGGING_FILES
             logging/linux/stderr/StderrLogging.c
             logging/linux/stderr/StderrLogging.h)
+    set(LINUX_LOGGING_STARTER_FILES
+            logging/linux/starter/linux_logging_starter.c
+            logging/linux/starter/linux_logging_starter.h)
 
-    set(LOGGING_FILES ${CORE_LOGGING_FILES} ${MQTT_SN_LOGGING_FILES} ${STDOUT_LOGGING_FILES} ${STDERR_LOGGING_FILES})
+    set(LOGGING_FILES ${CORE_LOGGING_FILES} ${MQTT_SN_LOGGING_FILES} ${FILE_LOGGING_FILES} ${FILE_STDOUT_LOGGING_FILES} ${STDOUT_LOGGING_FILES} ${STDERR_LOGGING_FILES})
 
     add_library(lib-mqtt-sn-logging ${LOGGING_FILES})
     target_include_directories(lib-mqtt-sn-logging PRIVATE .)

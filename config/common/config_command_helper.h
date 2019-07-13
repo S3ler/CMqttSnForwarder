@@ -22,6 +22,15 @@ int32_t process_config_file(const char *config_file_path,
                             void *cfg,
                             int32_t (*callback)(void *, const MqttSnLogger *, int, char **),
                             const char *argv_0);
+int32_t process_config_cmd_str(const MqttSnLogger *logger,
+                               char *line,
+                               size_t len,
+                               const char *argv_0,
+                               void *cfg,
+                               int32_t (*callback)(void *, const MqttSnLogger *, int, char **),
+                               char *argv[],
+                               uint16_t *argc,
+                               uint16_t argv_max_len);
 int32_t process_config_file_line(const MqttSnLogger *logger,
                                  const char *line,
                                  size_t len,
@@ -70,6 +79,8 @@ int32_t print_invalid_gateway_id_given(const MqttSnLogger *logger, const char *g
 int32_t print_config_parser_invalid_port_given(const MqttSnLogger *logger, long invalid_port);
 
 int32_t print_config_parser_invalid_qos_given(const MqttSnLogger *logger, uint64_t given_qos);
+
+int32_t print_config_parser_invalid_log_target(const MqttSnLogger *logger, const char *given_str);
 
 int32_t print_argument_value_not_specified(const MqttSnLogger *logger, const char *argument, const char *argument_name);
 

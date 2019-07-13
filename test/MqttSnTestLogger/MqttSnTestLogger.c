@@ -3,6 +3,7 @@
 //
 
 #include "MqttSnTestLogger.h"
+#include "../../logging/MqttSnLoggingInterface.h"
 
 int mqtt_sn_test_stdout_log_init(MqttSnLogger *logger) {
   logger->log_init = stdout_log_init;
@@ -24,14 +25,14 @@ int stdout_log_flush(const MqttSnLogger *logger) {
   return 0;
 }
 
-int stdout_log_str(const char *str) {
+int stdout_log_str(const MqttSnLogger *logger, const char *str) {
   if (fputs(str, stdout) == EOF) {
     return -1;
   }
   return 0;
 }
 
-int stdout_log_char(char c) {
+int stdout_log_char(const MqttSnLogger *logger, char c) {
   if (fputc(c, stdout) == EOF) {
     return -1;
   }

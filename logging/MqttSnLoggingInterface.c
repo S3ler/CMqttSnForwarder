@@ -23,6 +23,23 @@ int MqttSnLoggerInit(MqttSnLogger *logger,
   return logger->status;
 }
 
+int MqttSnLoggerInitFile(MqttSnLogger *logger,
+                         log_level_t log_level,
+                         char *log_file_path,
+                         int (*log_init)(struct MqttSnLoggerInterface_ *),
+                         void *context) {
+  memset(logger, 0, sizeof(MqttSnLogger));
+  logger->log_file_path = log_file_path;
+  logger->log_level = log_level;
+  logger->log_init = log_init;
+  logger->status = -1;
+  logger->context = context;
+  if (logger->log_init(logger) == 0) {
+    logger->status = 0;
+  }
+  return logger->status;
+}
+
 void MqttSnLoggerDeinit(MqttSnLogger *logger) {
   logger->log_deinit(logger);
   logger->status = -1;
@@ -60,14 +77,14 @@ int log_char(const MqttSnLogger *logger, char c) {
   if (logger->status < 0) {
     return -1;
   }
-  return logger->log_char(c);
+  return logger->log_char(logger, c);
 }
 
 int log_str(const MqttSnLogger *logger, const char *str) {
   if (logger->status < 0) {
     return -1;
   }
-  return logger->log_str(str);
+  return logger->log_str(logger, str);
 }
 
 int log_int8(const MqttSnLogger *logger, int8_t n) {
@@ -216,8 +233,18 @@ int log_current_date_time(const MqttSnLogger *logger) {
   return log_status(logger);
 }
 
+int log_identifier(const MqttSnLogger *logger) {
+  if (!logger->log_identifier) {
+    return log_status(logger);
+  }
+  log_str(logger, "[");
+  log_str(logger, logger->log_identifier);
+  log_str(logger, "] ");
+  return log_status(logger);
+}
+
 int log_msg_start(const MqttSnLogger *logger) {
-  //if (log_current_time(logger)) { return -1; }
+  if (log_identifier(logger) < 0) { return -1; }
   if (log_current_date_time(logger) < 0) { return -1; }
   const char *ds = " : ";
   return log_str(logger, ds);

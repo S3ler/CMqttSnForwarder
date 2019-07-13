@@ -105,7 +105,7 @@ typedef struct MqttSnClient_ {
 } MqttSnClient;
 
 // init network too
-int32_t MqttSnClientInit(MqttSnClient *client, log_level_t log_level, void *gatewayNetworkContext);
+int32_t MqttSnClientInit(MqttSnClient *client, const MqttSnLogger *logger, void *gatewayNetworkContext);
 int32_t MqttSnClientDeinit(MqttSnClient *client);
 
 int32_t MqttSnClientLoop(MqttSnClient *client);

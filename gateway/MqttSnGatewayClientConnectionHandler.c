@@ -270,13 +270,15 @@ int32_t parse_and_handle_connect(MqttSnGatewayClientConnectionHandler *handler,
       return -1;
     }
     if (forwarders->forwarder_len > 0) {
-      int32_t fw_gen_rc = generate_multiple_forwarder_encapsulation_headers_byte(msg->data + gen_bytes,
-                                                                                 sizeof(msg->data) - gen_bytes,
+      uint8_t gen_msg_buf[gen_bytes];
+      memcpy(gen_msg_buf, msg->data, gen_bytes);
+      int32_t fw_gen_rc = generate_multiple_forwarder_encapsulation_headers_byte(msg->data,
+                                                                                 sizeof(msg->data),
                                                                                  forwarders->forwarder_radiuses,
                                                                                  forwarders->forwarder_addresses,
                                                                                  forwarders->forwarder_len,
                                                                                  &forwarders->wireless_node_id,
-                                                                                 msg->data,
+                                                                                 gen_msg_buf,
                                                                                  gen_bytes);
       if (fw_gen_rc < 0) {
         // the msg->data array was big enough for a connect message, thus is also bug enough for a connack message
@@ -286,7 +288,7 @@ int32_t parse_and_handle_connect(MqttSnGatewayClientConnectionHandler *handler,
 #endif
         return -1;
       }
-      gen_bytes += fw_gen_rc;
+      gen_bytes = fw_gen_rc;
     }
     msg->data_length = gen_bytes;
     if (put(handler->clientNetworkSendBuffer, msg) < 0) {

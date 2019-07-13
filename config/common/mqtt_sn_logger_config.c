@@ -4,9 +4,16 @@
 
 #include <platform/platform_compatibility.h>
 #include "mqtt_sn_logger_config.h"
+#include "config_command_helper.h"
 
 int32_t mqtt_sn_logger_config_init(mqtt_sn_logger_config *cfg) {
   memset(cfg, 0, sizeof(*cfg));
+  memcpy(cfg->default_logging_target,
+         MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET,
+         sizeof(MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET));
+  cfg->log_target = cfg->default_logging_target;
+  cfg->log_file_path = NULL;
+  cfg->log_identifier = NULL;
   cfg->log_lvl = MQTT_SN_LOGGER_DEFAULT_LOG_LVL;
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
@@ -14,19 +21,29 @@ void mqtt_sn_logger_config_cleanup(mqtt_sn_logger_config *cfg) {
 
 }
 int32_t is_mqtt_sn_logger_config_command(const char *arg, int *i) {
-  if (!strcmp(arg, "-q") || !strcmp(arg, "--quiet")) {
+
+  if (!strcmp(arg, "-lt") || !strcmp(arg, "--log_target")) {
+    (*i)++;
+    return 1;
+  } else if (!strcmp(arg, "-lfp") || !strcmp(arg, "--log_file_path")) {
+    (*i)++;
+    return 1;
+  } else if (!strcmp(arg, "-q") || !strcmp(arg, "--quiet")) {
+    (*i)++;
     return 1;
   } else if (!strcmp(arg, "-d") || !strcmp(arg, "--default")) {
+    (*i)++;
     return 1;
   } else if (!strcmp(arg, "-v") || !strcmp(arg, "--verbose")) {
+    (*i)++;
     return 1;
   }
 #if defined(WITH_DEBUG_LOGGING)
   else if (!strcmp(arg, "-db") || !strcmp(arg, "--debug")) {
+    (*i)++;
     return 1;
   }
 #endif
-
   return 0;
 }
 int32_t mqtt_sn_logger_config_process_args(mqtt_sn_logger_config *cfg,
@@ -35,7 +52,40 @@ int32_t mqtt_sn_logger_config_process_args(mqtt_sn_logger_config *cfg,
                                            char **argv) {
   int32_t parsed_args = 0;
   for (int i = 0; i < argc; i++) {
-    if (!strcmp(argv[i], "-q") || !strcmp(argv[i], "--quiet")) {
+    if (!strcmp(argv[i], "-li") || !strcmp(argv[i], "--log_identifier")) {
+      if (i == argc - 1) {
+        print_argument_value_not_specified(logger, argv[i], "log identifier");
+        return MQTT_SN_PARSE_CONFIG_FAILURE;
+      } else {
+        cfg->log_identifier = argv[i + 1];
+      }
+      i++;
+      parsed_args += 2;
+    }
+    if (!strcmp(argv[i], "-lt") || !strcmp(argv[i], "--log_target")) {
+      if (i == argc - 1) {
+        print_argument_value_not_specified(logger, argv[i], "log target");
+        return MQTT_SN_PARSE_CONFIG_FAILURE;
+      } else {
+        if (!strcmp(argv[i + 1], "console") || strcmp(argv[i + 1], "path")) {
+          cfg->log_target = argv[i + 1];
+        } else {
+          print_config_parser_invalid_log_target(logger, argv[i + 1]);
+          return MQTT_SN_PARSE_CONFIG_FAILURE;
+        }
+      }
+      i++;
+      parsed_args += 2;
+    } else if (!strcmp(argv[i], "-lfp") || !strcmp(argv[i], "--log_file_path")) {
+      if (i == argc - 1) {
+        print_argument_value_not_specified(logger, argv[i], "log file path");
+        return MQTT_SN_PARSE_CONFIG_FAILURE;
+      } else {
+        cfg->log_file_path = argv[i + 1];
+      }
+      i++;
+      parsed_args += 2;
+    } else if (!strcmp(argv[i], "-q") || !strcmp(argv[i], "--quiet")) {
       cfg->log_lvl = LOG_LEVEL_QUIET;
       parsed_args += 1;
     } else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--default")) {
@@ -52,19 +102,32 @@ int32_t mqtt_sn_logger_config_process_args(mqtt_sn_logger_config *cfg,
     }
 #endif
   }
+
+  if (!strcmp(cfg->log_target, "file") && cfg->log_file_path == NULL) {
+    print_argument_value_not_specified(logger, "log target file", "log file path");
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+
   return parsed_args;
 }
 void mqtt_sn_logger_config_print_usage_short(const MqttSnLogger *logger, const char *indent) {
   if (indent) {
     log_str(logger, indent);
   }
-  log_str(logger, PSTR("[[-q quiet] | [-d default] | [-v verbose]"));
+  log_str(logger,
+          PSTR("[[-li log_identifier] [-lt log_target] [-lfp log_file_path] [-q quiet] | [-d default] | [-v verbose]"));
 #ifdef WITH_DEBUG_LOGGING
   log_str(logger, PSTR(" | [-db debug]"));
 #endif
   log_str(logger, PSTR("]\n"));
 }
 void mqtt_sn_logger_config_print_usage_long(const MqttSnLogger *logger) {
+  log_str(logger, PSTR(" -li : specify the log identifier."));
+  log_str(logger, PSTR(" -lt : specify the log target. Can be: console, file. Defaults to "));
+  log_str(logger, PSTR(MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET));
+  log_str(logger, PSTR("\n"));
+  log_str(logger, PSTR("     : When using file as log target the logfile path (-lfp) must be set.\n"));
+  log_str(logger, PSTR(" -lfp : specify the logfile path. Logs to the logfile additional to the logging target.\n"));
   log_str(logger, PSTR(" -q : specify quiet logging. Don't print any log messages.\n"));
   log_str(logger, PSTR(" -d : specify default logging. Enables default log messages.\n"));
   //log_str(logger, PSTR(" -d : specify default logging. Print network status changes, and the mqtt-sn messages: PUBLISH, CONNECT, CONNACK, DISCONNECT.\n"));

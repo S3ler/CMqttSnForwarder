@@ -10,7 +10,10 @@ void MqttSnMultipleForwarderTests::SetUp() {
 
   for (size_t i = 1; i <= 1; ++i) {
     string gw_identifier = "gateway" + to_string(i);
-    string gw_cmd = "-db -cp 2000" + to_string(i) + " --gateway_id " + to_string(i);
+    string gw_cmd =
+        "-db --log_identifier MqttSnGateway" + to_string(i)
+            + " -lfp MqttSnGateway" + to_string(i) + ".log "
+            + "-cp 2000" + to_string(i) + " --gateway_id " + to_string(i);
     std::shared_ptr<MqttSnGatewayTestContainer> gw_prt(new MqttSnGatewayTestContainer(gw_identifier, gw_cmd));
     ASSERT_EQ(gw_prt->initialize(), 0);
     gateways.push_back(gw_prt);
@@ -18,7 +21,9 @@ void MqttSnMultipleForwarderTests::SetUp() {
 
   for (size_t i = 1; i <= 1; ++i) {
     string fw_identifier = "forwarder" + to_string(i);
-    string fw_cmd = "-db -cp 3000" + to_string(i) + " -gp 4000" + to_string(i) + " -p 20001";
+    string fw_cmd = "-db --log_identifier MqttSnForwarder" + to_string(i)
+        + " -lfp MqttSnForwarder" + to_string(i) + ".log "
+        + "-cp 3000" + to_string(i) + " -gp 4000" + to_string(i) + " -p 20001";
     std::shared_ptr<MqttSnForwarderTestContainer> fw_ptr(new MqttSnForwarderTestContainer(fw_identifier, fw_cmd));
     ASSERT_EQ(fw_ptr->initialize(), 0);
     forwarders.push_back(fw_ptr);
@@ -26,7 +31,9 @@ void MqttSnMultipleForwarderTests::SetUp() {
 
   for (size_t i = 1; i <= 1; ++i) {
     string client_identifier = "client" + to_string(i);
-    string client_cmd = "-db -gp 1000" + to_string(i) + " -p 30001";
+    string client_cmd = "-db --log_identifier MqttSnClient" + to_string(i)
+        + " -lfp MqttSnClient" + to_string(i) + ".log "
+        + " -gp 1000" + to_string(i) + " -p 30001";
     std::shared_ptr<MqttSnClientTestContainer> client_ptr(new MqttSnClientTestContainer(client_identifier, client_cmd));
     ASSERT_EQ(client_ptr->initialize(), 0);
     clients.push_back(client_ptr);
@@ -98,7 +105,7 @@ void MqttSnMultipleForwarderTests::TearDown() {
 }
 
 TEST_F(MqttSnMultipleForwarderTests, gen_parse_test) {
-  while(true) {
+  while (true) {
     std::this_thread::sleep_for(std::chrono::seconds(30));
   }
 }

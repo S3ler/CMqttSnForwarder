@@ -4,12 +4,12 @@
 
 #ifndef CMQTTSNFORWARDER_MQTTSNFORWARDERLOGGING_H
 #define CMQTTSNFORWARDER_MQTTSNFORWARDERLOGGING_H
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include <platform/device_address.h>
 #include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum MQTT_SN_FORWARDER_NETWORK_ {
   MQTT_SN_FORWARDER_NETWORK_INVALID = -1,
@@ -33,18 +33,26 @@ typedef struct MqttSnLoggerInterface_ {
 
   int (*log_flush)(const struct MqttSnLoggerInterface_ *logger);
 
-  int (*log_str)(const char *str);
+  int (*log_str)(const struct MqttSnLoggerInterface_ *logger, const char *str);
 
-  int (*log_char)(char c);
+  int (*log_char)(const struct MqttSnLoggerInterface_ *logger, char c);
 
-  void* context;
+  char *log_identifier;
+  char *log_file_path;
   int log_level;
   int status;
+  void *context;
 } MqttSnLogger;
 
 int MqttSnLoggerInit(MqttSnLogger *logger,
                      log_level_t log_level,
                      int (*log_init)(struct MqttSnLoggerInterface_ *logger));
+
+int MqttSnLoggerInitFile(MqttSnLogger *logger,
+                         log_level_t log_level,
+                         char *log_file_path,
+                         int (*log_init)(struct MqttSnLoggerInterface_ *),
+                         void *context);
 
 void MqttSnLoggerDeinit(MqttSnLogger *logger);
 
@@ -85,6 +93,8 @@ int log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t da
 int32_t get_timestamp_s(uint64_t *t_s);
 
 int log_current_time(const MqttSnLogger *logger);
+
+int log_identifier(const MqttSnLogger *logger);
 
 int log_msg_start(const MqttSnLogger *logger);
 

@@ -42,13 +42,10 @@ int32_t MqttSnGatewayInitialize(MqttSnGateway *mqttSnGateway,
                                 void *clientNetworkContext,
                                 const gateway_advertise_config *gacfg,
                                 const gateway_client_connection_config *gccccfg) {
-#ifdef WITH_LOGGING
-  if (logger) {
-    mqttSnGateway->logger = (*logger);
-    mqttSnGateway->db_handler_.logger = &mqttSnGateway->logger;
-    mqttSnGateway->clientNetwork.logger = &mqttSnGateway->logger;
-  }
-#endif
+
+  mqttSnGateway->logger = (*logger);
+  mqttSnGateway->db_handler_.logger = &mqttSnGateway->logger;
+  mqttSnGateway->clientNetwork.logger = &mqttSnGateway->logger;
 
   assert(gacfg != NULL);
   mqttSnGateway->advertisement_config = (*gacfg);
@@ -88,9 +85,6 @@ int32_t MqttSnGatewayInitialize(MqttSnGateway *mqttSnGateway,
 int32_t MqttSnGatewayDeinitialize(MqttSnGateway *mqttSnGateway) {
   ClientNetworkDeinitialize(&mqttSnGateway->clientNetwork, mqttSnGateway->clientNetworkContext);
   MqttClientDeinitialize(mqttSnGateway->mqttClient);
-#ifdef WITH_LOGGING
-  mqttSnGateway->logger.log_deinit(&mqttSnGateway->logger);
-#endif
   return 0;
 }
 int32_t MqttSnGatewayConnect(MqttSnGateway *mqttSnGateway) {
@@ -458,6 +452,7 @@ int32_t parse_and_handle_encapsulated_messages(MqttSnGateway *gateway,
     return 0;
   }
 
+  parsed_bytes += parse_rc;
   ParsedMqttSnHeader h = {0};
   int32_t h_bytes = 0;
   int32_t h_rc = 0;

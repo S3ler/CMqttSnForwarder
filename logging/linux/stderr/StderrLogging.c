@@ -18,20 +18,20 @@ void stderr_log_deinit(MqttSnLogger *logger) {
 }
 
 int stderr_log_flush(const MqttSnLogger *logger) {
-  if (logger->log_str("\n") || fflush(stderr) == EOF) {
+  if (logger->log_str(logger, "\n") || fflush(stderr) == EOF) {
     return -1;
   }
   return 0;
 }
 
-int stderr_log_str(const char *str) {
+int stderr_log_str(const MqttSnLogger *logger, const char *str) {
   if (fputs(str, stderr) == EOF) {
     return -1;
   }
   return 0;
 }
 
-int stderr_log_char(char c) {
+int stderr_log_char(const MqttSnLogger *logger, char c) {
   if (fputc(c, stderr) == EOF) {
     return -1;
   }

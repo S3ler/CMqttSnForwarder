@@ -13,6 +13,11 @@
 #include <network/linux/client/plugin/client_network_plugin_interface.h>
 #include <network/linux/client/plugin/MqttSnClientPluginNetwork.h>
 #include <network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h>
+#include <logging/linux/file/FileLogging.h>
+#include <logging/linux/stdout/StdoutLogging.h>
+#include <logging/linux/stderr/StderrLogging.h>
+#include <logging/linux/filestdout/FileStdoutLogging.h>
+#include <vector>
 #include "MqttSnGatewayTestContainer.h"
 
 MqttSnGatewayTestContainer::MqttSnGatewayTestContainer(const string &identifier, const string &cmd)
@@ -22,26 +27,63 @@ int32_t MqttSnGatewayTestContainer::initialize() {
   if (isRunning()) {
     return EXIT_FAILURE;
   }
-  if (MqttSnLoggerInit(&gw_logger, LOG_LEVEL_DEBUG, stdout_log_init)) {
+
+  MqttSnLogger cfg_logger = {0};
+  if (MqttSnLoggerInit(&cfg_logger, LOG_LEVEL_VERBOSE, stderr_log_init)) {
     return EXIT_FAILURE;
   }
 
   if (mqtt_sn_gateway__config_init(&gateway_config) < 0) {
     return EXIT_FAILURE;
   }
-  int32_t rc = process_config_file_line(&gw_logger,
-                                        cmd.data(),
-                                        cmd.length() + 1,
-                                        identifier.data(),
-                                        &gateway_config,
-                                        mqtt_sn_gateway__config_file_process_command_callback);
+
+  std::copy(cmd.begin(), cmd.end(), std::back_inserter(line_str));
+  int32_t rc = process_config_cmd_str(&cfg_logger,
+                                      line_str.data(),
+                                      line_str.size() + 1,
+                                      identifier.data(),
+                                      &gateway_config,
+                                      mqtt_sn_gateway__config_file_process_command_callback,
+                                      argv,
+                                      &argc,
+                                      argv_max_len);
+
   if (rc) {
     mqtt_sn_gateway__config_cleanup(&gateway_config);
+    MqttSnLoggerDeinit(&cfg_logger);
     return EXIT_FAILURE;
   }
+
+  if (start_logger(&gateway_config.mslcfg, &gw_logger) < 0) {
+    log_str(&cfg_logger, "Could not initialize mqtt sn logger\n");
+    MqttSnLoggerDeinit(&cfg_logger);
+    return EXIT_FAILURE;
+  }
+
+  MqttSnLoggerDeinit(&cfg_logger);
   return EXIT_SUCCESS;
 }
-
+int32_t MqttSnGatewayTestContainer::start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger) {
+  if (!strcmp(cfg->log_target, "console")) {
+    if (cfg->log_file_path != NULL) {
+      if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_file_path, file_stdout_log_init, &file_stdout_logging_context_) < 0) {
+        return -1;
+      }
+    } else {
+      if (MqttSnLoggerInit(logger, cfg->log_lvl, stdout_log_init) < 0) {
+        return -1;
+      }
+    }
+  } else if (!strcmp(cfg->log_target, "file")) {
+    if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_file_path, file_log_init, &file_logging_context_) < 0) {
+      return -1;
+    }
+  }
+  if (cfg->log_identifier) {
+    logger->log_identifier = cfg->log_identifier;
+  }
+  return 0;
+}
 int32_t MqttSnGatewayTestContainer::start() {
   /*
   const mqtt_sn_gateway__config *fcfg = &gateway_config;
@@ -72,7 +114,6 @@ int32_t MqttSnGatewayTestContainer::start() {
 
   gateway.clientNetworkSendTimeout = gateway_config.cncfg.client_network_send_timeout;
   gateway.clientNetworkReceiveTimeout = gateway_config.cncfg.client_network_receive_timeout;
-
 
 #ifdef WITH_LOGGING
   print_program_started(&gateway.logger, &gateway_config.msvcfg, gateway_config.executable_name);

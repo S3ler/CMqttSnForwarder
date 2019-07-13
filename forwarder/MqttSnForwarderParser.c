@@ -21,6 +21,7 @@ int32_t remove_mqtt_sn_forwarder_encapsulation_frame(MqttSnMessageData *gatewayM
                                                     gatewayMessageData->data_length);
   if (p_rc < 0) {
 #ifdef WITH_DEBUG_LOGGING
+    // TODO nicht im standard spezifiert
     log_gateway_mqtt_sn_message_malformed(logger,
                                           &gatewayMessageData->from,
                                           gatewayMessageData->data,

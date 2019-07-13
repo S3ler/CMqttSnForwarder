@@ -95,6 +95,70 @@ int32_t process_config_file(const char *config_file_path,
 #endif
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
+int32_t process_config_cmd_str(const MqttSnLogger *logger,
+                               char *line,
+                               size_t len,
+                               const char *argv_0,
+                               void *cfg,
+                               int32_t (*callback)(void *, const MqttSnLogger *, int, char **),
+                               char *argv[],
+                               uint16_t *argc,
+                               uint16_t argv_max_len) {
+  if (line == NULL) {
+    assert(!(line == NULL));
+    return -1;
+  }
+  if (len == 0) {
+    assert(!(len == 0));
+    return -1;
+  }
+
+  if (strlen(line) + 1 != len) {
+    assert(!(strlen(line) + 1 != len));
+    return -1;
+  }
+
+  if (strlen(line) == 0) {
+    assert(!(strlen(line) == 0));
+    return -1;
+  }
+
+  int tk_count = 0;
+  {
+    char line_copy[len];
+    memcpy(line_copy, line, len);
+    // estimates argc
+    for (char *tk = strtok(line_copy, " "); tk != NULL; tk = strtok(NULL, " ")) {
+      tk_count++;
+    }
+  }
+  if (tk_count > argv_max_len) {
+    // TOOD log too much argc
+    return -1;
+  }
+  //char *argv[tk_count];
+  (*argc) = 0;
+  memset(argv, 0, argv_max_len);
+  {
+    argv[(*argc)++] = (char *) argv_0;
+    for (char *tk = strtok(line, " "); tk != NULL; tk = strtok(NULL, " ")) {
+      argv[(*argc)++] = tk;
+    }
+  }
+
+  // remove '\n' from tokens
+  for (uint16_t i = 1; i < (*argc); i++) {
+    if (argv[i][(strlen(argv[i]) - 1)] == '\n') {
+      argv[i][(strlen(argv[i]) - 1)] = '\0';
+    }
+  }
+
+#ifdef WITH_DEBUG_LOGGING
+  print_argc_argv(logger, (*argc), argv);
+#endif
+
+  return callback(cfg, logger, (*argc), argv);
+}
 int32_t process_config_file_line(const MqttSnLogger *logger,
                                  const char *line,
                                  size_t len,
@@ -319,6 +383,12 @@ int32_t print_config_parser_invalid_port_given(const MqttSnLogger *logger, long 
 int32_t print_config_parser_invalid_qos_given(const MqttSnLogger *logger, uint64_t given_qos) {
   log_str(logger, PSTR("Error: Invalid qos given: "));
   log_uint64(logger, given_qos);
+  log_flush(logger);
+  return log_status(logger);
+}
+int32_t print_config_parser_invalid_log_target(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: Invalid log target given: "));
+  log_str(logger, given_str);
   log_flush(logger);
   return log_status(logger);
 }

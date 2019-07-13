@@ -14,9 +14,12 @@
 #include <client/pub/config/publish_client_config.h>
 #include <network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
 #include <network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h>
+#include <logging/linux/file/FileLogging.h>
+#include <logging/linux/filestdout/FileStdoutLogging.h>
 
 using std::thread;
 using std::atomic_bool;
+using std::vector;
 using std::string;
 using std::shared_ptr;
 
@@ -24,6 +27,14 @@ class MqttSnClientTestContainer {
  private:
   string identifier;
   string cmd;
+
+  vector<char> line_str;
+  uint16_t argc = 0;
+  const static uint16_t argv_max_len = 1024;
+  char *argv[argv_max_len];
+  FileLoggingContext file_logging_context_= {0};
+  FileStdoutLoggingContext file_stdout_logging_context_ = {0};
+  int32_t start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger);
 
   MqttSnLogger client_logger;
   publish_client_config client_cfg;
@@ -33,6 +44,8 @@ class MqttSnClientTestContainer {
   thread runner;
   atomic_bool running{false};
   atomic_bool stopped{false};
+
+
 
  public:
   MqttSnClientTestContainer(const string &identifier, const string &cmd);

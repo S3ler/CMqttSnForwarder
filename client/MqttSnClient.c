@@ -23,7 +23,7 @@ int32_t client_parse_and_handle_ping_req(MqttSnClient *client, MqttSnMessageData
 int32_t send_to_gateway(MqttSnClient *client, const uint8_t *msg_data, int32_t gen_rc);
 uint64_t get_last_timeout_reset(MqttSnClient *client);
 uint64_t get_tolerance_timeout(uint16_t timeout);
-int32_t MqttSnClientInit(MqttSnClient *client, log_level_t log_level, void *gatewayNetworkContext) {
+int32_t MqttSnClientInit(MqttSnClient *client, const MqttSnLogger *logger, void *gatewayNetworkContext) {
   //memset(client, 0, sizeof(*client));
   client->client_protocol_id = 0x01; // TODO define
 
@@ -34,17 +34,9 @@ int32_t MqttSnClientInit(MqttSnClient *client, log_level_t log_level, void *gate
   client->connect_duration = MQTT_SN_CLIENT_DEFAULT_CONNECT_DURATION;
   client->connect_timeout_offset = 0;
 
-#ifdef WITH_LOGGING
-#if defined(Arduino_h) || defined(WITH_PLATFORMIO)
-  if (MqttSnLoggerInit(&mqttSnForwarder->logger, log_level, arduino_serial_log_init) != 0) {
-#else
-  if (MqttSnLoggerInit(&client->logger, log_level, stdout_log_init) != 0) {
-#endif
-    MqttSnLoggerDeinit(&client->logger);
-    return -1;
-  }
+  client->logger = (*logger);
   client->gatewayNetwork.logger = &client->logger;
-#endif
+
 
   client->gatewayNetworkContext = gatewayNetworkContext;
 

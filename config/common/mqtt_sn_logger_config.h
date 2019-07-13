@@ -12,11 +12,19 @@
 extern "C" {
 #endif
 
+#ifndef MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET
+#define MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET "console"
+#endif
+
 #ifndef MQTT_SN_LOGGER_DEFAULT_LOG_LVL
 #define MQTT_SN_LOGGER_DEFAULT_LOG_LVL LOG_LEVEL_DEFAULT
 #endif
 
 typedef struct mqtt_sn_logger_config_ {
+  char default_logging_target[sizeof(MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET)];
+  char* log_target;
+  char* log_file_path;
+  char* log_identifier;
   log_level_t log_lvl;
 } mqtt_sn_logger_config;
 

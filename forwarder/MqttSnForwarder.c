@@ -16,10 +16,11 @@
 #include <parser/logging/common/MqttSnMessageLogging.h>
 
 int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
-                        MqttSnLogger *logger,
-                        log_level_t log_level,
+                        const MqttSnLogger *logger,
                         void *clientNetworkContext,
                         void *gatewayNetworkContext) {
+  // TODO is capable of handling a NULL logger
+/*
 #ifdef WITH_LOGGING
   if (!logger) {
 
@@ -35,10 +36,13 @@ int MqttSnForwarderInit(MqttSnForwarder *mqttSnForwarder,
     mqttSnForwarder->clientNetwork.logger = &mqttSnForwarder->logger;
   }else{
     memcpy(&mqttSnForwarder->logger, logger, sizeof(MqttSnLogger));
-    mqttSnForwarder->gatewayNetwork.logger = &mqttSnForwarder->logger;
-    mqttSnForwarder->clientNetwork.logger = &mqttSnForwarder->logger;
+
   }
 #endif
+*/
+  mqttSnForwarder->logger = (*logger);
+  mqttSnForwarder->gatewayNetwork.logger = &mqttSnForwarder->logger;
+  mqttSnForwarder->clientNetwork.logger = &mqttSnForwarder->logger;
 
   mqttSnForwarder->clientNetworkContext = clientNetworkContext;
   MqttSnFixedSizeRingBufferInit(&mqttSnForwarder->clientNetworkReceiveBuffer);
@@ -77,9 +81,6 @@ void MqttSnForwarderDeinit(MqttSnForwarder *forwarder) {
   ClientNetworkDisconnect(&forwarder->clientNetwork, forwarder->clientNetworkContext);
   GatewayNetworkDeinitialize(&forwarder->gatewayNetwork, forwarder->gatewayNetworkContext);
   ClientNetworkDeinitialize(&forwarder->clientNetwork, forwarder->clientNetworkContext);
-#ifdef WITH_LOGGING
-  forwarder->logger.log_deinit(&forwarder->logger);
-#endif
 }
 
 int MqttSnForwarderLoop(MqttSnForwarder *forwarder) {

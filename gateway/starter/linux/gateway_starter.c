@@ -79,21 +79,14 @@ int start_mqtt_sn_gateway(const mqtt_sn_gateway__config *fcfg,
 #ifdef WITH_LOGGING
   print_program_started(logger, &fcfg->msvcfg, fcfg->executable_name);
 #endif
-  MqttSnLogger mqtt_sn_gateway_logger = {0};
-  if (MqttSnLoggerInit(&mqtt_sn_gateway_logger, fcfg->mslcfg.log_lvl, stdout_log_init)) {
-#ifdef WITH_LOGGING
-    // TODO log that logger failed haha
-#endif
-    return EXIT_FAILURE;
-  }
+
   // FIXME MqttClient
   if (MqttSnGatewayInitialize(mqtt_sn_gateway,
-                              &mqtt_sn_gateway_logger,
+                              logger,
                               NULL,
                               clientNetworkContext,
                               &fcfg->gacfg,
                               &fcfg->gccccfg) < 0) {
-
     MqttSnGatewayDeinitialize(mqtt_sn_gateway);
     return EXIT_FAILURE;
   }
@@ -182,7 +175,6 @@ int start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
   clientNetworkContext = &clientPluginContext;
 
   return start_mqtt_sn_gateway(fcfg, logger, mqtt_sn_gateway, clientNetworkContext);
-
 }
 #endif
 
