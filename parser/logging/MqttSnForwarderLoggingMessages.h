@@ -20,7 +20,6 @@ int log_dup_flag(const MqttSnLogger *logger, uint8_t dup);
 
 int log_clean_flag(const MqttSnLogger *logger, uint8_t clean_session);
 
-int log_duration(const MqttSnLogger *logger, uint16_t duration);
 
 int log_protocol_id(const MqttSnLogger *logger, uint8_t protocolId);
 
@@ -39,9 +38,6 @@ int log_retain_flag(const MqttSnLogger *logger, uint8_t retain);
 int log_qos_flag(const MqttSnLogger *logger, int8_t qos);
 
 int log_ctrl(const MqttSnLogger *logger, uint8_t ctrl);
-
-int log_msg_from(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type, const device_address *from);
-int log_msg_to(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type, const device_address *from);
 
 int log_open_braked(const MqttSnLogger *logger);
 int log_close_braked(const MqttSnLogger *logger);

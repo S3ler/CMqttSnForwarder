@@ -360,11 +360,27 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_last_ping_resp_received(db_handler 
   return h->client_transaction_result;
 }
 
-DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_address(db_handler *h, device_address *client_address) {
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_address(db_handler *h,
+                                                     device_address *client_address,
+                                                     device_address *forwarder_addresses,
+                                                     uint16_t *forwarder_addresses_len,
+                                                     uint16_t forwarder_addresses_max_len) {
   assert(h->client_transaction_started);
   DB_HANDLER_CK__CLIENT_DB_ERROR(h)
 
   (*client_address) = h->_entry_client.client_address;
+  get_db_entry_mqtt_sn_client_forwarder_addresses(&h->_entry_client,
+                                                  forwarder_addresses,
+                                                  forwarder_addresses_len,
+                                                  forwarder_addresses_max_len);
+
+  return h->client_transaction_result;
+}
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_id(db_handler *h, char *client_id) {
+  assert(h->client_transaction_started);
+  DB_HANDLER_CK__CLIENT_DB_ERROR(h)
+
+  memcpy(client_id, h->_entry_client.client_id, strlen(h->_entry_client.client_id));
 
   return h->client_transaction_result;
 }

@@ -11,6 +11,7 @@
 #include <logging/MqttSnLoggingInterface.h>
 #include "db_entry_mqtt_sn_client.h"
 #include "db_entry_mqtt_sn_gateway_discovered.h"
+#include "db_handler_result.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -95,11 +96,6 @@ extern "C" {
 
 #endif
 
-typedef enum DB_HANDLER_RESULT_ {
-  DB_HANDLER_RESULT_SUCCESS = 0,
-  DB_HANDLER_RESULT_NO_TRANSACTION_STARTED,
-  DB_HANDLER_RESULT_ERROR
-} DB_HANDLER_RESULT;
 
 typedef struct db_handler_ {
   //char *db_directory_path;
@@ -123,6 +119,8 @@ typedef struct db_handler_ {
   DB_HANDLER_RESULT gateway_discovered_transaction_result;
 
   uint64_t client_count;
+
+  DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_LIST discovered_gw_list;
 
 #if WITH_LOGGING
   MqttSnLogger *logger;
@@ -181,7 +179,8 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_last_ping_req_received(db_handler *
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_last_ping_resp_received(db_handler *h, uint64_t *last_ping_resp_awaited);
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_last_ping_resp_received(db_handler *h, uint64_t last_ping_resp_awaited);
 
-DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_address(db_handler *h, device_address *client_address);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_address(db_handler *h, device_address *client_address,device_address *forwarder_addresses, uint16_t *forwarder_addresses_len, uint16_t forwarder_addresses_max_len);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_id(db_handler *h, char *client_id);
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_connect_duration(db_handler *h, uint16_t *connect_duration);
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_status(db_handler *h, DB_ENTRY_MQTT_SN_CLIENT_STATUS client_status);
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_status(db_handler *h, DB_ENTRY_MQTT_SN_CLIENT_STATUS *client_status);
@@ -318,16 +317,26 @@ bool is_mqtt_online();
 void get_client_id(char *client_id);
 
 // monitoring of gateway
+DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_RESULT mqtt_sn_discovered_gateway_init(db_handler *h);
 DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_RESULT mqtt_sn_discovered_gateway_update_address(db_handler *h,
                                                                                      uint8_t gw_id,
                                                                                      const device_address *address,
-                                                                                     uint64_t received_time);
+                                                                                     uint64_t received_time,
+                                                                                     uint8_t signal_strength,
+                                                                                     device_address *forwarder_addresses,
+                                                                                     uint16_t forwarder_address_len);
 DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_RESULT mqtt_sn_discovered_gateway_update(db_handler *h,
                                                                              uint8_t gw_id,
                                                                              uint16_t duration,
                                                                              const device_address *address,
-                                                                             uint64_t received_time);
+                                                                             uint8_t signal_strength,
+                                                                             uint64_t received_time,
+                                                                             device_address *forwarder_addresses,
+                                                                             uint16_t forwarder_address_len);
 DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_RESULT get_gateway_discovered_result(db_handler *h);
+DB_HANDLER_RESULT get_gateway_discovered_transaction_result(db_handler *h);
+DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_STATUS get_gateway_status(db_handler *handler, uint8_t gw_id);
+
 #ifdef __cplusplus
 }
 #endif

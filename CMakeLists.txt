@@ -48,6 +48,8 @@ target_include_directories(lib-mqtt-sn-platform-abstraction-layer PRIVATE .)
 target_compile_options(lib-mqtt-sn-platform-abstraction-layer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
 
 set(MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES
+        ringbuffer/logging/MqttSnFixedSizeRingBufferLogging.c
+        ringbuffer/logging/MqttSnFixedSizeRingBufferLogging.h
         ringbuffer/MqttSnFixedSizeRingBuffer.h
         ringbuffer/MqttSnFixedSizeRingBuffer.c)
 add_library(lib-mqtt-sn-ring-buffer ${MQTT_SN_FIXED_SIZE_RING_BUFFER_FILES})
@@ -486,12 +488,13 @@ set(DATABASE_FILES
         gateway/database/db_entry_mqtt_sn_client_publish.h
         gateway/database/db_entry_mqtt_sn_client_registration.h
         gateway/database/db_entry_mqtt_sn_client_will_message.h
-        gateway/database/db_entry_mqtt_sn_gateway_discovered.c
+       # gateway/database/db_entry_mqtt_sn_gateway_discovered.c
         gateway/database/db_entry_mqtt_sn_gateway_discovered.h
         gateway/database/db_entry_mqtt_sn_subscription.h
         gateway/database/db_entry_mqtt_subscription.h
         gateway/database/db_handler.c
         gateway/database/db_handler.h
+        gateway/database/db_handler_result.h
         gateway/database/db_handler_gateway_discovered.c
         gateway/database/db_handler_client.c
         gateway/database/ftfs_db.c
@@ -513,6 +516,7 @@ endif ()
 set(MQTT_SN_GATEWAY_FILES
         gateway/MqttSnGateway.c
         gateway/MqttSnGateway.h
+        gateway/MqttSnGatewayDiscoveryHandler.c gateway/MqttSnGatewayDiscoveryHandler.h
         gateway/MqttSnGatewayClientConnectionHandler.c gateway/MqttSnGatewayClientConnectionHandler.h
         gateway/MqttSnGatewayForwarder.c gateway/MqttSnGatewayForwarder.h
         gateway/MqttClient.c
@@ -521,7 +525,11 @@ set(MQTT_SN_GATEWAY_FILES
 if (WITH_LOGGING)
     set(MQTT_SN_GATEWAY_FILES ${MQTT_SN_GATEWAY_FILES}
             gateway/logging/MqttSnGatewayLogging.c
-            gateway/logging/MqttSnGatewayLogging.h)
+            gateway/logging/MqttSnGatewayLogging.h
+            gateway/logging/MqttSnGatewayClientConnectionLogging.c
+            gateway/logging/MqttSnGatewayClientConnectionLogging.h
+            gateway/logging/MqttSnGatewayDiscoveryLogging.c
+            gateway/logging/MqttSnGatewayDiscoveryLogging.h)
 endif ()
 add_library(lib-mqtt-sn-gateway ${MQTT_SN_GATEWAY_FILES})
 target_compile_options(lib-mqtt-sn-gateway PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})

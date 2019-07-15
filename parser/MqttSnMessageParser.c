@@ -87,7 +87,9 @@ int32_t parse_header(ParsedMqttSnHeader *h,
       return -1;
     }
   }
-
+  if (h->msg_type == RESERVED_INVALID || MQTT_SN_MESSAGE_TYPE_RESERVED(h->msg_type)) {
+    return -1;
+  }
   return (*parsed_bytes);
 }
 

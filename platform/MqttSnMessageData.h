@@ -18,6 +18,7 @@ extern "C" {
 
 typedef struct MqttSnMessageData_ {
   uint64_t create_time_s;
+  uint64_t create_time_ms;
   device_address from;
   device_address to;
   uint16_t data_length;
@@ -30,6 +31,8 @@ typedef struct MqttSnMessageData_ {
  * @returns 0 on success, -1 on error
  */
 int32_t reuse_mqtt_sn_message_data(MqttSnMessageData *mqtt_sn_message_data);
+
+int32_t add_mqtt_sn_message_timestamp(MqttSnMessageData* mqtt_sn_message_data);
 
 #ifdef __cplusplus
 }

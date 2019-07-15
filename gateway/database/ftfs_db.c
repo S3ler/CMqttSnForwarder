@@ -9,7 +9,7 @@
 #include <external/linux/gadget114514/fatfs-example-c00d2f9a408f195182f63c79a160ddbad37a5201/fatfs/source/ff.h>
 #include <assert.h>
 
-int32_t f_read_at(const char *path, UINT pos, void *buf, UINT btr) {
+int32_t f_read_at(const char *path, UINT pos, UINT pos_offset, void *buf, UINT btr) {
   FIL f;
   UINT read_bytes = 0;
   int32_t result = 0;
@@ -44,7 +44,7 @@ int32_t f_read_at(const char *path, UINT pos, void *buf, UINT btr) {
   }
   return result;
 }
-int32_t f_write_at(const char *path, UINT pos, void *buf, UINT btr) {
+int32_t f_write_at(const char *path, UINT pos, UINT pos_offset, void *buf, UINT btr) {
   FIL f;
   UINT written_bytes = 0;
   int32_t result = 0;

@@ -207,6 +207,28 @@ int32_t get_timestamp_s(uint64_t *t_s) {
   return 0;
 }
 
+int32_t get_timestamp_ms(uint64_t *t_s, uint64_t *t_ms) {
+  (*t_s) = 0;
+  (*t_ms) = 0;
+  struct timespec spec;
+  if (clock_gettime(CLOCK_REALTIME, &spec) == -1) {
+    return -1;
+  }
+  (*t_s) = spec.tv_sec;
+  (*t_ms) = spec.tv_nsec / 1.0e6;
+  return 0;
+}
+
+int32_t get_timestamp_ns(uint64_t *t_s, uint64_t *t_ns) {
+  struct timespec spec;
+  if (clock_gettime(CLOCK_REALTIME, &spec) == -1) {
+    return -1;
+  }
+  (*t_s) = spec.tv_sec;
+  (*t_ns) = spec.tv_nsec;
+  return 0;
+}
+
 int log_current_time(const MqttSnLogger *logger) {
   uintmax_t t;
   if (get_timestamp_s(&t)) {
@@ -263,4 +285,8 @@ int log_device_address(const MqttSnLogger *logger, const device_address *address
     }
   }
   return 0;
+}
+int32_t log_signal_strength(const MqttSnLogger *logger, uint8_t signal_strength) {
+  log_uint8(logger, signal_strength);
+  return log_status(logger);
 }

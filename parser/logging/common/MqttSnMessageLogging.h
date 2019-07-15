@@ -6,12 +6,17 @@
 #define CMQTTSNFORWARDER_PARSER_LOGGING_COMMON_MQTTSNMESSAGELOGGING_H_
 
 #include <logging/MqttSnLoggingInterface.h>
+#include <parser/MqttSnMessageParser.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+// TODO move functionality to MqttSnMessageParserLogging
+
 int32_t log_mqtt_sn_comma(const MqttSnLogger *logger);
+
+int32_t log_mqtt_sn_message_type(const MqttSnLogger *logger, MQTT_SN_MESSAGE_TYPE msg_type);
 
 // mqtt-sn specific logging
 
@@ -41,6 +46,18 @@ int32_t log_mqtt_sn_duration(const MqttSnLogger *logger, uint16_t duration);
 
 int32_t log_mqtt_sn_message_id(const MqttSnLogger *logger, uint16_t msgId);
 
+int32_t log_any_message(const MqttSnLogger *logger,
+                        const device_address *from,
+                        uint8_t signal_strength,
+                        const uint8_t *data,
+                        uint16_t data_length);
+
+int32_t print_any_message(const MqttSnLogger *logger,
+                          const device_address *from,
+                          uint8_t signal_strength,
+                          const uint8_t *data,
+                          uint16_t data_length);
+
 int log_client_mqtt_sn_message_malformed(const MqttSnLogger *logger,
                                          const device_address *from,
                                          const uint8_t *data,
@@ -52,6 +69,25 @@ int log_mqtt_sn_message_malformed(const MqttSnLogger *logger,
                                   const uint8_t *data,
                                   uint16_t data_len,
                                   uint8_t signal_strength);
+
+int32_t log_malformed_message_header(const MqttSnLogger *logger,
+                                     const device_address *from,
+                                     uint8_t signal_strength,
+                                     const uint8_t *data,
+                                     uint16_t data_len);
+
+int32_t log_malformed_message(const MqttSnLogger *logger,
+                              MQTT_SN_MESSAGE_TYPE msg_type,
+                              const device_address *from,
+                              uint8_t signal_strength,
+                              const uint8_t *data,
+                              uint16_t data_len);
+
+int32_t log_msg_gen_error(const MqttSnLogger *logger,
+                          MQTT_SN_MESSAGE_TYPE msg_type,
+                          const char *file_name,
+                          const char *function_name,
+                          int line_number);
 #ifdef __cplusplus
 }
 #endif

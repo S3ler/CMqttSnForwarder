@@ -14,8 +14,8 @@
 extern "C" {
 #endif
 
-int32_t f_read_at(const char *path, UINT pos, void *buf, UINT btr);
-int32_t f_write_at(const char *path, UINT pos, void *buf, UINT btr);
+int32_t f_read_at(const char *path, UINT pos, UINT pos_offset, void *buf, UINT btr);
+int32_t f_write_at(const char *path, UINT pos, UINT pos_offset, void *buf, UINT btr);
 int32_t f_delete(const char *path);
 
 int32_t read_db_entry_client(FIL *f, uint64_t position, DB_ENTRY_MQTT_SN_CLIENT *client_entry);

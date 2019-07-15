@@ -12,7 +12,8 @@ int32_t gateway_advertisement_config_init(gateway_advertise_config *cfg) {
   cfg->advertisement_duration = MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION;
   cfg->advertisement_radius = MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_RADIUS;
   cfg->gateway_id = MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID;
-
+  cfg->missing_advertise_count = MQTT_SN_GATEWAY_ADVERTISEMENT_MISSING_ADVERTISE_COUNT;
+  cfg->gateway_ping_monitoring = MQTT_SN_GATEWAY_ADVERTISEMENT_GATEWAY_PING_MONITORING;
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
 void gateway_advertisement_config_cleanup(gateway_advertise_config *cfg) {

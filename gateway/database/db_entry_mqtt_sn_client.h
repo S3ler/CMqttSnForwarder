@@ -89,6 +89,10 @@ void reset_db_entry_mqtt_sn_client(DB_ENTRY_MQTT_SN_CLIENT *client,
 void set_db_entry_mqtt_sn_client_forwarder_addresses(DB_ENTRY_MQTT_SN_CLIENT *client,
                                                      device_address *forwarder_addresses,
                                                      uint16_t forwarder_address_len);
+void get_db_entry_mqtt_sn_client_forwarder_addresses(DB_ENTRY_MQTT_SN_CLIENT *client,
+                                                     device_address *forwarder_addresses,
+                                                     uint16_t *forwarder_address_len,
+                                                     uint16_t forwarder_address_max_len);
 #ifdef __cplusplus
 }
 #endif

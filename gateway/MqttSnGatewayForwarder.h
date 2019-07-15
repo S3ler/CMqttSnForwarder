@@ -6,6 +6,8 @@
 #define CMQTTSNFORWARDER_GATEWAY_MQTTSNGATEWAYFORWARDER_H_
 
 #include <platform/device_address.h>
+#include <platform/MqttSnMessageData.h>
+#include <logging/MqttSnLoggingInterface.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,6 +25,11 @@ typedef struct MqttSnGatewayForwarder_ {
 } MqttSnGatewayForwarder;
 
 void MqttSnGatewayForwarderInit(MqttSnGatewayForwarder* mqtt_sn_gateway_forwarder);
+
+uint16_t gateway_add_forwarder_encapsulation_frames(MqttSnMessageData *msg,
+                                                    int32_t gen_bytes,
+                                                    MqttSnGatewayForwarder *forwarders,
+                                                    const MqttSnLogger *logger);
 
 #ifdef __cplusplus
 }

@@ -126,13 +126,8 @@ int32_t db_handler_initialize(db_handler *h, MqttSnLogger *logger) {
     return -1;
   }
   // init discovered gateways file with empty
-  for (uint8_t pos = 0; pos < UINT8_MAX; pos++) {
-    DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED entry_gw = {0};
-    entry_gw.gw_id = pos;
-    entry_gw.status = DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_NEVER;
-    if (f_write_at(MQTT_SN_GATEWAY_DB_DISCOVERED_GATEWAYS_FILE_NAME, pos, &entry_gw, sizeof(entry_gw)) < 0) {
-      return DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_RESULT_ERROR;
-    }
+  if (mqtt_sn_discovered_gateway_init(h) != DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_RESULT_SUCCESS) {
+    return DB_ENTRY_MQTT_SN_GATEWAY_DISCOVERED_RESULT_ERROR;
   }
 
   return 0;

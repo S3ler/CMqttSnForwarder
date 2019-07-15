@@ -13,6 +13,7 @@
 #include <config/gateway/gateway_client_connection_config.h>
 #include "MqttClient.h"
 #include "MqttSnGatewayClientConnectionHandler.h"
+#include "MqttSnGatewayDiscoveryHandler.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +21,7 @@ extern "C" {
 
 
 typedef struct MqttSnGateway_ {
+  MQTT_SN_GATEWAY_STATUS gateway_status_;
   db_handler db_handler_;
   MqttClient *mqttClient;
   MqttSnFixedSizeRingBuffer mqttClientNetworkReceiveBuffer;
@@ -36,8 +38,11 @@ typedef struct MqttSnGateway_ {
 #endif
 
   // TODO gateway configs
+  MqttSnGatewayClientConnectionHandler client_con_handler_;
+
   gateway_advertise_config advertisement_config;
-  MqttSnGatewayClientConnectionHandler client_connection_handler_;
+  MqttSnGatewayDiscoveryHandler discovery_handler;
+
 } MqttSnGateway;
 
 int32_t MqttSnGatewayInitialize(MqttSnGateway *mqttSnGateway,

@@ -23,10 +23,22 @@ extern "C" {
 #ifndef MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID
 #define MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID 0
 #endif
+
+#ifndef MQTT_SN_GATEWAY_ADVERTISEMENT_MISSING_ADVERTISE_COUNT
+#define MQTT_SN_GATEWAY_ADVERTISEMENT_MISSING_ADVERTISE_COUNT 2
+#endif
+
+#ifndef MQTT_SN_GATEWAY_ADVERTISEMENT_GATEWAY_PING_MONITORING
+#define MQTT_SN_GATEWAY_ADVERTISEMENT_GATEWAY_PING_MONITORING 1
+#endif
+
+
 typedef struct gateway_advertisement_config_ {
   uint16_t advertisement_duration;
   uint8_t advertisement_radius;
   uint8_t gateway_id;
+  uint8_t missing_advertise_count;
+  uint8_t gateway_ping_monitoring;
 } gateway_advertise_config;
 
 int32_t gateway_advertisement_config_init(gateway_advertise_config *cfg);

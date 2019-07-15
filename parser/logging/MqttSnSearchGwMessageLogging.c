@@ -3,6 +3,7 @@
 //
 
 #include <parser/MqttSnSearchGwMessage.h>
+#include <platform/platform_compatibility.h>
 #include "MqttSnSearchGwMessageLogging.h"
 #include "MqttSnForwarderLoggingMessages.h"
 
@@ -14,11 +15,14 @@ int32_t log_searchgw_message_byte(const MqttSnLogger *logger, const uint8_t *dat
   return log_searchgw_message(logger, radius);
 }
 int32_t log_searchgw_message(const MqttSnLogger *logger, uint8_t radius) {
-  log_open_braked(logger);
+  log_str(logger, PSTR("( "));
   log_searchgw_radius(logger, radius);
-  log_close_braked(logger);
+  log_str(logger, PSTR(")"));
   return log_status(logger);
 }
 int32_t log_searchgw_radius(const MqttSnLogger *logger, uint8_t radius) {
   return log_char_key_uint8_value(logger, 'r', radius);
+}
+int32_t log_searchgw_message_struct(const MqttSnLogger *logger, MqttSnSearchGw *search_gw) {
+  return log_searchgw_message(logger, search_gw->radius);
 }

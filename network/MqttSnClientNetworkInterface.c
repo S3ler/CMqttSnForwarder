@@ -165,6 +165,9 @@ int32_t ClientNetworkReceive(MqttSnClientNetworkInterface *n,
 
   msg.data_length = receive_rc;
   if (msg.data_length > 0) {
+    if (add_mqtt_sn_message_timestamp(&msg)) {
+      return -1;
+    }
     if (put(receiveBuffer, &msg) < 0) {
       // ignored
     }
