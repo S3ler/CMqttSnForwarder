@@ -44,7 +44,11 @@ int32_t MqttSnGatewayInitialize(MqttSnGateway *mqttSnGateway,
                                 const gateway_advertise_config *gacfg,
                                 const gateway_client_connection_config *gccccfg) {
 
-  mqttSnGateway->gateway_status_ = MQTT_SN_GATEWAY_STATUS_STAND_BY;
+  if (gacfg->advertisement_standby_monitoring) {
+    mqttSnGateway->gateway_status_ = MQTT_SN_GATEWAY_STATUS_STAND_BY;
+  } else {
+    mqttSnGateway->gateway_status_ = MQTT_SN_GATEWAY_STATUS_ACTIVE; //TODO exchange later see MQTT connected
+  }
 
   mqttSnGateway->logger = (*logger);
   mqttSnGateway->db_handler_.logger = &mqttSnGateway->logger;
@@ -101,6 +105,7 @@ int32_t MqttSnGatewayInitialize(MqttSnGateway *mqttSnGateway,
 int32_t MqttSnGatewayDeinitialize(MqttSnGateway *mqttSnGateway) {
   ClientNetworkDeinitialize(&mqttSnGateway->clientNetwork, mqttSnGateway->clientNetworkContext);
   MqttClientDeinitialize(mqttSnGateway->mqttClient);
+  db_handler_deinitialize(&mqttSnGateway->db_handler_, mqttSnGateway->db_handler_.logger);
   return 0;
 }
 int32_t MqttSnGatewayConnect(MqttSnGateway *mqttSnGateway) {
@@ -319,8 +324,6 @@ int32_t parse_and_handle_message(MqttSnGateway *mqttSnGateway,
 #endif
   return 0;
 }
-
-
 
 int32_t parse_and_handle_encapsulated_messages(MqttSnGateway *gateway,
                                                MqttSnMessageData *msg,

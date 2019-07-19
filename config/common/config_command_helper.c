@@ -315,6 +315,12 @@ int32_t print_invalid_clean_session_given(const MqttSnLogger *logger, const char
   log_flush(logger);
   return log_status(logger);
 }
+int32_t print_invalid_advertisement_standby_monitoring_enabled_given(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: advertisement standby monitoring enabled given: "));
+  log_str(logger, given_str);
+  log_flush(logger);
+  return log_status(logger);
+}
 int32_t parse_boolean(char *boolean_str, uint8_t *dst) {
   if (!strcmp(boolean_str, "false")) {
     (*dst) = 0;
@@ -346,6 +352,13 @@ int32_t parse_clean_session(const MqttSnLogger *logger, char *clean_session_str,
     (*dst) = 1;
   } else {
     print_invalid_clean_session_given(logger, clean_session_str);
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
+int32_t parse_advertisement_standby_monitoring_enabled(const MqttSnLogger *logger, char *str, uint8_t *dst) {
+  if (parse_boolean(str, dst) == MQTT_SN_PARSE_CONFIG_FAILURE) {
+    print_invalid_advertisement_standby_monitoring_enabled_given(logger, str);
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
   return MQTT_SN_PARSE_CONFIG_SUCCESS;

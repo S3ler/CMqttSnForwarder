@@ -62,11 +62,15 @@ int32_t parse_client_connection_timeout_enabled(const MqttSnLogger *logger, char
 
 int32_t parse_clean_session(const MqttSnLogger *logger, char *clean_session_str, uint8_t *dst);
 
+int32_t parse_advertisement_standby_monitoring_enabled(const MqttSnLogger *logger, char *str, uint8_t *dst);
+
 int32_t print_invalid_retain_given(const MqttSnLogger *logger, const char *given_str);
 
 int32_t print_invalid_client_connection_timeout_enabled_given(const MqttSnLogger *logger, const char *given_str);
 
 int32_t print_invalid_clean_session_given(const MqttSnLogger *logger, const char *given_str);
+
+int32_t print_invalid_advertisement_standby_monitoring_enabled_given(const MqttSnLogger *logger, const char *given_str);
 
 int32_t print_invalid_topic_id_given(const MqttSnLogger *logger, const char *given_str);
 

@@ -6,6 +6,7 @@
 #include "MqttSnAdvertiseMessageLogging.h"
 #include "MqttSnSearchGwMessageLogging.h"
 #include "MqttSnGwInfoMessageLogging.h"
+#include "MqttSnMessageParserLogging.h"
 #include <platform/platform_compatibility.h>
 #ifndef Arduino_h
 #include <netinet/in.h>
@@ -13,11 +14,12 @@
 #include <parser/logging/common/MqttSnMessageLogging.h>
 #endif
 
+/*
 #define MQTT_SN_MESSAGE_TYPE_STRING_NEGATIVE_ENUMS_OFFSET 2
 static const char *MQTT_SN_MESSAGE_TYPE_STRING[] = {
     FOREACH_MQTT_SN_MESSAGE_TYPE(GENERATE_MQTT_SN_MESSAGE_TYPE_STRING)
 };
-
+*/
 int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags) {
 
   uint8_t dup = GET_MQTT_SN_DUP_FLAG(flags);

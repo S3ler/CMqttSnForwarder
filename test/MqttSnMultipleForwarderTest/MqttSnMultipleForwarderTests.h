@@ -11,7 +11,7 @@
 #include <gateway/MqttSnGateway.h>
 #include <test/MqttSnForwarder/MqttSnForwarderTestContainer.h>
 #include <test/MqttSnClient/MqttSnClientTestContainer.h>
-#include <test/MqttSnGateway/MqttSnGatewayTestContainer.h>
+#include <test/MqttSnGateway/MqttSnGatewayArsmbDirectTestContainer.h>
 #include "gmock/gmock.h"
 
 using std::vector;
@@ -22,7 +22,7 @@ using std::shared_ptr;
 class MqttSnMultipleForwarderTests  : public ::testing::Test {
   vector<shared_ptr<MqttSnForwarderTestContainer>> forwarders;
   vector<shared_ptr<MqttSnClientTestContainer>> clients;
-  vector<std::shared_ptr<MqttSnGatewayTestContainer>> gateways;
+  vector<std::shared_ptr<MqttSnGatewayTestContainerInterface>> gateways;
 
   MqttSnLogger logger;
  protected:

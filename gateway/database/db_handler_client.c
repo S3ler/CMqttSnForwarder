@@ -151,11 +151,11 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT add_client(db_handler *h,
       return h->client_transaction_result;
   }
 
-  if (strlen(client_id) < MQTT_SN_CLIENTID_MIN_LENGTH) {
+  if (strlen(client_id) + MQTT_SN_CLIENTID_NULL_TERMINATOR < MQTT_SN_CLIENTID_MIN_LENGTH) {
     h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_CLIENT_ID_TOO_SHORT;
     return h->client_transaction_result;
   }
-  if (strlen(client_id) >= MQTT_SN_CLIENTID_MAX_LENGTH) {
+  if (strlen(client_id) + MQTT_SN_CLIENTID_NULL_TERMINATOR > MQTT_SN_CLIENTID_MAX_LENGTH) {
     h->client_transaction_result = DB_ENTRY_MQTT_SN_CLIENT_RESULT_CLIENT_ID_TOO_LONG;
     return h->client_transaction_result;
   }

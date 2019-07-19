@@ -87,6 +87,13 @@ int log_str(const MqttSnLogger *logger, const char *str) {
   return logger->log_str(logger, str);
 }
 
+int log_bool(const MqttSnLogger *logger, uint8_t n) {
+  if (n) {
+    return log_str(logger, "true");
+  }
+  return log_str(logger, "false");
+}
+
 int log_int8(const MqttSnLogger *logger, int8_t n) {
   const char *int8_max_str = "-128";
   int int8_max_str_length = strlen(int8_max_str);

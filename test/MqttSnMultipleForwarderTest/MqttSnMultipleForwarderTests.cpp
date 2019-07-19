@@ -14,7 +14,7 @@ void MqttSnMultipleForwarderTests::SetUp() {
         "-db --log_identifier MqttSnGateway" + to_string(i)
             + " -lfp MqttSnGateway" + to_string(i) + ".log "
             + "-cp 2000" + to_string(i) + " --gateway_id " + to_string(i);
-    std::shared_ptr<MqttSnGatewayTestContainer> gw_prt(new MqttSnGatewayTestContainer(gw_identifier, gw_cmd));
+    std::shared_ptr<MqttSnGatewayTestContainerInterface> gw_prt(new MqttSnGatewayArsmbDirectTestContainer(gw_identifier, gw_cmd));
     ASSERT_EQ(gw_prt->initialize(), 0);
     gateways.push_back(gw_prt);
   }

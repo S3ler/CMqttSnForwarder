@@ -9,6 +9,7 @@
 int32_t gateway_advertisement_config_init(gateway_advertise_config *cfg) {
   memset(cfg, 0, sizeof(*cfg));
 
+  cfg->advertisement_standby_monitoring = MQTT_SN_GATEWAY_ADVERTISEMENT_STANDBY_MONITORING;
   cfg->advertisement_duration = MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION;
   cfg->advertisement_radius = MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_RADIUS;
   cfg->gateway_id = MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_GW_ID;
@@ -20,7 +21,10 @@ void gateway_advertisement_config_cleanup(gateway_advertise_config *cfg) {
   // nothing to do here
 }
 int32_t is_gateway_advertisement_config_command(const char *arg, int *i) {
-  if (!strcmp(arg, "-ad") || !strcmp(arg, "--advertisement_duration")) {
+  if (!strcmp(arg, "-asm") || !strcmp(arg, "--advertisement_standby_monitoring")) {
+    (*i)++;
+    return 1;
+  } else if (!strcmp(arg, "-ad") || !strcmp(arg, "--advertisement_duration")) {
     (*i)++;
     return 1;
   } else if (!strcmp(arg, "-ar") || !strcmp(arg, "--advertisement_radius")) {
@@ -38,7 +42,16 @@ int32_t gateway_advertisement_config_process_args(gateway_advertise_config *cfg,
                                                   char **argv) {
   int32_t parsed_args = 0;
   for (int i = 0; i < argc; i++) {
-    if (!strcmp(argv[i], "-ad") || !strcmp(argv[i], "--advertisement_duration")) {
+    if (!strcmp(argv[i], "-asm") || !strcmp(argv[i], "--advertisement_standby_monitoring")) {
+      if (i == argc - 1) {
+        print_argument_value_not_specified(logger, argv[i], "advertisement standby monitoring");
+        return MQTT_SN_PARSE_CONFIG_FAILURE;
+      } else {
+        parse_advertisement_standby_monitoring_enabled(logger, argv[i + 1], &cfg->advertisement_standby_monitoring);
+      }
+      i++;
+      parsed_args += 2;
+    } else if (!strcmp(argv[i], "-ad") || !strcmp(argv[i], "--advertisement_duration")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "advertisement duration");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
@@ -73,9 +86,13 @@ void gateway_advertisement_config_print_usage_short(const MqttSnLogger *logger, 
   if (indent) {
     log_str(logger, indent);
   }
-  log_str(logger, PSTR("[-ad --advertisement_duration] [-ar --advertisement_radius] [-gi --gateway_id]\n"));
+  log_str(logger,
+          PSTR(
+              "[-asm --advertisement_standby_monitoring] [-ad --advertisement_duration] [-ar --advertisement_radius] [-gi --gateway_id]\n"));
 }
 void gateway_advertisement_config_print_usage_long(const MqttSnLogger *logger) {
+  log_str(logger, PSTR(" -asm : specify advertisement standby monitoring true or false. Defaults to "));
+  log_bool(logger, MQTT_SN_GATEWAY_ADVERTISEMENT_STANDBY_MONITORING);
   log_str(logger, PSTR(" -ad : specify the advertisement duration in s. Defaults to "));
   log_int32(logger, MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION);
   log_str(logger, PSTR(" s.\n"));

@@ -40,7 +40,7 @@ int32_t init_client_connection_handler(MqttSnGatewayClientConnectionHandler *han
   handler->db_handler_ = db_handler_;
   handler->clientNetworkSendBuffer = clientNetworkSendBuffer;
   handler->clientNetwork = clientNetwork;
-
+  handler->logger = logger;
   handler->client_connection_timeout_check_enabled = cfg->client_connection_timeout_check_enabled;
   handler->client_connection_timeout_check_period = cfg->client_connection_timeout_check_period;
   handler->client_connection_timeout_offset = cfg->client_connection_timeout_offset;

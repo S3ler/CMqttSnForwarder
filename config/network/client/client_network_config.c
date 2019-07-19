@@ -348,3 +348,10 @@ void client_network_config_print_usage_long(const MqttSnLogger *logger) {
   log_str(logger, PSTR("        You can set client port to -1 if you want to overwrite this behaviour.\n"));
 #endif
 }
+int32_t client_network_config_file_process_command_callback(void *cfg,
+                                                            const MqttSnLogger *logger,
+                                                            int argc,
+                                                            char **argv) {
+  client_network_config *cncfg = (client_network_config *) cfg;
+  return client_network_config_process_args(cncfg, logger, argc, argv);
+}

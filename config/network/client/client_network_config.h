@@ -77,6 +77,11 @@ int32_t client_network_config_process_args(client_network_config *cfg,
 void client_network_config_print_usage_short(const MqttSnLogger *logger, const char *indent);
 void client_network_config_print_usage_long(const MqttSnLogger *logger);
 
+int32_t client_network_config_file_process_command_callback(void *cfg,
+                                                            const MqttSnLogger *logger,
+                                                            int argc,
+                                                            char **argv);
+
 #ifdef __cplusplus
 }
 #endif

@@ -37,7 +37,10 @@ static int32_t remove_file_if_exists(const char *path) {
   }
   return 0;
 }
-
+int32_t db_handler_deinitialize(db_handler *h, const MqttSnLogger* logger){
+  f_mount(0, "", 0);
+  return 0;
+}
 int32_t db_handler_initialize(db_handler *h, MqttSnLogger *logger) {
   memset(h, 0, sizeof(*h));
 
@@ -132,6 +135,9 @@ int32_t db_handler_initialize(db_handler *h, MqttSnLogger *logger) {
 
   return 0;
 }
+
+
+
 DB_HANDLER_RESULT get_db_handler_result(db_handler *h) {
   return h->transaction_result;
 }

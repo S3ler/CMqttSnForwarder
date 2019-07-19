@@ -18,12 +18,12 @@
 #include <logging/linux/stderr/StderrLogging.h>
 #include <logging/linux/filestdout/FileStdoutLogging.h>
 #include <vector>
-#include "MqttSnGatewayTestContainer.h"
+#include "MqttSnGatewayArsmbDirectTestContainer.h"
 
-MqttSnGatewayTestContainer::MqttSnGatewayTestContainer(const string &identifier, const string &cmd)
-    : identifier(identifier), cmd(cmd) {}
+MqttSnGatewayArsmbDirectTestContainer::MqttSnGatewayArsmbDirectTestContainer(const string &identifier, const string &cmd)
+    : MqttSnGatewayTestContainerInterface(identifier, cmd) {}
 
-int32_t MqttSnGatewayTestContainer::initialize() {
+int32_t MqttSnGatewayArsmbDirectTestContainer::initialize() {
   if (isRunning()) {
     return EXIT_FAILURE;
   }
@@ -38,9 +38,10 @@ int32_t MqttSnGatewayTestContainer::initialize() {
   }
 
   std::copy(cmd.begin(), cmd.end(), std::back_inserter(line_str));
+  line_str.push_back('\0');
   int32_t rc = process_config_cmd_str(&cfg_logger,
                                       line_str.data(),
-                                      line_str.size() + 1,
+                                      line_str.size(),
                                       identifier.data(),
                                       &gateway_config,
                                       mqtt_sn_gateway__config_file_process_command_callback,
@@ -63,10 +64,14 @@ int32_t MqttSnGatewayTestContainer::initialize() {
   MqttSnLoggerDeinit(&cfg_logger);
   return EXIT_SUCCESS;
 }
-int32_t MqttSnGatewayTestContainer::start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger) {
+int32_t MqttSnGatewayArsmbDirectTestContainer::start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger) {
   if (!strcmp(cfg->log_target, "console")) {
     if (cfg->log_file_path != NULL) {
-      if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_file_path, file_stdout_log_init, &file_stdout_logging_context_) < 0) {
+      if (MqttSnLoggerInitFile(logger,
+                               cfg->log_lvl,
+                               cfg->log_file_path,
+                               file_stdout_log_init,
+                               &file_stdout_logging_context_) < 0) {
         return -1;
       }
     } else {
@@ -84,7 +89,7 @@ int32_t MqttSnGatewayTestContainer::start_logger(const mqtt_sn_logger_config *cf
   }
   return 0;
 }
-int32_t MqttSnGatewayTestContainer::start() {
+int32_t MqttSnGatewayArsmbDirectTestContainer::start() {
   /*
   const mqtt_sn_gateway__config *fcfg = &gateway_config;
   MqttSnGateway *mqtt_sn_gateway = &gateway;
@@ -109,6 +114,7 @@ int32_t MqttSnGatewayTestContainer::start() {
     log_str(&gw_logger, PSTR("Error init client network unknown protocol:"));
     log_str(&gw_logger, gateway_config.cncfg.client_network_protocol);
     log_str(&gw_logger, PSTR("\n"));
+    MqttSnLoggerDeinit(&gateway.logger);
     return EXIT_FAILURE;
   }
 
@@ -128,6 +134,7 @@ int32_t MqttSnGatewayTestContainer::start() {
                               &gateway_config.gccccfg) < 0) {
 
     MqttSnGatewayDeinitialize(&gateway);
+    MqttSnLoggerDeinit(&gateway.logger);
     return EXIT_FAILURE;
   }
 
@@ -137,27 +144,28 @@ int32_t MqttSnGatewayTestContainer::start() {
     print_program_terminated(&gateway.logger, &gateway_config.msvcfg, gateway_config.executable_name);
 #endif
     MqttSnGatewayDeinitialize(&gateway);
+    MqttSnLoggerDeinit(&gateway.logger);
     running = false;
     return EXIT_FAILURE;
   }
 
-  runner = thread(&MqttSnGatewayTestContainer::loop, this);
+  runner = thread(&MqttSnGatewayArsmbDirectTestContainer::loop, this);
   runner.detach();
 
   return EXIT_SUCCESS;
 }
-void MqttSnGatewayTestContainer::stop() {
+void MqttSnGatewayArsmbDirectTestContainer::stop() {
   stopped = true;
 }
-bool MqttSnGatewayTestContainer::isStopped() {
+bool MqttSnGatewayArsmbDirectTestContainer::isStopped() {
   return stopped;
 }
-bool MqttSnGatewayTestContainer::isRunning() {
+bool MqttSnGatewayArsmbDirectTestContainer::isRunning() {
   return running;
 }
-void MqttSnGatewayTestContainer::loop() {
+void MqttSnGatewayArsmbDirectTestContainer::loop() {
   stopped = false;
-  running = false;
+  running = true;
 
   while ((MqttSnGatewayLoop(&gateway) >= 0) & !stopped) {}
 
@@ -166,12 +174,13 @@ void MqttSnGatewayTestContainer::loop() {
   print_program_terminated(&gateway.logger, &gateway_config.msvcfg, gateway_config.executable_name);
 #endif
   MqttSnGatewayDeinitialize(&gateway);
+  MqttSnLoggerDeinit(&gateway.logger);
   mqtt_sn_gateway__config_cleanup(&gateway_config);
   running = false;
 }
 
 #ifdef WITH_LINUX_PLUGIN_NETWORK
-int MqttSnGatewayTestContainer::start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
+int MqttSnGatewayArsmbDirectTestContainer::start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
                                                              const MqttSnLogger *logger,
                                                              MqttSnGateway *mqtt_sn_gateway) {
   // TODO adept - do not use atm
@@ -226,7 +235,7 @@ int MqttSnGatewayTestContainer::start_mqtt_sn_gateway_plugin(const mqtt_sn_gatew
 #endif
 
 #ifdef WITH_LINUX_TCP_CLIENT_NETWORK
-int MqttSnGatewayTestContainer::start_mqtt_sn_gateway_tcp(const mqtt_sn_gateway__config *fcfg,
+int MqttSnGatewayArsmbDirectTestContainer::start_mqtt_sn_gateway_tcp(const mqtt_sn_gateway__config *fcfg,
                                                           const MqttSnLogger *logger,
                                                           MqttSnGateway *mqtt_sn_gateway) {
 
@@ -272,7 +281,7 @@ int MqttSnGatewayTestContainer::start_mqtt_sn_gateway_tcp(const mqtt_sn_gateway_
 #endif
 
 #ifdef WITH_LINUX_UDP_CLIENT_NETWORK
-int MqttSnGatewayTestContainer::start_mqtt_sn_gateway_client_udp(const mqtt_sn_gateway__config *fcfg,
+int MqttSnGatewayArsmbDirectTestContainer::start_mqtt_sn_gateway_client_udp(const mqtt_sn_gateway__config *fcfg,
                                                                  const MqttSnLogger *logger,
                                                                  MqttSnGateway *mqtt_sn_gateway) {
 

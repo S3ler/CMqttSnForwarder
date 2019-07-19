@@ -4,14 +4,13 @@
 
 #ifndef CMQTTSNFORWARDER_MQTTSNIPNETWORKHELPER_H
 #define CMQTTSNFORWARDER_MQTTSNIPNETWORKHELPER_H
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include <platform/device_address.h>
 #include <logging/MqttSnLoggingInterface.h>
 #include <netdb.h>
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct sockaddr_in get_sockaddr_in_from_tcp_file_descriptor(int file_descriptor);
 

@@ -17,7 +17,8 @@ void init_db_entry_mqtt_sn_client(DB_ENTRY_MQTT_SN_CLIENT *client,
                                   uint16_t connect_duration,
                                   uint64_t connect_time,
                                   int32_t position) {
-  assert(strlen(client_id) >= MQTT_SN_CLIENTID_MIN_LENGTH && strlen(client_id) <= MQTT_SN_CLIENTID_MAX_LENGTH);
+  assert(strlen(client_id) + MQTT_SN_CLIENTID_NULL_TERMINATOR >= MQTT_SN_CLIENTID_MIN_LENGTH);
+  assert(strlen(client_id) + MQTT_SN_CLIENTID_NULL_TERMINATOR <= MQTT_SN_CLIENTID_MAX_LENGTH);
   assert(position >= 0);
   memset(client, 0x0, sizeof(DB_ENTRY_MQTT_SN_CLIENT));
 
@@ -42,7 +43,8 @@ void reset_db_entry_mqtt_sn_client(DB_ENTRY_MQTT_SN_CLIENT *client,
                                    uint16_t forwarder_address_len,
                                    uint16_t connect_duration,
                                    uint64_t connect_time) {
-  assert(strlen(client_id) >= MQTT_SN_CLIENTID_MIN_LENGTH && strlen(client_id) <= MQTT_SN_CLIENTID_MAX_LENGTH - 1);
+  assert(strlen(client_id) + MQTT_SN_CLIENTID_NULL_TERMINATOR >= MQTT_SN_CLIENTID_MIN_LENGTH);
+  assert(strlen(client_id) + MQTT_SN_CLIENTID_NULL_TERMINATOR <= MQTT_SN_CLIENTID_MAX_LENGTH);
 
   strcpy(client->client_id, client_id);
   client->client_address = (*client_address);

@@ -68,6 +68,8 @@ int log_char(const MqttSnLogger *logger, char c);
 
 int log_str(const MqttSnLogger *logger, const char *str);
 
+int log_bool(const MqttSnLogger *logger, uint8_t n);
+
 int log_int8(const MqttSnLogger *logger, int8_t n);
 int log_int16(const MqttSnLogger *logger, int16_t n);
 int log_int32(const MqttSnLogger *logger, int32_t n);

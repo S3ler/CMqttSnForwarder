@@ -2,8 +2,8 @@
 // Created by SomeDude on 09.07.2019.
 //
 
-#ifndef CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYTESTCONTAINER_H_
-#define CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYTESTCONTAINER_H_
+#ifndef CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYARSMBDIRECTTESTCONTAINER_H_
+#define CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYARSMBDIRECTTESTCONTAINER_H_
 
 #include <string>
 #include <vector>
@@ -13,6 +13,9 @@
 #include <gateway/MqttSnGateway.h>
 #include <gateway/config/gateway_config.h>
 #include <network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
+#include <logging/linux/file/FileLogging.h>
+#include <logging/linux/filestdout/FileStdoutLogging.h>
+#include "MqttSnGatewayTestContainerInterface.h"
 
 using std::thread;
 using std::atomic_bool;
@@ -20,11 +23,8 @@ using std::string;
 using std::vector;
 using std::shared_ptr;
 
-class MqttSnGatewayTestContainer {
+class MqttSnGatewayArsmbDirectTestContainer : public MqttSnGatewayTestContainerInterface {
  private:
-  string identifier;
-  string cmd;
-
   vector<char> line_str;
   uint16_t argc = 0;
   const static uint16_t argv_max_len = 1024;
@@ -44,12 +44,12 @@ class MqttSnGatewayTestContainer {
 
   shared_ptr<MqttSnClientUdpNetwork> udpClientNetworkContext = nullptr;
  public:
-  MqttSnGatewayTestContainer(const string &identifier, const string &cmd);
-  int32_t initialize();
-  int32_t start();
-  void stop();
-  bool isStopped();
-  bool isRunning();
+  MqttSnGatewayArsmbDirectTestContainer(const string &identifier, const string &cmd);
+  int32_t initialize() override;
+  int32_t start() override;
+  void stop() override;
+  bool isStopped() override;
+  bool isRunning() override;
 
   void loop();
 
@@ -68,4 +68,4 @@ class MqttSnGatewayTestContainer {
                                        MqttSnGateway *mqtt_sn_gateway);
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYTESTCONTAINER_H_
+#endif //CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYARSMBDIRECTTESTCONTAINER_H_

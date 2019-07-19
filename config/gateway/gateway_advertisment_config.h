@@ -12,6 +12,10 @@
 extern "C" {
 #endif
 
+#ifndef MQTT_SN_GATEWAY_ADVERTISEMENT_STANDBY_MONITORING
+#define MQTT_SN_GATEWAY_ADVERTISEMENT_STANDBY_MONITORING 0
+#endif
+
 #ifndef MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION
 #define MQTT_SN_GATEWAY_ADVERTISEMENT_DEFAULT_DURATION 60
 #endif
@@ -34,6 +38,7 @@ extern "C" {
 
 
 typedef struct gateway_advertisement_config_ {
+  uint8_t  advertisement_standby_monitoring;
   uint16_t advertisement_duration;
   uint8_t advertisement_radius;
   uint8_t gateway_id;

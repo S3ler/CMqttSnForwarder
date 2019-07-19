@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include <logging/MqttSnLoggingInterface.h>
+#include <parser/MqttSnGwInfoMessage.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

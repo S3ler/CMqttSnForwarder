@@ -129,6 +129,7 @@ typedef struct db_handler_ {
 
 // initialization
 int32_t db_handler_initialize(db_handler *h, MqttSnLogger *logger);
+int32_t db_handler_deinitialize(db_handler *h, const MqttSnLogger* logger);
 DB_HANDLER_RESULT get_db_handler_result(db_handler *h);
 
 // TODO
