@@ -923,6 +923,44 @@ if (WITH_MQTT_SN_PARSER_TESTING)
     target_compile_options(runMqttSnGatewayArsmbDirectConnectTests PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(runMqttSnGatewayArsmbDirectConnectTests gtest gtest_main gmock pthread LibMqttSnGatewayTestContainer LibMqttSnMessageTester LibMqttBrokerTestContainer)
 
+    #Eclipse Paho stuff
+    set(PAHO_PROJECT_PATH external/paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d)
+
+    ## build settings
+    SET(PAHO_VERSION_MAJOR 1)
+    SET(PAHO_VERSION_MINOR 0)
+    SET(PAHO_VERSION_PATCH 0)
+    SET(CLIENT_VERSION ${PAHO_VERSION_MAJOR}.${PAHO_VERSION_MINOR}.${PAHO_VERSION_PATCH})
+
+    set(PAHO_PACKET_SAMPLE_PATH external/paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNPacket/samples)
+    set(PAHO_PACKET_SRC_PATH external/paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNPacket/src)
+    set(PAHO_PACKET_TEST_PATH external/paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNPacket/test)
+
+    ADD_LIBRARY(LibPahotest1 ${PAHO_PACKET_TEST_PATH}/test1.c)
+    TARGET_LINK_LIBRARIES(LibPahotest1 LibPahoMQTTSNPacketClient LibPahoMQTTSNPacketServer)
+    target_include_directories(LibPahotest1 PRIVATE ${PAHO_PACKET_SRC_PATH})
+
+    #add_executable(PPahotest1 ${PAHO_PACKET_TEST_PATH}/test1.c)
+    #target_include_directories(PPahotest1 PRIVATE ${PAHO_PACKET_SRC_PATH})
+    #target_link_libraries(PPahotest1 LibPahotest1)
+
+    ADD_LIBRARY(LibPahotest2 ${PAHO_PACKET_TEST_PATH}/test2.c)
+    TARGET_LINK_LIBRARIES(LibPahotest2 LibPahoMQTTSNPacketClient LibPahoMQTTSNPacketServer)
+    target_include_directories(LibPahotest2 PRIVATE ${PAHO_PACKET_SRC_PATH})
+
+    ADD_LIBRARY(LibPahoMQTTSNPacketClient SHARED ${PAHO_PACKET_SRC_PATH}/MQTTSNConnectClient.c ${PAHO_PACKET_SRC_PATH}/MQTTSNPacket.c ${PAHO_PACKET_SRC_PATH}/MQTTSNSearchClient.c ${PAHO_PACKET_SRC_PATH}/MQTTSNSubscribeClient.c
+            ${PAHO_PACKET_SRC_PATH}/MQTTSNUnsubscribeClient.c ${PAHO_PACKET_SRC_PATH}/MQTTSNSerializePublish.c ${PAHO_PACKET_SRC_PATH}/MQTTSNDeserializePublish.c)
+
+    ADD_LIBRARY(LibPahoMQTTSNPacketServer SHARED ${PAHO_PACKET_SRC_PATH}/MQTTSNConnectServer.c ${PAHO_PACKET_SRC_PATH}/MQTTSNPacket.c ${PAHO_PACKET_SRC_PATH}/MQTTSNSearchServer.c ${PAHO_PACKET_SRC_PATH}/MQTTSNSubscribeServer.c
+            ${PAHO_PACKET_SRC_PATH}/MQTTSNUnsubscribeServer.c ${PAHO_PACKET_SRC_PATH}/MQTTSNSerializePublish.c ${PAHO_PACKET_SRC_PATH}/MQTTSNDeserializePublish.c)
+
+    add_executable(Pahotest1 testclients/pahotest1main.c)
+    target_link_libraries(Pahotest1 LibPahotest1)
+
+    ADD_EXECUTABLE(LibPahoqos-1pub ${PAHO_PACKET_SAMPLE_PATH}/qos-1pub.c ${PAHO_PACKET_SAMPLE_PATH}/transport.c)
+    target_include_directories(LibPahoqos-1pub PRIVATE ${PAHO_PACKET_SRC_PATH})
+    TARGET_LINK_LIBRARIES(LibPahoqos-1pub LibPahoMQTTSNPacketClient)
+
 endif (WITH_MQTT_SN_PARSER_TESTING)
 
 if (WITH_TESTING)

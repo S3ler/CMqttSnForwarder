@@ -1,3 +1,58 @@
+Ideen:
+Automatisch docker container erstellen aus den executables
+über python api überwachen
+oder
+nur executable ausführen
+
+Frage: wie kann ich executables überwachen für lasttests?
+
+Testumgebung:
+Gateway:
+Variablen:
+| Unabhängige Variable | Abhängige Variable | Fixe Variablen |
+| :------------------: | :-----------------:| :-------------:|
+| Implemented  |   y  |
+| Tested       |   n  |
+| Example      |   n  |
+
+Procedures:
+
+Gateway Discovery Procedures:
+
+Advertisement:
+Gateway:
+Advertisement Procedure
+Advertisement Monitoring Procedure
+Advertisement Pinging-Monitoring Procedure
+Forwarder:
+Advertisement Monitoring Procedure
+Client:
+Advertisement Monitoring Procedure
+
+Search Gateway - Gateway Info:
+Gateway:
+SearchGW-GWinfo replying
+GWInfo Monitoring Procedure
+Forwarder:
+GWInfo Monitoring Procedure
+Client
+GWInfo Monitoring Procedure
+
+Connect Procedure:
+Gateway: (variables: bool:[with clean session], bool:[with will], bool:[prior will], bool:[any prior subscriptions], bool:[any prior registrations])
+Client connect with clean session without will without subscription without registrations
+Client connect without clean session without will without subscription without registrations
+// TODO more testcases
+// TODO check testcases with existing
+
+Client: (variable: )
+connect with clean session
+connect without clean session
+connect with will
+connect without will
+
+
+
 Featurelist:
 * search gw for mqtt-sn-gateway     // FEATURE implement searching for gateway
 * fix tests
