@@ -107,8 +107,8 @@ public:
 	virtual ~Exception() throw ();
 	const char* getFileName();
 	const char* getFunctionName();
-	const int getLineNo();
-	const int getExceptionNo();
+	int getLineNo();
+	int getExceptionNo();
 	virtual const char* what() const throw ();
 	void writeMessage();
 

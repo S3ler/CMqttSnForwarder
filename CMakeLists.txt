@@ -881,10 +881,26 @@ if (WITH_MQTT_SN_PARSER_TESTING)
     add_library(LibMqttSnGatewayTestContainer test/MqttSnGateway/MqttSnGatewayTestContainerInterface.h
             test/MqttSnGateway/MqttSnGatewayTestType.cpp test/MqttSnGateway/MqttSnGatewayTestType.h
             test/MqttSnGateway/MqttSnGatewayTestContainerFactory.cpp test/MqttSnGateway/MqttSnGatewayTestContainerInterface.h
-            test/MqttSnGateway/MqttSnGatewayArsmbDirectTestContainer.cpp test/MqttSnGateway/MqttSnGatewayArsmbDirectTestContainer.h)
+            test/MqttSnGateway/MqttSnGatewayArsmbTestContainer.cpp test/MqttSnGateway/MqttSnGatewayArsmbTestContainer.h
+            test/MqttSnGateway/MqttSnGatewayPahoTestContainer.cpp test/MqttSnGateway/MqttSnGatewayPahoTestContainer.h)
     target_include_directories(LibMqttSnGatewayTestContainer PRIVATE .)
-    target_compile_options(LibMqttSnGatewayTestContainer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_compile_options(LibMqttSnGatewayTestContainer PRIVATE ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(LibMqttSnGatewayTestContainer lib-mqtt-sn-linux-gateway-starter lib-mqtt-sn-gateway-config lib-mqtt-sn-gateway lib-mqtt-sn-linux-client-network)
+    target_link_libraries(LibMqttSnGatewayTestContainer LibMqttSnGatewayPahoTestContainer)
+
+    add_library(LibMqttSnGatewayPahoTestContainer test/MqttSnGateway/MqttSnGatewayTestContainerInterface.h
+            test/MqttSnGateway/MqttSnGatewayPahoTestContainer.cpp test/MqttSnGateway/MqttSnGatewayPahoTestContainer.h)
+    target_include_directories(LibMqttSnGatewayPahoTestContainer PRIVATE .)
+    target_compile_options(LibMqttSnGatewayPahoTestContainer PRIVATE ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_include_directories(LibMqttSnGatewayPahoTestContainer PUBLIC
+            external/paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNGateway/src
+            external/paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNGateway/src/linux
+            external/paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNGateway/src/linux/udp
+            external/paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNGateway/src/../../MQTTSNPacket/src
+            external/paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNGateway/src/../../MQTTSNPacket/src/tests}
+            )
+    target_link_libraries(LibMqttSnGatewayPahoTestContainer LibPaho-MQTT-SNGateway)
+
     if (WITH_LINUX_PLUGIN_NETWORK)
         target_link_libraries(LibMqttSnGatewayTestContainer lib-mqtt-sn-linux-plugin-client-network)
     endif ()

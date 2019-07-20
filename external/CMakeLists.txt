@@ -150,9 +150,10 @@ add_custom_command(TARGET ${LPROGNAME}
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${SRCDIR}/../${PREDEFTOPIC} ${PREDEFTOPIC}
         )
 
-
 add_executable(${TESTPROGNAME} ${CCPSRCS} ${CSRCS} ${SRCDIR}/${TEST}/${TESTAPPL})
 target_link_libraries(${TESTPROGNAME} ${LDADD})
+
+
 
 #set_target_properties(${PROGNAME} PROPERTIES
 #        RUNTIME_OUTPUT_DIRECTORY ${OUTDIR}

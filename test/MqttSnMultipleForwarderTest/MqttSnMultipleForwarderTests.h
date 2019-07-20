@@ -11,7 +11,7 @@
 #include <gateway/MqttSnGateway.h>
 #include <test/MqttSnForwarder/MqttSnForwarderTestContainer.h>
 #include <test/MqttSnClient/MqttSnClientTestContainer.h>
-#include <test/MqttSnGateway/MqttSnGatewayArsmbDirectTestContainer.h>
+#include <test/MqttSnGateway/MqttSnGatewayArsmbTestContainer.h>
 #include "gmock/gmock.h"
 
 using std::vector;

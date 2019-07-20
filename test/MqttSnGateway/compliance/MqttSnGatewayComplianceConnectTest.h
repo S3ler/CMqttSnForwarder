@@ -13,7 +13,7 @@
 #include <test/MqttSnMessageTester/MqttSnMessageTester.hpp>
 #include <test/MqttSnGateway/MqttSnGatewayTestContainerInterface.h>
 #include <test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.h>
-#include <test/MqttSnGateway/MqttSnGatewayArsmbDirectTestContainer.h>
+#include <test/MqttSnGateway/MqttSnGatewayArsmbTestContainer.h>
 #include <test/MqttSnGateway/MqttSnGatewayTestType.h>
 #include <test/MqttSnGateway/MqttSnGatewayTestContainerFactory.h>
 

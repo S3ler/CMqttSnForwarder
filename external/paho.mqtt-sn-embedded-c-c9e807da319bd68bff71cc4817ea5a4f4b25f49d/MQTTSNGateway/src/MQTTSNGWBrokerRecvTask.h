@@ -28,7 +28,7 @@ namespace MQTTSNGW
 class BrokerRecvTask: public Thread
 {
 MAGIC_WORD_FOR_THREAD;
-	;
+
 public:
 	BrokerRecvTask(Gateway* gateway);
 	~BrokerRecvTask();

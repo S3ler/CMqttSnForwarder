@@ -394,12 +394,12 @@ const char* Exception::getFunctionName()
 	return _functionName;
 }
 
-const int Exception::getLineNo()
+int Exception::getLineNo()
 {
 	return _line;
 }
 
-const int Exception::getExceptionNo()
+int Exception::getExceptionNo()
 {
 	return _exNo;
 }
