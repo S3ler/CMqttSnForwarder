@@ -36,6 +36,8 @@ class MqttSnGatewayPahoTestContainer : public MqttSnGatewayTestContainerInterfac
   bool isStopped() override;
   bool isRunning() override;
   void loop();
+  bool createGatewayConfFile();
+  bool removeGatewayConfFile();
 };
 
 #endif //CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYPAHOTESTCONTAINER_H_

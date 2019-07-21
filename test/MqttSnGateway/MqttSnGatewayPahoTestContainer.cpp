@@ -2,6 +2,7 @@
 // Created by SomeDude on 20.07.2019.
 //
 
+#include <fstream>
 #include "MqttSnGatewayPahoTestContainer.h"
 
 using namespace MQTTSNGW;
@@ -23,7 +24,15 @@ int32_t MqttSnGatewayPahoTestContainer::initialize() {
   if (CmdStrToArgcArgv() < 0) {
     return -1;
   }
-  gateway.initialize(argc, argv);
+  if (!createGatewayConfFile()) {
+    return -1;
+  }
+  try {
+    gateway.initialize(argc, argv);
+  } catch (Exception &exception) {
+    exception.writeMessage();
+    return -1;
+  }
   return 0;
 }
 int32_t MqttSnGatewayPahoTestContainer::start() {
@@ -33,6 +42,8 @@ int32_t MqttSnGatewayPahoTestContainer::start() {
 
   runner = thread(&MqttSnGatewayPahoTestContainer::loop, this);
   runner.detach();
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   return 0;
 }
@@ -48,9 +59,38 @@ bool MqttSnGatewayPahoTestContainer::isRunning() {
 }
 void MqttSnGatewayPahoTestContainer::loop() {
   stopped = false;
+  theSignaled = 0;
   running = true;
 
   gateway.run(); // blocks
 
+  removeGatewayConfFile();
+
   running = false;
+}
+bool MqttSnGatewayPahoTestContainer::createGatewayConfFile() {
+  std::ofstream outfile;
+  outfile.open("./gateway.conf", ios::out);
+  // default config file from paho/MqttSnGateay/gateway.conf
+  const char data[] = "BrokerName=localhost\nBrokerPortNo=1883\nBrokerSecurePortNo=8883\n\n\
+ClientAuthentication=NO\nAggregatingGateway=NO\nQoS-1=NO\nForwarder=NO\n\n\
+PredefinedTopic=NO\n\n\
+GatewayID=1\nGatewayName=PahoGateway-01\nKeepAlive=900\n\n\
+GatewayPortNo=10000\nMulticastIP=225.1.1.1\nMulticastPortNo=1883\n\n\
+ShearedMemory=NO;";
+  /*
+  const char default_gateway_conf_data[] = "BrokerName=iot.eclipse.org\nBrokerPortNo=1883\nBrokerSecurePortNo=8883\n\n\
+ClientAuthentication=NO\nAggregatingGateway=NO\nQoS-1=NO\nForwarder=NO\n\n\
+PredefinedTopic=NO\n\n\
+GatewayID=1\nGatewayName=PahoGateway-01\nKeepAlive=900\n\n\
+GatewayPortNo=10000\nMulticastIP=225.1.1.1\nMulticastPortNo=1883\n\n\
+ShearedMemory=NO;";
+   */
+  outfile << data << endl;
+
+  outfile.close();
+  return true;
+}
+bool MqttSnGatewayPahoTestContainer::removeGatewayConfFile() {
+  return remove("./gateway.conf") == 0;
 }

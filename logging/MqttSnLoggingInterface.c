@@ -130,7 +130,8 @@ int log_uint8(const MqttSnLogger *logger, uint8_t n) {
   const char *uint8_max_str = "255";
   int uint8_max_str_length = strlen(uint8_max_str);
   char n_str[uint8_max_str_length + 1];
-  snprintf((char *) &n_str, uint8_max_str_length + 1, "%u", n);
+  //snprintf((char *) &n_str, uint8_max_str_length + 1, "%u", n);
+  snprintf((char *) &n_str, uint8_max_str_length + 1, "%02X", n);
   return log_str(logger, n_str);
 }
 
@@ -191,13 +192,13 @@ int log_str_key_uint16_value(const MqttSnLogger *logger, const char *key, uint16
   return log_uint16(logger, val);
 }
 int log_uint8_array(const MqttSnLogger *logger, const uint8_t *data, uint16_t data_length) {
-  const char *comma = ", ";
+  const char *seperator = " ";
   for (uint16_t i = 0; i < data_length; ++i) {
     if (log_uint8(logger, data[i])) {
       return -1;
     }
     if (i + 1 < data_length) {
-      if (log_str(logger, comma)) {
+      if (log_str(logger, seperator)) {
         return -1;
       }
     }
