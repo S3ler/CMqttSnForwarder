@@ -4,8 +4,6 @@
 
 #include "MqttSnGatewayTestType.h"
 
-const char *MqttSnGatewayTestTypeEnumString[] = {"ARSMB", "PAHO"};
-
 const char *getTextFromEnum(MqttSnGatewayTestType enumVal) {
   if (enumVal == MqttSnGatewayTestType::ARSMB) {
     return "ARSMB";

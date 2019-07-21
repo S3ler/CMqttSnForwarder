@@ -5,8 +5,13 @@
 #ifndef CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTCONTAINERFACTORY_H_
 #define CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTCONTAINERFACTORY_H_
 
-class MqttBrokerTestContainerFactory {
+#include <memory>
+#include "MqttBrokerTestContainerInterface.h"
+#include "MqttBrokerTestType.h"
 
+class MqttBrokerTestContainerFactory {
+ public:
+  static std::shared_ptr<MqttBrokerTestContainerInterface> getMqttBroker(MqttBrokerTestType mqttBrokerTestType);
 };
 
 #endif //CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTCONTAINERFACTORY_H_

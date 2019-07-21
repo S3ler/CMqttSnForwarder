@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERMOSQUITTODOCKERTESTCONTAINER_H_
 #define CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERMOSQUITTODOCKERTESTCONTAINER_H_
 
-#include "MqttBrokerTestContainerInterface.hpp"
+#include "MqttBrokerTestContainerInterface.h"
 class MqttBrokerMosquittoDockerTestContainer : public MqttBrokerTestContainerInterface {
  public:
   MqttBrokerMosquittoDockerTestContainer();

@@ -23,6 +23,7 @@ std::shared_ptr<MqttSnGatewayTestContainerInterface> MqttSnGatewayTestContainerF
   }
   return nullptr;
 }
+/*
 std::shared_ptr<MqttSnGatewayTestContainerInterface> MqttSnGatewayTestContainerFactory::getMqttSnGateway(
     MqttSnGatewayTestType mqttSnGatewayTestType, const std::string &command) {
   if (mqttSnGatewayTestType == MqttSnGatewayTestType::ARSMB) {
@@ -33,3 +34,4 @@ std::shared_ptr<MqttSnGatewayTestContainerInterface> MqttSnGatewayTestContainerF
   }
   return nullptr;
 }
+*/

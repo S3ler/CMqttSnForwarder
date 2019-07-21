@@ -1,0 +1,15 @@
+//
+// Created by SomeDude on 21.07.2019.
+//
+
+#ifndef CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTTYPE_H_
+#define CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTTYPE_H_
+
+enum class MqttBrokerTestType {
+  MOSQUITTO_DOCKER = 0, EXTERNAL = 1
+};
+
+const char *getTextFromEnum(MqttBrokerTestType enumVal);
+
+
+#endif //CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTTYPE_H_

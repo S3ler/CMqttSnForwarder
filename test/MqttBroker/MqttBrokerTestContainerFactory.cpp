@@ -3,3 +3,15 @@
 //
 
 #include "MqttBrokerTestContainerFactory.h"
+#include "MqttBrokerMosquittoDockerTestContainer.h"
+#include "MqttBrokerExternalTestContainer.h"
+
+std::shared_ptr<MqttBrokerTestContainerInterface> MqttBrokerTestContainerFactory::getMqttBroker(MqttBrokerTestType mqttBrokerTestType) {
+  if (mqttBrokerTestType == MqttBrokerTestType::MOSQUITTO_DOCKER) {
+    return std::make_shared<MqttBrokerMosquittoDockerTestContainer>();
+  }
+  if (mqttBrokerTestType == MqttBrokerTestType::EXTERNAL) {
+    return std::make_shared<MqttBrokerExternalTestContainer>();
+  }
+  return nullptr;
+}

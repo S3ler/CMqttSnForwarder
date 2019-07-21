@@ -873,7 +873,11 @@ if (WITH_MQTT_SN_PARSER_TESTING)
     target_include_directories(MqttSnMultipleForwarderTests PRIVATE .)
     target_link_libraries(MqttSnMultipleForwarderTests gtest gtest_main gmock LibMqttSnClientTestContainer LibMqttSnForwarderTestContainer LibMqttSnGatewayTestContainer)
 
-    add_library(LibMqttBrokerTestContainer test/MqttBroker/MqttBrokerTestContainerInterface.hpp test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.cpp test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.h)
+    add_library(LibMqttBrokerTestContainer test/MqttBroker/MqttBrokerTestContainerInterface.h
+            test/MqttBroker/MqttBrokerTestType.cpp test/MqttBroker/MqttBrokerTestType.h
+            test/MqttBroker/MqttBrokerTestContainerFactory.cpp test/MqttBroker/MqttBrokerTestContainerFactory.h
+            test/MqttBroker/MqttBrokerExternalTestContainer.cpp test/MqttBroker/MqttBrokerExternalTestContainer.h
+            test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.cpp test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.h)
     target_include_directories(LibMqttBrokerTestContainer PRIVATE .)
     target_compile_options(LibMqttBrokerTestContainer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(LibMqttBrokerTestContainer pthread)

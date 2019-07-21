@@ -9,13 +9,15 @@
 #include <memory>
 #include <gmock/gmock.h>
 #include <list>
-#include <test/MqttBroker/MqttBrokerTestContainerInterface.hpp>
+#include <test/MqttBroker/MqttBrokerTestContainerInterface.h>
 #include <test/MqttSnMessageTester/MqttSnMessageTester.hpp>
 #include <test/MqttSnGateway/MqttSnGatewayTestContainerInterface.h>
 #include <test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.h>
 #include <test/MqttSnGateway/MqttSnGatewayArsmbTestContainer.h>
 #include <test/MqttSnGateway/MqttSnGatewayTestType.h>
 #include <test/MqttSnGateway/MqttSnGatewayTestContainerFactory.h>
+#include <test/MqttBroker/MqttBrokerTestType.h>
+#include <test/MqttBroker/MqttBrokerTestContainerFactory.h>
 
 using ::testing::_;
 using ::testing::AtLeast;
@@ -30,7 +32,8 @@ using ::testing::DoAll;
 using std::shared_ptr;
 using std::to_string;
 
-class MqttSnGatewayComplianceConnectTest : public ::testing::TestWithParam<MqttSnGatewayTestType> {
+class MqttSnGatewayComplianceConnectTest
+    : public ::testing::TestWithParam<std::tuple<MqttBrokerTestType, MqttSnGatewayTestType>> {
 
  public:
   shared_ptr<MqttBrokerTestContainerInterface> mqttBroker;
@@ -64,11 +67,11 @@ class MqttSnGatewayComplianceConnectTest : public ::testing::TestWithParam<MqttS
   }
 
   virtual void SetUp() {
-
-    mqttBroker = std::make_shared<MqttBrokerMosquittoDockerTestContainer>();
+    mqttBroker = MqttBrokerTestContainerFactory::getMqttBroker(std::get<0>(GetParam()));
+    ASSERT_NE(mqttBroker.get(), nullptr);
     mqttBroker->start_broker();
 
-    mqttSnGateway = MqttSnGatewayTestContainerFactory::getMqttSnGateway(GetParam());
+    mqttSnGateway = MqttSnGatewayTestContainerFactory::getMqttSnGateway(std::get<1>(GetParam()));
     ASSERT_NE(mqttSnGateway, nullptr);
     ASSERT_EQ(mqttSnGateway->initialize(), EXIT_SUCCESS);
     ASSERT_EQ(mqttSnGateway->start(), EXIT_SUCCESS);
@@ -94,17 +97,20 @@ class MqttSnGatewayComplianceConnectTest : public ::testing::TestWithParam<MqttS
 
 };
 
-MqttSnGatewayTestType mqttSnGatewayTestTypes[] = {MqttSnGatewayTestType::ARSMB, MqttSnGatewayTestType::PAHO};
 struct PrintToStringMqttSnGatewayComplianceConnectTestValueName {
   template<class ParamType>
   std::string operator()(const ::testing::TestParamInfo<ParamType> &info) const {
-    std::string result = getTextFromEnum(info.param);
+    std::string result =
+        std::string(getTextFromEnum(std::get<0>(info.param))) + "_"
+            + std::string(getTextFromEnum(std::get<1>(info.param)));
     return result;
   }
 };
 INSTANTIATE_TEST_SUITE_P(MqttSnGatewayComplianceConnectCompareTest,
                          MqttSnGatewayComplianceConnectTest,
-                         testing::ValuesIn(mqttSnGatewayTestTypes),
+                         testing::Combine(
+                             testing::Values(MqttBrokerTestType::MOSQUITTO_DOCKER),
+                             testing::Values(MqttSnGatewayTestType::ARSMB, MqttSnGatewayTestType::PAHO)),
                          PrintToStringMqttSnGatewayComplianceConnectTestValueName());
 
 ACTION_P(check_disconnect, expected) {
