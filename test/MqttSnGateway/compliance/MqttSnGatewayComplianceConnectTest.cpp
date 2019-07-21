@@ -3,6 +3,7 @@
 //
 
 #include "MqttSnGatewayComplianceConnectTest.h"
+#include "MqttSnGatewayComplianceTestAction.h"
 
 TEST_P(MqttSnGatewayComplianceConnectTest, Connect_withoutwill_duration60_nocleansession_return_accepted) {
 

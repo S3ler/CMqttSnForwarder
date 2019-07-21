@@ -73,7 +73,7 @@ class MqttSnMessageTester {
  public:
   MqttSnMessageTester();
   bool send(const uint8_t *data, uint16_t data_length);
-  bool is_running();
+  bool isRunning();
   bool start();
   void stop();
 

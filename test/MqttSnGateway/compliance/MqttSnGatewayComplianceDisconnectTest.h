@@ -1,9 +1,9 @@
 //
-// Created by SomeDude on 19.07.2019.
+// Created by SomeDude on 21.07.2019.
 //
 
-#ifndef CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_COMPLIANCE_MQTTSNGATEWAYCOMPLIANCECONNECTTEST_H_
-#define CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_COMPLIANCE_MQTTSNGATEWAYCOMPLIANCECONNECTTEST_H_
+#ifndef CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_COMPLIANCE_MQTTSNGATEWAYCOMPLIANCEDISCONNECTTEST_H_
+#define CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_COMPLIANCE_MQTTSNGATEWAYCOMPLIANCEDISCONNECTTEST_H_
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -18,6 +18,10 @@
 #include <test/MqttSnGateway/MqttSnGatewayTestContainerFactory.h>
 #include <test/MqttBroker/MqttBrokerTestType.h>
 #include <test/MqttBroker/MqttBrokerTestContainerFactory.h>
+#include <test/MqttClientMessageTester/MqttTestMessageReceiverMock.h>
+#include <test/MqttClientMessageTester/MqttMessageTester.h>
+#include <test/MqttClientMessageTester/MqttMessageTestType.h>
+#include <test/MqttClientMessageTester/MqttMessageTesterFactory.h>
 
 using ::testing::_;
 using ::testing::AtLeast;
@@ -32,8 +36,8 @@ using ::testing::DoAll;
 using std::shared_ptr;
 using std::to_string;
 
-class MqttSnGatewayComplianceConnectTest
-    : public ::testing::TestWithParam<std::tuple<MqttBrokerTestType, MqttSnGatewayTestType>> {
+class MqttSnGatewayComplianceDisconnectTest : public ::testing::TestWithParam<std::tuple<MqttBrokerTestType,
+                                                                                         MqttSnGatewayTestType>> {
 
  public:
   shared_ptr<MqttBrokerTestContainerInterface> mqttBroker;
@@ -44,13 +48,9 @@ class MqttSnGatewayComplianceConnectTest
   MqttSnTestMessageSender mqtt_sn_sender;
   MqttSnTestMessageReceiverMock mqtt_sn_receiver;
 
-  /*
-  std::list<std::string> predefined_topics;
-  std::list<std::string> receiver_topics;
-  predefined_topics.push_back(std::string("50 /unsubscribed/client/topic/name"));
-  predefined_topics.push_back(std::string("20 /another/predefined/topic"));
-  receiver_topics.push_back(std::string("/unsubscribed/client/topic/name"));
-  */
+  shared_ptr<MqttMessageTester> mqttMessageTester;
+  MqttTestMessageReceiverMock mqtt_receiver;
+
   virtual void TearDown() {
     mqttSnMessageTester->stop();
     while (mqttSnMessageTester->isRunning()) {}
@@ -61,6 +61,10 @@ class MqttSnGatewayComplianceConnectTest
     while (mqttSnGateway->isRunning()) {}
     mqttSnGateway = nullptr;
 
+    mqttMessageTester->stop();
+    while (mqttMessageTester->isRunning()) {}
+    mqttMessageTester = nullptr;
+
     mqttBroker->stop_broker();
     while (mqttBroker->isRunning()) {}
     mqttBroker = nullptr;
@@ -69,7 +73,11 @@ class MqttSnGatewayComplianceConnectTest
   virtual void SetUp() {
     mqttBroker = MqttBrokerTestContainerFactory::getMqttBroker(std::get<0>(GetParam()));
     ASSERT_NE(mqttBroker.get(), nullptr);
-    mqttBroker->start_broker();
+    ASSERT_TRUE(mqttBroker->start_broker());
+
+    mqttMessageTester = MqttMessageTesterFactory::getMqttMessageTester(MqttMessageTestType::PAHOC);
+    ASSERT_NE(mqttMessageTester, nullptr);
+    ASSERT_TRUE(mqttMessageTester->start());
 
     mqttSnGateway = MqttSnGatewayTestContainerFactory::getMqttSnGateway(std::get<1>(GetParam()));
     ASSERT_NE(mqttSnGateway, nullptr);
@@ -80,19 +88,21 @@ class MqttSnGatewayComplianceConnectTest
     mqtt_sn_sender.setTester(mqttSnMessageTester.get());
     mqttSnMessageTester->SetReceiver(&mqtt_sn_receiver);
 
+    // TODO factory?
     static int32_t i = 0;
     string tester_cmd = "-db --log_identifier MqttSnTester -p 1000" + to_string(i) + " -gp 2000" + to_string(i);
     ASSERT_TRUE(mqttSnMessageTester->SetConfiguration("MqttSnMessageTester", tester_cmd));
     ASSERT_TRUE(mqttSnMessageTester->InitializeGatewayNetwork());
 
     ASSERT_TRUE(mqttSnMessageTester->start());
+
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
   }
 
 };
 
-struct PrintToStringMqttSnGatewayComplianceConnectTestValueName {
+struct PrintToStringMqttSnGatewayComplianceDisconnectTestValueName {
   template<class ParamType>
   std::string operator()(const ::testing::TestParamInfo<ParamType> &info) const {
     std::string result = std::string(getTextFromEnum(std::get<0>(info.param))) + "_"
@@ -100,11 +110,12 @@ struct PrintToStringMqttSnGatewayComplianceConnectTestValueName {
     return result;
   }
 };
-INSTANTIATE_TEST_SUITE_P(MqttSnGatewayComplianceConnectCompareTest,
-                         MqttSnGatewayComplianceConnectTest,
+
+INSTANTIATE_TEST_SUITE_P(MqttSnGatewayComplianceDisconnectCompareTest,
+                         MqttSnGatewayComplianceDisconnectTest,
                          testing::Combine(
                              testing::Values(MqttBrokerTestType::MOSQUITTO_DOCKER),
                              testing::Values(MqttSnGatewayTestType::ARSMB, MqttSnGatewayTestType::PAHO)),
-                         PrintToStringMqttSnGatewayComplianceConnectTestValueName());
+                         PrintToStringMqttSnGatewayComplianceDisconnectTestValueName());
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_COMPLIANCE_MQTTSNGATEWAYCOMPLIANCECONNECTTEST_H_
+#endif //CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_COMPLIANCE_MQTTSNGATEWAYCOMPLIANCEDISCONNECTTEST_H_

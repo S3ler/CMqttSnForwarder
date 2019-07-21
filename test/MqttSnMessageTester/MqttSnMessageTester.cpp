@@ -145,7 +145,7 @@ void MqttSnMessageTester::loop() {
   forwarder_config_cleanup(&fw_cfg);
   running = false;
 }
-bool MqttSnMessageTester::is_running() {
+bool MqttSnMessageTester::isRunning() {
   return running;
 }
 bool MqttSnMessageTester::start() {
@@ -239,7 +239,7 @@ bool MqttSnMessageTester::send(const uint8_t *data, uint16_t data_length) {
   return put_rc;
 }
 bool MqttSnMessageTester::SetConfiguration(const std::string &identifier, const std::string &command) {
-  if (is_running()) {
+  if (isRunning()) {
     return false;
   }
 

@@ -935,13 +935,21 @@ if (WITH_MQTT_SN_PARSER_TESTING)
         target_link_libraries(LibMqttSnMessageTester lib-mqtt-sn-linux-plugin-client-network)
     endif ()
 
+    add_library(LibMqttClientMessageTester
+            test/MqttClientMessageTester/MqttPublish.cpp test/MqttClientMessageTester/MqttPublish.h
+            test/MqttClientMessageTester/MqttTestMessageReceiverInterface.h test/MqttClientMessageTester/MqttTestMessageReceiverMock.h
+            test/MqttClientMessageTester/MqttMessageTester.cpp test/MqttClientMessageTester/MqttMessageTester.h
+            test/MqttClientMessageTester/MqttMessageTesterFactory.cpp test/MqttClientMessageTester/MqttMessageTesterFactory.h)
+    #LibMqttClientMessageTester(LibMqttSnMessageTester PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    #target_link_libraries(LibMqttClientMessageTester lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer)
 
-    add_executable(runMqttSnGatewayArsmbDirectConnectTests
-            test/MqttSnGateway/compliance/MqttSnGatewayComplianceConnectTest.cpp
-            test/MqttSnGateway/compliance/MqttSnGatewayComplianceConnectTest.h)
-    target_include_directories(runMqttSnGatewayArsmbDirectConnectTests PRIVATE .)
-    target_compile_options(runMqttSnGatewayArsmbDirectConnectTests PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
-    target_link_libraries(runMqttSnGatewayArsmbDirectConnectTests gtest gtest_main gmock pthread LibMqttSnGatewayTestContainer LibMqttSnMessageTester LibMqttBrokerTestContainer)
+    add_executable(runMqttSnGatewayComplianceTests
+            test/MqttSnGateway/compliance/MqttSnGatewayComplianceTestAction.h
+            test/MqttSnGateway/compliance/MqttSnGatewayComplianceConnectTest.cpp test/MqttSnGateway/compliance/MqttSnGatewayComplianceConnectTest.h
+            test/MqttSnGateway/compliance/MqttSnGatewayComplianceDisconnectTest.cpp test/MqttSnGateway/compliance/MqttSnGatewayComplianceDisconnectTest.h)
+    target_include_directories(runMqttSnGatewayComplianceTests PRIVATE .)
+    target_compile_options(runMqttSnGatewayComplianceTests PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(runMqttSnGatewayComplianceTests gtest gtest_main gmock pthread LibMqttSnGatewayTestContainer LibMqttSnMessageTester LibMqttBrokerTestContainer LibMqttClientMessageTester)
 
     ADD_SUBDIRECTORY(external)
 
