@@ -1,0 +1,12 @@
+//
+// Created by SomeDude on 22.07.2019.
+//
+
+#ifndef CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTACTIONTYPE_H_
+#define CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTACTIONTYPE_H_
+#include <iostream>
+enum class MqttClientActionType {
+  CONNECT, DISCONNECT, PUBLISH, SUBSCRIBE, PUBLISHRECEIVEPUBLISH
+};
+std::ostream &operator<<(std::ostream &os, const MqttClientActionType &obj);
+#endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTACTIONTYPE_H_

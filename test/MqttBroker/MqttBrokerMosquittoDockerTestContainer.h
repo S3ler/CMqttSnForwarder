@@ -8,7 +8,7 @@
 #include "MqttBrokerTestContainerInterface.h"
 class MqttBrokerMosquittoDockerTestContainer : public MqttBrokerTestContainerInterface {
  public:
-  MqttBrokerMosquittoDockerTestContainer();
+  MqttBrokerMosquittoDockerTestContainer(const MqttBrokerTestContainerConfiguration &broker_config);
   void stop_broker() override;
   bool isRunning() override ;
   bool start_broker() override;

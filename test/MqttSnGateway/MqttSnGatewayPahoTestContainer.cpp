@@ -27,6 +27,9 @@ int32_t MqttSnGatewayPahoTestContainer::initialize() {
   if (!createGatewayConfFile()) {
     return -1;
   }
+  if (!createPredefinedTopicConfFile()) {
+    return -1;
+  }
   try {
     gateway.initialize(argc, argv);
   } catch (Exception &exception) {
@@ -65,7 +68,7 @@ void MqttSnGatewayPahoTestContainer::loop() {
   gateway.run(); // blocks
 
   removeGatewayConfFile();
-
+  removePredefinedTopicConfFile();
   running = false;
 }
 bool MqttSnGatewayPahoTestContainer::createGatewayConfFile() {
@@ -73,8 +76,9 @@ bool MqttSnGatewayPahoTestContainer::createGatewayConfFile() {
   outfile.open("./gateway.conf", ios::out);
   // default config file from paho/MqttSnGateay/gateway.conf
   const char data[] = "BrokerName=localhost\nBrokerPortNo=1883\nBrokerSecurePortNo=8883\n\n\
-ClientAuthentication=NO\nAggregatingGateway=NO\nQoS-1=NO\nForwarder=NO\n\n\
-PredefinedTopic=NO\n\n\
+ClientAuthentication=NO\nAggregatingGateway=NO\nQoS-1=YES\nForwarder=NO\n\n\
+PredefinedTopic=YES\n\
+PredefinedTopicList=predefinedTopic.conf\n\
 GatewayID=1\nGatewayName=PahoGateway-01\nKeepAlive=900\n\n\
 GatewayPortNo=10000\nMulticastIP=225.1.1.1\nMulticastPortNo=1883\n\n\
 ShearedMemory=NO;";
@@ -91,6 +95,21 @@ ShearedMemory=NO;";
   outfile.close();
   return true;
 }
+bool MqttSnGatewayPahoTestContainer::createPredefinedTopicConfFile() {
+  std::ofstream outfile;
+  outfile.open("./predefinedTopic.conf", ios::out);
+  // default config file from paho/MqttSnGateay/gateway.conf
+  const char data[] = "*,/unsubscribed/client/topic/name, 50\n\
+*,/another/predefined/topic, 20\nMqttSnTestclient,/unsubscribed/client/topic/name, 50\n";
+
+  outfile << data << endl;
+
+  outfile.close();
+  return true;
+}
 bool MqttSnGatewayPahoTestContainer::removeGatewayConfFile() {
   return remove("./gateway.conf") == 0;
+}
+bool MqttSnGatewayPahoTestContainer::removePredefinedTopicConfFile() {
+  return remove("./predefinedTopic.conf") == 0;
 }

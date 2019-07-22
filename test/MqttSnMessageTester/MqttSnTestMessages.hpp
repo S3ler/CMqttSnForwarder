@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <stdexcept>
+#include <arpa/inet.h>
 
 #define PROTOCOL_ID 0x01
 
@@ -176,7 +177,7 @@ struct test_gwinfo {
 };
 
 #pragma pack(pop)
-
+#pragma pack(push, 1)
 struct test_connect {
   uint8_t length;
   message_type_test type;
@@ -208,11 +209,12 @@ struct test_connect {
       flags |= FLAG_CLEAN;
     }
     this->protocol_id = protocol_id;
-    this->duration = duration;
+    this->duration = htons(duration);
     memcpy(this->client_id, client_id, client_id_length);
   }
 
 };
+#pragma pack(pop)
 
 struct test_disconnect {
   uint8_t length = 2;
@@ -324,7 +326,6 @@ struct test_willmsg {
 };
 
 #pragma pack(push, 1)
-
 struct test_publish {
   uint8_t length = 7;
   message_type_test type = TEST_MQTTSN_PUBLISH;
@@ -364,12 +365,11 @@ struct test_publish {
     } else if (qos == -1) {
       this->flags |= FLAG_QOS_M1;
     }
-    this->topic_id = topic_id;
-    this->message_id = msg_id;
+    this->topic_id = htons(topic_id);
+    this->message_id = htons(msg_id);
     memcpy(this->data, payload, payload_len);
   }
 };
-
 #pragma pack(pop)
 
 #pragma pack(push, 1)

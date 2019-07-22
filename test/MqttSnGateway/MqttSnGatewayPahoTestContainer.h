@@ -38,6 +38,9 @@ class MqttSnGatewayPahoTestContainer : public MqttSnGatewayTestContainerInterfac
   void loop();
   bool createGatewayConfFile();
   bool removeGatewayConfFile();
+  bool createPredefinedTopicConfFile();
+  bool removePredefinedTopicConfFile();
+
 };
 
 #endif //CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYPAHOTESTCONTAINER_H_

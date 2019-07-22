@@ -15,8 +15,8 @@ TEST_P(MqttSnGatewayComplianceDisconnectTest, PredefinedTopic_QoS_M1_Publish) {
   std::copy( data_string.begin(), data_string.end(), std::back_inserter(data_vector));
   data_vector.push_back('\0');
 
-  EXPECT_CALL(mqtt_receiver, receive(AllOf(Field(&MqttPublish::data, data_vector),
-                                           Field(&MqttPublish::topic, topic))));
+  EXPECT_CALL(mqtt_receiver, receive(AllOf(Field(&MqttClientTestContainerPublish::data, data_vector),
+                                           Field(&MqttClientTestContainerPublish::topic, topic))));
 
   // when -  send publish with qos -1
   mqtt_sn_sender.send_publish(false, (int8_t) -1, false, false, (uint16_t) 50, 0, (const uint8_t *) data,
@@ -28,7 +28,7 @@ TEST_P(MqttSnGatewayComplianceDisconnectTest, PredefinedTopic_QoS_M1_Publish) {
   std::cout << std::endl;
 }
 
-TEST_P(MqttSnGatewayComplianceDisconnectTest, PredefinedTopic_QoS_0_Publish) {
+TEST_P(MqttSnGatewayComplianceDisconnectTest,  PredefinedTopic_QoS_0_Publish) {
 
   test_connack expected_connack(TEST_ACCEPTED);
   EXPECT_CALL(mqtt_sn_receiver, receive_connack(_)).WillOnce(check_connack(expected_connack));
@@ -42,11 +42,11 @@ TEST_P(MqttSnGatewayComplianceDisconnectTest, PredefinedTopic_QoS_0_Publish) {
   std::copy( data_string.begin(), data_string.end(), std::back_inserter(data_vector));
   data_vector.push_back('\0');
 
-  EXPECT_CALL(mqtt_receiver, receive(AllOf(Field(&MqttPublish::data, data_vector),
-                                           Field(&MqttPublish::topic, topic))));
+  EXPECT_CALL(mqtt_receiver, receive(AllOf(Field(&MqttClientTestContainerPublish::data, data_vector),
+                                           Field(&MqttClientTestContainerPublish::topic, topic))));
 
 
-  mqtt_sn_sender.send_connect("Mqtt SN Testclient", UINT16_MAX, false, false);
+  mqtt_sn_sender.send_connect("MqttSnTestclient", UINT16_MAX, false, false);
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   // when -  send publish with qos 0
   mqtt_sn_sender.send_publish(false, (int8_t) 0, false, false, (uint16_t) 50, 0, (const uint8_t *) data,
@@ -58,7 +58,7 @@ TEST_P(MqttSnGatewayComplianceDisconnectTest, PredefinedTopic_QoS_0_Publish) {
   std::cout << std::endl;
 }
 
-TEST_P(MqttSnGatewayComplianceDisconnectTest, PredefinedTopic_QoS_1_Publish) {
+TEST_P(MqttSnGatewayComplianceDisconnectTest,  PredefinedTopic_QoS_1_Publish) {
 
   uint16_t msg_id = 10;
   uint16_t topic_id = 50;
@@ -70,19 +70,19 @@ TEST_P(MqttSnGatewayComplianceDisconnectTest, PredefinedTopic_QoS_1_Publish) {
 
   // expected - incoming publish
   const char *topic = "/unsubscribed/client/topic/name";
-  const char *data = "some qos 0 data";
+  const char *data = "some qos 1 data";
 
   std::string data_string(data);
   std::vector<uint8_t> data_vector;
   std::copy( data_string.begin(), data_string.end(), std::back_inserter(data_vector));
   data_vector.push_back('\0');
 
-  EXPECT_CALL(mqtt_receiver, receive(AllOf(Field(&MqttPublish::data, data_vector),
-                                           Field(&MqttPublish::topic, topic))));
+  EXPECT_CALL(mqtt_receiver, receive(AllOf(Field(&MqttClientTestContainerPublish::data, data_vector),
+                                           Field(&MqttClientTestContainerPublish::topic, topic))));
 
-  mqtt_sn_sender.send_connect("Mqtt SN Testclient", UINT16_MAX, false, false);
+  mqtt_sn_sender.send_connect("MqttSnTestclient", UINT16_MAX, false, false);
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  // when -  send publish with qos 0
+  // when -  send publish with qos 1
   mqtt_sn_sender.send_publish(false, (int8_t) 1, false, false, topic_id, msg_id, (const uint8_t *) data,
                               (uint8_t) (strlen(data) + 1));
 

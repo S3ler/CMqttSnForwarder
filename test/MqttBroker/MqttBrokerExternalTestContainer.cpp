@@ -4,7 +4,6 @@
 
 #include "MqttBrokerExternalTestContainer.h"
 
-MqttBrokerExternalTestContainer::MqttBrokerExternalTestContainer() {}
 void MqttBrokerExternalTestContainer::stop_broker() {
   started = false;
 }
@@ -15,3 +14,5 @@ bool MqttBrokerExternalTestContainer::start_broker() {
   started = true;
   return started;
 }
+MqttBrokerExternalTestContainer::MqttBrokerExternalTestContainer(const MqttBrokerTestContainerConfiguration &broker_config)
+    : MqttBrokerTestContainerInterface(broker_config) {}
