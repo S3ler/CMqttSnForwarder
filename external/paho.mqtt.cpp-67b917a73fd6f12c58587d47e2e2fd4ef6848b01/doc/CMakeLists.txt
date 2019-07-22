@@ -1,5 +1,5 @@
 #*******************************************************************************
-#  Copyright (c) 2016
+#  Copyright (c) 2015 logi.cals GmbH
 # 
 #  All rights reserved. This program and the accompanying materials
 #  are made available under the terms of the Eclipse Public License v1.0
@@ -11,33 +11,35 @@
 #    http://www.eclipse.org/org/documents/edl-v10.php.
 # 
 #  Contributors:
-#     Guilherme Maciel Ferreira - initial version
+#     Rainer Poisel - initial version
 #*******************************************************************************/
 
-## documentation settings
-find_package(Doxygen)
-if(NOT DOXYGEN_FOUND)
+# Note: on OS X you should install XCode and the associated command-line tools
+
+### documentation settings
+FIND_PACKAGE(Doxygen)
+IF(NOT DOXYGEN_FOUND)
     message(FATAL_ERROR "Doxygen is needed to build the documentation.")
-endif()
+ENDIF()
+SET(DOXYTARGETS)
+FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc)
+FOREACH(DOXYFILE_SRC DoxyfileV3ClientAPI;DoxyfileV3AsyncAPI;DoxyfileV3ClientInternal)
+    SET(DOXYFILE_IN ${DOXYFILE_SRC}.in)
+    SET(DOXYFILE ${CMAKE_CURRENT_BINARY_DIR}/${DOXYFILE_SRC})
 
-set(DOXYTARGETS)
+    CONFIGURE_FILE(${DOXYFILE_IN} ${DOXYFILE} @ONLY)
+    ADD_CUSTOM_TARGET(${DOXYFILE_SRC}.target
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            COMMENT "Generating API documentation with Doxygen"
+            VERBATIM
+    )
+    SET(DOXYTARGETS ${DOXYTARGETS} ${DOXYFILE_SRC}.target)
+ENDFOREACH(DOXYFILE_SRC)
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc)
-
-set(DOXYFILE_SRC Doxyfile.cmake)
-set(DOXYFILE ${CMAKE_CURRENT_BINARY_DIR}/${DOXYFILE_SRC})
-
-configure_file(${DOXYFILE_SRC} ${DOXYFILE} @ONLY)
-add_custom_target(
-    ${DOXYFILE_SRC}.target
-    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generating API documentation with Doxygen"
-    VERBATIM
-)
-set(DOXYTARGETS ${DOXYTARGETS} ${DOXYFILE_SRC}.target)
-
-add_custom_target(doc ALL DEPENDS ${DOXYTARGETS})
-
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION share)
-
+ADD_CUSTOM_TARGET(doc ALL DEPENDS ${DOXYTARGETS})
+IF (PAHO_ENABLE_CPACK)
+    INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION share)
+ELSE()
+    INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION ${CMAKE_INSTALL_DOCDIR})
+ENDIF()

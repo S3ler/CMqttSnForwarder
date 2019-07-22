@@ -1,150 +1,197 @@
-# CMakeLists.txt
-#
-# CMake file for the Paho C++ core library.
-#
-# This is part of the Paho MQTT C++ client library.
-#
-
 #*******************************************************************************
-# Copyright (c) 2016-2017, Guilherme Maciel Ferreira
-# Copyright (c) 2017-2018, Frank Pagliughi
+#  Copyright (c) 2015, 2018 logi.cals GmbH and others
 #
 #  All rights reserved. This program and the accompanying materials
 #  are made available under the terms of the Eclipse Public License v1.0
-#  and Eclipse Distribution License v1.0 which accompany this distribution. 
-# 
-#  The Eclipse Public License is available at 
+#  and Eclipse Distribution License v1.0 which accompany this distribution.
+#
+#  The Eclipse Public License is available at
 #     http://www.eclipse.org/legal/epl-v10.html
-#  and the Eclipse Distribution License is available at 
+#  and the Eclipse Distribution License is available at
 #    http://www.eclipse.org/org/documents/edl-v10.php.
-# 
+#
 #  Contributors:
-#     Guilherme Maciel Ferreira - initial version
-#     Frank Pagliughi - made the shared library optional
+#     Rainer Poisel - initial version
+#     Ian Craggs (IBM Corp.) - merge master
+#     Ian Craggs - update for MQTTV5 support
 #*******************************************************************************/
 
-find_package(PahoMqttC REQUIRED)
+# Note: on OS X you should install XCode and the associated command-line tools
 
-# --- The headers ---
-
-add_subdirectory(mqtt)
-
-## --- Library dependencies ---
-
-set (THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-
-#set(LIBS_SYSTEM Threads::Threads)
-#if(WIN32)
-#    string(APPEND LIBS_SYSTEM " ws2_32")
-#endif()
-
-## --- Use object library to optimize compilation ---
-
-add_library(paho-cpp-objs OBJECT
-        async_client.cpp
-        client.cpp
-        disconnect_options.cpp
-        iclient_persistence.cpp
-        message.cpp
-        response_options.cpp
-        ssl_options.cpp
-        string_collection.cpp
-        token.cpp
-        topic.cpp
-        connect_options.cpp
-        will_options.cpp
-)
-
-## install the shared library
-#install(TARGETS paho-cpp-objs EXPORT PahoMqttCpp
-#    OBJECTS DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#)
-
-if(PAHO_WITH_SSL)
-    add_definitions(-DOPENSSL)
-endif()
-
-# Object libraries can't use target_link_libraries in order to take advantage
-# of transitive usage requirements until CMake 3.12. This is a workaround:
-#target_include_directories(OBJS PRIVATE ${PAHO_MQTT_C_INCLUDE_DIRS})
-
-target_include_directories(paho-cpp-objs 
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-    PRIVATE 
-        ${PAHO_MQTT_C_INCLUDE_DIRS}
-        src
-)
-
-
-## --- Build the shared library, if requested ---
-
-if(PAHO_BUILD_SHARED)
-    ## set position independent flag (-fPIC on Unix)
-    # this may only be necessary for old compiler, but doesn't hurt
-    set_property(TARGET paho-cpp-objs PROPERTY POSITION_INDEPENDENT_CODE ON)
-
-    add_library(paho-mqttpp3 SHARED $<TARGET_OBJECTS:paho-cpp-objs>)
-
-    ## add dependencies to the shared library
-    target_link_libraries(paho-mqttpp3
-        PRIVATE ${LIBS_SYSTEM}
-        PUBLIC PahoMqttC::PahoMqttC)
-
-    # It would be nice to exort the include paths from the obj lib, but we
-    # get an export error. Perhaps in a future version?
-    # 
-    # CMake Error: install(EXPORT "PahoMqttCpp" ...) includes target "paho-mqttpp3"
-    #   which requires target "paho-cpp-objs" that is not in the export set.
-
-    #target_include_directories(paho-mqttpp3 PUBLIC 
-    #    $<TARGET_PROPERTY:paho-cpp-objs,INCLUDE_DIRECTORIES>
-    #)
-
-    target_include_directories(paho-mqttpp3 PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
+## compilation/linkage settings
+INCLUDE_DIRECTORIES(
+    .
+    ${CMAKE_BINARY_DIR}
     )
 
-    ## set the shared library soname
-    set_target_properties(paho-mqttpp3 PROPERTIES
-        VERSION ${PROJECT_VERSION}
-        SOVERSION ${PROJECT_VERSION_MAJOR})
-
-    ## install the shared library
-    install(TARGETS paho-mqttpp3 EXPORT PahoMqttCpp
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif()
-
-## --- Build static version of the library, if requested ---
-
-if(PAHO_BUILD_STATIC)
-    ## create the static library
-    add_library(paho-mqttpp3-static STATIC $<TARGET_OBJECTS:paho-cpp-objs>)
-
-    ## add dependencies to the shared library
-    target_link_libraries(paho-mqttpp3-static
-        PRIVATE ${LIBS_SYSTEM}
-        PUBLIC PahoMqttC::PahoMqttC)
-
-    target_include_directories(paho-mqttpp3-static PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
+CONFIGURE_FILE(VersionInfo.h.in
+    ${CMAKE_BINARY_DIR}/VersionInfo.h
+    @ONLY
     )
 
-    ## install the static library
-    install(TARGETS paho-mqttpp3-static EXPORT PahoMqttCpp
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+SET(common_src
+    MQTTProtocolClient.c
+    Clients.c
+    utf-8.c
+    StackTrace.c
+    MQTTPacket.c
+    MQTTPacketOut.c
+    Messages.c
+    Tree.c
+    Socket.c
+    Log.c
+    MQTTPersistence.c
+    Thread.c
+    MQTTProtocolOut.c
+    MQTTPersistenceDefault.c
+    SocketBuffer.c
+    Heap.c
+    LinkedList.c
+    MQTTProperties.c
+    MQTTReasonCodes.c
+    Base64.c
+    SHA1.c
+    WebSocket.c
+    )
 
-    ## Let the archive use the same name as the shared lib on *nix systems
-    if(UNIX)
-        set_target_properties(paho-mqttpp3-static PROPERTIES OUTPUT_NAME paho-mqttpp3)
-    endif()
-endif()
+IF (WIN32)
+    SET(LIBS_SYSTEM ws2_32)
+ELSEIF (UNIX)
+    IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
+        SET(LIBS_SYSTEM c dl pthread)
+    ELSEIF (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+        SET(LIBS_SYSTEM compat pthread)
+    ELSE()
+        SET(LIBS_SYSTEM c pthread)
+    ENDIF()
+ENDIF()
 
+## common compilation for libpaho-mqtt3c and libpaho-mqtt3a
+ADD_LIBRARY(common_obj OBJECT ${common_src})
+SET_PROPERTY(TARGET common_obj PROPERTY POSITION_INDEPENDENT_CODE ON)
 
+ADD_EXECUTABLE(MQTTVersion MQTTVersion.c)
+
+ADD_LIBRARY(paho-mqtt3c SHARED $<TARGET_OBJECTS:common_obj> MQTTClient.c)
+ADD_LIBRARY(paho-mqtt3a SHARED $<TARGET_OBJECTS:common_obj> MQTTAsync.c)
+
+TARGET_LINK_LIBRARIES(paho-mqtt3c ${LIBS_SYSTEM})
+TARGET_LINK_LIBRARIES(paho-mqtt3a ${LIBS_SYSTEM})
+
+TARGET_LINK_LIBRARIES(MQTTVersion paho-mqtt3a paho-mqtt3c ${LIBS_SYSTEM})
+SET_TARGET_PROPERTIES(
+    paho-mqtt3c paho-mqtt3a PROPERTIES
+    VERSION ${CLIENT_VERSION}
+    SOVERSION ${PAHO_VERSION_MAJOR})
+
+INSTALL(TARGETS paho-mqtt3c paho-mqtt3a
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+INSTALL(TARGETS MQTTVersion
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+IF (PAHO_BUILD_STATIC)
+    ADD_LIBRARY(paho-mqtt3c-static STATIC $<TARGET_OBJECTS:common_obj> MQTTClient.c)
+    ADD_LIBRARY(paho-mqtt3a-static STATIC $<TARGET_OBJECTS:common_obj> MQTTAsync.c)
+
+    TARGET_LINK_LIBRARIES(paho-mqtt3c-static ${LIBS_SYSTEM})
+    TARGET_LINK_LIBRARIES(paho-mqtt3a-static ${LIBS_SYSTEM})
+
+    INSTALL(TARGETS paho-mqtt3c-static paho-mqtt3a-static
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ENDIF()
+
+INSTALL(FILES MQTTAsync.h MQTTClient.h MQTTClientPersistence.h MQTTProperties.h MQTTReasonCodes.h MQTTSubscribeOpts.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+IF (PAHO_WITH_SSL)
+    SET(OPENSSL_SEARCH_PATH "" CACHE PATH "Directory containing OpenSSL libraries and includes")
+
+    IF (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+      SET(OPENSSL_SEARCH_PATH "/usr/local/opt/openssl")
+    ENDIF (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+
+    IF (WIN32)
+      SET(OPENSSL_SEARCH_PATH "C:/OpenSSL-Win64")
+      SET(OPENSSL_SEARCH_LIB_PATH "${OPENSSL_SEARCH_PATH}/lib64")
+      IF (DEFINED ENV{PAHO_WINDOWS_BUILD_BIT})
+        IF ($ENV{PAHO_WINDOWS_BUILD_BIT} STREQUAL "x86")
+          SET(OPENSSL_SEARCH_PATH "C:/OpenSSL-Win32")
+          SET(OPENSSL_SEARCH_LIB_PATH "${OPENSSL_SEARCH_PATH}/lib32")
+        ENDIF ()
+      ENDIF ()
+    ELSE()
+      SET(OPENSSL_SEARCH_LIB_PATH "${OPENSSL_SEARCH_PATH}/lib64")
+    ENDIF ()
+
+    FIND_PATH(OPENSSL_INCLUDE_DIR openssl/ssl.h
+        HINTS ${OPENSSL_SEARCH_PATH}/include)
+    FIND_LIBRARY(OPENSSL_LIB NAMES ssl libssl ssleay32
+        HINTS ${OPENSSL_SEARCH_PATH}/lib ${OPENSSL_SEARCH_LIB_PATH})
+    FIND_LIBRARY(OPENSSLCRYPTO_LIB NAMES crypto libcrypto libeay32
+      	HINTS ${OPENSSL_SEARCH_PATH}/lib ${OPENSSL_SEARCH_LIB_PATH})
+
+    MESSAGE(STATUS "OpenSSL hints: ${OPENSSL_SEARCH_PATH}")
+    MESSAGE(STATUS "OpenSSL headers found at ${OPENSSL_INCLUDE_DIR}")
+    MESSAGE(STATUS "OpenSSL library found at ${OPENSSL_LIB}")
+    MESSAGE(STATUS "OpenSSL Crypto library found at ${OPENSSLCRYPTO_LIB}")
+
+    INCLUDE_DIRECTORIES(
+        ${OPENSSL_INCLUDE_DIR}
+    )
+
+    ## common compilation for libpaho-mqtt3cs and libpaho-mqtt3as
+    ## Note: SSL libraries must be recompiled due ifdefs
+    ADD_LIBRARY(common_ssl_obj OBJECT ${common_src})
+    SET_PROPERTY(TARGET common_ssl_obj PROPERTY POSITION_INDEPENDENT_CODE ON)
+    SET_PROPERTY(TARGET common_ssl_obj PROPERTY COMPILE_DEFINITIONS "OPENSSL=1")
+    ADD_LIBRARY(paho-mqtt3cs SHARED $<TARGET_OBJECTS:common_ssl_obj> MQTTClient.c SSLSocket.c)
+    ADD_LIBRARY(paho-mqtt3as SHARED $<TARGET_OBJECTS:common_ssl_obj> MQTTAsync.c SSLSocket.c)
+
+    TARGET_LINK_LIBRARIES(paho-mqtt3cs ${OPENSSL_LIB} ${OPENSSLCRYPTO_LIB} ${LIBS_SYSTEM})
+    TARGET_LINK_LIBRARIES(paho-mqtt3as ${OPENSSL_LIB} ${OPENSSLCRYPTO_LIB} ${LIBS_SYSTEM})
+    SET_TARGET_PROPERTIES(
+        paho-mqtt3cs paho-mqtt3as PROPERTIES
+        VERSION ${CLIENT_VERSION}
+        SOVERSION ${PAHO_VERSION_MAJOR}
+        COMPILE_DEFINITIONS "OPENSSL=1")
+    INSTALL(TARGETS paho-mqtt3cs paho-mqtt3as
+        ARCHIVE DESTINATION  ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION  ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION  ${CMAKE_INSTALL_BINDIR})
+
+    IF (PAHO_BUILD_STATIC)
+        ADD_LIBRARY(paho-mqtt3cs-static STATIC $<TARGET_OBJECTS:common_ssl_obj> MQTTClient.c SSLSocket.c)
+        ADD_LIBRARY(paho-mqtt3as-static STATIC $<TARGET_OBJECTS:common_ssl_obj> MQTTAsync.c SSLSocket.c)
+
+        TARGET_LINK_LIBRARIES(paho-mqtt3cs-static ${OPENSSL_LIBRARIES} ${LIBS_SYSTEM})
+        TARGET_LINK_LIBRARIES(paho-mqtt3as-static ${OPENSSL_LIBRARIES} ${LIBS_SYSTEM})
+        SET_TARGET_PROPERTIES(
+        paho-mqtt3cs-static paho-mqtt3as-static PROPERTIES
+        VERSION ${CLIENT_VERSION}
+        SOVERSION ${PAHO_VERSION_MAJOR}
+        COMPILE_DEFINITIONS "OPENSSL=1")
+
+        INSTALL(TARGETS paho-mqtt3cs-static paho-mqtt3as-static
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    ENDIF()
+ENDIF()
+
+# Base64 test
+ADD_EXECUTABLE( Base64Test EXCLUDE_FROM_ALL Base64.c Base64.h )
+TARGET_COMPILE_DEFINITIONS( Base64Test PUBLIC "-DBASE64_TEST" )
+IF (PAHO_WITH_SSL)
+	ADD_EXECUTABLE( Base64TestOpenSSL EXCLUDE_FROM_ALL Base64.c Base64.h )
+	TARGET_LINK_LIBRARIES( Base64TestOpenSSL ${OPENSSL_LIB} ${OPENSSLCRYPTO_LIB} )
+	TARGET_COMPILE_DEFINITIONS( Base64TestOpenSSL PUBLIC "-DBASE64_TEST -DOPENSSL=1" )
+ENDIF (PAHO_WITH_SSL)
+
+# SHA1 test
+ADD_EXECUTABLE( Sha1Test EXCLUDE_FROM_ALL SHA1.c SHA1.h )
+TARGET_COMPILE_DEFINITIONS( Sha1Test PUBLIC "-DSHA1_TEST" )
+IF (PAHO_WITH_SSL)
+	ADD_EXECUTABLE( Sha1TestOpenSSL EXCLUDE_FROM_ALL SHA1.c SHA1.h )
+	TARGET_LINK_LIBRARIES( Sha1TestOpenSSL ${OPENSSL_LIB} ${OPENSSLCRYPTO_LIB} )
+	TARGET_COMPILE_DEFINITIONS( Sha1TestOpenSSL PUBLIC "-DSHA1_TEST -DOPENSSL=1" )
+ENDIF (PAHO_WITH_SSL)

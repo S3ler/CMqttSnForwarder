@@ -213,5 +213,5 @@ TARGET_LINK_LIBRARIES(LibPahoqos-1pub LibPahoMQTTSNPacketClient)
 SET(PAHO_GATEWAY_SRC_FILES
         paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNGateway/src)
 
-add_subdirectory(paho.mqtt.c-d631449f16ec78c37e063c220eb6cfc546a4facb)
-#add_subdirectory(paho.mqtt.cpp-67b917a73fd6f12c58587d47e2e2fd4ef6848b01)
+#add_subdirectory(paho.mqtt.c-d631449f16ec78c37e063c220eb6cfc546a4facb)
+add_subdirectory(paho.mqtt.cpp-67b917a73fd6f12c58587d47e2e2fd4ef6848b01)
