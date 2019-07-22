@@ -1,0 +1,151 @@
+language: cpp
+
+sudo: required
+
+dist: trusty
+
+os: linux
+
+install:
+  # Install Paho MQTT C (Need only paho-mqtt3a and paho-mqtt3as)
+  - ./install_paho_mqtt_c.sh
+
+addons:
+  apt:
+    sources:
+      - george-edison55-precise-backports # cmake 3.2.3 / doxygen 1.8.3
+      - sourceline: 'ppa:mosquitto-dev/mosquitto-ppa'
+    packages:
+      - cppcheck
+      - libcppunit-dev
+      - git
+      - cmake
+      - cmake-data
+      - doxygen
+      - mosquitto
+
+matrix:
+  include:
+    # GCC 4.8
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports # cmake 3.2.3 / doxygen 1.8.3
+            - sourceline: 'ppa:mosquitto-dev/mosquitto-ppa'
+          packages:
+            - g++-4.8
+            - cppcheck
+            - libcppunit-dev
+            - git
+            - cmake
+            - cmake-data
+            - doxygen
+            - mosquitto
+      env: COMPILER=g++-4.8
+    # GCC 4.9
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports # cmake 3.2.3 / doxygen 1.8.3
+            - sourceline: 'ppa:mosquitto-dev/mosquitto-ppa'
+          packages:
+            - g++-4.9
+            - cppcheck
+            - libcppunit-dev
+            - git
+            - cmake
+            - cmake-data
+            - doxygen
+            - mosquitto
+      env: COMPILER=g++-4.9
+    # GCC 5
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports # cmake 3.2.3 / doxygen 1.8.3
+            - sourceline: 'ppa:mosquitto-dev/mosquitto-ppa'
+          packages:
+            - g++-5
+            - cppcheck
+            - libcppunit-dev
+            - git
+            - cmake
+            - cmake-data
+            - doxygen
+            - mosquitto
+      env: COMPILER=g++-5
+    # GCC 6
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports # cmake 3.2.3 / doxygen 1.8.3
+            - sourceline: 'ppa:mosquitto-dev/mosquitto-ppa'
+          packages:
+            - g++-6
+            - cppcheck
+            - libcppunit-dev
+            - git
+            - cmake
+            - cmake-data
+            - doxygen
+            - mosquitto
+      env: COMPILER=g++-6
+    # Clang 3.6
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+            - george-edison55-precise-backports # cmake 3.2.3 / doxygen 1.8.3
+            - sourceline: 'ppa:mosquitto-dev/mosquitto-ppa'
+          packages:
+            - clang-3.6
+            - cppcheck
+            - libcppunit-dev
+            - git
+            - cmake
+            - cmake-data
+            - doxygen
+            - mosquitto
+      env: COMPILER=clang++-3.6
+    # Clang 3.8
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+            - george-edison55-precise-backports # cmake 3.2.3 / doxygen 1.8.3
+            - sourceline: 'ppa:mosquitto-dev/mosquitto-ppa'
+          packages:
+            - clang-3.8
+            - cppcheck
+            - libcppunit-dev
+            - git
+            - cmake
+            - cmake-data
+            - doxygen
+            - mosquitto
+      env: COMPILER=clang++-3.8
+  exclude:
+    - compiler: gcc
+
+script:
+  # Test Makefile building
+  - ./travis_build_make.sh
+  # Test CMake building
+  - ./travis_build_cmake.sh
+  # Test Autotools building
+  - ./travis_build_autotools.sh
+  # Static Analysis
+  - cppcheck --enable=all --std=c++11 --force --quiet src/*.cpp
+
