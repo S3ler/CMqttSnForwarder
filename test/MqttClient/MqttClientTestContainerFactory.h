@@ -6,7 +6,6 @@
 #define CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERFACTORY_H_
 
 #include <memory>
-#include <test/MqttBroker/MqttBrokerTestContainerInterface.h>
 #include "MqttClientTestType.h"
 #include "MqttClientTestContainerInterface.h"
 
@@ -14,9 +13,9 @@ class MqttClientTestContainerFactory {
  public:
   static std::shared_ptr<MqttClientTestContainerInterface> getMqttClient(
       MqttClientTestType mqttClientTestType,
-      MqttClientConnectAction &mqttClientConnectAction);
+      const MqttClientConnectAction mqttClientConnectAction);
   static std::shared_ptr<MqttClientTestContainerInterface> getMqttClient(MqttClientTestType mqttClientTestType,
-                                                                  std::shared_ptr<MqttBrokerTestContainerInterface> mqttBroker);
+                                                                         const MqttBrokerTestContainerConfiguration mqttBrokerConfiguration);
 };
 
 #endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERFACTORY_H_

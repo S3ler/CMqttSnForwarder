@@ -82,7 +82,7 @@ class MqttSnGatewayComplianceDisconnectTest : public ::testing::TestWithParam<st
     ASSERT_NE(mqttBroker.get(), nullptr);
     ASSERT_TRUE(mqttBroker->start_broker());
 
-    mqttClient = MqttClientTestContainerFactory::getMqttClient(MqttClientTestType::PAHO_CPP, mqttBroker);
+    mqttClient = MqttClientTestContainerFactory::getMqttClient(MqttClientTestType::PAHO_CPP, mqttBroker->broker_config);
     ASSERT_NE(mqttClient, nullptr);
     mqttClient->SetReceiverInterface(&mqtt_receiver);
     ASSERT_TRUE(mqttClient->StartBackgroundHandler());

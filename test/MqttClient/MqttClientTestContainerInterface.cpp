@@ -36,4 +36,9 @@ void MqttClientTestContainerInterface::addDisconnectAction(MqttClientDisconnectA
 void MqttClientTestContainerInterface::SetReceiverInterface(MqttClientTestContainerReceiverInterface *receiver_interface) {
   MqttClientTestContainerInterface::receiver_interface = receiver_interface;
 }
+void MqttClientTestContainerInterface::ReceivePublish(MqttClientTestContainerPublish &mqtt_publish) {
+  if (receiver_interface) {
+    receiver_interface->receive(mqtt_publish);
+  }
+}
 

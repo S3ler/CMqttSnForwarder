@@ -12,9 +12,11 @@ std::ostream &operator<<(std::ostream &os, const MqttClientActionType &obj) {
     os << "PUBLISH";
   } else if (obj == MqttClientActionType::SUBSCRIBE) {
     os << "SUBSCRIBE";
+  } else if (obj == MqttClientActionType::UNSUBSCRIBE) {
+    os << "UNSUBSCRIBE";
   } else if (obj == MqttClientActionType::PUBLISHRECEIVEPUBLISH) {
     os << "PUBLISHRECEIVEPUBLISH";
-  } else{
+  } else {
     os << "UNKNOWN";
   }
   return os;

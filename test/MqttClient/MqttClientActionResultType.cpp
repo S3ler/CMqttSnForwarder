@@ -6,8 +6,10 @@
 std::ostream &operator<<(std::ostream &os, const MqttClientActionResultType &obj) {
   if (obj == MqttClientActionResultType::SUCCESS) {
     os << "SUCCESS";
-  } else {
+  } else if (obj == MqttClientActionResultType::ERROR) {
     os << "ERROR";
+  } else if (obj == MqttClientActionResultType::CONNECTIONLOST) {
+    os << "CONNECTIONLOST";
   }
   return os;
 }

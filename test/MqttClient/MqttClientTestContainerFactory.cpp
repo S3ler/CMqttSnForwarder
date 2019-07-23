@@ -9,17 +9,16 @@
 
 std::shared_ptr<MqttClientTestContainerInterface> MqttClientTestContainerFactory::getMqttClient(
     MqttClientTestType mqttClientTestType,
-    MqttClientConnectAction &mqttClientConnectAction) {
+    const MqttClientConnectAction mqttClientConnectAction) {
   if (mqttClientTestType == MqttClientTestType::PAHO_CPP) {
     return std::make_shared<MqttClientPahoCppClientTestContainer>(mqttClientConnectAction);
   }
   return nullptr;
 }
 std::shared_ptr<MqttClientTestContainerInterface> MqttClientTestContainerFactory::getMqttClient(MqttClientTestType mqttClientTestType,
-                                                                                                std::shared_ptr<
-                                                                                                    MqttBrokerTestContainerInterface> mqttBroker) {
+                                                                                                const MqttBrokerTestContainerConfiguration mqttBrokerConfiguration) {
   static int i = 0;
-  MqttClientConnectAction connect_action(mqttBroker->broker_config,
+  MqttClientConnectAction connect_action(mqttBrokerConfiguration,
                                          std::string("MqttClientContainer") + std::to_string(i++),
                                          std::string(""),
                                          20,

@@ -6,48 +6,57 @@
 #define CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTPAHOCPPCLIENTTESTCONTAINER_H_
 
 #include "MqttClientTestContainerInterface.h"
-#include "../../external/paho.mqtt.cpp-67b917a73fd6f12c58587d47e2e2fd4ef6848b01/src/MQTTClient.h"
 #include "MqttClientPublishAction.h"
 #include "MqttClientSubscribeAction.h"
 #include "MqttClientDisconnectAction.h"
 #include "MqttClientActionResult.h"
 #include <atomic>
 #include <thread>
+#include <external/paho.mqtt.cpp-67b917a73fd6f12c58587d47e2e2fd4ef6848b01/src/MQTTAsync.h>
 
 class MqttClientPahoCppClientTestContainer : public MqttClientTestContainerInterface {
  private:
+  std::string clientId;
   std::string brokerURI;
-  MQTTClient client;
-  MQTTClient_connectOptions conn_opts;
+  MQTTAsync client;
+  MQTTAsync_connectOptions conn_opts;
+
+  std::atomic_bool connected{false};
 
   std::atomic_bool running{false};
   std::atomic_bool stopped{false};
   std::thread thread;
 
-  std::atomic<MQTTClient_deliveryToken> tk;
+  //std::atomic<MQTTClient_deliveryToken> tk;
 
+  timespec start_ts;
+  timespec end_ts;
+  std::atomic_bool action_completed{true};
+  std::atomic<MqttClientActionResultType> action_result;
+  std::atomic<MQTTAsync_token> publish_token;
+ public:
+  void on_action_finished(MqttClientActionResultType action_result);
+  void on_publish_action_finished(MqttClientActionResultType action_result, MQTTAsync_token publish_token);
+  void on_receive_publish_action_finished(MqttClientActionResultType action_result, timespec end_ts);
  public:
   MqttClientPahoCppClientTestContainer(const MqttClientConnectAction &initial_connect_action);
+  virtual ~MqttClientPahoCppClientTestContainer();
 
   bool StartBackgroundHandler() override;
   void StopBackgroundHandler() override;
   bool IsBackgroundHandlerRunning() override;
 
   MqttClientActionResult connect() override;
-  uint64_t connect(MqttClientConnectAction &connect_action) override;
+  MqttClientActionResult connect(MqttClientConnectAction &connect_action) override;
   MqttClientActionResult disconnect() override;
-  uint64_t publish(MqttClientPublishAction &publish_action) override;
   MqttClientActionResult subscribe(MqttClientSubscribeAction &subscribe_action) override;
-  virtual ~MqttClientPahoCppClientTestContainer();
-  // synchronous methods - return time in ns?
-  //uint64_t connect();
-  //uint64_t disconnect();
-  //uint64_t publish(MqttClientPublishAction publish_action);
-  //uint64_t subscribe(MqttClientSubscribeAction subscribe_action);
+  MqttClientActionResult unsubscribe(MqttClientUnsubscribeAction &unsubscribe_action) override;
+  MqttClientActionResult publish(MqttClientPublishAction &publish_action) override;
+  MqttClientActionResult publishReceivePublish(MqttClientPublishReceivePublish &publish_receive_publish) override;
+
   //uint64_t rec_subscribe(MqttClientReceiveSubscribeAction receive_subscribe_action, uint64_t timeout_ns);
 
-  void message_delivered(MQTTClient_deliveryToken token);
-  void receive_publish(char *topicName, int topicLen, MQTTClient_message *message);
+  void receive_publish(char *topicName, int topicLen, MQTTAsync_message *message);
   void connection_lost(char *cause);
 };
 

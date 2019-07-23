@@ -8,7 +8,7 @@
 #include <iostream>
 
 enum class MqttClientActionResultType {
-  SUCCESS = 0, ERROR //, TIMEOUT
+  SUCCESS = 0, ERROR , CONNECTIONLOST
 };
 std::ostream &operator<<(std::ostream &os, const MqttClientActionResultType &obj);
 

@@ -8,15 +8,11 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
-//#include <test/MqttBroker/MqttBrokerTestContainerConfiguration.h>
 #include "../MqttBroker/MqttBrokerTestContainerConfiguration.h"
 #include "MqttClientAction.h"
 
 class MqttClientConnectAction : public MqttClientAction {
  public:
-  //const std::string brokerURI; // example tcp://localhost:1883
-
-
   const std::string protocol; // example tcp
   const std::string brokerAddress; // example localhost
   const uint16_t brokerPort; // example 1883

@@ -7,34 +7,36 @@
 
 #include <string>
 #include <memory>
-#include "../MqttNetworkObjectBuilder/MqttClientTestContainerConnectOptions.h"
 #include "MqttClientConnectAction.h"
 #include "MqttClientPublishAction.h"
 #include "MqttClientSubscribeAction.h"
 #include "MqttClientDisconnectAction.h"
 #include "MqttClientActionResult.h"
 #include "MqttClientTestContainerReceiverInterface.h"
+#include "MqttClientUnsubscribeAction.h"
+#include "MqttClientPublishReceivePublish.h"
 
 class MqttClientTestContainerInterface {
  protected:
   uint64_t action_number = 0;
-  MqttClientTestContainerReceiverInterface* receiver_interface = nullptr;
+  MqttClientTestContainerReceiverInterface *receiver_interface = nullptr;
  public:
   MqttClientConnectAction initial_connect_action;
   MqttClientTestContainerInterface(const MqttClientConnectAction &initial_connect_action);
   void SetReceiverInterface(MqttClientTestContainerReceiverInterface *receiver_interface);
-  // synchronous methods - return time in ns?
-  virtual MqttClientActionResult connect() = 0;
+  void ReceivePublish(MqttClientTestContainerPublish &mqtt_publish);
 
   virtual bool StartBackgroundHandler() = 0;
   virtual void StopBackgroundHandler() = 0;
   virtual bool IsBackgroundHandlerRunning() = 0;
 
-  virtual uint64_t connect(MqttClientConnectAction &connect_action) = 0;
+  virtual MqttClientActionResult connect() = 0;
+  virtual MqttClientActionResult connect(MqttClientConnectAction &connect_action) = 0;
   virtual MqttClientActionResult disconnect() = 0;
-  virtual uint64_t publish(MqttClientPublishAction &publish_action) = 0;
   virtual MqttClientActionResult subscribe(MqttClientSubscribeAction &subscribe_action) = 0;
-
+  virtual MqttClientActionResult unsubscribe(MqttClientUnsubscribeAction &unsubscribe_action) = 0;
+  virtual MqttClientActionResult publish(MqttClientPublishAction &publish_action) = 0;
+  virtual MqttClientActionResult publishReceivePublish(MqttClientPublishReceivePublish &publish_receive_publish) = 0;
   // adds a action to the Sequence
   void addAction(MqttClientAction action);
   bool executeSequence();

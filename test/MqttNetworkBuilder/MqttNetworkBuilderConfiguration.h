@@ -6,11 +6,15 @@
 #define CMQTTSNFORWARDER_TEST_MQTTOBJECTBUILDER_MQTTOBJECTBUILDERCONFIGURATION_H_
 
 #include <stdint.h>
-#include <test/MqttBroker/MqttBrokerTestType.h>
 #include <string>
+#include "../MqttBroker/MqttBrokerTestContainerConfiguration.h"
+#include "MqttNetworkMqttClientBuilderConfiguration.h"
+#include "MqttNetworkMqttBrokerBuilderConfiguration.h"
 
-class MqttObjectBuilderConfiguration {
-
+class MqttNetworkBuilderConfiguration {
+ public:
+  const MqttNetworkMqttBrokerBuilderConfiguration mqtt_broker_config;
+  const MqttNetworkMqttClientBuilderConfiguration mqtt_client_config;
   // MQTT-Broker
   /*
   MqttBrokerTestType mqttBrokerTestType;
@@ -52,6 +56,10 @@ class MqttObjectBuilderConfiguration {
   // Mqtt-Sn Forwarder's find gateway strategy (Default=Direct, SearchGw, Advertisement)
   // On Direct: Mqtt-Sn Forwarder's Gateway Address + Mqtt-Sn Forwarder's Multicast Network Address (same as Gateway's)
   // On Other: Mqtt-Sn Forwarder's Multicast Network Address (same as Gateway's)
+ public:
+  MqttNetworkBuilderConfiguration(const MqttNetworkMqttBrokerBuilderConfiguration &mqtt_broker_config,
+                                  const MqttNetworkMqttClientBuilderConfiguration &mqtt_client_config);
+  static const MqttNetworkBuilderConfiguration DefaultConfiguration();
 };
 
 #endif //CMQTTSNFORWARDER_TEST_MQTTOBJECTBUILDER_MQTTOBJECTBUILDERCONFIGURATION_H_

@@ -15,3 +15,13 @@ std::shared_ptr<MqttBrokerTestContainerInterface> MqttBrokerTestContainerFactory
   }
   return nullptr;
 }
+std::shared_ptr<MqttBrokerTestContainerInterface> MqttBrokerTestContainerFactory::getMqttBroker(MqttBrokerTestType mqttBrokerTestType,
+                                                                                                MqttBrokerTestContainerConfiguration mqttBrokerConfiguration) {
+  if (mqttBrokerTestType == MqttBrokerTestType::MOSQUITTO_DOCKER) {
+    return std::make_shared<MqttBrokerMosquittoDockerTestContainer>(mqttBrokerConfiguration);
+  }
+  if (mqttBrokerTestType == MqttBrokerTestType::EXTERNAL) {
+    return std::make_shared<MqttBrokerExternalTestContainer>(mqttBrokerConfiguration);
+  }
+  return nullptr;
+}

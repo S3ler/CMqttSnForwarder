@@ -6,6 +6,7 @@
 #define CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTCONTAINERCONFIGURATION_H_
 
 #include <string>
+#include "MqttBrokerTestType.h"
 
 class MqttBrokerTestContainerConfiguration {
  public:
@@ -15,7 +16,7 @@ class MqttBrokerTestContainerConfiguration {
   MqttBrokerTestContainerConfiguration(const std::string &a_protocol,
                                        const std::string &broker_address,
                                        const uint16_t broker_port);
-  static MqttBrokerTestContainerConfiguration GetDefaultTestContainerConfiguration();
+  static const MqttBrokerTestContainerConfiguration GetDefaultTestContainerConfiguration();
 };
 
 #endif //CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTCONTAINERCONFIGURATION_H_
