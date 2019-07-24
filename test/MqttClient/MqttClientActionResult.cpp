@@ -9,22 +9,10 @@ std::chrono::nanoseconds MqttClientActionResult::timespecToDuration(timespec ts)
   return std::chrono::duration_cast<std::chrono::nanoseconds>(duration);
 }
 
-MqttClientActionResult::MqttClientActionResult(std::string client_id,
-                                               MqttClientActionType action_type,
-                                               uint64_t action_number,
-                                               MqttClientActionResultType action_result,
-                                               const std::chrono::nanoseconds &start,
-                                               const std::chrono::nanoseconds &an_end)
-    : clientId(client_id),
-      action_type(action_type),
-      action_number(action_number),
-      action_result(action_result),
-      start(start),
-      end(an_end) {}
-MqttClientActionResult::MqttClientActionResult(std::string client_id,
-                                               MqttClientActionType action_type,
-                                               uint64_t action_number,
-                                               MqttClientActionResultType action_result,
+MqttClientActionResult::MqttClientActionResult(const std::string client_id,
+                                               const MqttClientActionType action_type,
+                                               const uint64_t action_number,
+                                               const MqttClientActionResultType action_result,
                                                const timespec &start,
                                                const timespec &an_end)
     : clientId(client_id),
@@ -43,4 +31,16 @@ std::ostream &operator<<(std::ostream &os, const MqttClientActionResult &result)
      << "," << (result.end.count() - result.start.count());
   return os;
 }
+MqttClientActionResult::MqttClientActionResult(const std::string &client_id,
+                                               const uint64_t action_number,
+                                               const MqttClientActionType action_type,
+                                               const MqttClientActionResultType action_result,
+                                               const std::chrono::nanoseconds &start,
+                                               const std::chrono::nanoseconds &an_end)
+    : clientId(client_id),
+      action_number(action_number),
+      action_type(action_type),
+      action_result(action_result),
+      start(start),
+      end(an_end) {}
 

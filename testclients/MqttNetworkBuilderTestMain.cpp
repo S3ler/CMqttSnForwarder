@@ -25,7 +25,7 @@ int main() {
   publish_receive_publish_results.reserve(clientCount * rounds);
   disconnect_results.reserve(clientCount * rounds);
 
-  auto builder = std::unique_ptr<MqttNetworkBuilder>(new MqttNetworkBuilder());
+  auto builder = std::make_shared<MqttNetworkBuilder>();
   auto broker = builder->getMqttBroker();
 
   for (int32_t i = 0; i < clientCount; i++) {

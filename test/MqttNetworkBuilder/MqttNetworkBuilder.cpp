@@ -53,3 +53,6 @@ MqttClientConnectAction MqttNetworkBuilder::getMqttClientConfiguration() const {
                                          configuration.mqtt_client_config.cleanSession);
   return connect_action;
 }
+std::shared_ptr<MqttSnNetworkBuilder> MqttNetworkBuilder::getMqttSnNetworkBuilder() {
+  return std::make_shared<MqttSnNetworkBuilder>(this);
+}

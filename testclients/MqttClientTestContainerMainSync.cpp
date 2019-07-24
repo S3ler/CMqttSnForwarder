@@ -7,7 +7,6 @@
 #include <test/MqttClient/MqttClientConnectAction.h>
 #include <test/MqttClient/MqttClientTestContainerInterface.h>
 #include <test/MqttClient/MqttClientTestContainerFactory.h>
-#include <test/MqttClient/MqttClientConnectActionResult.h>
 #include <iostream>
 #include <thread>
 
