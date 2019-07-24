@@ -960,7 +960,7 @@ if (WITH_MQTT_SN_PARSER_TESTING)
             test/MqttClient/MqttClientConnectAction.cpp test/MqttClient/MqttClientConnectAction.h
             test/MqttBroker/MqttBrokerTestContainerConfiguration.cpp test/MqttBroker/MqttBrokerTestContainerConfiguration.h
             test/MqttClient/MqttClientTestContainerFactory.cpp test/MqttClient/MqttClientTestContainerFactory.h
-            test/MqttClient/MqttClientDisconnectAction.cpp test/MqttClient/MqttClientDisconnectAction.h test/MqttClient/MqttClientPublishRecPublishAction.cpp test/MqttClient/MqttClientPublishRecPublishAction.h test/MqttClient/MqttClientReceivePublishAction.cpp test/MqttClient/MqttClientReceivePublishAction.h test/MqttClient/MqttClientConnectActionResult.cpp test/MqttClient/MqttClientConnectActionResult.h test/MqttClient/MqttClientActionResult.cpp test/MqttClient/MqttClientActionResult.h test/MqttClient/MqttClientActionResultType.cpp test/MqttClient/MqttClientActionResultType.h test/MqttClient/MqttClientTestContainerReceiverInterface.h test/MqttClient/MqttClientTestContainerReceiverMock.h test/MqttClient/MqttClientTestContainerPublish.cpp test/MqttClient/MqttClientTestContainerPublish.h test/MqttClient/MqttClientUnsubscribeAction.cpp test/MqttClient/MqttClientUnsubscribeAction.h test/MqttClient/MqttClientPublishReceivePublish.cpp test/MqttClient/MqttClientPublishReceivePublish.h test/MqttClient/MqttClientPahoCppTestContainerReceiver.h)
+            test/MqttClient/MqttClientDisconnectAction.cpp test/MqttClient/MqttClientDisconnectAction.h test/MqttClient/MqttClientPublishRecPublishAction.cpp test/MqttClient/MqttClientPublishRecPublishAction.h test/MqttClient/MqttClientReceivePublishAction.cpp test/MqttClient/MqttClientReceivePublishAction.h test/MqttClient/MqttClientConnectActionResult.cpp test/MqttClient/MqttClientConnectActionResult.h test/MqttClient/MqttClientActionResult.cpp test/MqttClient/MqttClientActionResult.h test/MqttClient/MqttClientActionResultType.cpp test/MqttClient/MqttClientActionResultType.h test/MqttClient/MqttClientTestContainerReceiverInterface.h test/MqttClient/MqttClientTestContainerReceiverMock.h test/MqttClient/MqttClientTestContainerPublish.cpp test/MqttClient/MqttClientTestContainerPublish.h test/MqttClient/MqttClientUnsubscribeAction.cpp test/MqttClient/MqttClientUnsubscribeAction.h test/MqttClient/MqttClientPublishReceivePublish.cpp test/MqttClient/MqttClientPublishReceivePublish.h test/MqttClient/MqttClientPahoCppTestContainerReceiver.h test/MqttClient/MqttClientActionSequence.cpp test/MqttClient/MqttClientActionSequence.h)
     target_include_directories(LibMqttClient PRIVATE .)
     target_link_libraries(LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
             paho-mqtt3c paho-mqtt3a)
@@ -975,7 +975,10 @@ if (WITH_MQTT_SN_PARSER_TESTING)
     target_include_directories(runMqttNetworkBuilderTestMain PRIVATE .)
     target_link_libraries(runMqttNetworkBuilderTestMain LibMqttNetworkObjectBuilder  LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
             paho-mqtt3c paho-mqtt3a)
-
+    add_executable(runMqttNetworkBuilderTestSequenceMain testclients/MqttNetworkBuilderTestSequenceMain.cpp)
+    target_include_directories(runMqttNetworkBuilderTestSequenceMain PRIVATE .)
+    target_link_libraries(runMqttNetworkBuilderTestSequenceMain LibMqttNetworkObjectBuilder  LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
+            paho-mqtt3c paho-mqtt3a)
     add_executable(runMqttSnGatewayComplianceTests
             test/MqttSnGateway/compliance/MqttSnGatewayComplianceTestAction.h
             test/MqttSnGateway/compliance/MqttSnGatewayComplianceConnectTest.cpp test/MqttSnGateway/compliance/MqttSnGatewayComplianceConnectTest.h

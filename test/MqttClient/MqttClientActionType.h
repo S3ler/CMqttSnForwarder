@@ -7,6 +7,6 @@
 #include <iostream>
 enum class MqttClientActionType {
   CONNECT, DISCONNECT, SUBSCRIBE, PUBLISH, UNSUBSCRIBE, PUBLISHRECEIVEPUBLISH
-};
+  };
 std::ostream &operator<<(std::ostream &os, const MqttClientActionType &obj);
 #endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTACTIONTYPE_H_

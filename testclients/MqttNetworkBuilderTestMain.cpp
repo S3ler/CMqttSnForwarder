@@ -7,8 +7,8 @@
 #include <test/MqttNetworkBuilder/MqttNetworkBuilder.h>
 
 int main() {
-  int32_t clientCount = 10;
-  int32_t rounds = 100;
+  int32_t clientCount = 3;
+  int32_t rounds = 3;
   std::vector<std::shared_ptr<MqttClientTestContainerInterface>> clients;
   std::vector<MqttClientActionResult> connect_results;
   std::vector<MqttClientActionResult> subscription_results;
@@ -83,12 +83,20 @@ int main() {
   bool isBackgroundHandlerRunning = true;
   while (isBackgroundHandlerRunning) {
     isBackgroundHandlerRunning = false;
+    int32_t running_clients = 0;
+    int32_t finished_clients = 0;
     for (auto &client : clients) {
       if (client->IsBackgroundHandlerRunning()) {
         isBackgroundHandlerRunning = true;
-        break;
+        running_clients += 1;
+      } else {
+        finished_clients += 1;
       }
     }
+    std::cout << "finished: " << std::to_string(running_clients)
+              << " running: " << std::to_string(finished_clients)
+              << std::endl << std::flush;
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
   }
 
   broker->stop_broker();

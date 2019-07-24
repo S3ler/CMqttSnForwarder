@@ -118,6 +118,7 @@ MqttClientActionResult MqttClientPahoCppClientTestContainer::connect() {
                                 start_ts,
                                 end_ts);
 }
+/*
 MqttClientActionResult MqttClientPahoCppClientTestContainer::connect(MqttClientConnectAction &connect_action) {
   if (!action_completed) {
     throw std::exception();
@@ -139,7 +140,7 @@ MqttClientActionResult MqttClientPahoCppClientTestContainer::connect(MqttClientC
   if (MQTTAsync_connect(client, &conn_opts) != MQTTASYNC_SUCCESS) {
     on_action_finished(MqttClientActionResultType::ERROR);
   }
-  while (!action_completed) { /*TODO remove busy wait by better construct*/ }
+  while (!action_completed) {  }
 
   return MqttClientActionResult(clientId,
                                 connect_action.action_type,
@@ -148,6 +149,7 @@ MqttClientActionResult MqttClientPahoCppClientTestContainer::connect(MqttClientC
                                 start_ts,
                                 end_ts);
 }
+*/
 MqttClientActionResult MqttClientPahoCppClientTestContainer::disconnect() {
   if (!action_completed) {
     throw std::exception();

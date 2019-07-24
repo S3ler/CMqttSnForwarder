@@ -27,6 +27,7 @@ class MqttClientConnectAction : public MqttClientAction {
   //const std::string willTopic;
   //const std::vector<uint8_t> willMessage;
   //const int32_t willQoS;
+  MqttClientConnectAction();
   MqttClientConnectAction(const MqttBrokerTestContainerConfiguration &broker_config,
                           const std::string &client_id,
                           const std::string &client_password,

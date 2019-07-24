@@ -34,3 +34,13 @@ MqttClientConnectAction::MqttClientConnectAction(const MqttBrokerTestContainerCo
       clientPassword(client_password),
       keepAliveInterval(keep_alive_interval),
       cleanSession(clean_session) {}
+
+MqttClientConnectAction::MqttClientConnectAction()
+    : MqttClientAction(MqttClientActionType::CONNECT),
+      protocol("tcp"),
+      brokerAddress("localhost"),
+      brokerPort(1883),
+      clientId(""),
+      clientPassword(""),
+      keepAliveInterval(60),
+      cleanSession(true) {}

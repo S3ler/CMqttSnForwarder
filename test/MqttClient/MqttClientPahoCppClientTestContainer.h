@@ -25,7 +25,6 @@ class MqttClientPahoCppClientTestContainer : public MqttClientTestContainerInter
 
   std::atomic_bool running{false};
   std::atomic_bool stopped{false};
-  std::thread thread;
 
   //std::atomic<MQTTClient_deliveryToken> tk;
 
@@ -47,7 +46,7 @@ class MqttClientPahoCppClientTestContainer : public MqttClientTestContainerInter
   bool IsBackgroundHandlerRunning() override;
 
   MqttClientActionResult connect() override;
-  MqttClientActionResult connect(MqttClientConnectAction &connect_action) override;
+  //MqttClientActionResult connect(MqttClientConnectAction &connect_action) override;
   MqttClientActionResult disconnect() override;
   MqttClientActionResult subscribe(MqttClientSubscribeAction &subscribe_action) override;
   MqttClientActionResult unsubscribe(MqttClientUnsubscribeAction &unsubscribe_action) override;

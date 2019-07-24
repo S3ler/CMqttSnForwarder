@@ -9,7 +9,7 @@
 
 class MqttClientDisconnectAction : public MqttClientAction {
  public:
-  MqttClientDisconnectAction(MqttClientActionType action_type);
+  MqttClientDisconnectAction();
 };
 
 #endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTDISCONNECTACTION_H_

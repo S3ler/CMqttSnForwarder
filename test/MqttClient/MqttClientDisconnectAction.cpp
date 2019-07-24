@@ -3,5 +3,5 @@
 //
 
 #include "MqttClientDisconnectAction.h"
-MqttClientDisconnectAction::MqttClientDisconnectAction(MqttClientActionType action_type)
-    : MqttClientAction(action_type) {}
+MqttClientDisconnectAction::MqttClientDisconnectAction()
+    : MqttClientAction(MqttClientActionType::DISCONNECT) {}
