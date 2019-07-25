@@ -13,11 +13,16 @@ int main() {
   int32_t mqttBrokerCount = 1;
   int32_t mqttClientCount = 1;
   int32_t mqttSnGatewayCount = 1;
-  int32_t mqttsnForwarderCount = 1;
   int32_t mqttSnClientCount = 1;
+  int32_t mqttSnForwarderCount = 1;
+  int32_t mqttSnBehindForwarderClientCount = 1;
   int32_t rounds = 1;
   std::vector<std::shared_ptr<MqttBrokerTestContainerInterface>> mqttBrokers;
   std::vector<std::shared_ptr<MqttClientTestContainerInterface>> mqttClients;
+  std::vector<std::shared_ptr<MqttSnGatewayTestContainerInterface>> mqttSnGateways;
+  std::vector<std::shared_ptr<MqttSnClientTestContainerInterface>> mqttSnClients;
+  std::vector<std::shared_ptr<MqttSnForwarderTestContainerInterface>> mqttSnForwarders;
+  std::vector<std::shared_ptr<MqttSnClientTestContainerInterface>> mqttSnBehindForwarderClients;
 
   auto builder = std::make_shared<MqttNetworkBuilder>();
 
@@ -29,12 +34,27 @@ int main() {
     mqttClients.push_back(builder->getMqttClient());
   }
 
+  auto mqttSnNetworkBuilder = builder->getMqttSnNetworkBuilder();
   for (int32_t i = 0; i < mqttSnGatewayCount; i++) {
-
+    mqttSnGateways.push_back(mqttSnNetworkBuilder->getMqttSnGateway());
   }
 
-  if (!broker->start_broker()) {
-    throw std::exception();
+  for (int32_t i = 0; i < mqttSnClientCount; i++) {
+    mqttSnClients.push_back(mqttSnNetworkBuilder->getMqttSnClient());
+  }
+
+  for (int32_t i = 0; i < mqttSnForwarderCount; i++) {
+    mqttSnForwarders.push_back(mqttSnNetworkBuilder->getMqttSnForwarder());
+  }
+
+  for (int32_t i = 0; i < mqttSnBehindForwarderClientCount; i++) {
+    mqttSnBehindForwarderClients.push_back(mqttSnNetworkBuilder->getMqttSnClient());
+  }
+
+  for (auto &broker : mqttBrokers) {
+    if (!broker->start_broker()) {
+      throw std::exception();
+    }
   }
 
   for (auto &client : mqttClients) {
@@ -86,8 +106,10 @@ int main() {
     }
   }
 
-  broker->stop_broker();
-  while (broker->isRunning()) {}
+  for (auto &broker : mqttBrokers) {
+    broker->stop_broker();
+    while (broker->isRunning()) {}
+  }
 
   std::cout << "end" << std::endl << std::flush;
 

@@ -5,6 +5,7 @@
 #include "MqttNetworkBuilder.h"
 #include "../MqttBroker/MqttBrokerTestContainerFactory.h"
 #include "../MqttClient/MqttClientTestContainerFactory.h"
+
 MqttNetworkBuilder::MqttNetworkBuilder() : configuration(MqttNetworkBuilderConfiguration::DefaultConfiguration()) {}
 MqttNetworkBuilder::MqttNetworkBuilder(const MqttNetworkBuilderConfiguration &configuration)
     : configuration(configuration) {}
