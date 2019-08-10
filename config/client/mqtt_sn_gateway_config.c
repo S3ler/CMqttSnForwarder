@@ -119,4 +119,19 @@ void mqtt_sn_gateway_config_print_usage_long(const MqttSnLogger *logger) {
   log_str(logger, PSTR("      mqttsn(s)://host[:port]\n"));
   log_str(logger, PSTR("      mqttsn(s) uses the same protocol as the gateway network.\n"));
 }
+int32_t mqtt_sn_gateway_config_buffer_copy_to_buffer(mqtt_sn_gateway_config *cfg,
+                                                     mqtt_sn_gateway_config_buffer *cfg_buffer) {
+  if (strlen(cfg->mqtt_sn_gateway_host) + 1 > DEFAULT_MQTT_SN_GATEWAY_CONFIG_GATEWAY_HOST_LENGTH) {
+    return -1;
+  }
+  strcpy(cfg_buffer->mqtt_sn_gateway_host, cfg->mqtt_sn_gateway_host);
+  cfg->mqtt_sn_gateway_host = cfg_buffer->mqtt_sn_gateway_host;
+  return 0;
+}
+int32_t mqtt_sn_gateway_config_buffer_is_copyable_to_buffer(mqtt_sn_gateway_config *cfg) {
+  if (strlen(cfg->mqtt_sn_gateway_host) + 1 > DEFAULT_MQTT_SN_GATEWAY_CONFIG_GATEWAY_HOST_LENGTH) {
+    return 0;
+  }
+  return 1;
+}
 

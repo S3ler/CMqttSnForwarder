@@ -22,7 +22,10 @@ void mqtt_sn_logger_config_cleanup(mqtt_sn_logger_config *cfg) {
 }
 int32_t is_mqtt_sn_logger_config_command(const char *arg, int *i) {
 
-  if (!strcmp(arg, "-lt") || !strcmp(arg, "--log_target")) {
+  if (!strcmp(arg, "-li") || !strcmp(arg, "--log_identifier")) {
+    (*i)++;
+    return 1;
+  } else if (!strcmp(arg, "-lt") || !strcmp(arg, "--log_target")) {
     (*i)++;
     return 1;
   } else if (!strcmp(arg, "-lfp") || !strcmp(arg, "--log_file_path")) {
@@ -122,8 +125,8 @@ void mqtt_sn_logger_config_print_usage_short(const MqttSnLogger *logger, const c
   log_str(logger, PSTR("]\n"));
 }
 void mqtt_sn_logger_config_print_usage_long(const MqttSnLogger *logger) {
-  log_str(logger, PSTR(" -li : specify the log identifier."));
-  log_str(logger, PSTR(" -lt : specify the log target. Can be: console, file. Defaults to "));
+  log_str(logger, PSTR(" -li : specify the log identifier.\n"));
+  log_str(logger, PSTR(" -lt : specify the log target. Can be: console, file, consolefile. Defaults to "));
   log_str(logger, PSTR(MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET));
   log_str(logger, PSTR("\n"));
   log_str(logger, PSTR("     : When using file as log target the logfile path (-lfp) must be set.\n"));
@@ -135,5 +138,30 @@ void mqtt_sn_logger_config_print_usage_long(const MqttSnLogger *logger) {
 #if defined(WITH_DEBUG_LOGGING)
   log_str(logger, PSTR(" -db : specify debug logging. Enables debug log messages.\n"));
 #endif
+}
+int32_t mqtt_sn_logger_config_buffer_copy_to_buffer(mqtt_sn_logger_config *cfg,
+                                                    mqtt_sn_logger_config_buffer *cfg_buffer) {
+  if (cfg->log_target) {
+    if (strlen(cfg->log_target) + 1 > MQTT_SN_LOGGER_CONFIG_BUFFER_LOG_TARGET_LENGTH) {
+      return -1;
+    }
+    strcpy(cfg_buffer->log_target, cfg->log_target);
+    cfg->log_target = cfg_buffer->log_target;
+  }
+  if (cfg->log_file_path) {
+    if (strlen(cfg->log_file_path) + 1 > MQTT_SN_LOGGER_CONFIG_BUFFER_LOG_log_file_path_LENGTH) {
+      return -1;
+    }
+    strcpy(cfg_buffer->log_file_path, cfg->log_file_path);
+    cfg->log_file_path = cfg_buffer->log_file_path;
+  }
+  if (cfg->log_identifier) {
+    if (strlen(cfg->log_identifier) + 1 > MQTT_SN_LOGGER_CONFIG_BUFFER_LOG_log_identifier_LENGTH) {
+      return -1;
+    }
+    strcpy(cfg_buffer->log_identifier, cfg->log_identifier);
+    cfg->log_identifier = cfg_buffer->log_identifier;
+  }
+  return 0;
 }
 

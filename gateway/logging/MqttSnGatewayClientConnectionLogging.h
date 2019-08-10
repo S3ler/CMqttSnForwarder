@@ -53,6 +53,14 @@ int32_t log_client_connection_client_ping_req_received(const MqttSnLogger *logge
                                                        uint16_t connect_duration,
                                                        uint64_t ping_req_received,
                                                        uint64_t ping_resp_received);
+int32_t log_client_connection_client_disconnected(const MqttSnLogger *logger,
+                                               const device_address *wireless_node_id,
+                                               const char *client_id,
+                                               uint16_t connect_duration);
+int32_t log_client_connection_client_asleep(const MqttSnLogger *logger,
+                                                  const device_address *wireless_node_id,
+                                                  const char *client_id,
+                                                  uint16_t connect_duration);
 #ifdef __cplusplus
 }
 #endif

@@ -3,12 +3,12 @@
 //
 
 #include "MqttBrokerTestContainerConfiguration.h"
-MqttBrokerTestContainerConfiguration::MqttBrokerTestContainerConfiguration(const std::string &a_protocol,
-                                                                           const std::string &broker_address,
-                                                                           const uint16_t broker_port)
-    : protocol(a_protocol), brokerAddress(broker_address), brokerPort(broker_port) {}
 const MqttBrokerTestContainerConfiguration MqttBrokerTestContainerConfiguration::GetDefaultTestContainerConfiguration() {
-  return MqttBrokerTestContainerConfiguration(std::string("tcp"),
+  return MqttBrokerTestContainerConfiguration(MqttBrokerProtocolTestType ::TCP,
                                               std::string("localhost"),
                                               1883);
 }
+MqttBrokerTestContainerConfiguration::MqttBrokerTestContainerConfiguration(const MqttBrokerProtocolTestType protocol_type,
+                                                                           const std::string &broker_address,
+                                                                           const uint16_t broker_port) : protocol_type(
+    protocol_type), brokerAddress(broker_address), brokerPort(broker_port) {}

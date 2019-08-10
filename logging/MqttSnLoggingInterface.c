@@ -236,7 +236,9 @@ int32_t get_timestamp_ns(uint64_t *t_s, uint64_t *t_ns) {
   (*t_ns) = spec.tv_nsec;
   return 0;
 }
-
+uint64_t timestamp_s_ns_to_ns(uint64_t t_s, uint64_t t_ns) {
+  return (t_s * (uint64_t) 1000000000) + t_ns;
+}
 int log_current_time(const MqttSnLogger *logger) {
   uintmax_t t;
   if (get_timestamp_s(&t)) {

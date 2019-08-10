@@ -14,7 +14,7 @@ extern "C" {
 
 int32_t log_mqtt_sn_client(const MqttSnLogger* logger, MQTT_SN_CLIENT_RETURN_CODE mqtt_sn_client_return_code);
 int32_t log_mqtt_sn_client_connection_status(const MqttSnLogger *logger,
-                                             bool connection_status,
+                                             uint8_t connection_status,
                                              const device_address *gateway_address);
 
 #ifdef __cplusplus

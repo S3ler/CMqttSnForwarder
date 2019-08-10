@@ -3,4 +3,4 @@
 //
 
 #include "MqttSnClientAction.h"
-MqttSnClientAction::MqttSnClientAction(const MqttSnClientActionType type) : type(type) {}
+MqttSnClientAction::MqttSnClientAction(const MqttSnClientActionType type) : action_type(type) {}

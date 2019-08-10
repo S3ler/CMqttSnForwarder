@@ -5,8 +5,12 @@
 #include <memory>
 #include <vector>
 #include <test/MqttNetworkBuilder/MqttNetworkBuilder.h>
+#include <test/MqttSnClient/MqttSnClientAction.h>
+#include <test/MqttSnClient/MqttSnClientConnectAction.h>
 
 void configureMqttClients(int32_t rounds, const vector<std::shared_ptr<MqttClientTestContainerInterface>> &clients);
+void configureMqttSnClients(int32_t rounds, const vector<std::shared_ptr<MqttSnClientTestContainerInterface>> &clients);
+
 int main() {
   std::cout << "start" << std::endl << std::flush;
 
@@ -44,11 +48,11 @@ int main() {
   }
 
   for (int32_t i = 0; i < mqttSnForwarderCount; i++) {
-    mqttSnForwarders.push_back(mqttSnNetworkBuilder->getMqttSnForwarder());
+    // TODO mqttSnForwarders.push_back(mqttSnNetworkBuilder->getMqttSnForwarder());
   }
 
   for (int32_t i = 0; i < mqttSnBehindForwarderClientCount; i++) {
-    mqttSnBehindForwarderClients.push_back(mqttSnNetworkBuilder->getMqttSnClient());
+    // TODO mqttSnBehindForwarderClients.push_back(mqttSnNetworkBuilder->getMqttSnClient());
   }
 
   for (auto &broker : mqttBrokers) {
@@ -63,12 +67,28 @@ int main() {
     }
   }
 
+  for (auto &gateway : mqttSnGateways) {
+    if (gateway->start()) {
+      throw std::exception();
+    }
+  }
+
+  for (auto &mqtt_sn_client : mqttSnClients) {
+    mqtt_sn_client->StartBackgroundHandler();
+  }
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+
   std::cout << "setup" << std::endl << std::flush;
   configureMqttClients(rounds, mqttClients);
-
+  configureMqttSnClients(rounds, mqttSnClients);
   for (auto &client : mqttClients) {
     client->execActionSequence_async();
   }
+  for (auto &mqtt_sn_client : mqttSnClients) {
+    mqtt_sn_client->execActionSequence_async();
+  }
+
 
   bool IsActionSequenceExecuted = true;
   while (IsActionSequenceExecuted) {
@@ -101,6 +121,23 @@ int main() {
     for (auto &client : mqttClients) {
       if (client->IsBackgroundHandlerRunning()) {
         isBackgroundHandlerRunning = true;
+        break;
+      }
+    }
+  }
+
+
+
+  for (auto &mqtt_sn_gateway : mqttSnGateways) {
+    mqtt_sn_gateway->stop();
+  }
+
+  bool isMqttSnGwRunning = true;
+  while (isMqttSnGwRunning) {
+    isMqttSnGwRunning = false;
+    for (auto &mqtt_sn_gateway : mqttSnGateways) {
+      if (mqtt_sn_gateway->isRunning()) {
+        isMqttSnGwRunning = true;
         break;
       }
     }
@@ -169,5 +206,11 @@ void configureMqttClients(int32_t rounds, const vector<std::shared_ptr<MqttClien
 
   for (auto &client : clients) {
     std::shared_ptr<MqttClientActionSequence> action_sequence = client->generateActionSequence(rounds);
+  }
+}
+void configureMqttSnClients(int32_t rounds, const vector<std::shared_ptr<MqttSnClientTestContainerInterface>> &clients)  {
+  for (auto &client : clients) {
+    auto connect_action = client->configuration.GetConnectAction();
+    // TODO client->addAction(connect_action);
   }
 }

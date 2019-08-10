@@ -34,8 +34,11 @@ char* currentDateTime(void);
 /*=====================================
  Global Variables & Functions
  ======================================*/
+int MQTTSNGW::_globalStopCount = 0;
+int MQTTSNGW::_globalThreadCount = 0;
 Process* MQTTSNGW::theProcess = nullptr;
 MultiTaskProcess* MQTTSNGW::theMultiTaskProcess = nullptr;
+
 
 /*
  *  Save the type of signal
@@ -304,6 +307,7 @@ void MultiTaskProcess::waitStop(void)
 	while (_stopCount < _threadCount)
 	{
 		sleep(1);
+		if(_globalStopCount >= _globalThreadCount){ return; }
 	}
 }
 
@@ -311,6 +315,7 @@ void MultiTaskProcess::threadStoped(void)
 {
 	_mutex.lock();
 	_stopCount++;
+	_globalStopCount++;
 	_mutex.unlock();
 
 }
@@ -322,6 +327,7 @@ void MultiTaskProcess::attach(Thread* thread)
 	{
 		_threadList[_threadCount] = thread;
 		_threadCount++;
+		_globalThreadCount++;
 	}
 	else
 	{

@@ -12,7 +12,7 @@ int32_t print_program_started(const MqttSnLogger *logger,
     return log_status(logger);
   }
 
-  log_msg_start(logger);
+  //log_msg_start(logger);
   log_str(logger, program_name);
   log_str(logger, PSTR(" version "));
   log_str(logger, msvcfg->version);

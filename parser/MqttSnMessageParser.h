@@ -366,7 +366,6 @@ int parse_publish(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len)
 
 int header_parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
-int parse_disconnect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
 uint16_t get_message_length(const uint8_t *data);
 

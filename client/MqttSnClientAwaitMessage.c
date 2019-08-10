@@ -5,6 +5,38 @@
 #include "MqttSnClientAwaitMessage.h"
 #include "MqttSnClient.h"
 
+MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS get_await_status_timeout_ms(MqttSnClient *client,
+                                                                int32_t await_fd,
+                                                                uint64_t start_ts_ms,
+                                                                uint64_t timeout_ms) {
+  MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS await_rc;
+  while ((await_rc = get_await_status(client, await_fd)) == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_AWAIT) {
+    uint64_t current_time = 0;
+    if (get_timestamp_s(&current_time) < 0) {
+      return -1;
+    }
+    if (MqttSnClientLoop(client) < 0) {
+      return MQTT_SN_CLIENT_RETURN_ERROR;
+    }
+    if (timeout_ms > 0) {
+      uint64_t elapsed_time = current_time - start_ts_ms;
+      if (elapsed_time > (uint64_t) timeout_ms / 1000) {
+        break;
+      }
+    } else if (timeout_ms == 0) {
+      break;
+    }
+  }
+  if (await_rc != MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_SUCCESS) {
+    if (await_rc == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_AWAIT) {
+      return MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_TIMEOUT;
+    }
+    return await_rc;
+  }
+  return await_rc;
+
+}
+
 MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS get_await_status(MqttSnClient *client, int32_t await_fd) {
   if (await_fd < 0 || await_fd > MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT - 1) { // maybe use assert instead
     return MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_ERROR;
@@ -56,3 +88,4 @@ int32_t new_await_msg(MqttSnClient *client, MQTT_SN_MESSAGE_TYPE msg_type, uint1
 void MqttSnClientTimeoutOffset(MqttSnClient *client, int32_t connect_timeout_offset) {
   client->connect_timeout_offset = connect_timeout_offset;
 }
+

@@ -10,50 +10,58 @@ MqttNetworkBuilder::MqttNetworkBuilder() : configuration(MqttNetworkBuilderConfi
 MqttNetworkBuilder::MqttNetworkBuilder(const MqttNetworkBuilderConfiguration &configuration)
     : configuration(configuration) {}
 std::shared_ptr<MqttBrokerTestContainerInterface> MqttNetworkBuilder::getMqttBroker() {
-  if (createdMqttBrokers >= configuration.mqtt_broker_config.maxBrokerCount) {
+  if (mqtt_broker_configurations.size() >= configuration.mqtt_broker_config.maxBrokerCount) {
     return nullptr;
   }
-  auto result = MqttBrokerTestContainerFactory::getMqttBroker(configuration.mqtt_broker_config.type,
-                                                              getMqttBrokerConfiguration());
-  createdMqttBrokers += 1;
-  return result;
+  return MqttBrokerTestContainerFactory::getMqttBroker(configuration.mqtt_broker_config.type,
+                                                       getMqttBrokerConfiguration());
 }
-MqttBrokerTestContainerConfiguration MqttNetworkBuilder::getMqttBrokerConfiguration() const {
-  MqttBrokerTestContainerConfiguration broker_cfg(configuration.mqtt_broker_config.protocol,
+MqttBrokerTestContainerConfiguration MqttNetworkBuilder::getMqttBrokerConfiguration() {
+  MqttBrokerTestContainerConfiguration broker_cfg(configuration.mqtt_broker_config.protocol_type,
                                                   configuration.mqtt_broker_config.brokerAddress,
-                                                  configuration.mqtt_broker_config.minBrokerPort + createdMqttBrokers);
+                                                  configuration.mqtt_broker_config.minBrokerPort
+                                                      + mqtt_broker_configurations.size());
+  mqtt_broker_configurations.push_back(broker_cfg);
   return broker_cfg;
 }
 std::shared_ptr<MqttClientTestContainerInterface> MqttNetworkBuilder::getMqttClient() {
-  if (createdMqttBrokers == 0) {
+  if (mqtt_broker_configurations.empty()) {
     return nullptr;
   }
-  if (createdMqttClients >= configuration.mqtt_client_config.maxClientCount) {
+  if (mqtt_client_configurations.size() >= configuration.mqtt_client_config.maxClientCount) {
     return nullptr;
   }
-  auto result = MqttClientTestContainerFactory::getMqttClient(configuration.mqtt_client_config.type,
-                                                              getMqttClientConfiguration());
-  createdMqttClients += 1;
-  return result;
+  return MqttClientTestContainerFactory::getMqttClient(configuration.mqtt_client_config.type,
+                                                       getMqttClientConfiguration());
 }
-MqttClientConnectAction MqttNetworkBuilder::getMqttClientConfiguration() const {
-  auto broker_cfg = getMqttBrokerConfiguration();
+MqttClientTestContainerConfiguration MqttNetworkBuilder::getMqttClientConfiguration() {
+  if (mqtt_broker_configurations.empty()) {
+    throw std::exception();
+  }
+  MqttBrokerTestContainerConfiguration broker_cfg = mqtt_broker_configurations.back();
   std::string clientPassword;
   if (configuration.mqtt_client_config.baseClientPassword.length() > 0) {
-    clientPassword = configuration.mqtt_client_config.baseClientPassword + std::to_string(createdMqttClients);
+    clientPassword = configuration.mqtt_client_config.baseClientPassword
+        + std::to_string(mqtt_client_configurations.size());
   } else {
     clientPassword = std::string("");
   }
-  MqttClientConnectAction connect_action(broker_cfg.protocol,
-                                         broker_cfg.brokerAddress,
-                                         broker_cfg.brokerPort - 1,
-                                         configuration.mqtt_client_config.baseClientId
-                                             + std::to_string(createdMqttClients),
-                                         clientPassword,
-                                         configuration.mqtt_client_config.keepAliveInterval,
-                                         configuration.mqtt_client_config.cleanSession);
-  return connect_action;
+
+  MqttClientTestContainerConfiguration mqtt_config(broker_cfg,
+                                                   configuration.mqtt_client_config.baseClientId
+                                                       + std::to_string(mqtt_client_configurations.size()),
+                                                   clientPassword,
+                                                   configuration.mqtt_client_config.keepAliveInterval,
+                                                   configuration.mqtt_client_config.cleanSession);
+  mqtt_client_configurations.push_back(mqtt_config);
+  return mqtt_config;
 }
 std::shared_ptr<MqttSnNetworkBuilder> MqttNetworkBuilder::getMqttSnNetworkBuilder() {
   return std::make_shared<MqttSnNetworkBuilder>(this);
+}
+const std::vector<MqttBrokerTestContainerConfiguration> &MqttNetworkBuilder::GetMqttBrokerConfigurations() const {
+  return mqtt_broker_configurations;
+}
+const std::vector<MqttClientTestContainerConfiguration> &MqttNetworkBuilder::GetMqttClientConfigurations() const {
+  return mqtt_client_configurations;
 }

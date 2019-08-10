@@ -25,7 +25,7 @@ class MqttClientTestContainerInterface {
   MqttClientTestContainerReceiverInterface *receiver_interface = nullptr;
  public:
   MqttClientConnectAction initial_connect_action;
-  MqttClientTestContainerInterface(const MqttClientConnectAction &initial_connect_action);
+  MqttClientTestContainerInterface(const MqttClientTestContainerConfiguration &configuration);
   void SetReceiverInterface(MqttClientTestContainerReceiverInterface *receiver_interface);
   void ReceivePublish(MqttClientTestContainerPublish &mqtt_publish);
 

@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <logging/MqttSnLoggingInterface.h>
 #include <stdlib.h>
+#include <parser/MqttSnMessageParser.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -51,6 +52,23 @@ typedef struct client_connect_config_ {
   int32_t client_connect_timeout_ms;
   int32_t connect_timeout_offset;
 } client_connect_config;
+
+#ifndef DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_CLIENT_IT_LENGTH
+#define DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_CLIENT_IT_LENGTH  MQTT_SN_MAX_CLIENT_ID_LENGTH
+#endif
+#ifndef DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_WILL_TOPIC_LENGTH
+#define DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_WILL_TOPIC_LENGTH UINT16_MAX
+#endif
+#ifndef DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_WILL_MSG_LENGTH
+#define DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_WILL_MSG_LENGTH UINT16_MAX
+#endif
+typedef struct client_connect_config_buffer_ {
+  char client_id[DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_CLIENT_IT_LENGTH];
+  char will_topic[DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_WILL_TOPIC_LENGTH];
+  char will_msg[DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_WILL_MSG_LENGTH];
+} client_connect_config_buffer;
+
+int32_t client_connect_config_copy_to_buffer(client_connect_config* cfg, client_connect_config_buffer* cfg_buffer);
 
 int32_t client_connect_config_init(client_connect_config *cfg);
 void client_connect_config_cleanup(client_connect_config *cfg);

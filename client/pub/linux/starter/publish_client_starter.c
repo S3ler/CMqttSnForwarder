@@ -80,7 +80,8 @@ int32_t start_publish_client(const publish_client_config *cfg,
     }
   }
 
-  if (only_M1_publishes && cfg->cpcfg.default_qos == -1 && cfg->cpcfg.console_in) {
+  /*
+  if (only_M1_publishes && cfg->cpcfg.qos == -1 && cfg->cpcfg.console_in) {
     if (cfg->cpcfg.console_in == 1) {
       // ony one message
       // TODO
@@ -99,7 +100,7 @@ int32_t start_publish_client(const publish_client_config *cfg,
 #endif
     return EXIT_SUCCESS;
   }
-
+  */
   if (only_M1_publishes) {
     return send_single_mqtt_sn_m1_publish(publish_client, cfg);
   }
@@ -107,12 +108,12 @@ int32_t start_publish_client(const publish_client_config *cfg,
 
   MQTT_SN_CLIENT_RETURN_CODE connect_rc;
   MqttSnClientTimeoutOffset(publish_client, cfg->cccfg.connect_timeout_offset);
-  if ((connect_rc = MqttSnClientConnect(publish_client,
-                                         publish_client->gatewayNetwork.mqtt_sn_gateway_address,
-                                         cfg->cccfg.client_connect_timeout_ms,
-                                         cfg->cccfg.clean_session,
-                                         cfg->cccfg.client_id,
-                                         cfg->cccfg.connect_duration)) != MQTT_SN_CLIENT_RETURN_SUCCESS) {
+  if ((connect_rc = MqttSnClientDirectConnect(publish_client,
+                                              publish_client->gatewayNetwork.mqtt_sn_gateway_address,
+                                              cfg->cccfg.client_connect_timeout_ms,
+                                              cfg->cccfg.clean_session,
+                                              cfg->cccfg.client_id,
+                                              cfg->cccfg.connect_duration)) != MQTT_SN_CLIENT_RETURN_SUCCESS) {
 
     log_mqtt_sn_client(&publish_client->logger, connect_rc);
     // TODO log error here

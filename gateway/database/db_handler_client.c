@@ -384,6 +384,14 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_id(db_handler *h, char *client_id) 
 
   return h->client_transaction_result;
 }
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_connect_duration(db_handler *h, uint16_t connect_duration) {
+  assert(h->client_transaction_started);
+  DB_HANDLER_CK__CLIENT_DB_ERROR(h)
+
+  h->_entry_client.connect_duration = connect_duration;
+
+  return h->client_transaction_result;
+}
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_connect_duration(db_handler *h, uint16_t *connect_duration) {
   assert(h->client_transaction_started);
   DB_HANDLER_CK__CLIENT_DB_ERROR(h)
@@ -392,7 +400,6 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_connect_duration(db_handler *h, uin
 
   return h->client_transaction_result;
 }
-
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_status(db_handler *h, DB_ENTRY_MQTT_SN_CLIENT_STATUS *client_status) {
   assert(h->client_transaction_started);
   DB_HANDLER_CK__CLIENT_DB_ERROR(h)

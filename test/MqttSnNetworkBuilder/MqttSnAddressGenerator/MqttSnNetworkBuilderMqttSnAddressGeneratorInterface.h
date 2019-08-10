@@ -1,0 +1,17 @@
+//
+// Created by SomeDude on 31.07.2019.
+//
+
+#ifndef CMQTTSNFORWARDER_TEST_MQTTSNNETWORKBUILDER_MQTTSNNETWORKBUILDERMQTTSNADDRESSGENERATORINTERFACE_H_
+#define CMQTTSNFORWARDER_TEST_MQTTSNNETWORKBUILDER_MQTTSNNETWORKBUILDERMQTTSNADDRESSGENERATORINTERFACE_H_
+
+#include <stdint.h>
+#include <vector>
+
+class MqttSnNetworkBuilderMqttSnAddressGeneratorInterface {
+ public:
+  virtual const std::vector<uint8_t> GetMqttSnInterfaceAddress() = 0;
+  virtual const std::vector<uint8_t> GetMqttSnBroadcastAddress() = 0;
+};
+
+#endif //CMQTTSNFORWARDER_TEST_MQTTSNNETWORKBUILDER_MQTTSNNETWORKBUILDERMQTTSNADDRESSGENERATORINTERFACE_H_

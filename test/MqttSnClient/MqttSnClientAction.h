@@ -8,7 +8,7 @@
 #include "MqttSnClientActionType.h"
 class MqttSnClientAction {
  public:
-  const MqttSnClientActionType type;
+  const MqttSnClientActionType action_type;
   MqttSnClientAction(const MqttSnClientActionType type);
 };
 

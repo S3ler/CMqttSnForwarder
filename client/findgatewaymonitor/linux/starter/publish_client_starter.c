@@ -80,11 +80,11 @@ void *publish_client_thread_function(void *ptr) {
   MqttSnFindGatewayClient *client = ((FindGatewayMonitor_cfg_ptr *) ptr)->c_ptr;
   const find_gateway_monitor_config *cfg = ((FindGatewayMonitor_cfg_ptr *) ptr)->cfg_ptr;
   if (cfg->cfmqsgcfg.find_pattern_type == ADVERTISMENT_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE) {
-    MqttSnClientAwaitAdvertise(client, cfg->cfmqsgcfg.advertise_wait_timeout, NULL, find_gateway_monitor_adv_cb);
+    MqttSnClientAwaitAdvertise(client, cfg->cfmqsgcfg.advertise_wait_timeout_s, NULL, find_gateway_monitor_adv_cb);
   } else if (cfg->cfmqsgcfg.find_pattern_type == ANY_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE
       || cfg->cfmqsgcfg.find_pattern_type == SEARCH_GW_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE) {
     MqttSnClientSearchGw(client,
-                         cfg->cfmqsgcfg.search_gateway_wait_timeout,
+                         cfg->cfmqsgcfg.search_gateway_wait_timeout_ms,
                          cfg->cfmqsgcfg.search_gateway_radius,
                          NULL,
                          find_gateway_monitor_gwinfo_cb,

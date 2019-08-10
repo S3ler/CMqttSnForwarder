@@ -5,9 +5,9 @@
 #include "MqttNetworkBuilderConfiguration.h"
 
 const MqttNetworkBuilderConfiguration MqttNetworkBuilderConfiguration::DefaultConfiguration() {
-  return MqttNetworkBuilderConfiguration(MqttNetworkMqttBrokerBuilderConfiguration::GetDefaultConfiguration(),
-                                         MqttNetworkMqttClientBuilderConfiguration::GetDefaultConfiguration());
+  return MqttNetworkBuilderConfiguration(MqttNetworkBuilderMqttBrokerBuilderConfiguration::GetDefaultConfiguration(),
+                                         MqttNetworkBuilderMqttClientBuilderConfiguration::GetDefaultConfiguration());
 }
-MqttNetworkBuilderConfiguration::MqttNetworkBuilderConfiguration(const MqttNetworkMqttBrokerBuilderConfiguration &mqtt_broker_config,
-                                                                 const MqttNetworkMqttClientBuilderConfiguration &mqtt_client_config)
+MqttNetworkBuilderConfiguration::MqttNetworkBuilderConfiguration(const MqttNetworkBuilderMqttBrokerBuilderConfiguration &mqtt_broker_config,
+                                                                 const MqttNetworkBuilderMqttClientBuilderConfiguration &mqtt_client_config)
     : mqtt_broker_config(mqtt_broker_config), mqtt_client_config(mqtt_client_config) {}

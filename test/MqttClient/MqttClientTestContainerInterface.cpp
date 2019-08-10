@@ -6,8 +6,8 @@
 #include "../MqttClientMessageTester/MqttTestMessageReceiverInterface.h"
 #include <algorithm>
 
-MqttClientTestContainerInterface::MqttClientTestContainerInterface(const MqttClientConnectAction &initial_connect_action)
-    : initial_connect_action(initial_connect_action),
+MqttClientTestContainerInterface::MqttClientTestContainerInterface(const MqttClientTestContainerConfiguration &configuration)
+    : initial_connect_action(configuration),
       sequence(std::make_shared<std::vector<std::unique_ptr<MqttClientAction>>>()) {
 }
 void MqttClientTestContainerInterface::SetReceiverInterface(MqttClientTestContainerReceiverInterface *receiver_interface) {

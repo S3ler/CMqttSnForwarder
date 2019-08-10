@@ -8,13 +8,13 @@
 #include <stdint.h>
 #include <string>
 #include "../MqttBroker/MqttBrokerTestContainerConfiguration.h"
-#include "MqttNetworkMqttClientBuilderConfiguration.h"
-#include "MqttNetworkMqttBrokerBuilderConfiguration.h"
+#include "MqttNetworkBuilderMqttClientBuilderConfiguration.h"
+#include "MqttNetworkBuilderMqttBrokerBuilderConfiguration.h"
 
 class MqttNetworkBuilderConfiguration {
  public:
-  const MqttNetworkMqttBrokerBuilderConfiguration mqtt_broker_config;
-  const MqttNetworkMqttClientBuilderConfiguration mqtt_client_config;
+  const MqttNetworkBuilderMqttBrokerBuilderConfiguration mqtt_broker_config;
+  const MqttNetworkBuilderMqttClientBuilderConfiguration mqtt_client_config;
   // MQTT-Broker
   /*
   MqttBrokerTestType mqttBrokerTestType;
@@ -57,8 +57,8 @@ class MqttNetworkBuilderConfiguration {
   // On Direct: Mqtt-Sn Forwarder's Gateway Address + Mqtt-Sn Forwarder's Multicast Network Address (same as Gateway's)
   // On Other: Mqtt-Sn Forwarder's Multicast Network Address (same as Gateway's)
  public:
-  MqttNetworkBuilderConfiguration(const MqttNetworkMqttBrokerBuilderConfiguration &mqtt_broker_config,
-                                  const MqttNetworkMqttClientBuilderConfiguration &mqtt_client_config);
+  MqttNetworkBuilderConfiguration(const MqttNetworkBuilderMqttBrokerBuilderConfiguration &mqtt_broker_config,
+                                  const MqttNetworkBuilderMqttClientBuilderConfiguration &mqtt_client_config);
   static const MqttNetworkBuilderConfiguration DefaultConfiguration();
 };
 

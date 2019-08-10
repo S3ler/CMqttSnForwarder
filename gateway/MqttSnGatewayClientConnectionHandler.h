@@ -26,7 +26,7 @@ typedef struct MqttSnGatewayClientConnectionHandler_ {
   uint64_t client_connection_timeout_check_period;
   int32_t client_connection_timeout_offset;
 
-  MqttSnLogger* logger;
+  MqttSnLogger *logger;
 } MqttSnGatewayClientConnectionHandler;
 
 int32_t init_client_connection_handler(MqttSnGatewayClientConnectionHandler *handler,
@@ -42,6 +42,15 @@ int32_t parse_and_handle_connect(MqttSnGatewayClientConnectionHandler *handler,
                                  MqttSnMessageData *msg,
                                  int32_t parsed_bytes,
                                  MqttSnGatewayForwarder *forwarders);
+int32_t parse_and_handle_disconnect(MqttSnGatewayClientConnectionHandler *handler,
+                                    MqttSnMessageData *msg,
+                                    int32_t parsed_bytes,
+                                    MqttSnGatewayForwarder *forwarders);
+int32_t parse_and_handle_disconnect_duration(MqttSnGatewayClientConnectionHandler *handler,
+                                             MqttSnMessageData *msg,
+                                             int32_t parsed_bytes,
+                                             MqttSnGatewayForwarder *forwarders);
+
 int32_t parse_and_handle_ping_req(MqttSnGatewayClientConnectionHandler *handler,
                                   MqttSnMessageData *msg,
                                   int32_t parsed_bytes,
@@ -50,7 +59,9 @@ int32_t parse_and_handle_ping_resp(MqttSnGatewayClientConnectionHandler *handler
                                    MqttSnMessageData *msg,
                                    int32_t parsed_bytes,
                                    MqttSnGatewayForwarder *forwarders);
-int32_t remove_client_subscriptions(MqttSnGatewayClientConnectionHandler *gateway, const char *handler, device_address *client_address);
+int32_t remove_client_subscriptions(MqttSnGatewayClientConnectionHandler *gateway,
+                                    const char *handler,
+                                    device_address *client_address);
 
 #ifdef __cplusplus
 }

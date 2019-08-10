@@ -2,14 +2,14 @@
 // Created by SomeDude on 23.07.2019.
 //
 
-#ifndef CMQTTSNFORWARDER_TEST_MQTTNETWORKBUILDER_MQTTNETWORKMQTTCLIENTBUILDERCONFIGURATION_H_
-#define CMQTTSNFORWARDER_TEST_MQTTNETWORKBUILDER_MQTTNETWORKMQTTCLIENTBUILDERCONFIGURATION_H_
+#ifndef CMQTTSNFORWARDER_TEST_MQTTNETWORKBUILDER_MQTTNETWORKBUILDERMQTTCLIENTBUILDERCONFIGURATION_H_
+#define CMQTTSNFORWARDER_TEST_MQTTNETWORKBUILDER_MQTTNETWORKBUILDERMQTTCLIENTBUILDERCONFIGURATION_H_
 
 #include <stdint.h>
 #include <string>
 #include "../MqttClient/MqttClientTestType.h"
 
-class MqttNetworkMqttClientBuilderConfiguration {
+class MqttNetworkBuilderMqttClientBuilderConfiguration {
  public:
   const MqttClientTestType type;
   const int32_t maxClientCount;
@@ -25,13 +25,13 @@ class MqttNetworkMqttClientBuilderConfiguration {
   //const std::vector<uint8_t> baseWillMessage;
   //const int32_t willQoS;
 
-  MqttNetworkMqttClientBuilderConfiguration(const MqttClientTestType &type,
+  MqttNetworkBuilderMqttClientBuilderConfiguration(const MqttClientTestType &type,
                                             const int32_t max_client_count,
                                             const std::string &base_client_id,
                                             const std::string &base_client_password,
                                             const int32_t keep_alive_interval,
                                             const bool clean_session);
-  static const MqttNetworkMqttClientBuilderConfiguration GetDefaultConfiguration();
+  static const MqttNetworkBuilderMqttClientBuilderConfiguration GetDefaultConfiguration();
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTNETWORKBUILDER_MQTTNETWORKMQTTCLIENTBUILDERCONFIGURATION_H_
+#endif //CMQTTSNFORWARDER_TEST_MQTTNETWORKBUILDER_MQTTNETWORKBUILDERMQTTCLIENTBUILDERCONFIGURATION_H_

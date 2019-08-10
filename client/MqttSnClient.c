@@ -14,7 +14,10 @@
 #include <parser/MqttSnConnackMessage.h>
 #include <parser/MqttSnPingReqMessage.h>
 #include <parser/MqttSnPingRespMessage.h>
+#include <parser/MqttSnSearchGwMessage.h>
+#include <parser/MqttSnDisconnectMessage.h>
 
+int32_t parse_and_handle_disconnect(MqttSnClient *client, MqttSnMessageData *msg);
 int32_t parse_and_handle_connack(MqttSnClient *client, MqttSnMessageData *msg);
 int32_t handle_client_connection(MqttSnClient *client);
 int32_t client_parse_and_handle_ping_resp(MqttSnClient *client, MqttSnMessageData *msg);
@@ -37,7 +40,6 @@ int32_t MqttSnClientInit(MqttSnClient *client, const MqttSnLogger *logger, void 
   client->logger = (*logger);
   client->gatewayNetwork.logger = &client->logger;
 
-
   client->gatewayNetworkContext = gatewayNetworkContext;
 
   if (GatewayNetworkConnect(&client->gatewayNetwork, client->gatewayNetworkContext) != 0) {
@@ -52,11 +54,13 @@ int32_t MqttSnClientInit(MqttSnClient *client, const MqttSnLogger *logger, void 
   client->ping_req_await_msg.msg_type = ANY_MESSAGE_TYPE;
   client->ping_req_await_msg.msg_id = 0;
 
+  client->adv_cb = global_mqtt_sn_client_adv_cb;
+  client->gwinfo_cb = global_mqtt_sn_client_gwinfo_cb;
   return 0;
 }
 int32_t MqttSnClientDeinit(MqttSnClient *client) {
   GatewayNetworkDisconnect(&client->gatewayNetwork, client->gatewayNetworkContext);
-  GatewayNetworkDeinitialize(&client->gatewayNetwork, client->gatewayNetworkContext);
+  client->status = 0;
   return 0;
 }
 int32_t MqttSnClientLoop(MqttSnClient *client) {
@@ -77,8 +81,11 @@ int32_t MqttSnClientLoop(MqttSnClient *client) {
                                                   client->gatewayNetworkContext)) < 0) {
     return -1;
   }
+  if (msg_data_length == 0) {
+    return 0;
+  }
   msg.data_length = msg_data_length;
-  if (memcmp(&msg.from, client->gatewayNetwork.mqtt_sn_gateway_address, sizeof(device_address)) != 0) {
+  if (memcmp(&msg.from, &client->mqtt_sn_gateway_address, sizeof(device_address)) != 0) {
     // TODO parse only advertise and search gw and gw info
     // message is not from gateway
     return 0;
@@ -88,19 +95,32 @@ int32_t MqttSnClientLoop(MqttSnClient *client) {
   if (parse_header(&header, ANY_MESSAGE_TYPE, msg.data, msg.data_length, &parsed_bytes) < 0) {
     return 0;
   }
-  switch (header.msg_type) {
-    case PINGRESP: return client_parse_and_handle_ping_resp(client, &msg);
-    case PINGREQ: return client_parse_and_handle_ping_req(client, &msg);
-      break;
-    case ADVERTISE:
-      // TODO update observed gateway
-      break;
-    case CONNACK:return parse_and_handle_connack(client, &msg);
-      break;
-    default:
-      // TODO log unknown message
-      break;
+  if (!client->connected) {
+    switch (header.msg_type) {
+      case PINGRESP: break; // TODO log ping resp ignored
+      case PINGREQ: break;// TODO log pingrequest ignored
+      case ADVERTISE:return parse_and_handle_advertise(client, &msg);// TODO update and maintain observed gateway
+      case GWINFO:return parse_and_handle_gwinfo(client, &msg);// TODO update and maintain observed gateway
+      case CONNACK:return parse_and_handle_connack(client, &msg);
+      case DISCONNECT:return parse_and_handle_disconnect(client, &msg);
+      default:
+        // TODO log unknown message
+        break;
+    }
+  } else {
+    switch (header.msg_type) {
+      case PINGRESP: return client_parse_and_handle_ping_resp(client, &msg);
+      case PINGREQ: return client_parse_and_handle_ping_req(client, &msg);
+      case ADVERTISE:return parse_and_handle_advertise(client, &msg);// TODO update and maintain observed gateway
+      case GWINFO:return parse_and_handle_gwinfo(client, &msg);// TODO update and maintain observed gateway
+      case CONNACK:return parse_and_handle_connack(client, &msg);
+      case DISCONNECT:return parse_and_handle_disconnect(client, &msg);
+      default:
+        // TODO log unknown message
+        break;
+    }
   }
+
   return 0;
 }
 int32_t client_parse_and_handle_ping_resp(MqttSnClient *client, MqttSnMessageData *msg) {
@@ -142,7 +162,7 @@ int32_t client_parse_and_handle_ping_resp(MqttSnClient *client, MqttSnMessageDat
 }
 int32_t send_to_gateway(MqttSnClient *client, const uint8_t *msg_data, int32_t gen_rc) {
   int32_t send_rc = GatewayNetworkSendTo(&client->gatewayNetwork,
-                                         client->gatewayNetwork.mqtt_sn_gateway_address,
+                                         &client->mqtt_sn_gateway_address,
                                          msg_data,
                                          gen_rc,
                                          client->default_signal_strength,
@@ -282,6 +302,73 @@ int32_t client_parse_and_handle_ping_req(MqttSnClient *client, MqttSnMessageData
   return 0;
 
 }
+int32_t parse_and_handle_disconnect(MqttSnClient *client, MqttSnMessageData *msg) {
+  int32_t await_fd;
+  if ((await_fd = is_await_msg(client, DISCONNECT, 0)) < 0) {
+    // out of order disconnect
+    client->connected = false;
+    // TODO log
+    return 0;
+  }
+  // awaited disconnect
+  client->connected = false;
+  if (free_await_msg(client, await_fd) < 0) {
+    return -1;
+  }
+  return 0;
+}
+int32_t parse_and_handle_advertise(MqttSnClient *client, MqttSnMessageData *msg) {
+  MqttSnAdvertise mqtt_sn_advertise = {0};
+  if (parse_advertise(&mqtt_sn_advertise, msg->data, msg->data_length) < 0) {
+    return 0;
+  }
+  MqttSnClientReceivedAdvertise received_advertise = {
+      .received_advertise = mqtt_sn_advertise,
+      .from = msg->from,
+      .signal_strength = msg->signal_strength
+  };
+
+  int32_t await_fd;
+  if ((await_fd = is_await_msg(client, ADVERTISE, 0)) < 0) {
+    if (client->adv_cb(client, &received_advertise, NULL) < 0) {
+      return -1;
+    }
+  } else {
+    if (client->adv_cb(client, &received_advertise, client->adv_cb_context) < 0) {
+      return -1;
+    }
+    if (free_await_msg(client, await_fd) < 0) {
+      return -1;
+    }
+  }
+}
+int32_t parse_and_handle_gwinfo(MqttSnClient *client, MqttSnMessageData *msg) {
+
+  MqttSnGwInfo mqtt_sn_gwinfo = {0};
+  if (parse_gwinfo(&mqtt_sn_gwinfo, msg->data, msg->data_length) < 0) {
+    return 0;
+  }
+  MqttSnClientReceivedGwInfo received_gw_info = {
+      .received_gw_info = mqtt_sn_gwinfo,
+      .from = msg->from,
+      .signal_strength = msg->signal_strength
+  };
+
+  int32_t await_fd;
+  if ((await_fd = is_await_msg(client, GWINFO, 0)) < 0) {
+    if (client->gwinfo_cb(client, &received_gw_info, NULL) < 0) {
+      return -1;
+    }
+  } else {
+    if (client->gwinfo_cb(client, &received_gw_info, client->gwinfo_cb_context) < 0) {
+      return -1;
+    }
+    if (free_await_msg(client, await_fd) < 0) {
+      return -1;
+    }
+  }
+  return 0;
+}
 
 int32_t MqttSnClientSubscribe(MqttSnClient *client,
                               const char *topic_name,
@@ -319,15 +406,26 @@ int32_t MqttSnClientPublishPredefinedM1(MqttSnClient *client,
   return send_rc;
 }
 
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientConnect(MqttSnClient *client,
-                                               device_address *mqtt_sn_gateway_address,
-                                               int32_t connect_timeout_ms,
-                                               bool clean_session,
-                                               const char *client_id,
-                                               uint16_t connect_duration) {
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientDirectConnect(MqttSnClient *client,
+                                                     device_address *mqtt_sn_gateway_address,
+                                                     int32_t connect_timeout_ms,
+                                                     uint8_t clean_session,
+                                                     const char *client_id,
+                                                     uint16_t connect_duration) {
+  client->mqtt_sn_gateway_address = (*mqtt_sn_gateway_address);
+  client->gatewayNetwork.mqtt_sn_gateway_address = &client->mqtt_sn_gateway_address;
+
+  int32_t client_id_len;
+  if ((client_id_len = MqttSnClientSafeStrlen(client_id, MQTT_SN_MAX_CLIENT_ID_LENGTH)) < 0) {
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+  strncpy(client->client_id_str, client_id, client_id_len);
+
+  /*
   if (memcmp(mqtt_sn_gateway_address, client->gatewayNetwork.mqtt_sn_gateway_address, sizeof(device_address)) != 0) {
     client->gatewayNetwork.mqtt_sn_gateway_address = mqtt_sn_gateway_address;
   }
+  */
   client->connect_duration = connect_duration;
 
   uint8_t msg_data[MQTT_SN_MESSAGE_CONNECT_MAX_LENGTH] = {0};
@@ -406,4 +504,226 @@ MQTT_SN_CLIENT_RETURN_CODE MqttSnClientConnect(MqttSnClient *client,
   }
   return MQTT_SN_CLIENT_RETURN_ERROR;
 }
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientAwaitAdvertise(MqttSnClient *client,
+                                                      int32_t timeout_s,
+                                                      MqttSnClientReceivedAdvertise *dst_advertise) {
+  int32_t await_fd = -1;
+  while ((await_fd = new_await_msg(client, ADVERTISE, 0)) < 0) {
+    if (MqttSnClientLoop(client) < 0) {
+      return MQTT_SN_CLIENT_RETURN_ERROR;
+    }
+  }
+
+  client->adv_cb_context = dst_advertise;
+  uint64_t start_ts = 0;
+  if (get_timestamp_s(&start_ts) < 0) {
+    client->adv_cb_context = NULL;
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+  int32_t random_ts = 5000; // TODO get random
+
+  MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS await_rc = get_await_status_timeout_ms(client, await_fd, start_ts, random_ts);
+
+  if (await_rc == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_TIMEOUT) {
+    client->adv_cb_context = NULL;
+    return MQTT_SN_CLIENT_RETURN_TIMEOUT;
+  }
+  if (await_rc == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_ERROR) {
+    client->adv_cb_context = NULL;
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+  client->adv_cb_context = NULL;
+  return MQTT_SN_CLIENT_RETURN_SUCCESS;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientAwaitAdvertiseCallback(MqttSnClient *client,
+                                                              int32_t timeout_s,
+                                                              void *context,
+                                                              int32_t (*adv_cb)(const MqttSnClient *,
+                                                                                const MqttSnClientReceivedAdvertise *,
+                                                                                void *)) {
+  // TODO implement me
+  return MQTT_SN_CLIENT_RETURN_ERROR;
+}
+int32_t global_mqtt_sn_client_gwinfo_cb(MqttSnClient *client,
+                                        MqttSnClientReceivedGwInfo *rec_gw_info,
+                                        void *context) {
+  if (context == NULL) {
+    // TODO MqttSnCLientUpdateGateway(client,rec_gw_info);
+    return 0;
+  }
+  MqttSnClientReceivedGwInfo *dst_gwinfo = (MqttSnClientReceivedGwInfo *) context;
+  (*dst_gwinfo) = (*rec_gw_info);
+  return 0;
+}
+int32_t global_mqtt_sn_client_adv_cb(MqttSnClient *client,
+                                     MqttSnClientReceivedAdvertise *rec_advertise,
+                                     void *context) {
+  if (context == NULL) {
+    // TODO MqttSnCLientUpdateGateway(client,rec_gw_info);
+    return 0;
+  }
+  MqttSnClientReceivedAdvertise *dst_advertise = (MqttSnClientReceivedAdvertise *) context;
+  (*dst_advertise) = (*rec_advertise);
+  return 0;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSearchGw(MqttSnClient *client,
+                                                int32_t timeout_ms,
+                                                uint8_t radius,
+                                                MqttSnClientReceivedGwInfo *dst_gwinfo) {
+  // wait random time - if now gw info received send searchgw - then wait until timeout_ms
+  int32_t await_fd = -1;
+  while ((await_fd = new_await_msg(client, GWINFO, 0)) < 0) {
+    if (MqttSnClientLoop(client) < 0) {
+      return MQTT_SN_CLIENT_RETURN_ERROR;
+    }
+  }
+
+  client->gwinfo_cb_context = dst_gwinfo;
+  uint64_t start_ts = 0;
+  if (get_timestamp_s(&start_ts) < 0) {
+    return -1;
+  }
+  int32_t random_ts = 5000; // TODO get random
+
+  MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS await_rc = get_await_status_timeout_ms(client, await_fd, start_ts, random_ts);
+  if (await_rc == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_SUCCESS) {
+    client->gwinfo_cb_context = NULL;
+    return MQTT_SN_CLIENT_RETURN_SUCCESS;
+  }
+  if (await_rc == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_ERROR) {
+    client->gwinfo_cb_context = NULL;
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+
+  while ((await_fd = new_await_msg(client, GWINFO, 0)) < 0) {
+    if (MqttSnClientLoop(client) < 0) {
+      return MQTT_SN_CLIENT_RETURN_ERROR;
+    }
+  }
+  uint8_t msg_data[MQTT_SN_MESSAGE_SEARCHGW_LENGTH] = {0};
+  int32_t gen_rc = generate_searchgw_message(msg_data, sizeof(msg_data), radius);
+  if (gen_rc < 0) {
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+  client->gwinfo_cb_context = dst_gwinfo;
+  uint64_t send_time = 0;
+  if (get_timestamp_s(&send_time) < 0) {
+    return -1;
+  }
+  int32_t send_rc = send_to_gateway(client, msg_data, gen_rc);
+  if (send_rc < 0 || send_rc != gen_rc) {
+    client->gwinfo_cb_context = NULL;
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+
+  await_rc = get_await_status_timeout_ms(client, await_fd, start_ts, timeout_ms);
+
+  if (await_rc == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_TIMEOUT) {
+    client->gwinfo_cb_context = NULL;
+    return MQTT_SN_CLIENT_RETURN_TIMEOUT;
+  }
+  if (await_rc == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_ERROR) {
+    client->gwinfo_cb_context = NULL;
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+  client->gwinfo_cb_context = NULL;
+  return MQTT_SN_CLIENT_RETURN_SUCCESS;
+}
+int32_t MqttSnClientSafeStrlen(const char *str, int32_t max_len) {
+  const char *end = (const char *) memchr(str, '\0', max_len);
+  if (end == NULL)
+    return -1;
+  else
+    return end - str;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientDisconnect(MqttSnClient *client) {
+  int32_t await_fd = -1;
+  while ((await_fd = new_await_msg(client, DISCONNECT, 0)) < 0) {
+    if (MqttSnClientLoop(client) < 0) {
+      return MQTT_SN_CLIENT_RETURN_ERROR;
+    }
+  }
+
+  uint8_t msg_data[MQTT_SN_MESSAGE_DISCONNECT_MIN_LENGTH] = {0};
+  int32_t gen_rc = generate_disconnect_message(msg_data, sizeof(msg_data));
+  if (gen_rc < 0) {
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+  uint64_t start_ts = 0;
+  if (get_timestamp_s(&start_ts) < 0) {
+    return -1;
+  }
+  int32_t send_rc = send_to_gateway(client, msg_data, gen_rc);
+  if (send_rc < 0 || send_rc != gen_rc) {
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+
+  MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS await_rc = get_await_status_timeout_ms(client,
+                                                                             await_fd,
+                                                                             start_ts,
+                                                                             client->default_timeout);
+  client->connected = false;
+  if (await_rc == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_TIMEOUT) {
+    return MQTT_SN_CLIENT_RETURN_TIMEOUT;
+  }
+  if (await_rc == MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS_ERROR) {
+    return MQTT_SN_CLIENT_RETURN_ERROR;
+  }
+  return MQTT_SN_CLIENT_RETURN_SUCCESS;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientPublishTopicName(MqttSnClient *client,
+                                                        const char *topic_name,
+                                                        uint16_t topic_name_length,
+                                                        uint8_t retain,
+                                                        int8_t qos,
+                                                        uint8_t *data,
+                                                        uint16_t data_len) {
+  // TODO implement me
+  return 0;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientPublishPredefined(MqttSnClient *client,
+                                                         uint16_t predefined_topic_id,
+                                                         uint8_t retain,
+                                                         int8_t qos,
+                                                         uint8_t *data,
+                                                         uint16_t data_len) {
+  // TODO implement me
+  return 0;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientPublishTopicId(MqttSnClient *client,
+                                                      uint16_t short_topic_id,
+                                                      uint8_t retain,
+                                                      int8_t qos,
+                                                      uint8_t *data,
+                                                      uint16_t data_len) {
+  // TODO implement me
+  return 0;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientRegister(MqttSnClient *client, const char *topic_name) {
+  // TODO implement me
+  return 0;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSubscribePredefined(MqttSnClient *client, int8_t qos) {
+  // TODO implement me
+  return 0;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSubscribeShort(MqttSnClient *client, int8_t qos) {
+  // TODO implement me
+  return 0;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSubscribeTopicName(MqttSnClient *client, const char *topic_name) {
+  // TODO implement me
+  return 0;
+}
+
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSleep(MqttSnClient *client, uint16_t sleep_duration) {
+  // TODO implement me
+  return 0;
+}
+MQTT_SN_CLIENT_RETURN_CODE MqttSnClientWakeup(MqttSnClient *client) {
+  // TODO implement me
+  return 0;
+}
+
+
 

@@ -8,7 +8,8 @@
 #include <logging/linux/file/FileLogging.h>
 #include <logging/linux/filestdout/FileStdoutLogging.h>
 
-int32_t start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger);
+int32_t start_logger(const mqtt_sn_logger_config *cfg,
+                     MqttSnLogger *logger);
 
 int main(int argc, char *argv[]) {
   MqttSnLogger cfg_logger = {0};
@@ -56,7 +57,8 @@ int main(int argc, char *argv[]) {
   return rc;
 }
 
-int32_t start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger) {
+int32_t start_logger(const mqtt_sn_logger_config *cfg,
+                     MqttSnLogger *logger) {
   if (!strcmp(cfg->log_target, "console")) {
     if (cfg->log_file_path != NULL) {
       if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_file_path, file_stdout_log_init, NULL) < 0) {

@@ -244,7 +244,7 @@ int32_t parse_and_handle_active_messages(MqttSnGateway *gateway,
     case UNSUBACK:return 1;
     case PINGREQ:return parse_and_handle_ping_req(&gateway->client_con_handler_, msg, parsed_bytes, forwarders);
     case PINGRESP:return parse_and_handle_ping_resp(&gateway->client_con_handler_, msg, parsed_bytes, forwarders);
-    case DISCONNECT:
+    case DISCONNECT:return parse_and_handle_disconnect(&gateway->client_con_handler_, msg, parsed_bytes, forwarders);
       // TODO parse_searchgw(address, bytes);
       break;
     case WILLTOPICUPD:

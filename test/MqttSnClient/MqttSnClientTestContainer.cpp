@@ -148,12 +148,12 @@ void MqttSnClientTestContainer::loop() {
   */
   MQTT_SN_CLIENT_RETURN_CODE connect_rc;
   MqttSnClientTimeoutOffset(&client, client_cfg.cccfg.connect_timeout_offset);
-  if ((connect_rc = MqttSnClientConnect(&client,
-                                        client.gatewayNetwork.mqtt_sn_gateway_address,
-                                        client_cfg.cccfg.client_connect_timeout_ms,
-                                        client_cfg.cccfg.clean_session,
-                                        client_cfg.cccfg.client_id,
-                                        client_cfg.cccfg.connect_duration)) != MQTT_SN_CLIENT_RETURN_SUCCESS) {
+  if ((connect_rc = MqttSnClientDirectConnect(&client,
+                                              client.gatewayNetwork.mqtt_sn_gateway_address,
+                                              client_cfg.cccfg.client_connect_timeout_ms,
+                                              client_cfg.cccfg.clean_session,
+                                              client_cfg.cccfg.client_id,
+                                              client_cfg.cccfg.connect_duration)) != MQTT_SN_CLIENT_RETURN_SUCCESS) {
 
     log_mqtt_sn_client(&client.logger, connect_rc);
     // TODO log error here

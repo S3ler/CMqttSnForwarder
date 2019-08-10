@@ -20,9 +20,15 @@
 #include <vector>
 #include "MqttSnGatewayArsmbTestContainer.h"
 
-MqttSnGatewayArsmbTestContainer::MqttSnGatewayArsmbTestContainer(const string &identifier, const string &cmd)
-    : MqttSnGatewayTestContainerInterface(identifier, cmd) {}
-
+//MqttSnGatewayArsmbTestContainer::MqttSnGatewayArsmbTestContainer(const string &identifier, const string &cmd)
+//    : MqttSnGatewayTestContainerInterface(identifier, cmd) {}
+MqttSnGatewayArsmbTestContainer::MqttSnGatewayArsmbTestContainer(const MqttSnGatewayTestContainerConfiguration &configuration)
+    : MqttSnGatewayTestContainerInterface(configuration) {
+  string gw_identifier = "ArmsbMqttSnGateway";
+  string gw_cmd = "-db --log_identifier MqttSnGateway -lfp MqttSnGateway.log -cp 10000 --gateway_id 1";
+  identifier = gw_identifier;
+  cmd = gw_cmd;
+}
 int32_t MqttSnGatewayArsmbTestContainer::initialize() {
   if (isRunning()) {
     return EXIT_FAILURE;
@@ -90,6 +96,9 @@ int32_t MqttSnGatewayArsmbTestContainer::start_logger(const mqtt_sn_logger_confi
   return 0;
 }
 int32_t MqttSnGatewayArsmbTestContainer::start() {
+  if (initialize() != 0) {
+    return -1;
+  }
   /*
   const mqtt_sn_gateway__config *fcfg = &gateway_config;
   MqttSnGateway *mqtt_sn_gateway = &gateway;
@@ -181,8 +190,8 @@ void MqttSnGatewayArsmbTestContainer::loop() {
 
 #ifdef WITH_LINUX_PLUGIN_NETWORK
 int MqttSnGatewayArsmbTestContainer::start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
-                                                             const MqttSnLogger *logger,
-                                                             MqttSnGateway *mqtt_sn_gateway) {
+                                                                  const MqttSnLogger *logger,
+                                                                  MqttSnGateway *mqtt_sn_gateway) {
   // TODO adept - do not use atm
 
   /*
@@ -236,8 +245,8 @@ int MqttSnGatewayArsmbTestContainer::start_mqtt_sn_gateway_plugin(const mqtt_sn_
 
 #ifdef WITH_LINUX_TCP_CLIENT_NETWORK
 int MqttSnGatewayArsmbTestContainer::start_mqtt_sn_gateway_tcp(const mqtt_sn_gateway__config *fcfg,
-                                                          const MqttSnLogger *logger,
-                                                          MqttSnGateway *mqtt_sn_gateway) {
+                                                               const MqttSnLogger *logger,
+                                                               MqttSnGateway *mqtt_sn_gateway) {
 
   MqttSnClientTcpNetwork tcpClientNetworkContext = {0};
 
@@ -282,8 +291,8 @@ int MqttSnGatewayArsmbTestContainer::start_mqtt_sn_gateway_tcp(const mqtt_sn_gat
 
 #ifdef WITH_LINUX_UDP_CLIENT_NETWORK
 int MqttSnGatewayArsmbTestContainer::start_mqtt_sn_gateway_client_udp(const mqtt_sn_gateway__config *fcfg,
-                                                                 const MqttSnLogger *logger,
-                                                                 MqttSnGateway *mqtt_sn_gateway) {
+                                                                      const MqttSnLogger *logger,
+                                                                      MqttSnGateway *mqtt_sn_gateway) {
 
   udpClientNetworkContext = shared_ptr<MqttSnClientUdpNetwork>(new MqttSnClientUdpNetwork());
 
@@ -324,4 +333,5 @@ int MqttSnGatewayArsmbTestContainer::start_mqtt_sn_gateway_client_udp(const mqtt
 
   return start();
 }
+
 #endif

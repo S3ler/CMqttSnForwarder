@@ -977,7 +977,8 @@ private:
 	int _size;
 };
 
-
+extern int _globalStopCount;
+extern int _globalThreadCount;
 extern Process* theProcess;
 extern MultiTaskProcess* theMultiTaskProcess;
 

@@ -182,6 +182,7 @@ DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_last_ping_resp_received(db_handler 
 
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_address(db_handler *h, device_address *client_address,device_address *forwarder_addresses, uint16_t *forwarder_addresses_len, uint16_t forwarder_addresses_max_len);
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_id(db_handler *h, char *client_id);
+DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_connect_duration(db_handler *h, uint16_t connect_duration);
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_connect_duration(db_handler *h, uint16_t *connect_duration);
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_set_client_status(db_handler *h, DB_ENTRY_MQTT_SN_CLIENT_STATUS client_status);
 DB_ENTRY_MQTT_SN_CLIENT_RESULT db_get_client_status(db_handler *h, DB_ENTRY_MQTT_SN_CLIENT_STATUS *client_status);

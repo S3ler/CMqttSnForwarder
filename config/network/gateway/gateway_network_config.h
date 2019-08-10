@@ -36,10 +36,10 @@ extern "C" {
 #endif
 
 #ifndef DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS
-#define DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS "224.1.1.100"
+#define DEFAULT_MQTT_SN_GATEWAY_BROADCAST_ADDRESS "225.1.1.1" // TODO old "224.1.1.100"
 #endif
 #ifndef DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT
-#define DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT 5353
+#define DEFAULT_MQTT_SN_GATEWAY_BROADCAST_BIND_PORT 1883 // TODO old 5353
 #endif
 
 typedef struct linux_gateway_network_config_ {
@@ -64,6 +64,44 @@ typedef struct linux_gateway_network_config_ {
   char *gateway_network_plugin_path;
 #endif
 } gateway_network_config;
+
+#ifndef DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_NETWORK_PROTOCOL_LENGTH
+#define DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_NETWORK_PROTOCOL_LENGTH  10
+#endif
+
+#ifndef DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_NETWORK_BIND_ADDRESS_LENGTH
+#define DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_NETWORK_BIND_ADDRESS_LENGTH  (MQTT_SN_DEVICE_ADDRESS_LENGTH*4+1)
+#endif
+
+#ifndef DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_BROADCAST_PROTOCOL_LENGTH
+#define DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_BROADCAST_PROTOCOL_LENGTH  10
+#endif
+
+#ifndef DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_BROADCAST_ADDRESS_LENGTH
+#define DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_BROADCAST_ADDRESS_LENGTH  10
+#endif
+
+#ifndef DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_PLUGIN_PATH_LENGTH
+#define DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_PLUGIN_PATH_LENGTH  10
+#endif
+
+typedef struct linux_gateway_network_config_buffer_ {
+  // gateway network address
+  char gateway_network_protocol[DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_NETWORK_PROTOCOL_LENGTH];
+  char gateway_network_bind_address[DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_NETWORK_BIND_ADDRESS_LENGTH];
+
+#ifdef WITH_GATEWAY_NETWORK_BROADCAST
+  // broadcast
+  char gateway_network_broadcast_protocol[DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_BROADCAST_PROTOCOL_LENGTH];
+  char gateway_network_broadcast_address[DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_BROADCAST_ADDRESS_LENGTH];
+#endif
+  // plugin
+#ifdef WITH_LINUX_PLUGIN_NETWORK
+  char gateway_network_plugin_path[DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_PLUGIN_PATH_LENGTH];
+#endif
+} gateway_network_config_buffer;
+
+int32_t gateway_network_config_copy_to_buffer(gateway_network_config* cfg, gateway_network_config_buffer* cfg_buffer);
 
 int32_t gateway_network_config_init(gateway_network_config *cfg);
 void gateway_network_config_cleanup(gateway_network_config *cfg);

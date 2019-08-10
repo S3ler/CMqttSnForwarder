@@ -22,6 +22,7 @@ int32_t process_config_file(const char *config_file_path,
                             void *cfg,
                             int32_t (*callback)(void *, const MqttSnLogger *, int, char **),
                             const char *argv_0);
+int32_t tokenize_command_str(char *str, size_t len, char *argv_0, char **argv, int32_t argv_len);
 int32_t process_config_cmd_str(const MqttSnLogger *logger,
                                char *line,
                                size_t len,
@@ -57,6 +58,10 @@ int32_t parse_topic_id(const MqttSnLogger *logger, char *topic_id_str, uint16_t 
 int32_t parse_boolean(char *boolean_str, uint8_t *dst);
 
 int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst);
+
+int32_t print_invalid_publish_clear_given(const MqttSnLogger *logger, const char *given_str);
+
+int32_t parse_client_clear_boolean(const MqttSnLogger *logger,char *boolean_str, uint8_t *dst);
 
 int32_t parse_client_connection_timeout_enabled(const MqttSnLogger *logger, char *retain_str, uint8_t *dst);
 

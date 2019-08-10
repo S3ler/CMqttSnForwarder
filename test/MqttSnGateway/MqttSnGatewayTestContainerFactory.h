@@ -13,6 +13,9 @@
 class MqttSnGatewayTestContainerFactory {
  public:
   static std::shared_ptr<MqttSnGatewayTestContainerInterface> getMqttSnGateway(MqttSnGatewayTestType mqttSnGatewayTestType);
+  static std::shared_ptr<MqttSnGatewayTestContainerInterface> getMqttSnGateway(MqttSnGatewayTestType mqttSnGatewayTestType,
+                                                                               const MqttSnGatewayTestContainerConfiguration &configuration);
+
   /*
   static std::shared_ptr<MqttSnGatewayTestContainerInterface> getMqttSnGateway(MqttSnGatewayTestType mqttSnGatewayTestType,
                                                                                const std::string &command);

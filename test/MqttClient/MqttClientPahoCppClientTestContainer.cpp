@@ -56,19 +56,15 @@ void paho_global_on_publish_receive_publish_failure(void *context, MQTTAsync_fai
   static_cast<MqttClientPahoCppClientTestContainer *>(context)->on_publish_action_finished(MqttClientActionResultType::ERROR,
                                                                                            response->token);
 }
-MqttClientPahoCppClientTestContainer::MqttClientPahoCppClientTestContainer(const MqttClientConnectAction &initial_connect_action)
-    : MqttClientTestContainerInterface(initial_connect_action) {
+MqttClientPahoCppClientTestContainer::MqttClientPahoCppClientTestContainer(const MqttClientTestContainerConfiguration &configuration)
+    : MqttClientTestContainerInterface(configuration) {
   clientId = initial_connect_action.clientId;
   brokerURI = initial_connect_action.protocol + "://" + initial_connect_action.brokerAddress + ":"
       + std::to_string(initial_connect_action.brokerPort);
-  MQTTAsync_create(&client,
-                   brokerURI.c_str(),
-                   clientId.c_str(),
-                   MQTTCLIENT_PERSISTENCE_NONE,
-                   NULL);
+  // MQTTAsync_create(&client, brokerURI.c_str(), clientId.c_str(), MQTTCLIENT_PERSISTENCE_NONE, NULL);
 }
 MqttClientPahoCppClientTestContainer::~MqttClientPahoCppClientTestContainer() {
-  MQTTAsync_destroy(&client);
+  // MQTTAsync_destroy(&client);
 }
 bool MqttClientPahoCppClientTestContainer::StartBackgroundHandler() {
   if (running) {
@@ -77,6 +73,7 @@ bool MqttClientPahoCppClientTestContainer::StartBackgroundHandler() {
   running = true;
   stopped = false;
 
+  MQTTAsync_create(&client, brokerURI.c_str(), clientId.c_str(), MQTTCLIENT_PERSISTENCE_NONE, NULL);
   return MQTTAsync_setCallbacks(client,
                                 this,
                                 paho_global_connection_lost,
@@ -86,6 +83,7 @@ bool MqttClientPahoCppClientTestContainer::StartBackgroundHandler() {
 void MqttClientPahoCppClientTestContainer::StopBackgroundHandler() {
   stopped = true;
   running = false;
+  MQTTAsync_destroy(&client);
 }
 bool MqttClientPahoCppClientTestContainer::IsBackgroundHandlerRunning() {
   return running;

@@ -29,7 +29,7 @@ int32_t log_mqtt_sn_client(const MqttSnLogger *logger, MQTT_SN_CLIENT_RETURN_COD
   return log_status(logger);
 }
 int32_t log_mqtt_sn_client_connection_status(const MqttSnLogger *logger,
-                                             bool connection_status,
+                                             uint8_t connection_status,
                                              const device_address *gateway_address) {
   log_msg_start(logger);
   if (connection_status) {

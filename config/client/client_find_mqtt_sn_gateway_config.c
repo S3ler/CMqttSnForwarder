@@ -19,21 +19,25 @@ int32_t client_find_mqtt_sn_gateway_config_init(client_find_mqtt_sn_gateway_conf
   memset(cfg, 0, sizeof(*cfg));
 
   cfg->find_pattern_type = CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_FIND_PATTERN;
-  cfg->advertise_wait_timeout = CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_ADVERTISEMENT_WAIT_TIMEOUT;
+  cfg->advertise_wait_timeout_s = CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_ADVERTISEMENT_WAIT_TIMEOUT;
 
-  cfg->search_gateway_wait_timeout = CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_SEARCH_GW_WAIT_TIMEOUT;
+  cfg->search_gateway_wait_timeout_ms = CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_SEARCH_GW_WAIT_TIMEOUT;
   cfg->search_gateway_radius = CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_DEFAULT_SEARCH_GW_RADIUS;
 
 #ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_REGEX_FILTER
   cfg->gw_id_regex_filter = NULL;
   cfg->gw_add_regex_filter = NULL;
 #endif
-
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_WHITELIST_FILTER
   cfg->gw_id_whitelist_max_len = CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ID_WHITELIST_LENGTH;
   cfg->gw_id_whitelist_len = 0;
 
   cfg->gw_add_whitelist_max_len = CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ADD_WHITELIST_LENGTH;
   cfg->gw_add_whitelist_len = 0;
+#endif
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_BLACKLIST_FILTER
+  // FEATURE implement blacklist filter configuration
+#endif
 
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
@@ -55,29 +59,34 @@ int32_t is_client_find_mqtt_sn_gateway_config_command(const char *arg, int *i) {
   } else if (!strcmp(arg, "-sgr") || !strcmp(arg, "--search_gateway_radius")) {
     (*i)++;
     return 1;
-  } else
+  }
 #ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_REGEX_FILTER
-    if (!strcmp(arg, "--gw_id_filter")) {
-      (*i)++;
-      return 1;
-    } else if (!strcmp(arg, "--gw_add_filter")) {
-      (*i)++;
-      return 1;
-    } else
+  else if (!strcmp(arg, "--gw_id_filter")) {
+    (*i)++;
+    return 1;
+  } else if (!strcmp(arg, "--gw_add_filter")) {
+    (*i)++;
+    return 1;
+  }
 #endif
-  if (!strcmp(arg, "--gw_id_whitelist")) {
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_WHITELIST_FILTER
+  else if (!strcmp(arg, "--gw_id_whitelist")) {
     (*i)++;
     return 1;
   } else if (!strcmp(arg, "--gw_add_whitelist")) {
     (*i)++;
     return 1;
-  } else if (!strcmp(arg, "--gw_id__blacklist")) {
+  }
+#endif
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_BLACKLIST_FILTER
+  else if (!strcmp(arg, "--gw_id__blacklist")) {
     (*i)++;
     return 1;
   } else if (!strcmp(arg, "--gw_add_blacklist")) {
     (*i)++;
     return 1;
   }
+#endif
 
   return 0;
 }
@@ -112,7 +121,7 @@ int32_t client_find_mqtt_sn_gateway_config_process_args(client_find_mqtt_sn_gate
         print_argument_value_not_specified(logger, argv[i], "advertise wait timeout");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        parse_timeout(logger, argv[i + 1], &cfg->advertise_wait_timeout);
+        parse_timeout(logger, argv[i + 1], &cfg->advertise_wait_timeout_s);
       }
       i++;
       parsed_args += 2;
@@ -121,7 +130,7 @@ int32_t client_find_mqtt_sn_gateway_config_process_args(client_find_mqtt_sn_gate
         print_argument_value_not_specified(logger, argv[i], "search gateway timeout");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        parse_timeout(logger, argv[i + 1], &cfg->search_gateway_wait_timeout);
+        parse_timeout(logger, argv[i + 1], &cfg->search_gateway_wait_timeout_ms);
       }
       i++;
       parsed_args += 2;
@@ -136,26 +145,27 @@ int32_t client_find_mqtt_sn_gateway_config_process_args(client_find_mqtt_sn_gate
       parsed_args += 2;
     }
 #ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_REGEX_FILTER
-      else if (!strcmp(argv[i], "--gw_id_filter")) {
-        if (i == argc - 1) {
-          print_argument_value_not_specified(logger, argv[i], "gw_id filter");
-          return MQTT_SN_PARSE_CONFIG_FAILURE;
-        } else {
-          cfg->gw_id_regex_filter = argv[i + 1];
-        }
-        i++;
-        parsed_args += 2;
-      } else if (!strcmp(argv[i], "--gw_add_filter")) {
-        if (i == argc - 1) {
-          print_argument_value_not_specified(logger, argv[i], "gw_add filter");
-          return MQTT_SN_PARSE_CONFIG_FAILURE;
-        } else {
-          cfg->gw_add_regex_filter = argv[i + 1];
-        }
-        i++;
-        parsed_args += 2;
+    else if (!strcmp(argv[i], "--gw_id_filter")) {
+      if (i == argc - 1) {
+        print_argument_value_not_specified(logger, argv[i], "gw_id filter");
+        return MQTT_SN_PARSE_CONFIG_FAILURE;
+      } else {
+        cfg->gw_id_regex_filter = argv[i + 1];
       }
+      i++;
+      parsed_args += 2;
+    } else if (!strcmp(argv[i], "--gw_add_filter")) {
+      if (i == argc - 1) {
+        print_argument_value_not_specified(logger, argv[i], "gw_add filter");
+        return MQTT_SN_PARSE_CONFIG_FAILURE;
+      } else {
+        cfg->gw_add_regex_filter = argv[i + 1];
+      }
+      i++;
+      parsed_args += 2;
+    }
 #endif
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_WHITELIST_FILTER
     else if (!strcmp(argv[i], "--gw_id_whitelist")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "gw_id whitelist");
@@ -184,7 +194,10 @@ int32_t client_find_mqtt_sn_gateway_config_process_args(client_find_mqtt_sn_gate
       }
       i++;
       parsed_args += 2;
-    } else if (!strcmp(argv[i], "--gw_id_blacklist")) {
+    }
+#endif
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_BLACKLIST_FILTER
+    else if (!strcmp(argv[i], "--gw_id_blacklist")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "gw_id blacklist");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
@@ -198,7 +211,8 @@ int32_t client_find_mqtt_sn_gateway_config_process_args(client_find_mqtt_sn_gate
       }
       i++;
       parsed_args += 2;
-    } else if (!strcmp(argv[i], "--gw_add_blacklist")) {
+    }
+    else if (!strcmp(argv[i], "--gw_add_blacklist")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "gw_add blacklist");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
@@ -213,6 +227,7 @@ int32_t client_find_mqtt_sn_gateway_config_process_args(client_find_mqtt_sn_gate
       i++;
       parsed_args += 2;
     }
+#endif
   }
   return parsed_args;
 }
@@ -259,6 +274,7 @@ void client_find_mqtt_sn_gateway_config_print_usage_long(const MqttSnLogger *log
   log_str(logger, PSTR(" --gw_id_filter : specify regex for filtering mqtt-sn gateway id.\n"));
   log_str(logger, PSTR(" --gw_add_filter : specify regex for mqtt-sn gateway address filter.\n"));
 #endif
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_WHITELIST_FILTER
   log_str(logger, PSTR(" --gw_id_whitelist : specify whitelist for mqtt-sn gateway ids. Can be used repeatedly."));
   log_str(logger, PSTR(" Maximum entry count is "));
   log_uint64(logger, CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ID_WHITELIST_LENGTH);
@@ -267,6 +283,8 @@ void client_find_mqtt_sn_gateway_config_print_usage_long(const MqttSnLogger *log
   log_str(logger, PSTR(" Can be used repeatedly. Maximum entry count is "));
   log_uint64(logger, CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ADD_WHITELIST_LENGTH);
   log_str(logger, PSTR(".\n"));
+#endif
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_WHITELIST_FILTER
   log_str(logger, PSTR(" --gw_id_blacklist : specify blaclist for mqtt-sn gateway ids. Can be used repeatedly."));
   log_str(logger, PSTR(" Maximum entry count is "));
   log_uint64(logger, CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ID_BLACKLIST_LENGTH);
@@ -275,5 +293,6 @@ void client_find_mqtt_sn_gateway_config_print_usage_long(const MqttSnLogger *log
   log_str(logger, PSTR(" Can be used repeatedly. Maximum entry count is "));
   log_uint64(logger, CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ADD_BLACKLIST_LENGTH);
   log_str(logger, PSTR(".\n"));
+#endif
 }
 

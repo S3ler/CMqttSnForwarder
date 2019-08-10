@@ -438,6 +438,8 @@ add_library(lib-mqtt-sn-client-config
         config/client/client_publish_config.c config/client/client_publish_config.h
         config/client/client_register_config.c config/client/client_register_config.h
         config/client/client_subscribe_config.c config/client/client_subscribe_config.h
+        config/client/client_unsubscribe_config.c config/client/client_unsubscribe_config.h
+        config/client/client_sleep_config.c config/client/client_sleep_config.h
         config/client/mqtt_sn_gateway_config.c config/client/mqtt_sn_gateway_config.h
         config/client/MqttSnClient_config.c config/client/MqttSnClient_config.h)
 target_include_directories(lib-mqtt-sn-client-config PRIVATE .)
@@ -577,12 +579,26 @@ if (WITH_MQTT_SN_CLIENT)
     if (WITH_LINUX_PLUGIN_NETWORK)
         target_link_libraries(MqttSnFindGatewayMonitor lib-mqtt-sn-linux-plugin-gateway-network)
     endif ()
+
     add_executable(MqttSnClientPub client/pub/linux/main.c
             client/pub/linux/starter/publish_client_starter.c client/pub/linux/starter/publish_client_starter.h
             parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h)
     target_include_directories(MqttSnClientPub PRIVATE .)
     target_compile_options(MqttSnClientPub PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(MqttSnClientPub lib-mqtt-sn-client lib-mqtt-sn-client-config lib-mqtt-sn-gateway-network-config pthread)
+
+    add_executable(MqttSnClientInteractive client/interactive/linux/main.c
+            client/interactive/config/interactive_client_config.c client/interactive/config/interactive_client_config.h
+            client/interactive/linux/starter/interactive_client_starter.c client/interactive/linux/starter/interactive_client_starter.h
+            client/interactive/linux/starter/MqttSnCmdBuffer.c client/interactive/linux/starter/MqttSnCmdBuffer.h
+            client/interactive/linux/starter/mqtt_sn_client_interactive_action_type.h
+            client/interactive/linux/starter/mqtt_sn_client_interactive_action_result_type.h
+
+            client/interactive/linux/starter/mqtt_sn_client_interactive_cmd_result.c client/interactive/linux/starter/mqtt_sn_client_interactive_cmd_result.h
+            parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h)
+    target_include_directories(MqttSnClientInteractive PRIVATE .)
+    target_compile_options(MqttSnClientInteractive PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
+    target_link_libraries(MqttSnClientInteractive lib-mqtt-sn-client lib-mqtt-sn-client-config lib-mqtt-sn-gateway-network-config pthread)
 endif ()
 
 option(WITH_MQTT_SN_FORWARDER "Include WITH_MQTT_SN_FORWARDER support?" ON)
@@ -877,7 +893,7 @@ if (WITH_MQTT_SN_PARSER_TESTING)
             test/MqttBroker/MqttBrokerTestType.cpp test/MqttBroker/MqttBrokerTestType.h
             test/MqttBroker/MqttBrokerTestContainerFactory.cpp test/MqttBroker/MqttBrokerTestContainerFactory.h
             test/MqttBroker/MqttBrokerExternalTestContainer.cpp test/MqttBroker/MqttBrokerExternalTestContainer.h
-            test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.cpp test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.h)
+            test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.cpp test/MqttBroker/MqttBrokerMosquittoDockerTestContainer.h test/MqttBroker/MqttBrokerProtocolTestType.cpp test/MqttBroker/MqttBrokerProtocolTestType.h)
     target_include_directories(LibMqttBrokerTestContainer PRIVATE .)
     #target_compile_options(LibMqttBrokerTestContainer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(LibMqttBrokerTestContainer pthread)
@@ -886,7 +902,8 @@ if (WITH_MQTT_SN_PARSER_TESTING)
             test/MqttSnGateway/MqttSnGatewayTestType.cpp test/MqttSnGateway/MqttSnGatewayTestType.h
             test/MqttSnGateway/MqttSnGatewayTestContainerFactory.cpp test/MqttSnGateway/MqttSnGatewayTestContainerInterface.h
             test/MqttSnGateway/MqttSnGatewayArsmbTestContainer.cpp test/MqttSnGateway/MqttSnGatewayArsmbTestContainer.h
-            test/MqttSnGateway/MqttSnGatewayPahoTestContainer.cpp test/MqttSnGateway/MqttSnGatewayPahoTestContainer.h)
+            test/MqttSnGateway/MqttSnGatewayPahoTestContainer.cpp test/MqttSnGateway/MqttSnGatewayPahoTestContainer.h
+            test/shared/MqttSnURLParser/MqttSnURLParser.cpp test/shared/MqttSnURLParser/MqttSnURLParser.h)
     target_include_directories(LibMqttSnGatewayTestContainer PRIVATE .)
     #target_compile_options(LibMqttSnGatewayTestContainer PRIVATE ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(LibMqttSnGatewayTestContainer lib-mqtt-sn-linux-gateway-starter lib-mqtt-sn-gateway-config lib-mqtt-sn-gateway lib-mqtt-sn-linux-client-network)
@@ -916,7 +933,7 @@ if (WITH_MQTT_SN_PARSER_TESTING)
 
     add_library(LibMqttSnClientTestContainer test/MqttSnClient/MqttSnClientTestContainer.cpp test/MqttSnClient/MqttSnClientTestContainer.h
             client/pub/linux/starter/publish_client_starter.c client/pub/linux/starter/publish_client_starter.h
-            parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h test/MqttSnClient/MqttSnClientTestContainerInterface.cpp test/MqttSnClient/MqttSnClientTestContainerInterface.h test/MqttSnClient/MqttSnClientAction.cpp test/MqttSnClient/MqttSnClientAction.h test/MqttSnClient/MqttSnClientActionType.cpp test/MqttSnClient/MqttSnClientActionType.h test/MqttSnClient/MqttSnClientActionResult.cpp test/MqttSnClient/MqttSnClientActionResult.h test/MqttSnClient/MqttSnClientActionResultType.cpp test/MqttSnClient/MqttSnClientActionResultType.h test/MqttSnClient/MqttSnClientTestType.cpp test/MqttSnClient/MqttSnClientTestType.h test/MqttSnClient/MqttSnTestContainerFactory.cpp test/MqttSnClient/MqttSnTestContainerFactory.h test/MqttSnClient/MqttSnClientConnectAction.cpp test/MqttSnClient/MqttSnClientConnectAction.h test/MqttSnClient/MqttSnClientProtocolType.cpp test/MqttSnClient/MqttSnClientProtocolType.h)
+            parser/MqttSnMessageParser.c parser/MqttSnMessageParser.h test/MqttSnClient/MqttSnClientTestContainerInterface.cpp test/MqttSnClient/MqttSnClientTestContainerInterface.h test/MqttSnClient/MqttSnClientArsmbCTestContainer.cpp test/MqttSnClient/MqttSnClientArsmbCTestContainer.h test/MqttSnClient/MqttSnClientAction.cpp test/MqttSnClient/MqttSnClientAction.h test/MqttSnClient/MqttSnClientActionType.cpp test/MqttSnClient/MqttSnClientActionType.h test/MqttSnClient/MqttSnClientActionResult.cpp test/MqttSnClient/MqttSnClientActionResult.h test/MqttSnClient/MqttSnClientActionResultType.cpp test/MqttSnClient/MqttSnClientActionResultType.h test/MqttSnClient/MqttSnClientTestType.cpp test/MqttSnClient/MqttSnClientTestType.h test/MqttSnClient/MqttSnTestContainerFactory.cpp test/MqttSnClient/MqttSnTestContainerFactory.h test/MqttSnClient/MqttSnClientConnectAction.cpp test/MqttSnClient/MqttSnClientConnectAction.h test/MqttSnClient/MqttSnClientProtocolTestType.cpp test/MqttSnClient/MqttSnClientProtocolTestType.h test/MqttSnClient/MqttSnClientTestContainerConfiguration.cpp test/MqttSnClient/MqttSnClientTestContainerConfiguration.h test/MqttSnClient/MqttSnClientFindGatewayType.cpp test/MqttSnClient/MqttSnClientFindGatewayType.h test/MqttSnClient/MqttSnClientTestContainerFactory.cpp test/MqttSnClient/MqttSnClientTestContainerFactory.h test/MqttSnClient/MqttSnClientArsmbCTestContainer.cpp test/MqttSnClient/MqttSnClientArsmbCTestContainer.h test/MqttSnClient/MqttSnClientDirectConnectAction.cpp test/MqttSnClient/MqttSnClientDirectConnectAction.h test/MqttSnClient/MqttSnClientSearchGwConnectAction.cpp test/MqttSnClient/MqttSnClientSearchGwConnectAction.h test/MqttSnClient/MqttSnClientAdvertiseConnectAction.cpp test/MqttSnClient/MqttSnClientAdvertiseConnectAction.h test/MqttSnClient/MqttSnClientActionSequence.cpp test/MqttSnClient/MqttSnClientActionSequence.h test/MqttSnClient/MqttSnClientTestContainerPublish.cpp test/MqttSnClient/MqttSnClientTestContainerPublish.h test/MqttSnClient/MqttSnClientTestContainerReceiverInterface.cpp test/MqttSnClient/MqttSnClientTestContainerReceiverInterface.h)
     target_include_directories(LibMqttSnClientTestContainer PRIVATE .)
     #target_compile_options(LibMqttSnClientTestContainer PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     target_link_libraries(LibMqttSnClientTestContainer lib-mqtt-sn-client lib-mqtt-sn-client-config lib-mqtt-sn-gateway-network-config lib-mqtt-sn-platform-abstraction-layer)
@@ -943,11 +960,11 @@ if (WITH_MQTT_SN_PARSER_TESTING)
             test/MqttBroker/MqttBrokerTestContainerConfiguration.cpp test/MqttBroker/MqttBrokerTestContainerConfiguration.h)
     #LibMqttClientMessageTester(LibMqttSnMessageTester PUBLIC ${CMQTTSNFORWADER_ERROR_COMPILE_FLAGS})
     #target_link_libraries(LibMqttClientMessageTester lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer)
-    add_executable(MqttClientMessageTesterMain testclients/MqttClientTestContainerMainSync.cpp test/MqttBroker/MqttBrokerTestContainerConfiguration.cpp test/MqttBroker/MqttBrokerTestContainerConfiguration.h)
-    target_include_directories(MqttClientMessageTesterMain PRIVATE .)
-    target_link_libraries(MqttClientMessageTesterMain LibMqttClientMessageTester)
-    target_link_libraries(MqttClientMessageTesterMain gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer LibMqttClient
-            paho-mqtt3c paho-mqtt3a)
+
+    #add_executable(MqttClientMessageTesterMain testclients/MqttClientTestContainerMainSync.cpp test/MqttBroker/MqttBrokerTestContainerConfiguration.cpp test/MqttBroker/MqttBrokerTestContainerConfiguration.h)
+    #target_include_directories(MqttClientMessageTesterMain PRIVATE .)
+    #target_link_libraries(MqttClientMessageTesterMain LibMqttClientMessageTester)
+    #target_link_libraries(MqttClientMessageTesterMain gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer LibMqttClient paho-mqtt3c paho-mqtt3a)
 
     add_library(LibMqttClient
             test/MqttClient/MqttClientTestType.cpp test/MqttClient/MqttClientTestType.h
@@ -960,28 +977,30 @@ if (WITH_MQTT_SN_PARSER_TESTING)
             test/MqttClient/MqttClientConnectAction.cpp test/MqttClient/MqttClientConnectAction.h
             test/MqttBroker/MqttBrokerTestContainerConfiguration.cpp test/MqttBroker/MqttBrokerTestContainerConfiguration.h
             test/MqttClient/MqttClientTestContainerFactory.cpp test/MqttClient/MqttClientTestContainerFactory.h
-            test/MqttClient/MqttClientDisconnectAction.cpp test/MqttClient/MqttClientDisconnectAction.h test/MqttClient/MqttClientPublishRecPublishAction.cpp test/MqttClient/MqttClientPublishRecPublishAction.h test/MqttClient/MqttClientReceivePublishAction.cpp test/MqttClient/MqttClientReceivePublishAction.h test/MqttClient/MqttClientActionResult.cpp test/MqttClient/MqttClientActionResult.h test/MqttClient/MqttClientActionResultType.cpp test/MqttClient/MqttClientActionResultType.h test/MqttClient/MqttClientTestContainerReceiverInterface.h test/MqttClient/MqttClientTestContainerReceiverMock.h test/MqttClient/MqttClientTestContainerPublish.cpp test/MqttClient/MqttClientTestContainerPublish.h test/MqttClient/MqttClientUnsubscribeAction.cpp test/MqttClient/MqttClientUnsubscribeAction.h test/MqttClient/MqttClientPublishReceivePublish.cpp test/MqttClient/MqttClientPublishReceivePublish.h test/MqttClient/MqttClientPahoCppTestContainerReceiver.h test/MqttClient/MqttClientActionSequence.cpp test/MqttClient/MqttClientActionSequence.h)
+            test/MqttClient/MqttClientDisconnectAction.cpp test/MqttClient/MqttClientDisconnectAction.h test/MqttClient/MqttClientPublishRecPublishAction.cpp test/MqttClient/MqttClientPublishRecPublishAction.h test/MqttClient/MqttClientReceivePublishAction.cpp test/MqttClient/MqttClientReceivePublishAction.h test/MqttClient/MqttClientActionResult.cpp test/MqttClient/MqttClientActionResult.h test/MqttClient/MqttClientActionResultType.cpp test/MqttClient/MqttClientActionResultType.h test/MqttClient/MqttClientTestContainerReceiverInterface.h test/MqttClient/MqttClientTestContainerReceiverMock.h test/MqttClient/MqttClientTestContainerPublish.cpp test/MqttClient/MqttClientTestContainerPublish.h test/MqttClient/MqttClientUnsubscribeAction.cpp test/MqttClient/MqttClientUnsubscribeAction.h test/MqttClient/MqttClientPublishReceivePublish.cpp test/MqttClient/MqttClientPublishReceivePublish.h test/MqttClient/MqttClientPahoCppTestContainerReceiver.h test/MqttClient/MqttClientActionSequence.cpp test/MqttClient/MqttClientActionSequence.h test/MqttClient/MqttClientTestContainerConfiguration.cpp test/MqttClient/MqttClientTestContainerConfiguration.h test/MqttClient/MqttClientProtocolTestType.cpp test/MqttClient/MqttClientProtocolTestType.h)
     target_include_directories(LibMqttClient PRIVATE .)
     target_link_libraries(LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
             paho-mqtt3c paho-mqtt3a)
 
     add_library(LibMqttNetworkObjectBuilder
             test/MqttNetworkBuilder/MqttNetworkBuilder.cpp test/MqttNetworkBuilder/MqttNetworkBuilder.h
-            test/MqttNetworkBuilder/MqttNetworkBuilderConfiguration.cpp test/MqttNetworkBuilder/MqttNetworkBuilderConfiguration.h test/MqttNetworkBuilder/MqttNetworkMqttClientBuilderConfiguration.cpp test/MqttNetworkBuilder/MqttNetworkMqttClientBuilderConfiguration.h test/MqttNetworkBuilder/MqttNetworkMqttBrokerBuilderConfiguration.cpp test/MqttNetworkBuilder/MqttNetworkMqttBrokerBuilderConfiguration.h test/MqttSnNetworkBuilder/MqttSnNetworkBuilder.cpp test/MqttSnNetworkBuilder/MqttSnNetworkBuilder.h)
+            test/MqttNetworkBuilder/MqttNetworkBuilderConfiguration.cpp test/MqttNetworkBuilder/MqttNetworkBuilderConfiguration.h test/MqttNetworkBuilder/MqttNetworkBuilderMqttClientBuilderConfiguration.cpp test/MqttNetworkBuilder/MqttNetworkBuilderMqttClientBuilderConfiguration.h test/MqttNetworkBuilder/MqttNetworkBuilderMqttBrokerBuilderConfiguration.cpp test/MqttNetworkBuilder/MqttNetworkBuilderMqttBrokerBuilderConfiguration.h test/MqttSnNetworkBuilder/MqttSnNetworkBuilder.cpp test/MqttSnNetworkBuilder/MqttSnNetworkBuilder.h test/MqttSnGateway/MqttSnGatewayTestContainerConfiguration.cpp test/MqttSnGateway/MqttSnGatewayTestContainerConfiguration.h test/MqttSnGateway/MqttSnGatewayProtocolTestType.cpp test/MqttSnGateway/MqttSnGatewayProtocolTestType.h test/MqttSnNetworkBuilder/MqttSnNetworkBuilderConfiguration.cpp test/MqttSnNetworkBuilder/MqttSnNetworkBuilderConfiguration.h test/MqttSnNetworkBuilder/MqttSnNetworkBuilderMqttSnGatewayConfiguration.cpp test/MqttSnNetworkBuilder/MqttSnNetworkBuilderMqttSnGatewayConfiguration.h
+            test/shared/MqttSnURLParser/MqttSnURLParser.cpp test/shared/MqttSnURLParser/MqttSnURLParser.h test/MqttSnNetworkBuilder/MqttSnNetworkBuilderMqttSnClientConfiguration.cpp test/MqttSnNetworkBuilder/MqttSnNetworkBuilderMqttSnClientConfiguration.h test/MqttSnNetworkBuilder/MqttSnAddressGenerator/MqttSnNetworkBuilderMqttSnAddressGeneratorInterface.cpp test/MqttSnNetworkBuilder/MqttSnAddressGenerator/MqttSnNetworkBuilderMqttSnAddressGeneratorInterface.h test/MqttSnNetworkBuilder/MqttSnAddressGenerator/MqttSnNetworkBuilderMqttSnAddressGeneratorFactory.cpp test/MqttSnNetworkBuilder/MqttSnAddressGenerator/MqttSnNetworkBuilderMqttSnAddressGeneratorFactory.h test/MqttSnNetworkBuilder/MqttSnAddressGenerator/MqttSnAddressGeneratorType.cpp test/MqttSnNetworkBuilder/MqttSnAddressGenerator/MqttSnAddressGeneratorType.h test/MqttSnNetworkBuilder/MqttSnAddressGenerator/MqttSnUdpAddressGenerator.cpp test/MqttSnNetworkBuilder/MqttSnAddressGenerator/MqttSnUdpAddressGenerator.h)
+
     target_link_libraries(LibMqttNetworkObjectBuilder gtest gtest_main gmock pthread LibMqttSnGatewayTestContainer LibMqttSnMessageTester LibMqttBrokerTestContainer LibMqttClientMessageTester LibMqttClient)
     target_include_directories(LibMqttNetworkObjectBuilder PRIVATE .)
 
     add_executable(runMqttSnNetworkBuilderTestSequenceMain testclients/MqttNetworkBuilderTestSequenceMain.cpp)
     target_include_directories(runMqttSnNetworkBuilderTestSequenceMain PRIVATE .)
-    target_link_libraries(runMqttSnNetworkBuilderTestSequenceMain LibMqttNetworkObjectBuilder  LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
+    target_link_libraries(runMqttSnNetworkBuilderTestSequenceMain LibMqttNetworkObjectBuilder LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
             paho-mqtt3c paho-mqtt3a)
-    add_executable(runMqttNetworkBuilderTestMain testclients/MqttNetworkBuilderTestMain.cpp)
+    add_executable(runMqttNetworkBuilderTestMain testclients/MqttNetworkBuilderTestMain.cpp test/MqttSnClient/MqttSnClientTestContainerFactory.cpp test/MqttSnClient/MqttSnClientTestContainerFactory.h)
     target_include_directories(runMqttNetworkBuilderTestMain PRIVATE .)
-    target_link_libraries(runMqttNetworkBuilderTestMain LibMqttNetworkObjectBuilder  LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
+    target_link_libraries(runMqttNetworkBuilderTestMain LibMqttNetworkObjectBuilder LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
             paho-mqtt3c paho-mqtt3a)
-    add_executable(runMqttNetworkBuilderTestSequenceMain testclients/MqttNetworkBuilderTestSequenceMain.cpp)
+    add_executable(runMqttNetworkBuilderTestSequenceMain testclients/MqttNetworkBuilderTestSequenceMain.cpp test/MqttSnClient/MqttSnClientTestContainerFactory.cpp test/MqttSnClient/MqttSnClientTestContainerFactory.h test/MqttSnClient/MqttSnClientTestContainerConfiguration.cpp test/MqttSnClient/MqttSnClientTestContainerConfiguration.h test/MqttSnClient/MqttSnClientArsmbCTestContainer.cpp test/MqttSnClient/MqttSnClientArsmbCTestContainer.h)
     target_include_directories(runMqttNetworkBuilderTestSequenceMain PRIVATE .)
-    target_link_libraries(runMqttNetworkBuilderTestSequenceMain LibMqttNetworkObjectBuilder  LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
+    target_link_libraries(runMqttNetworkBuilderTestSequenceMain LibMqttSnClientTestContainer LibMqttNetworkObjectBuilder LibMqttClient gtest gtest_main gmock pthread lib-mqtt-sn-linux-client-network lib-mqtt-sn-client-network-config lib-mqtt-sn-linux-gateway-network lib-mqtt-sn-gateway-network-config lib-mqtt-sn-ring-buffer
             paho-mqtt3c paho-mqtt3a)
     add_executable(runMqttSnGatewayComplianceTests
             test/MqttSnGateway/compliance/MqttSnGatewayComplianceTestAction.h

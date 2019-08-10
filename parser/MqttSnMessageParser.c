@@ -181,9 +181,7 @@ int header_parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t da
   return parse_message_tolerant(h, CONNECT, data, data_len);
 }
 
-int parse_disconnect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
-  return parse_message_tolerant(h, DISCONNECT, data, data_len);
-}
+
 
 int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len) {
   return parse_message_tolerant(h, ENCAPSULATED_MESSAGE, data, data_len);

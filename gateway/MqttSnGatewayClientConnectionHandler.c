@@ -14,6 +14,7 @@
 #include <parser/MqttSnPingRespMessage.h>
 #include <ringbuffer/logging/MqttSnFixedSizeRingBufferLogging.h>
 #include <gateway/logging/MqttSnGatewayClientConnectionLogging.h>
+#include <parser/MqttSnDisconnectMessage.h>
 
 int32_t check_active_client_connection_timeout(MqttSnGatewayClientConnectionHandler *handler,
                                                uint64_t current_time);
@@ -518,5 +519,148 @@ int32_t remove_client_subscriptions(MqttSnGatewayClientConnectionHandler *gatewa
                                     const char *handler,
                                     device_address *client_address) {
   // TODO implement me
+  return 0;
+}
+int32_t parse_and_handle_disconnect(MqttSnGatewayClientConnectionHandler *handler,
+                                    MqttSnMessageData *msg,
+                                    int32_t parsed_bytes,
+                                    MqttSnGatewayForwarder *forwarders) {
+  if (isFull(handler->clientNetworkSendBuffer)) {
+    return 0;
+  }
+
+  if (msg->data_length - parsed_bytes > MQTT_SN_MESSAGE_HEADER_SHORT_LENGTH) {
+    return parse_and_handle_disconnect_duration(handler, msg, parsed_bytes, forwarders);
+  }
+
+  // normal disconnect
+
+  // parse
+  if (parse_disconnect(msg->data + parsed_bytes, msg->data_length - parsed_bytes) < 0) {
+    return 0;
+  }
+  db_start_client_transaction(handler->db_handler_, &forwarders->wireless_node_id, NULL);
+
+
+  // TODO check state first only possibel from sleep, awake, connected
+  DB_ENTRY_MQTT_SN_CLIENT_STATUS client_status;
+  db_get_client_status(handler->db_handler_, &client_status);
+  if (client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ACTIVE ||
+      client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ASLEEP ||
+      client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_AWAKE) {
+    db_set_client_status(handler->db_handler_, DB_ENTRY_MQTT_SN_CLIENT_STATUS_DISCONNECTED);
+  }
+
+#if WITH_LOGGING
+  if (client_exist(handler->db_handler_) == DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS &&
+      (client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ACTIVE ||
+          client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ASLEEP ||
+          client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_AWAKE)) {
+    char client_id[MQTT_SN_MAX_CLIENT_ID_LENGTH] = {0};
+    uint16_t connect_duration = 0;
+    db_get_client_id(handler->db_handler_, client_id);
+    db_get_client_connect_duration(handler->db_handler_, &connect_duration);
+    log_client_connection_client_disconnected(handler->logger,
+                                              &forwarders->wireless_node_id,
+                                              client_id,
+                                              connect_duration);
+  }
+#endif
+
+  if (db_end_client_transaction(handler->db_handler_) == DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR) {
+#if WITH_LOGGING
+    log_fatal_client_db_error(handler->logger,
+                              __FILE__,
+                              __func__,
+                              __LINE__,
+                              db_get_client_transaction_result(handler->db_handler_),
+                              get_db_handler_result(handler->db_handler_));
+#endif
+    return -1;
+  }
+
+  if (!(client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ACTIVE ||
+      client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ASLEEP ||
+      client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_AWAKE)) {
+    // client has wrong status - send no disconnect
+    return 0;
+  }
+
+  if (reuse_mqtt_sn_message_data(msg) < 0) {
+    return -1;
+  }
+  int32_t gen_bytes = 0;
+  if ((gen_bytes = generate_disconnect_message(msg->data + gen_bytes, sizeof(msg->data) - gen_bytes)) < 0) {
+#if WITH_LOGGING
+    log_msg_gen_error(handler->logger, CONNACK, __FILE__, __func__, __LINE__);
+#endif
+    return -1;
+  }
+  msg->data_length = gateway_add_forwarder_encapsulation_frames(msg, gen_bytes, forwarders, handler->logger);
+  if (put(handler->clientNetworkSendBuffer, msg) < 0) {
+    // should never happen
+#if WITH_LOGGING
+    log_fatal_queue_error(handler->logger,
+                          handler->clientNetworkSendBuffer,
+                          __FILE__,
+                          __func__,
+                          __LINE__,
+                          PSTR("put"));
+#endif
+    return -1;
+  }
+
+  return 0;
+}
+int32_t parse_and_handle_disconnect_duration(MqttSnGatewayClientConnectionHandler *handler,
+                                             MqttSnMessageData *msg,
+                                             int32_t parsed_bytes,
+                                             MqttSnGatewayForwarder *forwarders) {
+
+  // parse
+  uint16_t sleep_duration = 0;
+  if (parse_disconnect_duration(&sleep_duration, msg->data + parsed_bytes, msg->data_length - parsed_bytes) < 0) {
+    return 0;
+  }
+  db_start_client_transaction(handler->db_handler_, &forwarders->wireless_node_id, NULL);
+
+  DB_ENTRY_MQTT_SN_CLIENT_STATUS client_status;
+  db_get_client_status(handler->db_handler_, &client_status);
+  if (client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ACTIVE ||
+      client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ASLEEP ||
+      client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_AWAKE) {
+    db_set_client_connect_duration(handler->db_handler_, sleep_duration);
+    db_set_client_status(handler->db_handler_, DB_ENTRY_MQTT_SN_CLIENT_STATUS_ASLEEP);
+  }
+
+#if WITH_LOGGING
+  if (client_exist(handler->db_handler_) == DB_ENTRY_MQTT_SN_CLIENT_RESULT_SUCCESS &&
+      (client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ACTIVE ||
+          client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_ASLEEP ||
+          client_status == DB_ENTRY_MQTT_SN_CLIENT_STATUS_AWAKE)) {
+    char client_id[MQTT_SN_MAX_CLIENT_ID_LENGTH] = {0};
+    uint16_t connect_duration = 0;
+    db_get_client_id(handler->db_handler_, client_id);
+    db_get_client_connect_duration(handler->db_handler_, &connect_duration);
+    log_client_connection_client_asleep(handler->logger,
+                                        &forwarders->wireless_node_id,
+                                        client_id,
+                                        connect_duration);
+  }
+#endif
+
+  if (db_end_client_transaction(handler->db_handler_) == DB_ENTRY_MQTT_SN_CLIENT_RESULT_ERROR) {
+#if WITH_LOGGING
+    log_fatal_client_db_error(handler->logger,
+                              __FILE__,
+                              __func__,
+                              __LINE__,
+                              db_get_client_transaction_result(handler->db_handler_),
+                              get_db_handler_result(handler->db_handler_));
+#endif
+    return -1;
+  }
+
+  // TODO maybe we should send a disconnect with duration back as acknowledgement - or a config parameter
   return 0;
 }

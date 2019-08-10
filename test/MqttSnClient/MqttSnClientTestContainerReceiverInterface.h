@@ -1,0 +1,14 @@
+//
+// Created by SomeDude on 01.08.2019.
+//
+
+#ifndef CMQTTSNFORWARDER_TEST_MQTTSNCLIENT_MQTTSNCLIENTTESTCONTAINERRECEIVERINTERFACE_H_
+#define CMQTTSNFORWARDER_TEST_MQTTSNCLIENT_MQTTSNCLIENTTESTCONTAINERRECEIVERINTERFACE_H_
+
+#include "MqttSnClientTestContainerPublish.h"
+class MqttSnClientTestContainerReceiverInterface {
+ public:
+  virtual void receive(MqttSnClientTestContainerPublish &publish) = 0;
+};
+
+#endif //CMQTTSNFORWARDER_TEST_MQTTSNCLIENT_MQTTSNCLIENTTESTCONTAINERRECEIVERINTERFACE_H_

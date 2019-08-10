@@ -4,8 +4,11 @@
 #include <platform/platform_compatibility.h>
 #include <logging/linux/file/FileLogging.h>
 #include <logging/linux/filestdout/FileStdoutLogging.h>
+#include <client/interactive/linux/starter/MqttSnCmdBuffer.h>
 
-int32_t start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger);
+int32_t mqtt_sn_client_interactive_start_logger(mqtt_sn_interactive_client *client,
+                                                const mqtt_sn_logger_config *cfg,
+                                                MqttSnLogger *logger);
 
 int main(int argc, char *argv[]) {
   MqttSnLogger cfg_logger = {0};
@@ -34,7 +37,7 @@ int main(int argc, char *argv[]) {
   MqttSnLogger *mqtt_sn_logger = NULL;
 #ifdef WITH_LOGGING
   MqttSnLogger logger = {0};
-  if (start_logger(&fcfg.mslcfg, &logger) < 0) {
+  if (mqtt_sn_client_interactive_start_logger(NULL, &fcfg.mslcfg, &logger) < 0) {
     log_str(&cfg_logger, PSTR("Could not initialize mqtt sn logger\n"));
   }
   mqtt_sn_logger = &logger;
@@ -53,7 +56,9 @@ int main(int argc, char *argv[]) {
   return rc;
 }
 
-int32_t start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger) {
+int32_t mqtt_sn_client_interactive_start_logger(mqtt_sn_interactive_client *client,
+                                                const mqtt_sn_logger_config *cfg,
+                                                MqttSnLogger *logger) {
   if (!strcmp(cfg->log_target, "console")) {
     if (cfg->log_file_path != NULL) {
       if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_file_path, file_stdout_log_init, NULL) < 0) {

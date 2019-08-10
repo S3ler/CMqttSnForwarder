@@ -60,15 +60,16 @@ typedef enum CONFIG_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE_ {
 
 typedef struct client_find_mqtt_sn_gateway_config_ {
   CONFIG_FIND_MQTT_SN_GATEWAY_PATTERN_TYPE find_pattern_type;
-  int32_t advertise_wait_timeout;
+  int32_t advertise_wait_timeout_s;
 
-  int32_t search_gateway_wait_timeout;
+  int32_t search_gateway_wait_timeout_ms;
   uint8_t search_gateway_radius;
 
 #ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_REGEX_FILTER
   char *gw_id_regex_filter;
   char *gw_add_regex_filter;
 #endif
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_WHITELIST_FILTER
   uint16_t gw_id_whitelist_max_len;
   char *gw_id_whitelist[CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ID_WHITELIST_LENGTH];
   uint16_t gw_id_whitelist_len;
@@ -76,7 +77,8 @@ typedef struct client_find_mqtt_sn_gateway_config_ {
   uint16_t gw_add_whitelist_max_len;
   char *gw_add_whitelist[CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ADD_WHITELIST_LENGTH];
   uint16_t gw_add_whitelist_len;
-
+#endif
+#ifdef WITH_FIND_MQTT_SN_GATEWAY_CONFIG_BLACKLIST_FILTER
   uint16_t gw_id_blacklist_max_len;
   char *gw_id_blacklist[CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ID_BLACKLIST_LENGTH];
   uint16_t gw_id_blacklist_len;
@@ -84,6 +86,7 @@ typedef struct client_find_mqtt_sn_gateway_config_ {
   uint16_t gw_add_blacklist_max_len;
   char *gw_add_blacklist[CLIENT_FIND_MQTT_SN_GATEWAY_CONFIG_GW_ADD_BLACKLIST_LENGTH];
   uint16_t gw_add_blacklist_len;
+#endif
 } client_find_mqtt_sn_gateway_config;
 
 int32_t client_find_mqtt_sn_gateway_config_init(client_find_mqtt_sn_gateway_config *cfg);

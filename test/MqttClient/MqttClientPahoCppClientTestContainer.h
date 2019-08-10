@@ -10,12 +10,15 @@
 #include "MqttClientSubscribeAction.h"
 #include "MqttClientDisconnectAction.h"
 #include "MqttClientActionResult.h"
+#include "MqttClientTestContainerConfiguration.h"
 #include <atomic>
 #include <thread>
 #include <external/paho.mqtt.cpp-67b917a73fd6f12c58587d47e2e2fd4ef6848b01/src/MQTTAsync.h>
 
 class MqttClientPahoCppClientTestContainer : public MqttClientTestContainerInterface {
  private:
+  const MqttClientTestContainerConfiguration configuration;
+
   std::string clientId;
   std::string brokerURI;
   MQTTAsync client;
@@ -38,7 +41,7 @@ class MqttClientPahoCppClientTestContainer : public MqttClientTestContainerInter
   void on_publish_action_finished(MqttClientActionResultType action_result, MQTTAsync_token publish_token);
   void on_receive_publish_action_finished(MqttClientActionResultType action_result, timespec end_ts);
  public:
-  MqttClientPahoCppClientTestContainer(const MqttClientConnectAction &initial_connect_action);
+  MqttClientPahoCppClientTestContainer(const MqttClientTestContainerConfiguration &configuration);
   virtual ~MqttClientPahoCppClientTestContainer();
 
   bool StartBackgroundHandler() override;

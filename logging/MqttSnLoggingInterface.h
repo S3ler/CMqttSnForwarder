@@ -97,6 +97,7 @@ int32_t get_timestamp_s(uint64_t *t_s);
 int32_t get_timestamp_ms(uint64_t *t_s, uint64_t *t_ms);
 
 int32_t get_timestamp_ns(uint64_t *t_s, uint64_t *t_ns);
+uint64_t timestamp_s_ns_to_ns(uint64_t t_s, uint64_t t_ns);
 
 int log_current_time(const MqttSnLogger *logger);
 

@@ -10,7 +10,9 @@
 
 int32_t gateway_network_config_init(gateway_network_config *cfg) {
   memset(cfg, 0, sizeof(*cfg));
-  memcpy(cfg->default_gateway_network_protocol, DEFAULT_MQTT_SN_GATEWAY_PROTOCOL, sizeof(DEFAULT_MQTT_SN_GATEWAY_PROTOCOL));
+  memcpy(cfg->default_gateway_network_protocol,
+         DEFAULT_MQTT_SN_GATEWAY_PROTOCOL,
+         sizeof(DEFAULT_MQTT_SN_GATEWAY_PROTOCOL));
   cfg->gateway_network_protocol = cfg->default_gateway_network_protocol;
   cfg->gateway_network_bind_port = DEFAULT_MQTT_SN_GATEWAY_BIND_PORT;
 #ifdef WITH_GATEWAY_NETWORK_BROADCAST
@@ -371,6 +373,51 @@ int32_t is_gateway_network_config_command(const char *arg, int *i) {
   else if (!strcmp(arg, "-gnp") || !strcmp(arg, "--gateway_network_plugin")) {
     (*i)++;
     return 1;
+  }
+#endif
+  return 0;
+}
+int32_t gateway_network_config_copy_to_buffer(gateway_network_config *cfg, gateway_network_config_buffer *cfg_buffer) {
+  if (cfg->gateway_network_protocol) {
+    if (strlen(cfg->gateway_network_protocol) + 1 > DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_NETWORK_PROTOCOL_LENGTH) {
+      return -1;
+    }
+    strcpy(cfg_buffer->gateway_network_protocol, cfg->gateway_network_protocol);
+    cfg->gateway_network_protocol;
+  }
+  if (cfg->gateway_network_bind_address) {
+    if (strlen(cfg->gateway_network_bind_address) + 1
+        > DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_NETWORK_BIND_ADDRESS_LENGTH) {
+      return -1;
+    }
+    strcpy(cfg_buffer->gateway_network_bind_address, cfg->gateway_network_bind_address);
+    cfg->gateway_network_bind_address = cfg_buffer->gateway_network_bind_address;
+  }
+#ifdef WITH_GATEWAY_NETWORK_BROADCAST
+  if (cfg->gateway_network_broadcast_protocol) {
+    if (strlen(cfg->gateway_network_broadcast_protocol) + 1
+        > DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_BROADCAST_PROTOCOL_LENGTH) {
+      return -1;
+    }
+    strcpy(cfg_buffer->gateway_network_broadcast_protocol, cfg->gateway_network_broadcast_protocol);
+    cfg->gateway_network_broadcast_protocol = cfg_buffer->gateway_network_broadcast_protocol;
+  }
+  if (cfg->gateway_network_broadcast_address) {
+    if (strlen(cfg->gateway_network_broadcast_address) + 1
+        > DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_BROADCAST_PROTOCOL_LENGTH) {
+      return -1;
+    }
+    strcpy(cfg_buffer->gateway_network_broadcast_address, cfg->gateway_network_broadcast_address);
+    cfg->gateway_network_broadcast_address = cfg_buffer->gateway_network_broadcast_address;
+  }
+#endif
+#ifdef WITH_LINUX_PLUGIN_NETWORK
+  if (cfg->gateway_network_plugin_path) {
+    if (strlen(cfg->gateway_network_plugin_path) + 1 > DEFAULT_MQTT_SN_GATEWAY_NETWORK_CONFIG_PLUGIN_PATH_LENGTH) {
+      return -1;
+    }
+    strcpy(cfg_buffer->gateway_network_plugin_path, cfg->gateway_network_plugin_path);
+    cfg->gateway_network_plugin_path = cfg_buffer->gateway_network_plugin_path;
   }
 #endif
   return 0;

@@ -92,7 +92,7 @@ class MqttSnGatewayComplianceDisconnectTest : public ::testing::TestWithParam<st
 
     mqttSnGateway = MqttSnGatewayTestContainerFactory::getMqttSnGateway(std::get<1>(GetParam()));
     ASSERT_NE(mqttSnGateway, nullptr);
-    ASSERT_EQ(mqttSnGateway->initialize(), EXIT_SUCCESS);
+    //ASSERT_EQ(mqttSnGateway->initialize(), EXIT_SUCCESS);
     ASSERT_EQ(mqttSnGateway->start(), EXIT_SUCCESS);
 
     mqttSnMessageTester = std::make_shared<MqttSnMessageTester>();

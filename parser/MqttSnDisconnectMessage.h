@@ -17,7 +17,11 @@ extern "C" {
 #define MQTT_SN_MESSAGE_DISCONNECT_MIN_LENGTH                 MQTT_SN_MESSAGE_DISCONNECT_HEADER_LENGTH
 #define MQTT_SN_MESSAGE_DISCONNECT_MAX_LENGTH                 (MQTT_SN_MESSAGE_DISCONNECT_HEADER_LENGTH + MQTT_SN_MESSAGE_DISCONNECT_DURATION_LENGTH)
 
-int32_t parse_disconnect_byte(uint16_t *duration, const uint8_t *data, uint16_t data_len);
+int32_t parse_disconnect(const uint8_t *data, uint16_t data_len);
+
+int32_t parse_disconnect_duration(uint16_t *duration, const uint8_t *data, uint16_t data_len);
+int32_t generate_disconnect_message(uint8_t *dst, uint16_t dst_len);
+int32_t generate_disconnect_duration(uint8_t *dst, uint16_t dst_len,uint16_t duration);
 
 #ifdef __cplusplus
 }

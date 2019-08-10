@@ -20,7 +20,7 @@ void MqttBrokerMosquittoDockerTestContainer::stop_broker() {
 }
 bool MqttBrokerMosquittoDockerTestContainer::start_broker() {
   stop_broker();
-  if (std::string("tcp") != broker_config.protocol) {
+  if (MqttBrokerProtocolTestType::TCP != broker_config.protocol_type) {
     return false;
   }
   std::string command = std::string("docker run -d --name mosquitto-test-broker -p ")

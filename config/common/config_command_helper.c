@@ -95,6 +95,55 @@ int32_t process_config_file(const char *config_file_path,
 #endif
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
 }
+
+int32_t tokenize_command_str(char *str, size_t len, char *argv_0, char **argv, int32_t argv_len) {
+  if (str == NULL) {
+    assert(!(str == NULL));
+    return -1;
+  }
+  if (len == 0) {
+    assert(!(len == 0));
+    return -1;
+  }
+  if (strlen(str) + 1 != len) {
+    assert(!(strlen(str) + 1 != len));
+    return -1;
+  }
+
+  int32_t argc = 0;
+  argv[argc++] = argv_0;
+
+  for (char *tk = strtok(str, " "); tk != NULL; tk = strtok(NULL, " ")) {
+    argv[argc++] = tk;
+    if (argc == INT32_MAX || argc + 1 > argv_len) {
+      return -1;
+    }
+  }
+
+  // remove '\n' from tokens
+  for (uint16_t i = 1; i < argc; i++) {
+    if (strlen(argv[i]) == 1 && argv[i][(strlen(argv[i]) - 1)] == '\n') {
+      argv[i][(strlen(argv[i]) - 1)] = '\0';
+      if (i + 1 == argc) {
+        // argv is the last entry only decrease argc
+        argc -= 1;
+      } else {
+        // shift all argv entries one to the front and decrease argc
+        for (uint16_t j = i; j < argc - 1; j++) {
+          argv[j] = argv[j + 1];
+        }
+        argc -= 1;
+      }
+    } else {
+      if (argv[i][(strlen(argv[i]) - 1)] == '\n') {
+        argv[i][(strlen(argv[i]) - 1)] = '\0';
+      }
+    }
+  }
+
+  return argc;
+}
+
 int32_t process_config_cmd_str(const MqttSnLogger *logger,
                                char *line,
                                size_t len,
@@ -315,7 +364,8 @@ int32_t print_invalid_clean_session_given(const MqttSnLogger *logger, const char
   log_flush(logger);
   return log_status(logger);
 }
-int32_t print_invalid_advertisement_standby_monitoring_enabled_given(const MqttSnLogger *logger, const char *given_str) {
+int32_t print_invalid_advertisement_standby_monitoring_enabled_given(const MqttSnLogger *logger,
+                                                                     const char *given_str) {
   log_str(logger, PSTR("Error: advertisement standby monitoring enabled given: "));
   log_str(logger, given_str);
   log_flush(logger);
@@ -337,6 +387,21 @@ int32_t parse_retain(const MqttSnLogger *logger, char *retain_str, uint8_t *dst)
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
+}
+
+int32_t print_invalid_publish_clear_given(const MqttSnLogger *logger, const char *given_str) {
+  log_str(logger, PSTR("Error: Invalid publish clear given: "));
+  log_str(logger, given_str);
+  log_flush(logger);
+  return log_status(logger);
+}
+int32_t parse_client_clear_boolean(const MqttSnLogger *logger, char *boolean_str, uint8_t *dst) {
+  if (parse_boolean(boolean_str, dst) == MQTT_SN_PARSE_CONFIG_FAILURE) {
+    print_invalid_publish_clear_given(logger, boolean_str);
+    return MQTT_SN_PARSE_CONFIG_FAILURE;
+  }
+  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+
 }
 int32_t parse_client_connection_timeout_enabled(const MqttSnLogger *logger, char *retain_str, uint8_t *dst) {
   if (parse_boolean(retain_str, dst) == MQTT_SN_PARSE_CONFIG_FAILURE) {
@@ -488,7 +553,7 @@ int32_t print_config_list_full(const MqttSnLogger *logger, char *arg_list, uint1
 int32_t parse_client_subscription_config_qos(const MqttSnLogger *logger, char *qos_str, int8_t *qos_dst) {
   char *endprt;
   long int n = strtol(qos_str, &endprt, 10);
-  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < -1 || n > 2)) {
+  if ((errno == EOVERFLOW) || (*endprt != '\0') || (n < 0 || n > 2)) {
     print_config_parser_invalid_qos_given(logger, n);
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
@@ -509,6 +574,7 @@ int32_t print_see_usage(const MqttSnLogger *logger, const char *executable_name)
   log_str(logger, PSTR("Use "));
   log_str(logger, executable_name);
   log_str(logger, PSTR(" --help' to see usage."));
+  log_flush(logger);
   return log_status(logger);
 }
 

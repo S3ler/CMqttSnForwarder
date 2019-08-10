@@ -50,6 +50,7 @@ int32_t client_connect_config_process_args(client_connect_config *cfg,
                                            const MqttSnLogger *logger,
                                            int argc,
                                            char **argv) {
+  int32_t parsed_args = 0;
   for (int i = 0; i < argc; i++) {
     if (!strcmp(argv[i], "-ci") || !strcmp(argv[i], "--client_id")) {
       if (i == argc - 1) {
@@ -59,6 +60,7 @@ int32_t client_connect_config_process_args(client_connect_config *cfg,
         cfg->client_id = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-wt") || !strcmp(argv[i], "--will_topic")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "will topic");
@@ -67,6 +69,8 @@ int32_t client_connect_config_process_args(client_connect_config *cfg,
         cfg->will_topic = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
+
     } else if (!strcmp(argv[i], "-wm") || !strcmp(argv[i], "--will_msg")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "will message");
@@ -75,6 +79,8 @@ int32_t client_connect_config_process_args(client_connect_config *cfg,
         cfg->will_msg = argv[i + 1];
       }
       i++;
+      parsed_args += 2;
+
     } else if (!strcmp(argv[i], "-cs") || !strcmp(argv[i], "--clean_session")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "clean session");
@@ -85,6 +91,7 @@ int32_t client_connect_config_process_args(client_connect_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     } else if (!strcmp(argv[i], "-cs") || !strcmp(argv[i], "--clean_session")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "client connect timeout");
@@ -95,7 +102,8 @@ int32_t client_connect_config_process_args(client_connect_config *cfg,
         }
       }
       i++;
-    }else if (!strcmp(argv[i], "-cto") || !strcmp(argv[i], "--client_timeout_offset")) {
+      parsed_args += 2;
+    } else if (!strcmp(argv[i], "-cto") || !strcmp(argv[i], "--client_timeout_offset")) {
       if (i == argc - 1) {
         print_argument_value_not_specified(logger, argv[i], "client timeout timeout");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
@@ -105,9 +113,10 @@ int32_t client_connect_config_process_args(client_connect_config *cfg,
         }
       }
       i++;
+      parsed_args += 2;
     }
   }
-  return MQTT_SN_PARSE_CONFIG_SUCCESS;
+  return parsed_args;
 }
 void client_connect_config_print_usage_short(const MqttSnLogger *logger, const char *indent) {
   if (indent) {
@@ -127,4 +136,29 @@ void client_connect_config_print_usage_long(const MqttSnLogger *logger) {
   log_str(logger, PSTR(" -cs : specify clean session. Can be true or false. Default is true.\n"));
   log_str(logger, PSTR(" -cct : specify client connect timeout in ms. Default is 30000.\n"));
   log_str(logger, PSTR(" -cto : client timeout offset in s. Default is -10.\n"));
+}
+int32_t client_connect_config_copy_to_buffer(client_connect_config *cfg, client_connect_config_buffer *cfg_buffer) {
+  if (strlen(cfg->client_id) + 1 > DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_CLIENT_IT_LENGTH) {
+    return -1;
+  }
+  strcpy(cfg_buffer->client_id, cfg->client_id);
+  cfg->client_id = cfg_buffer->client_id;
+
+  if (cfg->will_topic) {
+    if (strlen(cfg->will_topic) + 1 > DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_WILL_TOPIC_LENGTH) {
+      return -1;
+    }
+    stpcpy(cfg_buffer->will_topic, cfg->will_topic);
+    cfg->will_topic = cfg_buffer->will_topic;
+  }
+
+  if (cfg->will_msg) {
+    if (strlen(cfg->will_msg) + 1 > DEFAULT_MQTT_SN_CLIENT_CONNECT_CONFIG_BUFFER_WILL_MSG_LENGTH) {
+      return -1;
+    }
+    stpcpy(cfg_buffer->will_msg, cfg->will_msg);
+    cfg->will_msg = cfg_buffer->will_msg;
+  }
+
+  return 0;
 }

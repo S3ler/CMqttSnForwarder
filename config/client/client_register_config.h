@@ -21,10 +21,25 @@ typedef struct client_registration_config_ {
 } client_registration_config;
 
 typedef struct client_register_config_ {
-  uint16_t registration_list_max_len;
+  uint32_t registration_list_max_len;
   client_registration_config registration_list[CLIENT_MQTT_SN_MAX_REGISTRATIONS];
-  uint16_t registration_list_len;
+  uint32_t registration_list_len;
+  uint8_t register_clear;
 } client_register_config;
+
+#ifndef CLIENT_MQTT_SN_REGISTRATION_TOPIC_NAME_LENGTH
+#define CLIENT_MQTT_SN_REGISTRATION_TOPIC_NAME_LENGTH 255
+#endif
+
+typedef struct client_registration_config_buffer_ {
+  char topic_name[CLIENT_MQTT_SN_REGISTRATION_TOPIC_NAME_LENGTH];
+} client_registration_config_buffer;
+
+typedef struct client_register_config_buffer_ {
+  client_registration_config_buffer registration_list[CLIENT_MQTT_SN_MAX_REGISTRATIONS];
+} client_register_config_buffer;
+
+int32_t client_register_config_copy_to_buffer(client_register_config* cfg, client_register_config_buffer* cfg_buffer);
 
 int32_t client_register_config_init(client_register_config *cfg);
 void client_register_config_cleanup(client_register_config *cfg);

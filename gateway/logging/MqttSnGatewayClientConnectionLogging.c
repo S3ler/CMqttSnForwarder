@@ -204,4 +204,38 @@ int32_t log_client_connection_client_ping_req_received(const MqttSnLogger *logge
   log_flush(logger);
   return log_status(logger);
 }
+int32_t log_client_connection_client_disconnected(const MqttSnLogger *logger,
+                                                  const device_address *wireless_node_id,
+                                                  const char *client_id,
+                                                  uint16_t connect_duration) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return log_status(logger);
+  }
+  log_msg_start(logger);
+  log_str(logger, PSTR("client disconnected "));
+  log_device_address(logger, wireless_node_id);
+  log_str(logger, PSTR(" "));
+  log_str(logger, client_id);
+  log_str(logger, PSTR(" "));
+  log_duration(logger, connect_duration);
+  log_flush(logger);
+  return log_status(logger);
+}
+int32_t log_client_connection_client_asleep(const MqttSnLogger *logger,
+                                                  const device_address *wireless_node_id,
+                                                  const char *client_id,
+                                                  uint16_t connect_duration) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+    return log_status(logger);
+  }
+  log_msg_start(logger);
+  log_str(logger, PSTR("client sleep "));
+  log_device_address(logger, wireless_node_id);
+  log_str(logger, PSTR(" "));
+  log_str(logger, client_id);
+  log_str(logger, PSTR(" "));
+  log_duration(logger, connect_duration);
+  log_flush(logger);
+  return log_status(logger);
+}
 
