@@ -14,6 +14,16 @@ cmake --build $PWD --target 10kconsecutivePublishQoS1Paylaod10Byte -- -j 2
 
 ## Getting Started Arduino ESP32
 ### Prepare
+install arduino cli
+apt install python-pip
+pip install pyserial
+board_manager:
+  additional_urls:
+    - http://arduino.esp8266.com/stable/package_esp8266com_index.json
+    - http://dl.espressif.com/dl/package_esp32_index.json
+[ ! -d ~/Arduino/libraries ] && mkdir -p ~/Arduino/libraries
+cp arduinolibraries ~/Arduino/libraries
+ln -s ~/Arduino/libraries/CMqttSnForwarder ~/CMqttSnForwarder
 
 Ideen:
 Automatisch docker container erstellen aus den executables
