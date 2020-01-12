@@ -4,7 +4,7 @@
 #include <EEPROM.h>
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
 #include <SSD1306.h>
-#include <MqttSnForwarderArduino.hpp>
+#include <MqttSnClientArduino.hpp>
 
 #ifdef WITH_EEPROM
 EEPROM_cfg *eeprom_cfg = NULL;
@@ -21,34 +21,20 @@ ssd1306status display_status = {0};
 MqttSnLogger screen_logger = {0};
 forwarder_config fcfg = {0};
 
-// forwarder
-MqttSnForwarder mqttSnForwarder;
-
-#ifndef MQTT_SN_FORWARDER_ARDUINO_IDENTIFIER
-#define MQTT_SN_FORWARDER_ARDUINO_IDENTIFIER "FW"
-#endif
-char* fw_identifier = MQTT_SN_FORWARDER_ARDUINO_IDENTIFIER;
-
 #ifdef WITH_ARDUINO_GATEWAY_NETWORK_UDP
 WiFiUDP gatewayWiFiUdp;
 WiFiUDP gatewayBCWiFiUdp;
 WiFiUDP *gatewayUdp = &gatewayWiFiUdp;
 WiFiUDP *gatewayBCUdp = &gatewayBCWiFiUdp;
-MqttSnArduinoGatewayUdpNetworkContainer udpGatewayNetworkContainer;
 #endif
 
-#ifdef WITH_ARDUINO_CLIENT_NETWORK_UDP
-WiFiUDP clientWiFiUdp;
-WiFiUDP clientBCWiFiUdp;
-WiFiUDP *clientUdp = &clientWiFiUdp;
-WiFiUDP *clientBCUdp = &clientBCWiFiUdp;
-device_address  udp_client_network_mqtt_sn_gateway_address;
-MqttSnArduinoClientUdpNetworkContainer udpClientNetworkContainer;
-#endif
-
-char line[EEPROM_LINE_SIZE] = {0};
 size_t line_pos = 0;
-size_t line_max = EEPROM_LINE_SIZE;
+
+mqtt_sn_interactive_client interactive_client = { 0 };
+interactive_client_config_container cfg;
+mqtt_sn_config_command_buffer cmd_buffer;
+
+int updateEEPROM();
 
 void configureModeTimeout(int timeout) {
   if (timeout > 0) {
@@ -62,10 +48,9 @@ void configureModeTimeout(int timeout) {
     yield();
     if (Serial.available() > 0) {
       started = millis();
-      if (parse_arduino_serial_line(line, &line_pos, line_max)) {
-        arduino_serial_eval_process(eeprom_cfg, &fcfg, fcfg.executable_name, &fcfg_logger, line, line_pos,
-                                    forwarder_config_file_process_command_callback, forwarder_config_print_usage);
-        memset(line, 0, sizeof(line));
+      if (parse_arduino_serial_line(cmd_buffer.buffer, &line_pos, sizeof(cmd_buffer.buffer))) {
+        updateEEPROM();
+        mqtt_sn_config_command_buffer_reset(&cmd_buffer);
         line_pos = 0;
 
         started = millis();
@@ -93,8 +78,12 @@ void configureModeTimeout(int timeout) {
 void configureMode() {
   configureModeTimeout(0);
 }
-
+#ifndef MQTT_SN_CLIENT_ARDUINO_IDENTIFIER
+#define MQTT_SN_CLIENT_ARDUINO_IDENTIFIER "MqttSnArduinoClient"
+#endif
+char* client_identifier = MQTT_SN_CLIENT_ARDUINO_IDENTIFIER;
 void setup() {
+
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
@@ -106,19 +95,19 @@ void setup() {
     Serial.println("Error: Could not initialize MqttSnLogger.");
     return;
   }
-  if (fw_identifier) {
-    fcfg_logger.log_identifier = fw_identifier;
+  if (client_identifier) {
+    fcfg_logger.log_identifier = client_identifier;
   }
-  forwarder_config_init(&fcfg);
+  interactive_client_config_init(&cfg);
+  mqtt_sn_config_command_buffer_init(&cmd_buffer);
+
 #ifdef WITH_EEPROM
   eeprom_config_init(&eeprom_cfg);
-  int eeprom_fcfg_rc = eeprom_load_forwarder_config(eeprom_cfg, &fcfg, fcfg.executable_name, &fcfg_logger,
-                       forwarder_config_file_process_command_callback, forwarder_config_print_usage);
+  int eeprom_fcfg_rc = eeprom_load_forwarder_config(eeprom_cfg, NULL, NULL, &fcfg_logger, NULL, NULL);
   if (eeprom_fcfg_rc == -2) {
     configureModeTimeout(30);
   }
   yield();
-
   int wifi_rc = connect_wifi(eeprom_cfg->WiFi_cfg.ssid, eeprom_cfg->WiFi_cfg.password, 20000, &fcfg_logger);
   if (wifi_rc != 0) {
     configureModeTimeout(30);
@@ -129,97 +118,139 @@ void setup() {
   Serial.print("  ");
   WiFi.begin(ssid, password);
 #endif
-
-
-  if (!strcmp(fcfg.gncfg.gateway_network_protocol, "udp")) {
-    if (MqttSnArduinoGatewayUdpNetworkContainerStart(&fcfg_logger,
-        fcfg.msgcfg.mqtt_sn_gateway_host, fcfg.msgcfg.mqtt_sn_gateway_port,
-        fcfg.gncfg.gateway_network_bind_address, fcfg.gncfg.gateway_network_bind_port,
-        fcfg.gncfg.gateway_network_broadcast_address,
-        fcfg.gncfg.gateway_network_broadcast_bind_port, &mqttSnForwarder.gatewayNetwork,
-        &udpGatewayNetworkContainer, &mqttSnForwarder.mqtt_sn_gateway_address)) {
-      configureModeTimeout(30);
+}
+int32_t client_loop = 0;
+void updateConfig();
+void loop() {
+  if (client_loop) {
+    MQTT_SN_CLIENT_LOOP_RETURN_CODE loop_rc = MqttSnClientLoop(&interactive_client.client);
+    if (loop_rc == MQTT_SN_CLIENT_LOOP_RETURN_ERROR) {
+      client_loop = 0;
     }
   }
+  if (Serial.available() > 0) {
+    if (parse_arduino_serial_line(cmd_buffer.buffer, &line_pos, sizeof(cmd_buffer.buffer))) {
+      if (!updateEEPROM()) {
+        return;
+      }
 
-  if (!strcmp(fcfg.cncfg.client_network_protocol, "udp")) {
-    if (MqttSnArduinoClientUdpNetworkContainerStart(&fcfg_logger,
-        fcfg.msgcfg.mqtt_sn_gateway_host, fcfg.msgcfg.mqtt_sn_gateway_port,
-        fcfg.cncfg.client_network_bind_address, fcfg.cncfg.client_network_bind_port,
-        fcfg.cncfg.client_network_broadcast_address,
-        fcfg.cncfg.client_network_broadcast_bind_port, &mqttSnForwarder.clientNetwork,
-        &udpClientNetworkContainer, &udp_client_network_mqtt_sn_gateway_address)) {
-      configureModeTimeout(30);
+      yield();
+      cmd_buffer.buffer[strlen(cmd_buffer.buffer) - 1] = 0; // cut '\n'
+      // check for help
+      if (mqtt_sn_client_interactive_is_help(cmd_buffer.buffer)) {
+        mqtt_sn_client_interactive_print_usage(&fcfg_logger);
+        mqtt_sn_config_command_buffer_reset(&cmd_buffer);
+        line_pos = 0;
+        return;
+      }
+
+      // handle interactive commands
+      MQTT_SN_CLIENT_INTERACTIVE_ACTION_TYPE command_token;
+      if ((command_token = mqtt_sn_client_interactive_parse_action(cmd_buffer.buffer, strlen(cmd_buffer.buffer))) !=
+          MQTT_SN_CLIENT_INTERACTIVE_COMMAND_TOKEN_NO_COMMAND) {
+        // TODO logger initialiasierung
+        mqtt_sn_client_interactive_cmd_result exec_rc;
+        exec_rc = mqtt_sn_cmd_buffer_execute_command(&interactive_client, command_token, &cfg, &fcfg_logger);
+
+        print_mqtt_sn_client_interactive_cmd_result(&fcfg_logger, &exec_rc);
+        if (command_token == MQTT_SN_CLIENT_INTERACTIVE_COMMAND_TOKEN_INIT_CLIENT &&
+            exec_rc.action_result == MQTT_SN_CLIENT_INTERACTIVE_ACTION_RESULT_TYPE_SUCCESS) {
+          client_loop = 1;
+        }
+        if (command_token == MQTT_SN_CLIENT_INTERACTIVE_COMMAND_TOKEN_CONNECT_GATEWAY &&
+            exec_rc.action_result == MQTT_SN_CLIENT_INTERACTIVE_ACTION_RESULT_TYPE_SUCCESS) {
+          client_loop = 0;
+        }
+        if (command_token == MQTT_SN_CLIENT_INTERACTIVE_COMMAND_TOKEN_DEINIT_CLIENT &&
+            exec_rc.action_result == MQTT_SN_CLIENT_INTERACTIVE_ACTION_RESULT_TYPE_SUCCESS) {
+          client_loop = 0;
+        }
+
+        mqtt_sn_config_command_buffer_reset(&cmd_buffer);
+        line_pos = 0;
+        return;
+      }
+
+
+      updateConfig();
+
     }
   }
+}
+int updateEEPROM() {
+  mqtt_sn_config_command_buffer cmd_buffer_cp = mqtt_sn_config_command_buffer_cp(&cmd_buffer);
+  if (mqtt_sn_config_command_buffer_parse_string(&cmd_buffer_cp) < 0) {
+    log_str(&fcfg_logger, PSTR("Error tokenizing.\n"));
+    line_pos = 0;
+    return 0;
+  }
+  int eeprom_rc = process_eeprom_config_token(eeprom_cfg, &fcfg_logger, cmd_buffer_cp.argc, cmd_buffer_cp.argv);
+  if (eeprom_rc == 0 || eeprom_rc == 2) {
+    if (eeprom_rc == 0) {
+      eeprom_config_set(eeprom_cfg, NULL, 0);
+    }
+    mqtt_sn_config_command_buffer_reset(&cmd_buffer);
+    line_pos = 0;
+    return 0;
+  }
+  int system_rc = process_system_config_token(&fcfg_logger, cmd_buffer_cp.argc, cmd_buffer_cp.argv);
+  if (system_rc == 0 || system_rc == 2) {
+    mqtt_sn_config_command_buffer_reset(&cmd_buffer);
+    line_pos = 0;
+    return 0;
+  }
+  return 1;
+}
+void updateConfig() {
 
-  pinMode(16, OUTPUT);
-  digitalWrite(16, LOW);
-  delay(50);
-  digitalWrite(16, HIGH);
-  if (!display.init()) {
-    Serial.println("Error: Could not initialize display.");
+  // update configuration
+  // create a copy for simulating
+  mqtt_sn_config_command_buffer cmd_buffer_cp = mqtt_sn_config_command_buffer_cp(&cmd_buffer);
+  if (mqtt_sn_config_command_buffer_parse_string(&cmd_buffer_cp) < 0) {
+    log_str(&fcfg_logger, PSTR("Error tokenizing.\n"));
+    line_pos = 0;
+    return;
+  }
+  int rc;
+  if ((rc = mqtt_sn_cmd_buffer_interactive_client_simulate(&cfg, &fcfg_logger, cmd_buffer_cp.argc, cmd_buffer_cp.argv)) < 0) {
+    // no valid configuration - no update
+    mqtt_sn_config_command_buffer_reset(&cmd_buffer);
+    line_pos = 0;
     return;
   }
 
-  if (MqttSnLoggerInit(&screen_logger, LOG_LEVEL_VERBOSE, ssd1306_screen_log_init)) {
-    Serial.println("Error: Could not initialize MqttSnLogger.");
-    configureModeTimeout(30);
-  }
-
-  if (fcfg.mslcfg.log_identifier) {
-    screen_logger.log_identifier = fcfg.mslcfg.log_identifier;
-  }
-
-#ifdef WITH_LOGGING
-  if (log_forwarder_started(&screen_logger, fcfg.msvcfg.version, fcfg.msvcfg.major, fcfg.msvcfg.minor, fcfg.msvcfg.tweak, fcfg.msvcfg.build_date)) {
-  }
-#endif
-
-  mqttSnForwarder.clientNetworkSendTimeout = fcfg.cncfg.client_network_send_timeout;
-  mqttSnForwarder.clientNetworkReceiveTimeout = fcfg.cncfg.client_network_receive_timeout;
-  mqttSnForwarder.gatewayNetworkSendTimeout = fcfg.gncfg.gateway_network_send_timeout;
-  mqttSnForwarder.gatewayNetworkReceiveTimeout = fcfg.gncfg.gateway_network_receive_timeout;
-
-  MqttSnForwarderSetPinConnection(&mqttSnForwarder, 1);
-  if (fcfg.pin_connection && fcfg.connection_state == DISCONNECTED_CONFIG_MQTT_SN_FORWARDER_START_CONNECTION_STATE) {
-    log_str(&screen_logger, "Error: mqtt-sn gateway cannot start in disconnected state with pinned gateway connection.\n");
-  }
-
-  if (MqttSnForwarderInit(&mqttSnForwarder, &screen_logger, &mqttSnForwarder.mqtt_sn_gateway_address)) {
-    MqttSnForwarderDeinit(&mqttSnForwarder);
-    Serial.println("Could not initialize Forwarder");
-    configureModeTimeout(30);
-  }
-}
-
-int forwarder_rc = 0;
-void loop() {
-  if (forwarder_rc == 0) {
-    forwarder_rc = MqttSnForwarderLoop(&mqttSnForwarder);
-  } else if (forwarder_rc == -1) {
-#ifdef WITH_LOGGING
-    if (log_forwarder_terminated(&screen_logger,
-                                 fcfg.msvcfg.version,
-                                 fcfg.msvcfg.major,
-                                 fcfg.msvcfg.minor,
-                                 fcfg.msvcfg.tweak)) {
-    }
-#endif
-    forwarder_rc = 2;
-  } else if (forwarder_rc == 2) {
-    delay(2000);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(2000);
-    digitalWrite(LED_BUILTIN, HIGH);
-  }
-
-  if (Serial.available() > 0) {
-    if (parse_arduino_serial_line(line, &line_pos, line_max)) {
-      arduino_serial_eval_process(eeprom_cfg, &fcfg, fcfg.executable_name, &fcfg_logger, line, line_pos,
-                                  forwarder_config_file_process_command_callback, forwarder_config_print_usage);
-      memset(line, 0, sizeof(line));
+  if (rc != MQTT_SN_PARSE_CONFIG_SUCCESS) {
+    if (rc == MQTT_SN_PARSE_CONFIG_HELP) {
+      interactive_client_config_print_usage(&fcfg_logger);
+      mqtt_sn_config_command_buffer_reset(&cmd_buffer);
       line_pos = 0;
+      return;
+    } else {
+      interactive_client_config_print_see_usage(&fcfg_logger);
+      mqtt_sn_config_command_buffer_reset(&cmd_buffer);
+      line_pos = 0;
+      return;
     }
   }
+
+  // simulation successful now write real values into configuration
+  if (mqtt_sn_config_command_buffer_parse_string(&cmd_buffer) < 0) {
+    log_str(&fcfg_logger, PSTR("Error tokenizing.\n"));
+    line_pos = 0;
+    return;
+  }
+
+  if (cmd_buffer.argc == 1) {
+    mqtt_sn_config_command_buffer_reset(&cmd_buffer);
+    line_pos = 0;
+    return;
+  }
+
+  interactive_client_config_process_line(&cfg, &fcfg_logger, cmd_buffer.argc, cmd_buffer.argv);
+  interactive_client_config_copy_to_buffer(&cfg);
+
+  mqtt_sn_config_command_buffer_reset(&cmd_buffer);
+  interactive_client_config_print_updated_config(&fcfg_logger, 1);
+  line_pos = 0;
+
 }
