@@ -3,12 +3,12 @@
 //
 
 #include <stdlib.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <logging/linux/stdout/StdoutLogging.h>
 #include <platform/platform_compatibility.h>
 #include <client/findgatewaymonitor/config/find_gateway_monitor_config.h>
 #include <client/findgatewaymonitor/linux/starter/publish_client_starter.h>
-#include <client/MqttSnFindGatewayClient.h>
+#include <client/findgatewaymonitor/linux/MqttSnFindGatewayMonitor.h>
 
 int main(int argc, char *argv[]) {
   MqttSnLogger logger = {0};
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
   }
 
-  MqttSnFindGatewayClient client;
+  MqttSnFindGatewayMonitor client;
   MqttSnGatewayNetworkInterface gatewayNetworkInterface = {0};
   void *gatewayNetworkContext = NULL;
   rc = start_find_gateway_monitor(&cfg, &client, &logger, &gatewayNetworkInterface, gatewayNetworkContext);

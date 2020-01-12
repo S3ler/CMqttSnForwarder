@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_MQTTSNIPNETWORKHELPER_H
 
 #include <platform/device_address.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <netdb.h>
 #ifdef __cplusplus
 extern "C" {
@@ -25,6 +25,9 @@ int convert_hostname_port_to_device_address(const char *hostname,
                                             int port,
                                             device_address *address,
                                             const char *address_name);
+
+int is_device_address_ipv4_zeroed(const device_address* address);
+void set_device_address_ipv4_localhost( device_address *address);
 
 int get_device_address_from_hostname(const char *hostname, device_address *dst);
 

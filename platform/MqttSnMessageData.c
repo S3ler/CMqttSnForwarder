@@ -4,7 +4,7 @@
 
 #include "MqttSnMessageData.h"
 #include <string.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 
 int32_t reuse_mqtt_sn_message_data(MqttSnMessageData *mqtt_sn_message_data) {
   if (add_mqtt_sn_message_timestamp(mqtt_sn_message_data) < 0) {

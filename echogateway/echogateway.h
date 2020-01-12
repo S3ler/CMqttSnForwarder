@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_GATEWAY_ECHOGATEWAY_ECHOGATEWAY_H_
 
 #include <stdint.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <network/MqttSnClientNetworkInterface.h>
 #include <config/common/mqtt_sn_version_config.h>
 #include <echogateway/config/echogateway_config.h>

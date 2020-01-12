@@ -8,7 +8,6 @@
 #include <cstdint>
 #include <vector>
 #include <cstring>
-#include <forwarder/parser/MqttSnMessageParser.h>
 
 class MqttSnMessageDataGenerator {
  public:

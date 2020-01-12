@@ -11,7 +11,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <platform/device_address.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 
 int add_port_to_device_address(uint32_t port, device_address *dst);
 

@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_FORWARDER_NETWORK_SHARED_IP_IPHELPERLOGGING_H_
 #define CMQTTSNFORWARDER_FORWARDER_NETWORK_SHARED_IP_IPHELPERLOGGING_H_
 
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,6 +19,8 @@ int print_invalid_port_given(const MqttSnLogger *logger, int32_t port);
 
 int log_opening_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 
+int log_opening_unicast_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address);
+
 int log_opening_multicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 
 int log_close_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address);
@@ -27,6 +29,8 @@ int log_close_multicast_socket(const MqttSnLogger *logger, const char *protocol,
 
 int log_failed_opening_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 
+int log_failed_opening_unicast_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address);
+
 int log_failed_opening_multicast_socket(const MqttSnLogger *logger,
                                         const char *protocol,
                                         const device_address *address);
@@ -34,6 +38,10 @@ int log_failed_opening_multicast_socket(const MqttSnLogger *logger,
 int log_unicast_socket_failed(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 int log_multicast_socket_failed(const MqttSnLogger *logger, const char *protocol, const device_address *address);
 
+int log_opening_connection(const MqttSnLogger *logger,
+                           const char *cast,
+                           const char *protocol,
+                           const device_address *address);
 int log_opening_socket(const MqttSnLogger *logger,
                        const char *cast,
                        const char *protocol,
@@ -43,6 +51,10 @@ int log_failed_opening_socket(const MqttSnLogger *logger,
                               const char *cast,
                               const char *protocol,
                               const device_address *address);
+int log_failed_opening_connection(const MqttSnLogger *logger,
+                                  const char *cast,
+                                  const char *protocol,
+                                  const device_address *address);
 int log_socket_failed(const MqttSnLogger *logger,
                       const char *cast,
                       const char *protocol,

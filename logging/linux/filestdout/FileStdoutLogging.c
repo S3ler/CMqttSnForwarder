@@ -14,8 +14,8 @@ int file_stdout_log_init(MqttSnLogger *logger) {
   logger->log_char = file_stdout_log_char;
   if (logger->context) {
     FileStdoutLoggingContext *context = (FileStdoutLoggingContext *) logger->context;
-    if (logger->log_file_path) {
-      context->logfile = fopen(logger->log_file_path, "a+");
+    if (logger->log_filepath) {
+      context->logfile = fopen(logger->log_filepath, "a+");
     } else {
       return -1;
     }

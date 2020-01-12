@@ -1,3 +1,20 @@
+## Getting Started Linux
+### Dependencies
+sudo apt-get install cmake
+sudo apt-get install libssl-dev
+get docker: https://docs.docker.com/install/linux/docker-ce/ubuntu/
+docker needs to be runable without sudo
+docker pull eclipse-mosquitto:1.6.7
+
+### Build and Run
+mkdir cmake-build-debug
+cd cmake-build-debug
+cmake ../
+cmake --build $PWD --target 10kconsecutivePublishQoS1Paylaod10Byte -- -j 2
+
+## Getting Started Arduino ESP32
+### Prepare
+
 Ideen:
 Automatisch docker container erstellen aus den executables
 über python api überwachen
@@ -42,8 +59,6 @@ Connect Procedure:
 Gateway: (variables: bool:[with clean session], bool:[with will], bool:[prior will], bool:[any prior subscriptions], bool:[any prior registrations])
 Client connect with clean session without will without subscription without registrations
 Client connect without clean session without will without subscription without registrations
-// TODO more testcases
-// TODO check testcases with existing
 
 Client: (variable: )
 connect with clean session
@@ -68,32 +83,29 @@ arduino
 * default configuration (on error)
 * enable es32 compatibility
 
-TODO morgen: screen output, logger in forwarder refactoren
+ morgen: screen output, logger in forwarder refactoren
 
-ToDo Parser: message logging, message generating, check message parsing
-ToDo Forwarder: Same Broadcast Address and Port in Gateway and Client Network
-ToDo ClientPublish: Read lines from file and publish (including some delay)
-ToDo ClientSub: Load config from file and Read Linkes from file for subscribe
-// TODO enable GW MQTT-SN message header check?
+ Parser: message logging, message generating, check message parsing
+ Forwarder: Same Broadcast Address and Port in Gateway and Client Network
+ ClientPublish: Read lines from file and publish (including some delay)
+ ClientSub: Load config from file and Read Linkes from file for subscribe
+//  enable GW MQTT-SN message header check?
 
 // https://stackoverflow.com/questions/6688909/c-program-to-get-the-values-of-ip-header-fields-from-linux-ip-stack/6689064#6689064
 
-// TODO: how to fix the problem that we cannot find out own IP-Address of bind interface when using IN_ADDR_ANY
+// : how to fix the problem that we cannot find out own IP-Address of bind interface when using IN_ADDR_ANY
 // this leads to the problem that we cannot filter out own send message to multicast
 // and then we forward our own multicast messages in the client network to the gateway and vice versa
 
 // TODO mention: easily adeptable for other platforms like RTOS
 //  encapsulatedMessage->crtl = 0;
-//  TODO receive and send broadcasting
+//   receive and send broadcasting
 // for more information see Encapsulated message in MQTT-SN spec
 
-// TODO logging für restiliche mqtt-sn- message
-// TODO error parsing
+
 -cL redis://localhost:6379 -gL redis://localhost:6379 -gnp ./plugins/libhiredis_plugin.so -cnp ./plugins/libhiredis_plugin.so --debug
 --debug -gP tcp -cP tcp -cA 127.0.0.1 -gA 127.0.0.1
-  // TODO: printf("                        [-c config_file]\n");
-  // TODO  printf(" --json : produce json valid log message
-  // TODO: printf(" -c : specify the forwarder config file.\n");
+
 
 plugin for logging
 code coverage reports
@@ -102,7 +114,6 @@ mehr tests schreiben
 interface dokumenteiren
 restliche logfunctionen für verbose
 
-// TODO: Real defragmentationtest without network (fake-network implementations) for interface conformation + interface conformationtestsiii
 
 [![Build Status](http://arsmb.de/api/badges/S3ler/CMqttSnForwarder/status.svg)](http://arsmb.de/S3ler/CMqttSnForwarder)
 
@@ -111,7 +122,6 @@ restliche logfunctionen für verbose
 What does not work yet:
 automatically choice of MQTT-SN Gateway (we need a SearchGW and parsing prodecure)
 loading from configurationfile
-// TODO tests with multiple message (at the moment there is only one message send)
 // find out maximum rating for networks
 // der trick ist: obwohl in C implementiert kann man C++ google test framework nutzen, man muss nur zur vergleichbarkeit
 // alles es eine Frage der Netzwerkabstraction
@@ -402,113 +412,3 @@ monitoring
             gtest gtest_main gmock gmock_main pthread
             lib-mqtt-sn-gateway-network lib-mqtt-sn-forwarder lib-mqtt-sn-client-network)
 
-
-////////////////////////////////////
-
-
-int log_gateway_connack_message(const MqttSnLogger *logger,
-                                int level,
-                                const device_address *address,
-                                const uint8_t *data,
-                                uint16_t data_len) {
-  ParsedMqttSnHeader h = {0};
-  if (parse_connack(&h, data, data_len)) {
-    // TODO decide what to do
-    return (log_current_time(logger) ||
-        log_str(logger, "Invalid Message.") ||
-        log_flush(logger) != 0);
-  }
-  MqttSnMessageConnack *c = (MqttSnMessageConnack *) h.payload;
-  uint8_t return_code = c->returnCode;
-
-  const char *connack_to = "CONNACK to ";
-  const char *open_braked = " ( ";
-  const char *close_braked = ").";
-  // 1554750679: CONNACK to 127.0.0.1 (rc0).
-
-  return (
-      log_str(logger, connack_to) ||
-          log_device_address(logger, address) ||
-          log_str(logger, open_braked) ||
-          log_return_code(logger, return_code) ||
-          log_str(logger, close_braked) ||
-          log_flush(logger) != 0);
-}
-
-
-int log_gateway_publish_message(const MqttSnLogger *logger,
-                                int level,
-                                const device_address *address,
-                                const uint8_t *data,
-                                uint16_t data_len) {
-  ParsedMqttSnHeader h = {0};
-  if (parse_publish(&h, data, data_len)) {
-    return 0;
-  }
-
-  const char *publish_to = "gateway PUBLISH to ";
-  const char *open_braked = " ( ";
-  const char *comma = ", ";
-  const char *dots = "... (";
-  const char *bytes_close_braked = " bytes)).";
-
-  MqttSnMessagePublish *p = (MqttSnMessagePublish *) h.payload;
-  uint16_t msg_id = ntohs(p->msgId);
-  uint16_t topic_id = ntohs(((MqttSnMessagePublish *) h.payload)->topicId);
-  uint8_t flags = ((MqttSnMessagePublish *) h.payload)->flags;
-  uint16_t msg_bytes = h.length;
-
-  return (
-      log_str(logger, publish_to) ||
-          log_device_address(logger, address) ||
-          log_str(logger, open_braked) ||
-          log_message_id(logger, msg_id) ||
-          log_str(logger, comma) ||
-          log_topic_id(logger, topic_id) ||
-          log_str(logger, comma) ||
-          log_mqtt_sn_flags(logger, flags) ||
-          log_str(logger, comma) ||
-          log_str(logger, dots) ||
-          log_uint16(logger, msg_bytes) ||
-          log_str(logger, bytes_close_braked) ||
-          log_flush(logger) != 0);
-}
-
-
-int log_gateway_disconnect_message(const MqttSnLogger *logger,
-                                   int level,
-                                   const device_address *address,
-                                   const uint8_t *data,
-                                   uint16_t data_len) {
-  ParsedMqttSnHeader h = {0};
-  if (parse_disconnect(&h, data, data_len)) {
-    // TODO decide what to do
-    return (log_current_time(logger) ||
-        log_str(logger, "Invalid Message.") ||
-        log_flush(logger) != 0);
-  }
-
-  const char *disconnect_from = "gateway DISCONNECT from ";
-  const char *open_braked = " (";
-  const char *close_braked = " ).";
-
-  if (h.length == 2) {
-    return (log_current_time(logger) ||
-        log_str(logger, disconnect_from) ||
-        log_device_address(logger, address) ||
-        log_flush(logger) != 0);
-  }
-  if (h.length == 4) {
-    MqttSnMessageDisconnect *p = (MqttSnMessageDisconnect *) h.payload;
-    uint16_t duration = ntohs(p->duration);
-
-    return (
-        log_str(logger, disconnect_from) ||
-            log_device_address(logger, address) ||
-            log_str(logger, open_braked) ||
-            log_duration(logger, duration) ||
-            log_str(logger, close_braked) ||
-            log_flush(logger) != 0);
-  }
-  return 0;
-}

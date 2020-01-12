@@ -26,11 +26,17 @@ int print_invalid_port_given(const MqttSnLogger *logger, int32_t port) {
 int log_opening_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
   return log_opening_socket(logger, PSTR("unicast"), protocol, address);
 }
+int log_opening_unicast_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
+    return log_opening_connection(logger, PSTR("unicast"), protocol, address);
+}
 int log_opening_multicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
   return log_opening_socket(logger, PSTR("multicast"), protocol, address);
 }
 int log_failed_opening_unicast_socket(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
   return log_failed_opening_socket(logger, PSTR("unicast"), protocol, address);
+}
+int log_failed_opening_unicast_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
+    return log_failed_opening_connection(logger, PSTR("unicast"), protocol, address);
 }
 int log_failed_opening_multicast_socket(const MqttSnLogger *logger,
                                         const char *protocol,
@@ -38,11 +44,37 @@ int log_failed_opening_multicast_socket(const MqttSnLogger *logger,
   return log_failed_opening_socket(logger, PSTR("multicast"), protocol, address);
 }
 
+int log_opening_connection(const MqttSnLogger *logger, const char *cast, const char *protocol, const device_address *address) {
+    if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
+        return 0;
+    }
+
+    const char *opening = "Opening ";
+    const char *space = " ";
+    const char *listen_socket = " connection to ";
+    const char *on_port = " port ";
+    const char *dot = ".";
+    uint32_t port = get_port_from_device_address(address);
+
+    log_msg_start(logger);
+    log_str(logger, opening);
+    log_str(logger, cast);
+    log_str(logger, space);
+    log_str(logger, protocol);
+    log_str(logger, listen_socket);
+    log_device_address(logger, address);
+    log_str(logger, on_port);
+    log_uint32(logger, port);
+    log_str(logger, dot);
+    log_flush(logger);
+    return log_status(logger);
+}
+
 int log_opening_socket(const MqttSnLogger *logger,
                        const char *cast,
                        const char *protocol,
                        const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 
@@ -67,11 +99,36 @@ int log_opening_socket(const MqttSnLogger *logger,
   return log_status(logger);
 }
 
+int log_failed_opening_connection(const MqttSnLogger *logger, const char *cast, const char *protocol, const device_address *address) {
+    if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
+        return 0;
+    }
+
+    const char *opening = "Failed opening ";
+    const char *space = " ";
+    const char *listen_socket = " connection to ";
+    const char *on_port = " port ";
+    const char *dot = ".";
+    uint32_t port = get_port_from_device_address(address);
+
+    log_msg_start(logger);
+    log_str(logger, opening);
+    log_str(logger, cast);
+    log_str(logger, space);
+    log_str(logger, protocol);
+    log_str(logger, listen_socket);
+    log_device_address(logger, address);
+    log_str(logger, on_port);
+    log_uint32(logger, port);
+    log_str(logger, dot);
+    log_flush(logger);
+    return log_status(logger);
+}
 int log_failed_opening_socket(const MqttSnLogger *logger,
                               const char *cast,
                               const char *protocol,
                               const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 
@@ -107,7 +164,7 @@ int log_close_socket(const MqttSnLogger *logger,
                      const char *cast,
                      const char *protocol,
                      const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 
@@ -235,7 +292,7 @@ int log_gateway_unknown_destination(const MqttSnLogger *logger,
 }
 
 int log_gateway_close_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 
@@ -250,7 +307,7 @@ int log_gateway_close_connection(const MqttSnLogger *logger, const char *protoco
 }
 
 int log_gateway_lost_connection(const MqttSnLogger *logger, const char *protocol, const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 
@@ -269,7 +326,7 @@ int log_failed_convert_device_address_to_ipv4_and_port(const MqttSnLogger *logge
 }
 
 int log_failed_convert_device_address_to(const MqttSnLogger *logger, const device_address *from, const char *to) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
   log_msg_start(logger);
@@ -291,7 +348,7 @@ int log_socket_failed(const MqttSnLogger *logger,
                       const char *cast,
                       const char *protocol,
                       const device_address *address) {
-  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_DEFAULT)) {
+  if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
     return 0;
   }
 

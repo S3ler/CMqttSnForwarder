@@ -11,7 +11,7 @@ extern "C" {
 
 #include <platform/device_address.h>
 #include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <stdio.h>
 #include <stdint.h>
 

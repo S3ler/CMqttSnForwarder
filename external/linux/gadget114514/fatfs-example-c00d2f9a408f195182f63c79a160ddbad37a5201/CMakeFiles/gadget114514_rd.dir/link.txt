@@ -1,0 +1,1 @@
+/usr/bin/cc    CMakeFiles/gadget114514_rd.dir/rd.c.o CMakeFiles/gadget114514_rd.dir/fatfs/source/diskio.c.o CMakeFiles/gadget114514_rd.dir/fatfs/source/ff.c.o CMakeFiles/gadget114514_rd.dir/fatfs/source/ffsystem.c.o CMakeFiles/gadget114514_rd.dir/fatfs/source/ffunicode.c.o  -o gadget114514_rd 

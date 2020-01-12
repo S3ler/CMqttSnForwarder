@@ -36,32 +36,22 @@ int32_t init_client_connection_handler(MqttSnGatewayClientConnectionHandler *han
                                        const gateway_client_connection_config *cfg,
                                        MqttSnLogger *logger);
 
-int32_t check_client_connection_timeouts(MqttSnGatewayClientConnectionHandler *handler);
+int32_t client_connection_handler_check_timeouts(MqttSnGatewayClientConnectionHandler *handler);
 
-int32_t parse_and_handle_connect(MqttSnGatewayClientConnectionHandler *handler,
-                                 MqttSnMessageData *msg,
-                                 int32_t parsed_bytes,
-                                 MqttSnGatewayForwarder *forwarders);
-int32_t parse_and_handle_disconnect(MqttSnGatewayClientConnectionHandler *handler,
-                                    MqttSnMessageData *msg,
-                                    int32_t parsed_bytes,
-                                    MqttSnGatewayForwarder *forwarders);
-int32_t parse_and_handle_disconnect_duration(MqttSnGatewayClientConnectionHandler *handler,
-                                             MqttSnMessageData *msg,
-                                             int32_t parsed_bytes,
-                                             MqttSnGatewayForwarder *forwarders);
+int32_t client_connection_handler_parse_and_handle_connect(MqttSnGatewayClientConnectionHandler *handler, MqttSnMessageData *msg,
+                                                           int32_t parsed_bytes, MqttSnGatewayForwarder *forwarders);
+int32_t client_connection_handler_parse_and_handle_disconnect(MqttSnGatewayClientConnectionHandler *handler, MqttSnMessageData *msg,
+                                                              int32_t parsed_bytes, MqttSnGatewayForwarder *forwarders);
+int32_t client_connection_handler_parse_and_handle_disconnect_duration(MqttSnGatewayClientConnectionHandler *handler,
+                                                                       MqttSnMessageData *msg, int32_t parsed_bytes,
+                                                                       MqttSnGatewayForwarder *forwarders);
 
-int32_t parse_and_handle_ping_req(MqttSnGatewayClientConnectionHandler *handler,
-                                  MqttSnMessageData *msg,
-                                  int32_t parsed_bytes,
-                                  MqttSnGatewayForwarder *forwarders);
-int32_t parse_and_handle_ping_resp(MqttSnGatewayClientConnectionHandler *handler,
-                                   MqttSnMessageData *msg,
-                                   int32_t parsed_bytes,
-                                   MqttSnGatewayForwarder *forwarders);
-int32_t remove_client_subscriptions(MqttSnGatewayClientConnectionHandler *gateway,
-                                    const char *handler,
-                                    device_address *client_address);
+int32_t client_connection_handler_parse_and_handle_ping_req(MqttSnGatewayClientConnectionHandler *handler, MqttSnMessageData *msg,
+                                                            int32_t parsed_bytes, MqttSnGatewayForwarder *forwarders);
+int32_t client_connection_handler_parse_and_handle_ping_resp(MqttSnGatewayClientConnectionHandler *handler, MqttSnMessageData *msg,
+                                                             int32_t parsed_bytes, MqttSnGatewayForwarder *forwarders);
+int32_t client_connection_handler_remove_client_subscriptions(MqttSnGatewayClientConnectionHandler *gateway, const char *handler,
+                                                              device_address *client_address);
 
 #ifdef __cplusplus
 }

@@ -4,24 +4,26 @@
 
 #ifndef CMQTTSNFORWARDER_FORWARDER_MQTTSNFORWARDERLOGGING_H_
 #define CMQTTSNFORWARDER_FORWARDER_MQTTSNFORWARDERLOGGING_H_
+
+#include <logging/MqttSnLogging.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <logging/MqttSnLoggingInterface.h>
 
-int log_forwarder_started(const MqttSnLogger *logger,
-                          const char *version,
-                          int major,
-                          int minor,
-                          int tweak,
-                          const char *build_date);
+int32_t log_mqtt_sn_forwarder_connected(const MqttSnLogger *logger, const device_address* mqtt_sn_gateway_address);
+int32_t log_mqtt_sn_forwarder_disconnect(const MqttSnLogger *logger, const device_address* mqtt_sn_gateway_address);
 
-int log_forwarder_terminated(const MqttSnLogger *logger,
-                             const char *version,
-                             uint32_t major,
-                             uint32_t minor,
-                             uintmax_t tweak);
+int32_t log_mqtt_sn_forwarder_client_and_gateway_network_connection_lost(const MqttSnLogger *logger);
+int32_t log_mqtt_sn_forwarder_client_network_connection_lost(const MqttSnLogger *logger);
+int32_t log_mqtt_sn_forwarder_gateway_network_connection_lost(const MqttSnLogger *logger);
+
+int32_t log_mqtt_sn_forwarder_sending_buffer_gateway_messages(const MqttSnLogger *logger);
+int32_t log_mqtt_sn_forwarder_sending_buffer_client_messages(const MqttSnLogger *logger);
+
+int32_t log_mqtt_sn_forwarder_buffer_gateway_messages_send(const MqttSnLogger *logger);
+int32_t log_mqtt_sn_forwarder_buffer_client_messages_send(const MqttSnLogger *logger);
 
 #ifdef __cplusplus
 }

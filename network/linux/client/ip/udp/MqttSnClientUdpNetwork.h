@@ -13,7 +13,7 @@ typedef struct MqttSnClientUdpNetwork_ {
   int unicast_socket;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNCLIENTLINUXUDPNETWORKPROTOCOL)];
   uint64_t received_messages;
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
   int multicast_socket;
 #endif
 } MqttSnClientUdpNetwork;

@@ -1,0 +1,9 @@
+
+interactive todos entfernen
+MqttSnClien Todos entfernen
+default - only client status
+verbose - send received message
+debug - byteform additional
+tcp buffer
+Addon buffer
+reformat

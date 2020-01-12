@@ -36,21 +36,21 @@ int32_t init_discovery_handler(MqttSnGatewayDiscoveryHandler *handler,
                                gateway_advertise_config *advertise_config,
                                MqttSnLogger *logger);
 
-int32_t parse_and_handle_advertise(MqttSnGatewayDiscoveryHandler *handler,
+int32_t discovery_handler_parse_and_handle_advertise(MqttSnGatewayDiscoveryHandler *handler,
                                    MqttSnMessageData *msg,
                                    int32_t parsed_bytes,
                                    MqttSnGatewayForwarder *forwarders);
-int32_t parse_and_handle_gwinfo(MqttSnGatewayDiscoveryHandler *handler,
+int32_t discovery_handler_parse_and_handle_gwinfo(MqttSnGatewayDiscoveryHandler *handler,
                                 MqttSnMessageData *msg,
                                 int32_t parsed_bytes,
                                 MqttSnGatewayForwarder *forwarders);
-int32_t parse_and_handle_search_gw(MqttSnGatewayDiscoveryHandler *handler,
+int32_t discovery_handler_parse_and_handle_search_gw(MqttSnGatewayDiscoveryHandler *handler,
                                    MqttSnMessageData *msg,
                                    int32_t parsed_bytes,
                                    MqttSnGatewayForwarder *forwarders);
 
-int32_t check_discoveries(MqttSnGatewayDiscoveryHandler *handler);
-int32_t check_standy_by_monitoring(MqttSnGatewayDiscoveryHandler *handler, MQTT_SN_GATEWAY_STATUS *gateway_status);
+int32_t discovery_handler_check_discoveries(MqttSnGatewayDiscoveryHandler *handler);
+int32_t discovery_handler_check_standy_by_monitoring(MqttSnGatewayDiscoveryHandler *handler, MQTT_SN_GATEWAY_STATUS *gateway_status);
 // TODO check all gateway and update status
 // TODO check only own gateway id and update status
 

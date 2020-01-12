@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_STDOUTLOGGING_H
 #define CMQTTSNFORWARDER_STDOUTLOGGING_H
 
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

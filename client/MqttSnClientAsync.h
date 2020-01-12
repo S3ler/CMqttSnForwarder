@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <platform/device_address.h>
 #include <parser/MqttSnMessageParser.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

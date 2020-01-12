@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/Sha1Test.dir/SHA1.c.o  -o Sha1Test 

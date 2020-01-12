@@ -20,6 +20,7 @@ class MqttSnURLParser {
   static bool isLocalhost(const std::vector<uint8_t> &vector);
   static std::string toString(const std::vector<uint8_t> &vector, uint32_t elements);
   static uint16_t getPort(const std::vector<uint8_t> &vector);
+  static bool isIpv4Zero(const std::vector<uint8_t>& vector);
 };
 
 #endif //CMQTTSNFORWARDER_TEST_SHARED_MQTTSNURLPARSER_H_

@@ -147,7 +147,9 @@ void ClientRecvTask::run()
 			}
 		}
 
-		client = _gateway->getClientList()->getClient(senderAddr);
+		if( !client ){ // TODO change
+            client = _gateway->getClientList()->getClient(senderAddr);
+        }
 
 		if ( client )
 		{

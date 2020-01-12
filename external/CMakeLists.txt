@@ -8,6 +8,11 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #*******************************************************************************/
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+SET(PAHO_BUILD_SAMPLES FALSE CACHE BOOL "Build sample programs")
+SET(PAHO_ENABLE_CPACK TRUE CACHE BOOL "Enable CPack")
+
+
 project(PAHOMQTTSNGATEWAY C CXX)
 
 ## build settings
@@ -202,17 +207,17 @@ ADD_LIBRARY(LibPahoMQTTSNPacketClient SHARED ${PAHO_PACKET_SRC_PATH}/MQTTSNConne
 ADD_LIBRARY(LibPahoMQTTSNPacketServer SHARED ${PAHO_PACKET_SRC_PATH}/MQTTSNConnectServer.c ${PAHO_PACKET_SRC_PATH}/MQTTSNPacket.c ${PAHO_PACKET_SRC_PATH}/MQTTSNSearchServer.c ${PAHO_PACKET_SRC_PATH}/MQTTSNSubscribeServer.c
         ${PAHO_PACKET_SRC_PATH}/MQTTSNUnsubscribeServer.c ${PAHO_PACKET_SRC_PATH}/MQTTSNSerializePublish.c ${PAHO_PACKET_SRC_PATH}/MQTTSNDeserializePublish.c)
 
-add_executable(Pahotest1 ../testclients/pahotest1main.c)
+add_executable(Pahotest1 ../shorttests/pahotest1main.c)
 target_link_libraries(Pahotest1 LibPahotest1)
 
-ADD_EXECUTABLE(LibPahoqos-1pub ${PAHO_PACKET_SAMPLE_PATH}/qos-1pub.c ${PAHO_PACKET_SAMPLE_PATH}/transport.c)
-target_include_directories(LibPahoqos-1pub PRIVATE ${PAHO_PACKET_SRC_PATH})
-TARGET_LINK_LIBRARIES(LibPahoqos-1pub LibPahoMQTTSNPacketClient)
+#ADD_EXECUTABLE(LibPahoqos-1pub ${PAHO_PACKET_SAMPLE_PATH}/qos-1pub.c ${PAHO_PACKET_SAMPLE_PATH}/transport.c)
+#target_include_directories(LibPahoqos-1pub PRIVATE ${PAHO_PACKET_SRC_PATH})
+#TARGET_LINK_LIBRARIES(LibPahoqos-1pub LibPahoMQTTSNPacketClient)
 
 # paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNGateway/src
 SET(PAHO_GATEWAY_SRC_FILES
         paho.mqtt-sn-embedded-c-c9e807da319bd68bff71cc4817ea5a4f4b25f49d/MQTTSNGateway/src)
 
-SET(PAHO_BUILD_SAMPLES true)
+SET(PAHO_BUILD_SAMPLES false)
 #add_subdirectory(paho.mqtt.c-d631449f16ec78c37e063c220eb6cfc546a4facb)
 add_subdirectory(paho.mqtt.cpp-67b917a73fd6f12c58587d47e2e2fd4ef6848b01)

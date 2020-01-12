@@ -14,7 +14,8 @@ class MqttClientTestContainerPublish {
   std::vector<uint8_t> data;
   std::string topic;
   int32_t qos;
-  MqttClientTestContainerPublish(const std::vector<uint8_t> &data, const std::string &topic, int32_t qos);
+  bool retain;
+  MqttClientTestContainerPublish(const std::vector<uint8_t> &data, const std::string &topic, int32_t qos, bool retain);
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERPUBLISH_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERPUBLISH_H_

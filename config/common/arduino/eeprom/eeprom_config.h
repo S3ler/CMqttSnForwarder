@@ -8,7 +8,7 @@
 #include <EEPROM.h>
 #include <stdint.h>
 #include <stddef.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 
 #ifdef __cplusplus
 extern "C" {

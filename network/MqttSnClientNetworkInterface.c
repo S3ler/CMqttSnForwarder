@@ -27,6 +27,7 @@ int32_t ClientNetworkInitialize(MqttSnClientNetworkInterface *n,
   n->mqtt_sn_gateway_address = mqtt_sn_gateway_address;
   n->client_network_broadcast_address = client_network_broadcast_address;
   n->initialize = client_network_init;
+  n->context = context;
   if (n->initialize(n, context) == 0) {
     if (n->initialize == NULL) {
       return -1;

@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_CLIENT_FINDGATEWAYMONITOR_CONFIG_FIND_GATEWAY_MONITOR_CONFIG_H_
 
 #include <stdint.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <config/common/mqtt_sn_version_config.h>
 #include <config/common/mqtt_sn_logger_config.h>
 #include <config/network/gateway/gateway_network_config.h>
@@ -17,7 +17,7 @@ extern "C" {
 #endif
 
 #ifndef FINDGATEWAYMONITOR_EXECUTABLE_NAME
-#define FINDGATEWAYMONITOR_EXECUTABLE_NAME "broadcast_monitor"
+#define FINDGATEWAYMONITOR_EXECUTABLE_NAME "MqttSnFindGatewayMonitor"
 #endif
 
 typedef struct find_gateway_monitor_config_ {

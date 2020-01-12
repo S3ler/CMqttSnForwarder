@@ -18,7 +18,7 @@ std::vector<uint8_t> MqttSnURLParser::GetBrokerAddressFromUriAndPort(const std::
     std::vector<uint8_t> brokerPortVector = GetPortVectorFromInt32(brokerPort);
     stringBrokerAddress.insert(stringBrokerAddress.end(), brokerPortVector.begin(), brokerPortVector.end());
     return stringBrokerAddress;
-  } catch (std::exception exception) {}
+  } catch (std::exception& exception) {}
 
   std::vector<uint8_t> uriBrokerAddress = GetBrokerAddressFromUri(URI);
   std::vector<uint8_t> brokerPortVector = GetPortVectorFromInt32(brokerPort);
@@ -33,7 +33,8 @@ std::vector<uint8_t> MqttSnURLParser::GetPortVectorFromInt32(const int32_t broke
 
   std::vector<uint8_t> brokerPortVector;
   if (brokerPort > -1) {
-    uint16_t brokerPortNetworkByteOrder = htons((uint16_t) brokerPort);
+    uint16_t brokerPort16 = (uint16_t)brokerPort;
+    uint16_t brokerPortNetworkByteOrder = htons(brokerPort16);
     brokerPortVector.push_back((brokerPortNetworkByteOrder >> 8) & 0xff);
     brokerPortVector.push_back(brokerPortNetworkByteOrder & 0xff);
   }
@@ -107,6 +108,14 @@ std::vector<uint8_t> MqttSnURLParser::GetBrokerAddressFromUri(const std::string 
 bool MqttSnURLParser::isLocalhost(const std::vector<uint8_t> &vector) {
   if (vector.size() >= 4) {
     if (vector[0] == 127 && vector[1] == 0 && vector[2] == 0 && vector[3] == 1) {
+      return true;
+    }
+  }
+  return false;
+}
+bool MqttSnURLParser::isIpv4Zero(const std::vector<uint8_t> &vector) {
+  if (vector.size() >= 4) {
+    if (vector[0] == 0 && vector[1] == 0 && vector[2] == 0 && vector[3] == 0) {
       return true;
     }
   }

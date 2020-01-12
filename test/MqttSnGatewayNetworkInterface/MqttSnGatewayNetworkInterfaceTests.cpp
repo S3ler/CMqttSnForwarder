@@ -60,8 +60,7 @@ ASSERT_EQ(GatewayNetworkInit(&mqttSnGatewayNetworkInterface,
                              mock_gateway_network_init),
 0);
 
-EXPECT_EQ(mqttSnGatewayNetworkInterface
-.mqtt_sn_gateway_address, &mqtt_sn_gateway_network_address);
+EXPECT_EQ(mqttSnGatewayNetworkInterface.mqtt_sn_gateway_address, &mqtt_sn_gateway_network_address);
 }
 
 TEST_F(MqttSnGatewayNetworkInterfaceTests, AfterInitSucess_GatewayNetworkInitIsSet

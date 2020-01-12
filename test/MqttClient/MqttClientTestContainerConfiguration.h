@@ -8,40 +8,42 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
-#include <test/MqttBroker/MqttBrokerTestContainerConfiguration.h>
 #include "MqttClientAction.h"
 #include "MqttClientProtocolTestType.h"
+#include <test/MqttBroker/MqttBrokerTestContainerConfiguration.h>
 
 class MqttClientTestContainerConfiguration {
  public:
   const MqttClientProtocolTestType protocol_type;
-  const std::string brokerAddress; // example localhost
-  const uint16_t brokerPort; // example 1883
+  const std::string brokerAddress;
+  const uint16_t brokerPort;
 
-  const std::string clientId; // not optional
-  const std::string clientPassword; // optional
+  const std::string clientId;
+  const std::string clientPassword;
 
   const int32_t keepAliveInterval;
   const bool cleanSession;
 
-  // TODO will
-  //const std::string willTopic;
-  //const std::vector<uint8_t> willMessage;
-  //const int32_t willQoS;
+  const std::string willTopic;
+  const std::vector<uint8_t> willMessage;
+  const int32_t willQoS;
+  const bool willRetain;
+
+  const int64_t publishReceivePublishTimeout;
+
   MqttClientTestContainerConfiguration();
-  MqttClientTestContainerConfiguration(const MqttClientProtocolTestType protocol_type,
-                                       const std::string &broker_address,
-                                       const uint16_t broker_port,
-                                       const std::string &client_id,
-                                       const std::string &client_password,
-                                       const int32_t keep_alive_interval,
-                                       const bool clean_session);
-  MqttClientTestContainerConfiguration(const MqttBrokerTestContainerConfiguration &broker_config,
-                                       const std::string &client_id,
-                                       const std::string &client_password,
-                                       const int32_t keep_alive_interval,
-                                       const bool clean_session);
-  const MqttClientProtocolTestType GetProtocolTypeFromMqttBrokerProtocolType(MqttBrokerProtocolTestType t);
+
+  MqttClientTestContainerConfiguration(const MqttClientProtocolTestType protocol_type, const std::string &broker_address, const uint16_t broker_port, const std::string &client_id,
+                                       const std::string &client_password, const int32_t keep_alive_interval, const bool clean_session, const std::string &willTopic,
+                                       const std::vector<uint8_t> &willMessage, const int32_t willQoS, const bool willRetain, const int64_t publishReceivePublishTimeout);
+  MqttClientTestContainerConfiguration(const MqttBrokerTestContainerConfiguration &broker_config, const std::string &client_id, const std::string &client_password, const int32_t keep_alive_interval,
+                                       const bool clean_session, const std::string &willTopic, const std::vector<uint8_t> &willMessage, const int32_t willQoS, const bool willRetain,
+                                       const int64_t publishReceivePublishTimeout);
+  MqttClientTestContainerConfiguration(const MqttBrokerTestContainerConfiguration &broker_config, const std::string &client_id, const std::string &client_password, const int32_t keep_alive_interval,
+                                       const bool clean_session, const int64_t publishReceivePublishTimeout);
+
+ private:
+  MqttClientProtocolTestType GetProtocolTypeFromMqttBrokerProtocolType(MqttBrokerProtocolTestType t);
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERCONFIGURATION_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERCONFIGURATION_H_

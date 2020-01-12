@@ -7,7 +7,7 @@
 
 #include <platform/device_address.h>
 #include <platform/MqttSnMessageData.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

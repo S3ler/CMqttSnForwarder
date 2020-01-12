@@ -2,24 +2,23 @@
 // Created by SomeDude on 09.07.2019.
 //
 
-#include <logging/linux/stdout/StdoutLogging.h>
-#include <forwarder/config/forwarder_config.h>
+#include "MqttSnForwarderTestContainer.h"
 #include <config/common/config_command_helper.h>
-#include <string.h>
-#include <config/starter/starter_helper.h>
+#include <config/common/starter/starter_helper.h>
+#include <forwarder/config/forwarder_config.h>
+#include <logging/linux/file/FileLogging.h>
+#include <logging/linux/filestdout/FileStdoutLogging.h>
+#include <logging/linux/stderr/StderrLogging.h>
+#include <logging/linux/stdout/StdoutLogging.h>
+#include <network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h>
+#include <network/linux/client/plugin/MqttSnClientPluginNetwork.h>
+#include <network/linux/client/plugin/client_network_plugin_interface.h>
+#include <network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
+#include <network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h>
+#include <network/linux/gateway/plugin/gateway_network_plugin_interface.h>
 #include <network/linux/shared/ip/MqttSnIpNetworkHelper.h>
 #include <network/shared/ip/IpHelper.h>
-#include <network/linux/client/plugin/client_network_plugin_interface.h>
-#include <network/linux/client/plugin/MqttSnClientPluginNetwork.h>
-#include <network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h>
-#include <network/linux/gateway/plugin/gateway_network_plugin_interface.h>
-#include <network/linux/gateway/plugin/MqttSnGatewayPluginNetwork.h>
-#include <network/linux/gateway/ip/tcp/MqttSnGatewayTcpNetwork.h>
-#include <logging/linux/file/FileLogging.h>
-#include <logging/linux/stdout/StdoutLogging.h>
-#include <logging/linux/stderr/StderrLogging.h>
-#include <logging/linux/filestdout/FileStdoutLogging.h>
-#include "MqttSnForwarderTestContainer.h"
+#include <string.h>
 
 MqttSnForwarderTestContainer::MqttSnForwarderTestContainer(const string &identifier, const string &cmd)
     : identifier(identifier), cmd(cmd) {}
@@ -66,8 +65,8 @@ int32_t MqttSnForwarderTestContainer::initialize() {
 }
 int32_t MqttSnForwarderTestContainer::start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger) {
   if (!strcmp(cfg->log_target, "console")) {
-    if (cfg->log_file_path != NULL) {
-      if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_file_path, file_stdout_log_init, &file_stdout_logging_context_) < 0) {
+    if (cfg->log_filepath != NULL) {
+      if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_filepath, file_stdout_log_init, &file_stdout_logging_context_) < 0) {
         return -1;
       }
     } else {
@@ -76,7 +75,7 @@ int32_t MqttSnForwarderTestContainer::start_logger(const mqtt_sn_logger_config *
       }
     }
   } else if (!strcmp(cfg->log_target, "file")) {
-    if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_file_path, file_log_init, &file_logging_context_) < 0) {
+    if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_filepath, file_log_init, &file_logging_context_) < 0) {
       return -1;
     }
   }
@@ -141,10 +140,7 @@ int32_t MqttSnForwarderTestContainer::start() {
   print_program_started(&fw_logger, &fw_cfg.msvcfg, fw_cfg.executable_name);
 #endif
 
-  if (MqttSnForwarderInit(&forwarder,
-                          &fw_logger,
-                          clientNetworkContext,
-                          gatewayNetworkContext) != 0) {
+  if (MqttSnForwarderInit(&forwarder, &fw_logger, &forwarder.mqtt_sn_gateway_address) != 0) {
     MqttSnForwarderDeinit(&forwarder);
     MqttSnLoggerDeinit(&fw_logger);
     return EXIT_FAILURE;

@@ -74,7 +74,7 @@ class MqttSnGatewayComplianceConnectTest
     mqttSnGateway = MqttSnGatewayTestContainerFactory::getMqttSnGateway(std::get<1>(GetParam()));
     ASSERT_NE(mqttSnGateway, nullptr);
     //ASSERT_EQ(mqttSnGateway->initialize(), EXIT_SUCCESS);
-    ASSERT_EQ(mqttSnGateway->start(), EXIT_SUCCESS);
+    ASSERT_EQ(mqttSnGateway->start(), true);
 
     mqttSnMessageTester = std::make_shared<MqttSnMessageTester>();
     mqtt_sn_sender.setTester(mqttSnMessageTester.get());

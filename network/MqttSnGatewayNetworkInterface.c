@@ -23,9 +23,10 @@ int32_t GatewayNetworkInitialize(MqttSnGatewayNetworkInterface *n,
   n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DEINITIALIZED;
   n->max_data_length = max_data_length;
   n->gateway_network_address = gateway_network_address;
-  n->mqtt_sn_gateway_address = mqtt_sn_gateway_address;
+  // n->mqtt_sn_gateway_address = mqtt_sn_gateway_address;
   n->gateway_network_broadcast_address = gateway_network_broadcast_address;
   n->initialize = gateway_network_init;
+  n->context = context;
   if (n->initialize(n, context) == 0) {
     if (n->initialize == NULL) {
       return -1;
@@ -141,13 +142,8 @@ int32_t GatewayNetworkSend(MqttSnGatewayNetworkInterface *n,
   return send_rc;
 }
 
-int32_t GatewayNetworkSendTo(MqttSnGatewayNetworkInterface *n,
-                             device_address *to,
-                             const uint8_t *data,
-                             uint16_t data_length,
-                             uint8_t signal_strength,
-                             int32_t timeout_ms,
-                             void *context) {
+int32_t GatewayNetworkSendTo(MqttSnGatewayNetworkInterface *n, const device_address *from, const device_address *to, const uint8_t *data,
+                             uint16_t data_length, uint8_t signal_strength, int32_t timeout_ms, void *context) {
   if (n->status != MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_CONNECTED) {
     return -1;
   }
@@ -155,7 +151,7 @@ int32_t GatewayNetworkSendTo(MqttSnGatewayNetworkInterface *n,
     return -1;
   }
 
-  int32_t send_rc = n->send(n, n->gateway_network_address, to, data, data_length, signal_strength, timeout_ms, context);
+  int32_t send_rc = n->send(n, from, to, data, data_length, signal_strength, timeout_ms, context);
   if (send_rc < 0) {
     n->status = MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_DISCONNECTED;
   }

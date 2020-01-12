@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_GATEWAY_LOGGING_MQTTSNGATEWAYDISCOVERYLOGGING_H_
 
 #include <stdint.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <gateway/database/db_entry_mqtt_sn_gateway_discovered.h>
 #include <gateway/database/db_handler_result.h>
 #ifdef __cplusplus

@@ -292,10 +292,10 @@ void MqttSnMessageTester::SetReceiver(MqttSnTestMessageReceiverInterface *mqttSn
 }
 int32_t MqttSnMessageTester::start_logger(const mqtt_sn_logger_config *cfg, MqttSnLogger *logger) {
   if (!strcmp(cfg->log_target, "console")) {
-    if (cfg->log_file_path != NULL) {
+    if (cfg->log_filepath != NULL) {
       if (MqttSnLoggerInitFile(logger,
                                cfg->log_lvl,
-                               cfg->log_file_path,
+                               cfg->log_filepath,
                                file_stdout_log_init,
                                &file_stdout_logging_context_) < 0) {
         return -1;
@@ -306,7 +306,7 @@ int32_t MqttSnMessageTester::start_logger(const mqtt_sn_logger_config *cfg, Mqtt
       }
     }
   } else if (!strcmp(cfg->log_target, "file")) {
-    if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_file_path, file_log_init, &file_logging_context_) < 0) {
+    if (MqttSnLoggerInitFile(logger, cfg->log_lvl, cfg->log_filepath, file_log_init, &file_logging_context_) < 0) {
       return -1;
     }
   }

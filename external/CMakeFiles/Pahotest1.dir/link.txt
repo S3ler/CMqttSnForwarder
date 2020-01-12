@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/Pahotest1.dir/__/shorttests/pahotest1main.c.o  -o Pahotest1 -Wl,-rpath,/home/bele/CMqttSnForwarder/external libLibPahotest1.a libLibPahoMQTTSNPacketClient.so libLibPahoMQTTSNPacketServer.so 

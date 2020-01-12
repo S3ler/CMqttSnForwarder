@@ -6,29 +6,25 @@
 #define CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYTESTCONTAINER_CPP_MQTTSNGATEWAYTESTCONTAINERINTERFACE_H_
 
 #include <string.h>
-#include <string>
-#include <vector>
-#include <thread>
 #include <atomic>
+#include <string>
+#include <thread>
+#include <vector>
 #include "MqttSnGatewayTestContainerConfiguration.h"
 
 using std::vector;
 
 class MqttSnGatewayTestContainerInterface {
-
  public:
   const MqttSnGatewayTestContainerConfiguration configuration;
-  MqttSnGatewayTestContainerInterface(const MqttSnGatewayTestContainerConfiguration &configuration) : configuration(
-      configuration) {}
+  MqttSnGatewayTestContainerInterface(const MqttSnGatewayTestContainerConfiguration &configuration) : configuration(configuration) {}
 
- public:
   virtual ~MqttSnGatewayTestContainerInterface() {}
   virtual int32_t initialize() = 0;
   virtual int32_t start() = 0;
   virtual void stop() = 0;
   virtual bool isStopped() = 0;
   virtual bool isRunning() = 0;
-
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYTESTCONTAINER_CPP_MQTTSNGATEWAYTESTCONTAINERINTERFACE_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYTESTCONTAINER_CPP_MQTTSNGATEWAYTESTCONTAINERINTERFACE_H_

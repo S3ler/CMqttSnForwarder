@@ -22,11 +22,13 @@ int connect_wifi(const char *ssid, const char *password, uint32_t timeout_ms, co
 int parse_arduino_serial_line(char *line, size_t *line_pos, size_t line_max);
 
 int arduino_serial_eval_process(EEPROM_cfg *ecfg,
-                                forwarder_config *fcfg,
+                                void *fcfg,
+                                const char* executable_name,
                                 const MqttSnLogger *logger,
                                 char *line,
-                                size_t line_pos);
-
+                                size_t line_pos,
+                                int32_t (*forwarder_config_file_process_command_callback)(void *cfg, const MqttSnLogger *logger, int argc, char **argv),
+                                void (*config_print_usage)(const MqttSnLogger* logger));
 int convert_hostname_port_to_device_address(const MqttSnLogger *logger,
                                             const char *hostname,
                                             int port,

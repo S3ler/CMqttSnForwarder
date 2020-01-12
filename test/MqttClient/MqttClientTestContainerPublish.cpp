@@ -3,7 +3,5 @@
 //
 
 #include "MqttClientTestContainerPublish.h"
-
-MqttClientTestContainerPublish::MqttClientTestContainerPublish(const std::vector<uint8_t> &data,
-                                                               const std::string &topic,
-                                                               int32_t qos) : data(data), topic(topic), qos(qos) {}
+MqttClientTestContainerPublish::MqttClientTestContainerPublish(const std::vector<uint8_t>& data, const std::string& topic, int32_t qos, bool retain) : data(data), topic(topic), qos(qos),
+    retain(retain) {}

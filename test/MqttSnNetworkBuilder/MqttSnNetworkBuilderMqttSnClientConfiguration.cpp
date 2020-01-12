@@ -4,7 +4,7 @@
 
 #include "MqttSnNetworkBuilderMqttSnClientConfiguration.h"
 const MqttSnNetworkBuilderMqttSnClientConfiguration MqttSnNetworkBuilderMqttSnClientConfiguration::GetDefaultConfiguration() {
-  return MqttSnNetworkBuilderMqttSnClientConfiguration::GetDefaultConfiguration(MqttSnClientFindGatewayType::SEARCH);
+  return MqttSnNetworkBuilderMqttSnClientConfiguration::GetDefaultConfiguration(MqttSnClientFindGatewayType::CONNECT);
 }
 const MqttSnNetworkBuilderMqttSnClientConfiguration MqttSnNetworkBuilderMqttSnClientConfiguration::GetDefaultConfiguration(
     const MqttSnClientFindGatewayType &find_gateway_type) {
@@ -14,7 +14,7 @@ const MqttSnNetworkBuilderMqttSnClientConfiguration MqttSnNetworkBuilderMqttSnCl
                                                        -1,
                                                        60,
                                                        1,
-                                                       "ArsmbMqttSnClient",
+                                                       "MqttSnClient",
                                                        "",
                                                        60,
                                                        true);

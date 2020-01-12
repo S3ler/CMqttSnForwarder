@@ -8,13 +8,8 @@
 #include "MqttSnClientConnectAction.h"
 class MqttSnClientAdvertiseConnectAction : public MqttSnClientConnectAction {
  public:
-  const int32_t advertise_wait_timeout;
-  MqttSnClientAdvertiseConnectAction(const MqttSnClientProtocolTestType a_protocol,
-                                     const int32_t advertise_wait_duration,
-                                     const std::string &client_id,
-                                     const std::string &client_password,
-                                     const int32_t keep_alive_interval,
-                                     const bool clean_session);
+  const int64_t advertiseWaitDuration;
+  MqttSnClientAdvertiseConnectAction(int64_t advertiseWaitDuration, const std::string& client_id, const std::string& client_password, uint16_t keep_alive_interval, bool clean_session);
 };
 
 #endif //CMQTTSNFORWARDER_TEST_MQTTSNCLIENT_MQTTSNCLIENTADVERTISECONNECTACTION_H_

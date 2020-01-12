@@ -1,255 +1,132 @@
-
-
 //
-// Created by SomeDude on 31.05.2019.
+// Created by SomeDude on 25.08.2019.
 //
 
-#ifndef CMQTTSNFORWARDER_CLIENT_MQTTSNCLIENT_H_
-#define CMQTTSNFORWARDER_CLIENT_MQTTSNCLIENT_H_
+#ifndef CMQTTSNFORWARDER_MQTTSNCLIENT_H
+#define CMQTTSNFORWARDER_MQTTSNCLIENT_H
 
 #include <stdint.h>
-#include "MqttSnClientAwaitMessage.h"
 #include <platform/device_address.h>
 #include <parser/MqttSnMessageParser.h>
-#include <parser/MqttSnAdvertiseMessage.h>
-#include <parser/MqttSnGwInfoMessage.h>
+#include <parser/MqttSnPublishMessage.h>
 #include <network/MqttSnGatewayNetworkInterface.h>
-#include <string.h>
+#include "MqttSnClientConnectionStatus.h"
+#include "MqttSnClientConfig.h"
+#include "MqttSnClientRegistration.h"
+#include "MqttSnClientAwaitMessage.h"
+#include "MqttSnClientFindGatewayPattern.h"
+#include "common/discoveredgw/MqttSnClientDiscoveredGateway.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifndef MQTT_SN_CLIENT_DEFAULT_TIMEOUT_MS
-#define MQTT_SN_CLIENT_DEFAULT_TIMEOUT_MS 10000
-#endif
-
-#ifndef MQTT_SN_CLIENT_DEFAULT_SIGNAL_STRENGTH
-#define MQTT_SN_CLIENT_DEFAULT_SIGNAL_STRENGTH UINT8_MAX
-#endif
-
-#ifndef MQTT_SN_CLIENT_DEFAULT_CONNECT_DURATION
-#define MQTT_SN_CLIENT_DEFAULT_CONNECT_DURATION 5000
-#endif
-
-#ifndef MQTT_SN_CLIENT_MAX_REGISTRATIONS
-#define MQTT_SN_CLIENT_MAX_REGISTRATIONS 5
-#endif
-
-#ifndef MQTT_SN_CLIENT_MAX_REGISTRATION_TOPIC_NAME_LENGTH
-#define MQTT_SN_CLIENT_MAX_REGISTRATION_TOPIC_NAME_LENGTH 255
-#endif
-
-#ifndef MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT
-#define MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT 5
-#endif
-
-#ifndef MQTT_SN_CLIENT_PING_REQ_ADVANCE_TIME_S
-#define MQTT_SN_CLIENT_PING_REQ_ADVANCE_TIME_S 10
-#endif
-
-typedef enum MQTT_SN_CLIENT_RETURN_CODE_ {
-	MQTT_SN_CLIENT_RETURN_ERROR   = -1,
-	MQTT_SN_CLIENT_RETURN_SUCCESS = 0,
-	MQTT_SN_CLIENT_RETURN_CONJESTION,
-	MQTT_SN_CLIENT_RETURN_NOT_SUPPORTED,
-	MQTT_SN_CLIENT_RETURN_TIMEOUT,
-} MQTT_SN_CLIENT_RETURN_CODE;
-typedef struct MqttSnClientRegistration_ {
-	char *   topic_name;
-	uint16_t topic_id;
-} MqttSnClientRegistration;
-typedef struct MqttSnClientReceivedAdvertise_ {
-	MqttSnAdvertise received_advertise;
-	device_address  from;
-	uint8_t		signal_strength;
-} MqttSnClientReceivedAdvertise;
-typedef struct MqttSnClientReceivedGwInfo_ {
-	MqttSnGwInfo   received_gw_info;
-	device_address from;
-	uint8_t	signal_strength;
-} MqttSnClientReceivedGwInfo;
-/**
- * default_timeout: used for all operation when other value given
- */
-
-
 typedef struct MqttSnClient_ {
-  //device_address mqtt_sn_gateway_address;
-  int32_t default_timeout;
-  uint8_t default_signal_strength;
-  uint8_t status;
-  uint16_t msg_counter;
+    // network parameter
+    int32_t  retry_timeout_ms;
+    uint16_t retry_count;
+    uint64_t  congestion_delay_s;
+    uint8_t  default_signal_strength;
+    // timeout tolerances
+    uint16_t  low_timeout_threshold_s;
+    int32_t low_threshold_tolerance_percentage;
+    int32_t high_threshold_tolerance_percentage;
 
-  uint16_t connect_duration;
-  device_address mqtt_sn_gateway_address;
-  char client_id_str[MQTT_SN_MAX_CLIENT_ID_LENGTH];
-  char *client_id;
-  char *will_topic;
-  uint8_t *will_msg;
-  uint16_t will_msg_len;
+    MQTT_SN_CLIENT_STATUS status;
+    uint16_t              msg_counter;
 
-  MqttSnClientRegistration registrations[MQTT_SN_CLIENT_MAX_REGISTRATIONS];
-  uint16_t registrations_len;
+    uint8_t        clean_session;
+    uint16_t       connect_duration;
+    uint16_t       sleep_duration;
+    device_address mqtt_sn_gateway_address;
+    device_address mqtt_sn_broadcast_address;
 
-  int32_t (*publish_cb)(struct MqttSnClient_ client,
-                        const char *topic_name,
-                        uint16_t topic_id,
-                        uint8_t *data,
-                        uint16_t data_len);
-  void *adv_cb_context;
-  int32_t (*adv_cb)(struct MqttSnClient_ *client,
-                    MqttSnClientReceivedAdvertise *rec_advertise,
-                    void *context);
-  void *gwinfo_cb_context;
-  int32_t (*gwinfo_cb)(struct MqttSnClient_ *client,
-                       MqttSnClientReceivedGwInfo *rec_gw_info,
-                       void *context);
+    char *client_id;
 
-  MqttSnGatewayNetworkInterface gatewayNetwork;
-  int32_t gatewayNetworkSendTimeout;
-  int32_t gatewayNetworkReceiveTimeout;
+    char *   will_topic;
+    uint16_t will_topic_length;
+    uint8_t *will_msg;
+    uint16_t will_msg_len;
+    int8_t   will_qos;
+    uint8_t  will_retain;
 
-  void *gatewayNetworkContext;
-#ifdef WITH_LOGGING
-  MqttSnLogger logger;
+    MqttSnClientRegistration registrations[MQTT_SN_CLIENT_MAX_REGISTRATIONS];
+    uint16_t                 registrations_len;
+
+    MqttSnGatewayNetworkInterface gatewayNetwork;
+    int32_t                       gatewayNetworkSendTimeout;
+    int32_t                       gatewayNetworkReceiveTimeout;
+
+    MqttSnClientAwaitMessage await_msg[MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT];
+
+    uint64_t                 last_ping_req_received;
+    uint64_t                 last_ping_resp_received_s;
+    MqttSnClientAwaitMessage ping_req_await_msg;
+    int32_t                  connect_timeout_offset;
+
+#ifdef WITH_PAHO_WAKEUP_WORKAROUND
+    uint64_t ping_req_send_time_s;
+    uint8_t  awake_any_msg_received;
 #endif
-  uint8_t connected;
-  MQTT_SN_RETURN_CODE connect_return_code;
-  MqttSnClientAwaitMessage await_msg[MQTT_SN_CLIENT_MAX_MESSAGES_IN_FLIGHT];
+    uint64_t awake_ping_request_send_time_s;
 
-  uint64_t last_ping_req_received;
-  uint64_t last_ping_resp_received;
-  MqttSnClientAwaitMessage ping_req_await_msg;
-  int32_t connect_timeout_offset;
+    int32_t (*publish_cb)(const struct MqttSnClient_ *client, const struct MqttSnPublish_ *publish);
 
-  uint8_t client_protocol_id;
+    uint8_t                  searchgw_reply;
+    MqttSnClientAwaitMessage searchgw_reply_await_msg;
+    uint64_t                 searchgw_reply_await_last_s;
+    uint16_t                 gwinfo_delay_ms;
+
+#ifdef WITH_LOGGING
+    MqttSnLogger logger;
+#endif
+#if defined(WITH_ADVERTISE_GATEWAY_DISCOVERED_LIST) || defined(WITH_GWINFO_GATEWAY_DISCOVERED_LIST)
+    MqttSnDiscoveredGatewayList discovered_gw_list;
+#endif
+#ifdef WITH_MQTT_SN_CLIENT_BUFFER
+    MqttSnClientBuffer client_buffer;
+#endif
+#if defined(WITH_MQTT_SN_CLIENT_AUTO_CONNECT) || defined(WITH_MQTT_SN_CLIENT_AUTO_RECONNECT)
+    MQTT_SN_CLIENT_FIND_GW_PATTERN find_gw_pattern;
+    int32_t                        find_gateway_wait_timeout_ms;
+#endif
+#if defined(WITH_MQTT_SN_CLIENT_AUTO_RECONNECT)
+    uint8_t  auto_reconnect_enabled;
+    uint8_t  auto_reconnect_tried;
+    uint8_t  auto_reconnect_congestion;
+    uint64_t auto_reconnect_congestion_wait_s;
+#endif
+#ifdef WITH_MQTT_SN_CLIENT_WHITELIST
+    uint16_t gw_id_whitelist_max_len;
+    uint8_t  gw_id_whitelist[MQTT_SN_CLIENT_GW_ID_WHITELIST_LENGTH];
+    uint16_t gw_id_whitelist_len;
+
+    uint16_t       gw_addr_whitelist_max_len;
+    device_address gw_addr_whitelist[MQTT_SN_CLIENT_GW_ADDRESS_WHITELIST_LENGTH];
+    uint16_t       gw_addr_whitelist_len;
+#endif
+#ifdef WITH_MQTT_SN_CLIENT_BLACKLIST
+    uint16_t gw_id_blacklist_max_len;
+    uint8_t  gw_id_blacklist[MQTT_SN_CLIENT_GW_ID_BLACKLIST_LENGTH];
+    uint16_t gw_id_blacklist_len;
+
+    uint16_t       gw_addr_blacklist_max_len;
+    device_address gw_addr_blacklist[MQTT_SN_CLIENT_GW_ADDRESS_BLACKLIST_LENGTH];
+    uint16_t       gw_addr_blacklist_len;
+#endif
 } MqttSnClient;
 
-int32_t global_mqtt_sn_client_gwinfo_cb(MqttSnClient *client,
-                                        MqttSnClientReceivedGwInfo *rec_gw_info,
-                                        void *context);
-int32_t global_mqtt_sn_client_adv_cb(MqttSnClient *client,
-                                     MqttSnClientReceivedAdvertise *rec_advertise,
-                                     void *context);
-// init network too
-int32_t MqttSnClientInit(MqttSnClient *client, const MqttSnLogger *logger, void *gatewayNetworkContext);
-int32_t MqttSnClientDeinit(MqttSnClient *client);
-
-int32_t MqttSnClientLoop(MqttSnClient *client);
-// disconnect network too
-// deinint network too
-
-void MqttSnClientTimeoutOffset(MqttSnClient *client, int32_t connect_timeout_offset);
-
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientDirectConnect(MqttSnClient *client,
-                                                     device_address *mqtt_sn_gateway_address,
-                                                     int32_t connect_timeout_ms,
-                                                     uint8_t clean_session,
-                                                     const char *client_id,
-                                                     uint16_t connect_duration);
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientDisconnect(MqttSnClient *client);
-/**
- * Sends a MqttSnPublish with Quality of Service (qos) -1 to a predefined topic. Works with disconnected MqttSnClients.
- * @param client to use for sending
- * @param predefined_topic_id to publish to
- * @param data to publish
- * @param data_len length of data to publish
- * @return -1 on error, else the count of bytes send
- */
-int32_t MqttSnClientPublishPredefinedM1(MqttSnClient *client,
-                                        uint16_t predefined_topic_id,
-                                        uint8_t retain,
-                                        uint8_t *data,
-                                        uint16_t data_len);
-
-/**
- * Registers (if not yet) and publishes message
- * Look up if registered => else registers => then publishes
- */
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientPublishTopicName(MqttSnClient *client,
-                                                        const char *topic_name,
-                                                        uint16_t topic_name_length,
-                                                        uint8_t retain,
-                                                        int8_t qos,
-                                                        uint8_t *data,
-                                                        uint16_t data_len);
-/**
- * Publishes to predefined topic id with given qos
- */
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientPublishPredefined(MqttSnClient *client,
-                                                         uint16_t predefined_topic_id,
-                                                         uint8_t retain,
-                                                         int8_t qos,
-                                                         uint8_t *data,
-                                                         uint16_t data_len);
-/**
- * Publishes to topic id with given qos
- */
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientPublishTopicId(MqttSnClient *client,
-                                                      uint16_t short_topic_id,
-                                                      uint8_t retain,
-                                                      int8_t qos,
-                                                      uint8_t *data,
-                                                      uint16_t data_len);
-
-/**
- * Registers topic_name to gateway
- */
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientRegister(MqttSnClient *client, const char *topic_name);
-
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSubscribePredefined(MqttSnClient *client, int8_t qos);
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSubscribeShort(MqttSnClient *client, int8_t qos);
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSubscribeTopicName(MqttSnClient *client, const char *topic_name);
-
-int32_t MqttSnClientUnsubscribePredefined(MqttSnClient *client, int8_t qos);
-int32_t MqttSnClientUnsubscribeShort(MqttSnClient *client, int8_t qos);
-int32_t MqttSnClientUnsubscribeTopicName(MqttSnClient *client, const char *topic_name);
-
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSleep(MqttSnClient *client, uint16_t sleep_duration);
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientWakeup(MqttSnClient *client);
-
-int32_t MqttSnPingGateway(MqttSnClient *client);
-
-/*
-    int32_t find_gateway_monitor_adv_cb( MqttSnClient *client,
-                                        const MqttSnClientReceivedAdvertise *advertise,
-                                        void* context)
-
- */
-
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientAwaitAdvertise(MqttSnClient *client,
-                                                      int32_t timeout_s,
-                                                      MqttSnClientReceivedAdvertise *dst_advertise);
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientAwaitAdvertiseCallback(MqttSnClient *client,
-                                                              int32_t timeout_s,
-                                                              void *context,
-                                                              int32_t (*adv_cb)(const MqttSnClient *client,
-                                                                                const MqttSnClientReceivedAdvertise *rec_advertise,
-                                                                                void *context));
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSearchGw(MqttSnClient *client,
-                                                int32_t timeout_ms,
-                                                uint8_t radius,
-                                                MqttSnClientReceivedGwInfo *dst_gwinfo);
-MQTT_SN_CLIENT_RETURN_CODE MqttSnClientSearchGwCallback(MqttSnClient *client,
-                                                        int32_t timeout_ms,
-                                                        uint8_t radius,
-                                                        void *context,
-                                                        int32_t (*gwinfo_cb)(const MqttSnClient *client,
-                                                                             const MqttSnClientReceivedGwInfo *rec_gw_info,
-                                                                             void *context));
-
-int32_t MqttSnClientSafeStrlen(const char *str, int32_t max_len);
-int32_t parse_and_handle_advertise(MqttSnClient *client, MqttSnMessageData *msg);
-int32_t parse_and_handle_gwinfo(MqttSnClient *client, MqttSnMessageData *msg);
-
-int32_t is_await_msg(MqttSnClient *client, MQTT_SN_MESSAGE_TYPE msg_type, uint16_t msg_id);
-int32_t set_await_msg_status(MqttSnClient *client, int32_t await_fd, MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS status);
+MqttSnClientAwaitContext *          get_await_context(MqttSnClient *client, int32_t await_fd);
 MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS get_await_status(MqttSnClient *client, int32_t await_fd);
-int32_t free_await_msg(MqttSnClient *client, int32_t await_fd);
-int32_t new_await_msg(MqttSnClient *client, MQTT_SN_MESSAGE_TYPE msg_type, uint16_t msg_id);
-MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS get_await_status_timeout_ms(MqttSnClient *client, int32_t await_fd,
-                                                                uint64_t start_ts_ms, uint64_t timeout_ms);
+int32_t                             free_await_fd(MqttSnClient *client, int32_t await_fd);
+int32_t                             acquire_await_fd(MqttSnClient *client, MQTT_SN_MESSAGE_TYPE msg_type, uint16_t msg_id);
+MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS get_await_status_timeout_ms_easy(MqttSnClient *client, int32_t await_fd, uint64_t timeout_ms);
+MQTT_SN_CLIENT_AWAIT_MESSAGE_STATUS get_await_status_timeout_ms(MqttSnClient *client, int32_t await_fd, uint64_t start_ts_ms,
+                                                                uint64_t timeout_ms);
+
+
 #ifdef __cplusplus
 }
 #endif
-#endif //CMQTTSNFORWARDER_CLIENT_MQTTSNCLIENT_H_
+
+#endif  //CMQTTSNFORWARDER_MQTTSNCLIENT_H

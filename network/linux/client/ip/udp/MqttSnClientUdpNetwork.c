@@ -10,12 +10,13 @@
 #include <network/shared/ip/IpHelperLogging.h>
 #include <network/linux/shared/ip/MqttSnIpNetworkHelperLogging.h>
 
+
 int32_t ClientLinuxUdpInitialize(MqttSnClientNetworkInterface *n, void *context) {
   MqttSnClientUdpNetwork *udpNetwork = (MqttSnClientUdpNetwork *) context;
   memset(udpNetwork, 0, sizeof(MqttSnClientUdpNetwork));
   udpNetwork->received_messages = 0;
   udpNetwork->unicast_socket = -1;
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
   udpNetwork->multicast_socket = -1;
 #endif
   strcpy(udpNetwork->protocol, CMQTTSNFORWARDER_MQTTSNCLIENTLINUXUDPNETWORKPROTOCOL);
@@ -47,7 +48,7 @@ int32_t ClientLinuxUdpConnect(MqttSnClientNetworkInterface *n, void *context) {
   log_opening_unicast_socket(n->logger, udpNetwork->protocol, n->client_network_address);
 #endif
 
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
   if (n->client_network_broadcast_address) {
     if (udpNetwork->multicast_socket < 0) {
       uint32_t multicast_ip = 0;
@@ -58,7 +59,7 @@ int32_t ClientLinuxUdpConnect(MqttSnClientNetworkInterface *n, void *context) {
 #endif
         return -1;
       }
-      udpNetwork->multicast_socket = initialize_udp_multicast_socket(udpNetwork->unicast_socket,
+        udpNetwork->multicast_socket = initialize_udp_multicast_socket(udpNetwork->unicast_socket,
                                                                      multicast_ip,
                                                                      multicast_port);
       if (udpNetwork->multicast_socket < 0) {
@@ -86,7 +87,7 @@ int32_t ClientLinuxUdpDisconnect(MqttSnClientNetworkInterface *n, void *context)
     log_close_unicast_socket(n->logger, udpNetwork->protocol, n->client_network_address);
 #endif
   }
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
   if (n->client_network_broadcast_address) {
     if (udpNetwork->multicast_socket > -1) {
       close(udpNetwork->multicast_socket);
@@ -117,13 +118,13 @@ int32_t ClientLinuxUdpSend(MqttSnClientNetworkInterface *n,
 
   ssize_t send_rc = send_udp_message(clientUdpNetwork->unicast_socket, to, data, data_length);
 
+/* Can never happen with UDP
 #ifdef WITH_DEBUG_LOGGING
   if (send_rc > 0 && send_rc != data_length) {
     log_incomplete_client_message(n->logger, from, data, data_length);
   }
-
 #endif
-
+*/
   return send_rc;
 }
 
@@ -137,7 +138,7 @@ int32_t ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
                               void *context) {
   MqttSnClientUdpNetwork *udpNetwork = (MqttSnClientUdpNetwork *) context;
 
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
   int message_received = is_multicast_or_unicast_message_receive(udpNetwork->unicast_socket,
                                                                  udpNetwork->multicast_socket,
                                                                  timeout_ms);
@@ -152,7 +153,7 @@ int32_t ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
     return -1;
   }
 
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
   if (message_received == 3) {
     if (udpNetwork->received_messages % 2) {
       return ClientLinuxUdpReceiveUnicast(n, from, to, data, max_data_length, udpNetwork);
@@ -174,7 +175,7 @@ int32_t ClientLinuxUdpReceive(MqttSnClientNetworkInterface *n,
     return ClientLinuxUdpReceiveUnicast(n, from, to, data, max_data_length, udpNetwork);
   }
 
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
   if (n->client_network_broadcast_address) {
     if (message_received == 2) {
       return ClientLinuxUdpReceiveMulticast(n,
@@ -213,7 +214,7 @@ int32_t ClientLinuxUdpReceiveUnicast(MqttSnClientNetworkInterface *n,
 #endif
   return unicast_rc;
 }
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
 
 int32_t ClientLinuxUdpReceiveMulticast(MqttSnClientNetworkInterface *n,
                                        device_address *from,

@@ -4,10 +4,9 @@
 
 #ifndef CMQTTSNFORWARDER_CONFIG_MQTT_SN_LOGGER_CONFIG_H_
 #define CMQTTSNFORWARDER_CONFIG_MQTT_SN_LOGGER_CONFIG_H_
-//TODO implement me: log level
 
 #include <stdint.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,7 +23,7 @@ extern "C" {
 typedef struct mqtt_sn_logger_config_ {
   char default_logging_target[sizeof(MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET)];
   char* log_target;
-  char* log_file_path;
+  char* log_filepath;
   char* log_identifier;
   log_level_t log_lvl;
 } mqtt_sn_logger_config;
@@ -53,6 +52,7 @@ int32_t mqtt_sn_logger_config_process_args(mqtt_sn_logger_config *cfg,
                                            const MqttSnLogger *logger,
                                            int argc,
                                            char *argv[]);
+void mqtt_sn_logger_config_print_usage(const MqttSnLogger *logger);
 void mqtt_sn_logger_config_print_usage_short(const MqttSnLogger *logger, const char *indent);
 void mqtt_sn_logger_config_print_usage_long(const MqttSnLogger *logger);
 

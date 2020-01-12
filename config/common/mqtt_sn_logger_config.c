@@ -12,7 +12,7 @@ int32_t mqtt_sn_logger_config_init(mqtt_sn_logger_config *cfg) {
          MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET,
          sizeof(MQTT_SN_LOGGER_DEFAULT_LOGGING_TARGET));
   cfg->log_target = cfg->default_logging_target;
-  cfg->log_file_path = NULL;
+  cfg->log_filepath = NULL;
   cfg->log_identifier = NULL;
   cfg->log_lvl = MQTT_SN_LOGGER_DEFAULT_LOG_LVL;
   return MQTT_SN_PARSE_CONFIG_SUCCESS;
@@ -84,7 +84,7 @@ int32_t mqtt_sn_logger_config_process_args(mqtt_sn_logger_config *cfg,
         print_argument_value_not_specified(logger, argv[i], "log file path");
         return MQTT_SN_PARSE_CONFIG_FAILURE;
       } else {
-        cfg->log_file_path = argv[i + 1];
+        cfg->log_filepath = argv[i + 1];
       }
       i++;
       parsed_args += 2;
@@ -106,7 +106,7 @@ int32_t mqtt_sn_logger_config_process_args(mqtt_sn_logger_config *cfg,
 #endif
   }
 
-  if (!strcmp(cfg->log_target, "file") && cfg->log_file_path == NULL) {
+  if (!strcmp(cfg->log_target, "file") && cfg->log_filepath == NULL) {
     print_argument_value_not_specified(logger, "log target file", "log file path");
     return MQTT_SN_PARSE_CONFIG_FAILURE;
   }
@@ -131,7 +131,7 @@ void mqtt_sn_logger_config_print_usage_long(const MqttSnLogger *logger) {
   log_str(logger, PSTR("\n"));
   log_str(logger, PSTR("     : When using file as log target the logfile path (-lfp) must be set.\n"));
   log_str(logger, PSTR(" -lfp : specify the logfile path. Logs to the logfile additional to the logging target.\n"));
-  log_str(logger, PSTR(" -q : specify quiet logging. Don't print any log messages.\n"));
+  log_str(logger, PSTR(" -q : specify quiet logging. Does not print any log messages.\n"));
   log_str(logger, PSTR(" -d : specify default logging. Enables default log messages.\n"));
   //log_str(logger, PSTR(" -d : specify default logging. Print network status changes, and the mqtt-sn messages: PUBLISH, CONNECT, CONNACK, DISCONNECT.\n"));
   log_str(logger, PSTR(" -v : specify verbose logging. Enables verbose log messages.\n"));
@@ -148,12 +148,12 @@ int32_t mqtt_sn_logger_config_buffer_copy_to_buffer(mqtt_sn_logger_config *cfg,
     strcpy(cfg_buffer->log_target, cfg->log_target);
     cfg->log_target = cfg_buffer->log_target;
   }
-  if (cfg->log_file_path) {
-    if (strlen(cfg->log_file_path) + 1 > MQTT_SN_LOGGER_CONFIG_BUFFER_LOG_log_file_path_LENGTH) {
+  if (cfg->log_filepath) {
+    if (strlen(cfg->log_filepath) + 1 > MQTT_SN_LOGGER_CONFIG_BUFFER_LOG_log_file_path_LENGTH) {
       return -1;
     }
-    strcpy(cfg_buffer->log_file_path, cfg->log_file_path);
-    cfg->log_file_path = cfg_buffer->log_file_path;
+    strcpy(cfg_buffer->log_file_path, cfg->log_filepath);
+    cfg->log_filepath = cfg_buffer->log_file_path;
   }
   if (cfg->log_identifier) {
     if (strlen(cfg->log_identifier) + 1 > MQTT_SN_LOGGER_CONFIG_BUFFER_LOG_log_identifier_LENGTH) {
@@ -164,4 +164,7 @@ int32_t mqtt_sn_logger_config_buffer_copy_to_buffer(mqtt_sn_logger_config *cfg,
   }
   return 0;
 }
-
+void mqtt_sn_logger_config_print_usage(const MqttSnLogger *logger) {
+    mqtt_sn_logger_config_print_usage_short(logger, NULL);
+    mqtt_sn_logger_config_print_usage_long(logger);
+}

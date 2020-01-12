@@ -22,7 +22,7 @@ typedef struct MqttSnMessageData_ {
   device_address from;
   device_address to;
   uint16_t data_length;
-  uint8_t signal_strength; // TODO not really useful atm
+  uint8_t signal_strength;
   uint8_t data[MQTT_SN_MAXIMUM_MESSAGE_DATA_LENGTH];
 } MqttSnMessageData;
 

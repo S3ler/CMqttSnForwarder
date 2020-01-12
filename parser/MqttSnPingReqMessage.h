@@ -26,6 +26,7 @@ int32_t parse_ping_req_w_client_id_byte(char *client_id,
                                         uint8_t client_id_max_length,
                                         const uint8_t *data,
                                         uint16_t data_len);
+int32_t generate_ping_req_w_client_id(uint8_t *dst, uint64_t dst_len, const char *client_id, uint16_t client_id_length);
 int32_t parse_ping_req_byte(const uint8_t *data, uint16_t data_len);
 int32_t generate_ping_req(uint8_t *dst, uint16_t dst_len);
 #ifdef __cplusplus

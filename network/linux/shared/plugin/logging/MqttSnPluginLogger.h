@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 
 int log_client_network_connect(const MqttSnLogger *logger,
                                const char *protocol_name,

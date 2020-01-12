@@ -8,9 +8,10 @@
 extern "C" {
 #endif
 
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 
 int log_select_error(const MqttSnLogger *logger);
+int log_debug_select_error(const MqttSnLogger *logger, const char *file_name, const char *function_name, int line_number);
 
 #ifdef __cplusplus
 }

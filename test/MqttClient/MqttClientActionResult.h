@@ -6,9 +6,9 @@
 #define CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTACTIONRESULT_H_
 
 #include <stdint.h>
-#include <string>
 #include <chrono>
 #include <ostream>
+#include <string>
 #include "MqttClientAction.h"
 #include "MqttClientActionResultType.h"
 
@@ -21,17 +21,9 @@ class MqttClientActionResult {
   const std::chrono::nanoseconds start;
   const std::chrono::nanoseconds end;
 
-  MqttClientActionResult(const std::string &client_id,
-                         const uint64_t action_number,
-                         const MqttClientActionType action_type,
-                         const MqttClientActionResultType action_result,
-                         const std::chrono::nanoseconds &start,
-                         const std::chrono::nanoseconds &an_end);
-  MqttClientActionResult(const std::string client_id,
-                         const MqttClientActionType action_type,
-                         const uint64_t action_number,
-                         const MqttClientActionResultType action_result,
-                         const timespec &start,
+  MqttClientActionResult(const std::string &client_id, const MqttClientActionType action_type, const uint64_t action_number, const MqttClientActionResultType action_result,
+                         const std::chrono::nanoseconds &start, const std::chrono::nanoseconds &an_end);
+  MqttClientActionResult(const std::string client_id, const MqttClientActionType action_type, const uint64_t action_number, const MqttClientActionResultType action_result, const timespec &start,
                          const timespec &an_end);
   static std::chrono::nanoseconds timespecToDuration(timespec ts);
 
@@ -39,4 +31,4 @@ class MqttClientActionResult {
   friend std::ostream &operator<<(std::ostream &os, const MqttClientActionResult &result);
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTACTIONRESULT_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTACTIONRESULT_H_

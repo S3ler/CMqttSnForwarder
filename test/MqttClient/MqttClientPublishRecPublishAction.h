@@ -7,7 +7,7 @@
 
 #include "MqttClientPublishAction.h"
 #include "MqttClientReceivePublishAction.h"
-
+/*
 class MqttClientPublishRecPublishAction : public MqttClientAction{
   const MqttClientPublishAction publish_action;
   const MqttClientReceivePublishAction receive_publish_action;
@@ -16,5 +16,5 @@ class MqttClientPublishRecPublishAction : public MqttClientAction{
   MqttClientPublishRecPublishAction(const MqttClientPublishAction &publish_action,
                                     const MqttClientReceivePublishAction &receive_publish_action);
 };
-
+*/
 #endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTPUBLISHRECPUBLISHACTION_H_

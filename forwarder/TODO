@@ -1,0 +1,3 @@
+example basteln mit:
+ client - tcp - forwarder - udp - paho
+ client - udp - forwarder - udp - paho

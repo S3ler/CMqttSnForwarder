@@ -5,7 +5,7 @@
 #include "MqttSnGatewayForwarder.h"
 #include <string.h>
 #include <parser/MqttSnForwarderEncapsulationMessage.h>
-#include <parser/logging/common/MqttSnMessageLogging.h>
+#include <parser/logging/MqttSnMessageParserLogging.h>
 
 void MqttSnGatewayForwarderInit(MqttSnGatewayForwarder *mqtt_sn_gateway_forwarder) {
   memset(mqtt_sn_gateway_forwarder, 0, sizeof(MqttSnGatewayForwarder));

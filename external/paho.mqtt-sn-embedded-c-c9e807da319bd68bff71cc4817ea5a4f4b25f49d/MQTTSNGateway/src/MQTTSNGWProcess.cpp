@@ -253,6 +253,7 @@ MultiTaskProcess::MultiTaskProcess()
 {
 	theMultiTaskProcess = this;
 	_threadCount = 0;
+
 	_stopCount = 0;
 }
 

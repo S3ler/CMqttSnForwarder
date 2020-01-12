@@ -6,12 +6,14 @@
 #define CMQTTSNFORWARDER_TEST_MQTTSNNETWORKBUILDER_MQTTSNNETWORKBUILDERCONFIGURATION_H_
 
 #include <test/MqttNetworkBuilder/MqttNetworkBuilderConfiguration.h>
-#include "MqttSnNetworkBuilderMqttSnGatewayConfiguration.h"
 #include "MqttSnNetworkBuilderMqttSnClientConfiguration.h"
+#include "MqttSnNetworkBuilderMqttSnForwarderConfiguration.h"
+#include "MqttSnNetworkBuilderMqttSnGatewayConfiguration.h"
 class MqttSnNetworkBuilderConfiguration {
  public:
   const MqttNetworkBuilderConfiguration mqtt_network_builder_configuration;
   const MqttSnNetworkBuilderMqttSnGatewayConfiguration mqtt_sn_gateway_config;
+  const MqttSnNetworkBuilderMqttSnForwarderConfiguration mqtt_sn_forwarder_config;
   const MqttSnNetworkBuilderMqttSnClientConfiguration mqtt_sn_client_config;
   // Mqtt-Sn Gateway
   // Mqtt-SN Gateway implementation
@@ -31,11 +33,10 @@ class MqttSnNetworkBuilderConfiguration {
   // Mqtt-Sn Forwarder's find gateway strategy (Default=Direct, SearchGw, Advertisement)
   // On Direct: Mqtt-Sn Forwarder's Gateway Address + Mqtt-Sn Forwarder's Multicast Network Address (same as Gateway's)
   // On Other: Mqtt-Sn Forwarder's Multicast Network Address (same as Gateway's)
-  MqttSnNetworkBuilderConfiguration(const MqttNetworkBuilderConfiguration &mqtt_network_builder_configuration,
-                                    const MqttSnNetworkBuilderMqttSnGatewayConfiguration &mqtt_sn_gateway_config,
-                                    const MqttSnNetworkBuilderMqttSnClientConfiguration &mqtt_sn_client_config);
+  MqttSnNetworkBuilderConfiguration(const MqttNetworkBuilderConfiguration &mqtt_network_builder_configuration, const MqttSnNetworkBuilderMqttSnGatewayConfiguration &mqtt_sn_gateway_config,
+                                    const MqttSnNetworkBuilderMqttSnClientConfiguration &mqtt_sn_client_config, const MqttSnNetworkBuilderMqttSnForwarderConfiguration &mqtt_sn_forwarder_config);
   static const MqttSnNetworkBuilderConfiguration DefaultConfiguration(const MqttNetworkBuilderConfiguration &mqttNetworkBuilderConfiguration);
   static const MqttSnNetworkBuilderConfiguration DefaultConfiguration();
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTSNNETWORKBUILDER_MQTTSNNETWORKBUILDERCONFIGURATION_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTSNNETWORKBUILDER_MQTTSNNETWORKBUILDERCONFIGURATION_H_

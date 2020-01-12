@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_GATEWAY_STARTER_LINUX_GATEWAY_STARTER_H_
 #define CMQTTSNFORWARDER_GATEWAY_STARTER_LINUX_GATEWAY_STARTER_H_
 
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <gateway/MqttSnGateway.h>
 
 #ifdef __cplusplus

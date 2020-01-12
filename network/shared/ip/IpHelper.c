@@ -9,13 +9,17 @@
 #include <string.h>
 #include <stdio.h>
 
-int add_port_to_device_address(uint32_t port, device_address *dst) { // TODO to uint16_t
+// TODO to uint16_t port
+// TODO  ntohs
+int add_port_to_device_address(uint32_t port, device_address *dst) {
   dst->bytes[sizeof(device_address) - 2] = (port >> 8) & 0xFF;
   dst->bytes[sizeof(device_address) - 1] = (port >> 0) & 0xFF;
   return 0;
 }
 
-uint32_t get_port_from_device_address(const device_address *src) { // TODO to uint16_t
+// TODO to uint16_t port
+// TODO  ntohs
+uint32_t get_port_from_device_address(const device_address *src) {
   return (((uint32_t) src->bytes[sizeof(device_address) - 2]) << 8)
       + (((uint32_t) src->bytes[sizeof(device_address) - 1]) << 0);
 }

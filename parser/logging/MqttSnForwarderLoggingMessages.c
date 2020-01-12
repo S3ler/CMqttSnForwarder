@@ -11,7 +11,7 @@
 #ifndef Arduino_h
 #include <netinet/in.h>
 #include <parser/MqttSnAdvertiseMessage.h>
-#include <parser/logging/common/MqttSnMessageLogging.h>
+
 #endif
 
 /*
@@ -88,6 +88,7 @@ int log_short_topic_name(const MqttSnLogger *logger, uint16_t shortTopicName) {
 int log_qos_flag(const MqttSnLogger *logger, int8_t qos) {
   return log_char_key_int8_value(logger, 'q', qos);
 }
+
 int log_ctrl(const MqttSnLogger *logger, uint8_t ctrl) {
   return log_char_key_uint8_value(logger, 'c', ctrl);
 }
@@ -109,20 +110,14 @@ int log_close_braked_dot(const MqttSnLogger *logger) {
 int log_comma(const MqttSnLogger *logger) {
   return log_str(logger, PSTR(", "));
 }
-int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger *logger,
-                                          const device_address *from,
-                                          const uint8_t *data,
-                                          uint16_t data_len,
-                                          uint8_t signal_strength) {
-  return log_mqtt_sn_message_malformed(logger,
-                                       MQTT_SN_FORWARDER_NETWORK_GATEWAY,
-                                       from,
-                                       data,
-                                       data_len,
-                                       signal_strength);
+int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger* logger, MqttSnMessageData *msg){
+    if (is_logger_not_available(logger) || shall_not_be_logged(logger, LOG_LEVEL_VERBOSE)) {
+        return log_status(logger);
+    }
+    log_msg_start(logger);
+    log_str(logger, PSTR("malformed gateway message "));
+    return print_malformed_message(logger, ANY_MESSAGE_TYPE, &msg->from, &msg->to, msg->signal_strength, msg->data, msg->data_length);
 }
-
-
 
 int log_could_not_generate_encapsulation_message(const MqttSnLogger *logger,
                                                  const MQTT_SN_FORWARDER_NETWORK network,
@@ -229,8 +224,9 @@ int log_mqtt_sn_message_payload(const MqttSnLogger *logger,
 }
 
 int log_default_mqtt_sn_message_payload(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
+    // TODO implement me
   switch (header->msg_type) {
-    case PUBLISH: return log_publish_message(logger, header);
+    //case PUBLISH: return log_publish_message(logger, header);
     case CONNECT: return log_connect_message(logger, header);
     case CONNACK: return log_connack_message(logger, header);
     case DISCONNECT: return log_disconnect_message(logger, header);
@@ -246,7 +242,9 @@ int log_verbose_mqtt_sn_message_payload(const MqttSnLogger *logger,
                                         const ParsedMqttSnHeader *header,
                                         const uint8_t *data,
                                         uint16_t data_length) {
-  switch (header->msg_type) {
+    return log_status(logger);
+    // TODO implement me
+    switch (header->msg_type) {
     case ADVERTISE: return log_advertise_message_byte(logger, data, data_length);
     case SEARCHGW: return log_searchgw_message_byte(logger, data, data_length);
     case GWINFO: return log_gwinfo_message_byte(logger, data, data_length);
@@ -347,25 +345,6 @@ int log_regack_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *hea
   return log_flush(logger);
 }
 
-int log_publish_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
-  MqttSnMessagePublish *p = (MqttSnMessagePublish *) header->payload;
-  uint16_t msg_id = ntohs(p->msgId);
-  uint16_t topic_id = ntohs(((MqttSnMessagePublish *) header->payload)->topicId);
-  uint8_t flags = ((MqttSnMessagePublish *) header->payload)->flags;
-  uint16_t msg_bytes = header->length;
-
-  log_message_id(logger, msg_id);
-  log_comma(logger);
-  log_topic_id(logger, topic_id);
-  log_comma(logger);
-  log_mqtt_sn_flags(logger, flags);
-
-  log_str(logger, PSTR("... ("));
-  log_uint16(logger, msg_bytes);
-  log_str(logger, PSTR(" bytes)"));
-
-  return log_status(logger);
-}
 
 int log_puback_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header) {
   MqttSnMessagePuback *p = (MqttSnMessagePuback *) header->payload;

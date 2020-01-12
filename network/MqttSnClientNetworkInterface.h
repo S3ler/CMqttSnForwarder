@@ -11,7 +11,7 @@ extern "C" {
 #include <stdint.h>
 #include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
 #ifdef WITH_LOGGING
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #endif
 
 typedef enum MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS_ {
@@ -29,6 +29,7 @@ typedef struct MqttSnClientNetworkInterface_ {
   MQTT_SN_CLIENT_NETWORK_INTERFACE_STATUS status;
   uint16_t max_data_length;
 
+  void* context;
   device_address *client_network_address;
   device_address *mqtt_sn_gateway_address;
   device_address *client_network_broadcast_address;

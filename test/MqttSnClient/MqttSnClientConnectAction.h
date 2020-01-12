@@ -20,12 +20,19 @@ class MqttSnClientConnectAction : public MqttSnClientAction {
   const int32_t keepAliveInterval;
   const bool cleanSession;
 
-  // TODO will
-  MqttSnClientConnectAction(const MqttSnClientActionType action_type,
-                            const std::string &client_id,
-                            const std::string &client_password,
-                            const int32_t keep_alive_interval,
-                            const bool clean_session);
+  const std::string willTopic;
+  const std::vector<uint8_t> willMessage;
+  const bool willRetain;
+
+  MqttSnClientConnectAction(const std::string& client_id, const std::string& client_password, const int32_t connect_duration, const bool clean_session, const std::string& willTopic,
+                            const std::vector<uint8_t>& willMessage, const bool willRetain);
+  MqttSnClientConnectAction(const std::string& client_id, const std::string& client_password, const int32_t connect_duration, const bool clean_session);
+  MqttSnClientConnectAction(const std::string& clientId, const int32_t keepAliveInterval, const bool clean_session);
+
+  MqttSnClientConnectAction(MqttSnClientActionType actionType, const std::string& client_id, const std::string& client_password, const int32_t connect_duration, const bool clean_session,
+                            const std::string& willTopic, const std::vector<uint8_t>& willMessage, const bool willRetain);
+  MqttSnClientConnectAction(MqttSnClientActionType actionType, const std::string& client_id, const std::string& client_password, const int32_t connect_duration, const bool clean_session);
+  MqttSnClientConnectAction(MqttSnClientActionType actionType, const std::string& clientId, const int32_t keepAliveInterval, const bool clean_session);
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTSNCLIENT_MQTTSNCLIENTCONNECTACTION_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTSNCLIENT_MQTTSNCLIENTCONNECTACTION_H_

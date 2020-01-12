@@ -2,6 +2,7 @@
 // Created by SomeDude on 22.07.2019.
 //
 
+
 #ifndef CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTCONTAINERCONFIGURATION_H_
 #define CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTCONTAINERCONFIGURATION_H_
 
@@ -11,9 +12,9 @@
 
 class MqttBrokerTestContainerConfiguration {
  public:
-  const MqttBrokerProtocolTestType protocol_type; // example tcp
-  const std::string brokerAddress; // example localhost
-  const uint16_t brokerPort; // example 1883
+  const MqttBrokerProtocolTestType protocol_type;
+  const std::string brokerAddress;
+  const uint16_t brokerPort;
 
   MqttBrokerTestContainerConfiguration(const MqttBrokerProtocolTestType protocol_type,
                                        const std::string &broker_address,

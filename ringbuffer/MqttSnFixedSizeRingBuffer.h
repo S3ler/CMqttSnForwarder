@@ -19,8 +19,6 @@ extern "C" {
 #endif
 
 
-
-
 typedef struct MqttSnFixedSizeRingBuffer_ {
   uint32_t head;
   uint32_t tail;

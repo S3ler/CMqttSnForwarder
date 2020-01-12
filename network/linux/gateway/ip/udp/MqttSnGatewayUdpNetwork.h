@@ -17,7 +17,7 @@ typedef struct MqttSnGatewayUdpNetwork_ {
   int unicast_socket;
   char protocol[sizeof(CMQTTSNFORWARDER_MQTTSNGATEWAYLINUXUDPNETWORKPROTOCOL)];
   uint64_t received_messages;
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
   int multicast_socket;
 #endif
 } MqttSnGatewayUdpNetwork;
@@ -51,7 +51,7 @@ int32_t GatewayLinuxUdpReceiveUnicast(MqttSnGatewayNetworkInterface *n,
                                       uint8_t *data,
                                       uint16_t max_data_length,
                                       MqttSnGatewayUdpNetwork *udpNetwork);
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
 int32_t GatewayLinuxUdpReceiveMulticast(MqttSnGatewayNetworkInterface *n,
                                         device_address *from,
                                         device_address *to,

@@ -47,13 +47,8 @@ int32_t parse_connect_message_byte(uint8_t *will,
                                    uint8_t client_id_max_length,
                                    const uint8_t *data,
                                    uint16_t data_len);
-int32_t generate_connect(uint8_t *dst,
-                         uint16_t dst_len,
-                         uint8_t will,
-                         uint8_t clean_session,
-                         uint8_t protocol_id,
-                         uint16_t duration,
-                         const char *client_id);
+int32_t generate_connect(uint8_t *dst, uint16_t dst_len, uint8_t will, uint8_t clean_session, uint8_t protocol_id, uint16_t duration,
+                         const char *client_id, uint16_t client_id_length);
 
 #ifdef __cplusplus
 }

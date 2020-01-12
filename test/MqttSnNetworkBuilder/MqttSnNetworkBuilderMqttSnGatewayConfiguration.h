@@ -7,8 +7,11 @@
 
 #include <stdint.h>
 #include <string>
+#include <vector>
+#include <tuple>
+#include <test/MqttNetworkBuilder/MqttNetworkBuilderConfiguration.h>
 #include <test/MqttSnGateway/MqttSnGatewayTestType.h>
-#include "test/MqttSnGateway/MqttSnGatewayProtocolTestType.h"
+#include <test/MqttSnGateway/MqttSnGatewayProtocolTestType.h>
 class MqttSnNetworkBuilderMqttSnGatewayConfiguration {
  public:
   const MqttNetworkBuilderConfiguration mqtt_network_builder_configuration;
@@ -29,19 +32,13 @@ class MqttSnNetworkBuilderMqttSnGatewayConfiguration {
 
   const uint16_t minGatewayId;
 
-  MqttSnNetworkBuilderMqttSnGatewayConfiguration(const MqttNetworkBuilderConfiguration &mqtt_network_builder_configuration,
-                                                 const std::string &base_client_id,
-                                                 const std::string &base_client_password,
-                                                 const int32_t keep_alive_interval,
-                                                 const bool clean_session,
-                                                 const MqttSnGatewayTestType type,
-                                                 const int32_t max_gateway_count,
-                                                 const MqttSnGatewayProtocolTestType protocol_type,
-                                                 const std::string &gateway_address_url,
-                                                 const uint16_t min_gateway_port,
-                                                 const std::string &gatewayBroadcastAddressURL,
-                                                 const uint16_t gatewayBroadcastPort,
-                                                 const uint8_t mingGatewayId);
+  const std::vector<std::tuple<uint16_t ,std::string>> predefined_topics;
+
+  MqttSnNetworkBuilderMqttSnGatewayConfiguration(const MqttNetworkBuilderConfiguration& mqtt_network_builder_configuration, const std::string& base_client_id, const std::string& base_client_password,
+                                                 const int32_t keep_alive_interval, const bool clean_session, const MqttSnGatewayTestType type, const int32_t max_gateway_count,
+                                                 const MqttSnGatewayProtocolTestType protocol_type, const std::string& gateway_address_url, const uint16_t min_gateway_port,
+                                                 const std::string& gatewayBroadcastAddressURL, const uint16_t gatewayBroadcastPort, const uint8_t mingGatewayId,
+                                                 const std::vector<std::tuple<uint16_t, std::string>>& predefined_topics);
 
   static const MqttSnNetworkBuilderMqttSnGatewayConfiguration GetDefaultConfiguration();
   static const MqttSnNetworkBuilderMqttSnGatewayConfiguration GetDefaultConfiguration(const MqttNetworkBuilderConfiguration &mqtt_network_builder_configuration);

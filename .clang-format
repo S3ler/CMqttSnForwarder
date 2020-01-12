@@ -10,15 +10,16 @@
 #   https://clang.llvm.org/docs/ClangFormat.html
 #   https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 #
----
-Language:        C
 # BasedOnStyle:  https://github.com/torvalds/linux/blob/master/.clang-format 09.08.2019 commit: 6b0a7f84ea1fe248df96ccc4dd86e817e32ef65b
+---
+Language:        Cpp
 AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
 #AlignConsecutiveAssignments: false
 #AlignConsecutiveDeclarations: false
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
+#AlignConsecutiveMacros: true # Unknown to version below clang-format-10.0
 #AlignEscapedNewlines: Left # Unknown to clang-format-4.0
 AlignOperands: true
 AlignTrailingComments: false
@@ -38,8 +39,8 @@ BraceWrapping:
   AfterClass: false
   AfterControlStatement: false
   AfterEnum: false
-  AfterFunction: true
-  AfterNamespace: true
+  AfterFunction: false
+  AfterNamespace: false
   AfterObjCDeclaration: false
   AfterStruct: false
   AfterUnion: false
@@ -58,12 +59,12 @@ BreakConstructorInitializersBeforeComma: false
 #BreakConstructorInitializers: BeforeComma # Unknown to clang-format-4.0
 BreakAfterJavaFieldAnnotations: false
 BreakStringLiterals: false
-ColumnLimit: 80
+ColumnLimit: 140
 CommentPragmas: '^ IWYU pragma:'
 #CompactNamespaces: false # Unknown to clang-format-4.0
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
-ConstructorInitializerIndentWidth: 8
-ContinuationIndentWidth: 8
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
 Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false
@@ -452,7 +453,7 @@ IncludeCategories:
 IncludeIsMainRegex: '(Test)?$'
 IndentCaseLabels: false
 #IndentPPDirectives: None # Unknown to clang-format-5.0
-IndentWidth: 8
+IndentWidth: 4
 IndentWrappedFunctionNames: false
 JavaScriptQuotes: Leave
 JavaScriptWrapImports: true
@@ -487,13 +488,13 @@ SpaceBeforeAssignmentOperators: true
 SpaceBeforeParens: ControlStatements
 #SpaceBeforeRangeBasedForLoopColon: true # Unknown to clang-format-5.0
 SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 1
+SpacesBeforeTrailingComments: 2
 SpacesInAngles: false
 SpacesInContainerLiterals: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-Standard: Cpp03
-TabWidth: 8
-UseTab: Always
+Standard: Auto
+TabWidth: 4
+UseTab: Never
 ...

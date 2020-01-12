@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_
 #define CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_
 
-#if defined(Arduino_h) || defined(WITH_PLATFORMIO)// Arduino
+#if defined(MQTT_SN_ARDUINO) || defined(Arduino_h) || defined(WITH_PLATFORMIO)// Arduino
 
 #include <stdint.h>
 #include <WiFiUdp.h>
@@ -24,6 +24,9 @@
 #define MQTT_SN_PARSE_SUCCESS 1
 #define MQTT_SN_PARSE_CONFIG_HELP 2
 #define MQTT_SN_PARSE_CONFIG_SUCCESS 0
+
+int32_t PlatformCompatibilityGetTimestampMs(uint64_t *t);
+
 #else // Linux
 
 /*
@@ -56,7 +59,7 @@ int strcmp_P(const char *a, const char *b);
 }
 #endif
 */
-int32_t PlatformCompatibilityGetTimestamp(uint64_t *t);
+int32_t PlatformCompatibilityGetTimestampMs(uint64_t *t);
 #endif // Linux
 
 #endif //CMQTTSNFORWARDER_PLATFORM_COMPATIBILITY_H_

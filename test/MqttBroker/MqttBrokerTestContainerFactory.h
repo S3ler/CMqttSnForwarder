@@ -11,9 +11,9 @@
 
 class MqttBrokerTestContainerFactory {
  public:
+  static std::shared_ptr<MqttBrokerTestContainerInterface> getMqttBroker();
   static std::shared_ptr<MqttBrokerTestContainerInterface> getMqttBroker(MqttBrokerTestType mqttBrokerTestType);
   static std::shared_ptr<MqttBrokerTestContainerInterface> getMqttBroker(MqttBrokerTestType mqttBrokerTestType, MqttBrokerTestContainerConfiguration mqttBrokerConfiguration);
-
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTCONTAINERFACTORY_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERTESTCONTAINERFACTORY_H_

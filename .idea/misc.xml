@@ -1,25 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
-  <component name="CidrRootsConfiguration">
-    <sourceRoots>
-      <file path="$PROJECT_DIR$/client" />
-      <file path="$PROJECT_DIR$/forwarder" />
-      <file path="$PROJECT_DIR$/gateway" />
-      <file path="$PROJECT_DIR$/test" />
-    </sourceRoots>
-    <libraryRoots>
-      <file path="$PROJECT_DIR$/plugins/external" />
-    </libraryRoots>
-    <excludeRoots>
-      <file path="$PROJECT_DIR$/plugins/external/hiredis" />
-    </excludeRoots>
-  </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
-  </component>
-  <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/CMqttSnForwarderArduino.cpp" />
-    <file url="file://$PROJECT_DIR$/CMqttSnForwarderArduino.hpp" />
   </component>
 </project>

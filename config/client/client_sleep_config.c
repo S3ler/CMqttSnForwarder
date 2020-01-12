@@ -45,5 +45,5 @@ void client_sleep_config_print_usage_short(const MqttSnLogger *logger, const cha
   log_str(logger, PSTR("{[-sd --sleep_duration]}\n"));
 }
 void client_sleep_config_print_usage_long(const MqttSnLogger *logger) {
-  log_str(logger, PSTR(" -sd : sleep duration of client.\n"));
+  log_str(logger, PSTR(" -sd : sleep duration of client in s.\n"));
 }

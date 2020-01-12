@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <external/linux/gadget114514/fatfs-example-c00d2f9a408f195182f63c79a160ddbad37a5201/fatfs/source/ff.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include "db_entry_mqtt_sn_client.h"
 #include "db_entry_mqtt_sn_gateway_discovered.h"
 #include "db_handler_result.h"

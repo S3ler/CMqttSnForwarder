@@ -3,7 +3,7 @@
 //
 
 #include <stdlib.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <logging/linux/stdout/StdoutLogging.h>
 #include <echogateway/config/echogateway_config.h>
 #include <platform/platform_compatibility.h>

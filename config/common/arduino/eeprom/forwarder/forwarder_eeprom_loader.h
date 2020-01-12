@@ -21,7 +21,11 @@ extern "C" {
  * @param fcfg must not be NULL and must fcfg.logger must not be NULL. If the fcfg.logger is not set, the bahaviour is undefined.
  * @return the return value from process_forwarder_config_str.
  */
-int eeprom_load_forwarder_config(EEPROM_cfg *ecfg, forwarder_config *fcfg, const MqttSnLogger *logger);
+int eeprom_load_forwarder_config(EEPROM_cfg *ecfg, void *fcfg, const char* executable_name, const MqttSnLogger *logger,
+  int32_t (*forwarder_config_file_process_command_callback)(void *cfg, const MqttSnLogger *logger, int argc, char **argv),
+  void (*config_print_usage)(const MqttSnLogger* ));
+
+ //   int eeprom_load_forwarder_config(EEPROM_cfg *ecfg, forwarder_config *fcfg, const MqttSnLogger *logger);
 
 /*
  * parses the config to fcfg.
@@ -31,17 +35,19 @@ int eeprom_load_forwarder_config(EEPROM_cfg *ecfg, forwarder_config *fcfg, const
  */
 /**
  *
- * @param fcfg must not be NULL and must fcfg.logger must not be NULL. If the fcfg.logger is not set, the bahaviour is undefined.
+ * @param fcfg must not be NULL and fcfg.logger must not be NULL. If the fcfg.logger is not set, the bahaviour is undefined.
  * @param fcfg_line
  * @param fcfg_line_len
  * @return the return value from process_forwarder_config_str if saved. Else the return value of eeprom_config_set.
  */
-int eeprom_save_forwarder_config_line(EEPROM_cfg *ecfg,
-                                      forwarder_config *fcfg,
-                                      const MqttSnLogger *logger,
-                                      char *fcfg_line,
-                                      size_t fcfg_line_len);
-
+ int eeprom_save_forwarder_config_line(EEPROM_cfg *ecfg,
+                                       void *fcfg,
+                                       const char* executable_name,
+                                       const MqttSnLogger *logger,
+                                       char *fcfg_line,
+                                       size_t fcfg_line_len,
+                                       int32_t (*forwarder_config_file_process_command_callback)(void *cfg, const MqttSnLogger *logger, int argc, char **argv),
+                                       void (*config_print_usage)(const MqttSnLogger* logger));
 #ifdef __cplusplus
 }
 #endif

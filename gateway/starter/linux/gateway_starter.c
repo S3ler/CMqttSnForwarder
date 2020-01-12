@@ -5,7 +5,6 @@
 #include <gateway/config/gateway_config.h>
 #include <bits/types/sig_atomic_t.h>
 #include <stdlib.h>
-#include <config/starter/starter_helper.h>
 #include <platform/platform_compatibility.h>
 #include <pthread.h>
 #include <signal.h>
@@ -15,6 +14,7 @@
 #include <network/linux/client/plugin/client_network_plugin_interface.h>
 #include <network/linux/client/plugin/MqttSnClientPluginNetwork.h>
 #include <network/linux/client/ip/tcp/MqttSnClientTcpNetwork.h>
+#include <config/common/starter/starter_helper.h>
 #include "gateway_starter.h"
 
 static volatile sig_atomic_t keep_running = 1;

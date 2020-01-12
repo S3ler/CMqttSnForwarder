@@ -5,8 +5,11 @@
 #ifndef CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERMOSQUITTODOCKERTESTCONTAINER_H_
 #define CMQTTSNFORWARDER_TEST_MQTTBROKER_MQTTBROKERMOSQUITTODOCKERTESTCONTAINER_H_
 
+#include <atomic>
 #include "MqttBrokerTestContainerInterface.h"
 class MqttBrokerMosquittoDockerTestContainer : public MqttBrokerTestContainerInterface {
+ private:
+  std::atomic_bool running;
  public:
   MqttBrokerMosquittoDockerTestContainer(const MqttBrokerTestContainerConfiguration &broker_config);
   void stop_broker() override;

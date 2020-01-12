@@ -12,6 +12,7 @@
 
 class MqttClientTestContainerFactory {
  public:
+  static std::shared_ptr<MqttClientTestContainerInterface> getMqttClient();
   static std::shared_ptr<MqttClientTestContainerInterface> getMqttClient(
       MqttClientTestType mqttClientTestType,
       const MqttClientTestContainerConfiguration mqttClientConfiguration);

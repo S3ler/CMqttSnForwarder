@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_PARSER_LOGGING_MQTTSNSEARCHGWMESSAGELOGGING_H_
 #define CMQTTSNFORWARDER_PARSER_LOGGING_MQTTSNSEARCHGWMESSAGELOGGING_H_
 
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <parser/MqttSnSearchGwMessage.h>
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +17,9 @@ int32_t log_searchgw_message_struct(const MqttSnLogger *logger, MqttSnSearchGw *
 int32_t log_searchgw_message(const MqttSnLogger *logger, uint8_t radius);
 
 int32_t log_searchgw_radius(const MqttSnLogger *logger, uint8_t radius);
+
+int32_t log_searchgw_gen_error(const MqttSnLogger *logger, const char *file_name, const char *function_name, int line_number);
+
 #ifdef __cplusplus
 }
 #endif

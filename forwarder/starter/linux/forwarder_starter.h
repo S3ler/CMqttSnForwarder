@@ -13,55 +13,31 @@ extern "C" {
 #endif
 
 typedef struct MqttSnForwarder_fcfg_ptr_ {
-  MqttSnForwarder *mqttSnForwarder_ptr;
-  const forwarder_config *fcfg_ptr;
+    MqttSnForwarder *       mqttSnForwarder_ptr;
+    const forwarder_config *fcfg_ptr;
 } MqttSnForwarder_fcfg_ptr;
 
+int start_gateway_udp(const forwarder_config *cfg, const MqttSnLogger *logger, MqttSnForwarder *mqttSnForwarder,
+                      void *gatewayNetworkContext, void *clientNetworkContext);
 
+int start_gateway_tcp(const forwarder_config *cfg, const MqttSnLogger *logger, MqttSnForwarder *mqttSnForwarder,
+                      void *gatewayNetworkContext, void *clientNetworkContext);
 
-int start_gateway_udp(const forwarder_config *cfg,
-                      const MqttSnLogger *logger,
-                      MqttSnForwarder *mqttSnForwarder,
-                      void *gatewayNetworkContext,
-                      void *clientNetworkContext);
+int start_gateway_plugin(const forwarder_config *cfg, const MqttSnLogger *logger, MqttSnForwarder *mqttSnForwarder,
+                         void *gatewayNetworkContext, void *clientNetworkContext);
 
-int start_gateway_tcp(const forwarder_config *cfg,
-                      const MqttSnLogger *logger,
-                      MqttSnForwarder *mqttSnForwarder,
-                      void *gatewayNetworkContext,
-                      void *clientNetworkContext);
+int start_client_udp(const forwarder_config *fcfg, const MqttSnLogger *logger, MqttSnForwarder *mqttSnForwarder,
+                     void *gatewayNetworkContext, void *clientNetworkContext);
 
-int start_gateway_plugin(const forwarder_config *cfg,
-                         const MqttSnLogger *logger,
-                         MqttSnForwarder *mqttSnForwarder,
-                         void *gatewayNetworkContext,
-                         void *clientNetworkContext);
+int start_client_tcp(const forwarder_config *fcfg, const MqttSnLogger *logger, MqttSnForwarder *mqttSnForwarder,
+                     void *gatewayNetworkContext, void *clientNetworkContext);
 
-int start_client_udp(const forwarder_config *fcfg,
-                     const MqttSnLogger *logger,
-                     MqttSnForwarder *mqttSnForwarder,
-                     void *gatewayNetworkContext,
-                     void *clientNetworkContext);
+int start_client_plugin(const forwarder_config *fcfg, const MqttSnLogger *logger, MqttSnForwarder *mqttSnForwarder,
+                        void *gatewayNetworkContext, void *clientNetworkContext);
 
-int start_client_tcp(const forwarder_config *fcfg,
-                     const MqttSnLogger *logger,
-                     MqttSnForwarder *mqttSnForwarder,
-                     void *gatewayNetworkContext,
-                     void *clientNetworkContext);
-
-int start_client_plugin(const forwarder_config *fcfg,
-                        const MqttSnLogger *logger,
-                        MqttSnForwarder *mqttSnForwarder,
-                        void *gatewayNetworkContext,
-                        void *clientNetworkContext);
-
-int start_forwarder(const forwarder_config *fcfg,
-                    const MqttSnLogger *logger,
-                    MqttSnForwarder *mqttSnForwarder,
-                    void *gatewayNetworkContext,
-                    void *clientNetworkContext);
+int start_forwarder(const forwarder_config *fcfg, const MqttSnLogger *logger, MqttSnForwarder *mqttSnForwarder);
 
 #ifdef __cplusplus
 }
 #endif
-#endif //CMQTTSNFORWARDER_FORWARDER_STARTER_H
+#endif  //CMQTTSNFORWARDER_FORWARDER_STARTER_H

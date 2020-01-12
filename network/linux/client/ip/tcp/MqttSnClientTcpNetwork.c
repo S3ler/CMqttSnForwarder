@@ -25,7 +25,7 @@ int ClientLinuxTcpInitialize(MqttSnClientNetworkInterface *n, void *context) {
 #endif
   tcpNetwork->listen_socket_fd = -1;
   strcpy(tcpNetwork->protocol, CMQTTSNFORWARDER_MQTTSNCLIENTLINUXTCPNETWORKPROTOCOL);
-  tcpNetwork->max_clients = CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_CLIENTS;
+  tcpNetwork->max_clients = CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_TCP_ENDPOINTS;
   for (int i = 0; i < tcpNetwork->max_clients; ++i) {
     tcpNetwork->client_socket_fds[i] = -1;
     memset(tcpNetwork->client_buffer[i], 0, CMQTTSNFORWARDER_MQTTSNCLIENTTCPNETWORK_MAX_DATA_LENGTH);
@@ -222,7 +222,7 @@ int32_t ClientLinuxTcpReceive(MqttSnClientNetworkInterface *n,
       return -1;
     }
   }
-#ifdef WITH_UDP_BROADCAST
+#ifdef WITH_LINUX_UDP_NETWORK_BROADCAST
   if (select_rc == 6 || select_rc == 7) {
     if (n->client_network_broadcast_address) {
       if (((tcpNetwork->received_messages + tcpNetwork->udp_multicast_network.received_messages)

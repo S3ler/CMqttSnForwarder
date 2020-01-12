@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/test1.dir/test1.c.o  -o test1 -Wl,-rpath,/home/bele/CMqttSnForwarder/external/paho.mqtt.cpp-67b917a73fd6f12c58587d47e2e2fd4ef6848b01/src ../src/libpaho-mqtt3c.so.1.3.0 -lc -ldl -lpthread 

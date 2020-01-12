@@ -117,7 +117,7 @@ typedef enum MQTT_SN_RETURN_CODE_ {
 #define MQTT_SN_TOPICNAME_MAX_LENGTH          UINT16_MAX
 #define MQTT_SN_DATA_MIN_LENGTH               0
 #define MQTT_SN_DATA_MAX_LENGTH               UINT16_MAX
-// TODO WILLUPDATE
+// FEATURE WILLUPDATE
 #define MQTT_SN_CTRL_LENGTH                   1
 #define MQTT_SN_WIRELESSNODEID_LENGTH         sizeof(device_address)
 
@@ -362,8 +362,6 @@ int parse_encapsulation_header(ParsedMqttSnHeader *h, const uint8_t *data, uint1
 
 int parse_encapsulation(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
-int parse_publish(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
-
 int header_parse_connect(ParsedMqttSnHeader *h, const uint8_t *data, uint16_t data_len);
 
 
@@ -398,6 +396,7 @@ int32_t generate_duration(uint8_t *dst, uint16_t dst_len, uint16_t duration, int
 int32_t generate_topic_id(uint8_t *dst, uint16_t dst_len, uint16_t topic_id, int32_t *used_bytes);
 int32_t generate_msg_id(uint8_t *dst, uint16_t dst_len, uint16_t msg_id, int32_t *used_bytes);
 int32_t generate_data(uint8_t *dst, uint16_t dst_len, const uint8_t *data, uint16_t data_len, int32_t *used_bytes);
+int32_t generate_string(uint8_t *dst, uint16_t dst_len, const char *str, uint16_t str_len, int32_t *used_bytes);
 
 /*
 int generate_publish(uint8_t *dst,
@@ -452,6 +451,8 @@ int32_t parse_mqtt_sn_uint8_until_end_byte(const uint8_t *src_pos,
                                            uint8_t *u8_buf,
                                            uint16_t *u8_buf_length,
                                            uint16_t u8_buf_max_length);
+int32_t parse_mqtt_sn_uint8_until_end_byte_ptr(const uint8_t *src_pos, uint16_t src_len, int32_t *parsed_bytes, uint8_t **u8_buf,
+                                               uint16_t *u8_buf_length);
 int32_t parse_mqtt_sn_uint8_array_byte(const uint8_t *src_pos,
                                        uint16_t src_len,
                                        int32_t *parsed_bytes,
@@ -490,6 +491,9 @@ int32_t generate_mqtt_sn_device_address(uint8_t *dst_pos,
                                         int32_t *used_bytes,
                                         const device_address *address,
                                         uint16_t address_len);
+
+int32_t add_dup_flag_to_mqtt_sn_message(uint8_t* msg_data, uint16_t msg_data_length);
+
 #ifdef __cplusplus
 }
 #endif

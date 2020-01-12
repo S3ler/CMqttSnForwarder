@@ -11,7 +11,7 @@ extern "C" {
 #include <stdint.h>
 #include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
 #ifdef WITH_LOGGING
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #endif
 
 typedef enum MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS_ {
@@ -25,7 +25,7 @@ typedef struct MqttSnGatewayNetworkInterface_ {
   MQTT_SN_GATEWAY_NETWORK_INTERFACE_STATUS status;
   uint16_t max_data_length;
 
-  device_address *mqtt_sn_gateway_address;
+  void* context;
   device_address *gateway_network_address;
   device_address *gateway_network_broadcast_address;
 
@@ -77,13 +77,8 @@ int32_t GatewayNetworkSend(MqttSnGatewayNetworkInterface *n,
                            int timeout_ms,
                            void *context);
 
-int32_t GatewayNetworkSendTo(MqttSnGatewayNetworkInterface *n,
-                             device_address *to,
-                             const uint8_t *data,
-                             uint16_t data_length,
-                             uint8_t signal_strength,
-                             int32_t timeout_ms,
-                             void *context);
+int32_t GatewayNetworkSendTo(MqttSnGatewayNetworkInterface *n, const device_address *from, const device_address *to, const uint8_t *data,
+                             uint16_t data_length, uint8_t signal_strength, int32_t timeout_ms, void *context);
 
 int32_t GatewayNetworkReceive(MqttSnGatewayNetworkInterface *n,
                               MqttSnFixedSizeRingBuffer *receiveBuffer,

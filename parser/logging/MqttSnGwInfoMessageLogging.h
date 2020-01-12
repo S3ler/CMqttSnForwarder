@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_PARSER_LOGGING_MQTTSNGWINFOMESSAGELOGGING_H_
 
 #include <stdint.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <parser/MqttSnGwInfoMessage.h>
 #ifdef __cplusplus
 extern "C" {

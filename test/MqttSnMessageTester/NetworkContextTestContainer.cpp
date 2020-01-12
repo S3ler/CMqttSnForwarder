@@ -17,7 +17,7 @@ using std::shared_ptr;
 
 void *NetworkContextTestContainer::InitializeClientNetwork(MqttSnClientNetworkInterface *clientNetworkInterface,
                                                            const client_network_config *cncfg,
-                                                           const mqtt_sn_gateway_config *optional_msgcfg) {
+                                                           const client_mqtt_sn_gateway_config *optional_msgcfg) {
   int32_t init_rc = EXIT_FAILURE;
 
   MqttSnLogger cfg_logger = {0};
@@ -52,7 +52,7 @@ void *NetworkContextTestContainer::InitializeClientNetwork(MqttSnClientNetworkIn
 }
 void *NetworkContextTestContainer::InitializeGatewayNetwork(MqttSnGatewayNetworkInterface *gatewayNetworkInterface,
                                                             const gateway_network_config *gncfg,
-                                                            const mqtt_sn_gateway_config *msgcfg,
+                                                            const client_mqtt_sn_gateway_config *msgcfg,
                                                             const client_find_mqtt_sn_gateway_config *cfmsgcfg) {
   int32_t init_rc = EXIT_FAILURE;
 
@@ -88,7 +88,7 @@ void *NetworkContextTestContainer::InitializeGatewayNetwork(MqttSnGatewayNetwork
 }
 #ifdef WITH_LINUX_UDP_CLIENT_NETWORK
 int32_t NetworkContextTestContainer::init_gateway_udp(const gateway_network_config *gncfg,
-                                                      const mqtt_sn_gateway_config *msgcfg,
+                                                      const client_mqtt_sn_gateway_config *msgcfg,
                                                       const client_find_mqtt_sn_gateway_config *cfmsgcfg,
                                                       MqttSnGatewayNetworkInterface *gatewayNetworkInterface,
                                                       const MqttSnLogger *logger) {
@@ -138,10 +138,10 @@ int32_t NetworkContextTestContainer::init_gateway_udp(const gateway_network_conf
   return EXIT_SUCCESS;
 }
 int32_t NetworkContextTestContainer::init_client_udp(const client_network_config *cncfg,
-                                                     const mqtt_sn_gateway_config *optional_msgcfg,
+                                                     const client_mqtt_sn_gateway_config *optional_msgcfg,
                                                      MqttSnClientNetworkInterface *clientNetworkInterface,
                                                      const MqttSnLogger *logger) {
-  udpClientNetworkContext = std::make_shared<MqttSnClientUdpNetwork>();
+  auto udpClientNetwosqrkContext = std::make_shared<MqttSnClientUdpNetwork>();
 
   if (optional_msgcfg) {
     if (convert_hostname_port_to_device_address(optional_msgcfg->mqtt_sn_gateway_host,

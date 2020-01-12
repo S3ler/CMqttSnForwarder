@@ -7,7 +7,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 
 int print_loading_fcfg_from_eeprom(const MqttSnLogger *logger);
 int print_invalid_fcfg_clearing_eeprom(const MqttSnLogger *logger);

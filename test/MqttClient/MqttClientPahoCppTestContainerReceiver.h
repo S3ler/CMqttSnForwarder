@@ -5,20 +5,19 @@
 #ifndef CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTPAHOCPPTESTCONTAINERRECEIVER_H_
 #define CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTPAHOCPPTESTCONTAINERRECEIVER_H_
 
-#include "MqttClientTestContainerReceiverInterface.h"
-#include "MqttClientPublishReceivePublish.h"
 #include "MqttClientPahoCppClientTestContainer.h"
+#include "MqttClientPublishReceivePublishAction.h"
+#include "MqttClientTestContainerReceiverInterface.h"
 
 class MqttClientPahoCppClientTestContainer;
 
 class MqttClientPahoCppTestContainerReceiver : public MqttClientTestContainerReceiverInterface {
- private:
-  MqttClientPahoCppClientTestContainer *callee;
+
+
  public:
-  const MqttClientPublishReceivePublish publish_receive_publish;
-  MqttClientPahoCppTestContainerReceiver(const MqttClientPublishReceivePublish &publish_receive_publish,
-                                         MqttClientPahoCppClientTestContainer *callee) : publish_receive_publish(
-      publish_receive_publish), callee(callee) {}
+  const MqttClientPublishReceivePublishAction publish_receive_publish;
+  MqttClientPahoCppTestContainerReceiver(const MqttClientPublishReceivePublishAction &publish_receive_publish, MqttClientPahoCppClientTestContainer *callee)
+      : publish_receive_publish(publish_receive_publish), callee(callee) {}
   bool receive(MqttClientTestContainerPublish mqtt_publish) override {
     timespec end_ts;
     clock_gettime(CLOCK_REALTIME, &end_ts);
@@ -27,22 +26,16 @@ class MqttClientPahoCppTestContainerReceiver : public MqttClientTestContainerRec
     }
     return true;
   }
-  bool mqttPublishEquals(const MqttClientPublishReceivePublish &exp, const MqttClientTestContainerPublish &rec) const {
-    if (exp.receivePublishQos != rec.qos) {
+  bool mqttPublishEquals(const MqttClientPublishReceivePublishAction &exp, const MqttClientTestContainerPublish &rec) const {
+    if (exp.topicName != rec.topic) {
       return false;
     }
-    if (exp.publish_action.topic_name != rec.topic) {
+    if (exp.retain != rec.retain) {
       return false;
     }
-    if (exp.publish_action.payload != rec.data) {
-      return false;
-    }
-    /* // TODO retain
-    if (exp.publish_action.retain != rec.retain) {
-           return false;
-    }
-    */
-    return true;
+    return !(exp.payload != rec.data);
   }
+ private:
+  MqttClientPahoCppClientTestContainer *callee;
 };
-#endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTPAHOCPPTESTCONTAINERRECEIVER_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTPAHOCPPTESTCONTAINERRECEIVER_H_

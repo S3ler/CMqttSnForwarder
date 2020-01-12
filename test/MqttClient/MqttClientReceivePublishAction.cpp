@@ -3,7 +3,9 @@
 //
 
 #include "MqttClientReceivePublishAction.h"
+/*
 MqttClientReceivePublishAction::MqttClientReceivePublishAction(const std::string &subscription_topic_name,
                                                                const std::vector<uint8_t> &payload,
-                                                               const int32_t subscription_qos)
-    : subscription_topic_name(subscription_topic_name), payload(payload), subscription_qos(subscription_qos) {}
+                                                               const int32_t qos)
+    : subscription_topic_name(subscription_topic_name), payload(payload), subscription_qos(qos) {}
+*/

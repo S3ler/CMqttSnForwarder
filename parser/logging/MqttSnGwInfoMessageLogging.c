@@ -4,9 +4,10 @@
 
 #include <platform/platform_compatibility.h>
 #include <parser/MqttSnGwInfoMessage.h>
-#include <parser/logging/common/MqttSnMessageLogging.h>
+
 #include "MqttSnGwInfoMessageLogging.h"
 #include "MqttSnForwarderLoggingMessages.h"
+#include "MqttSnMessageParserLogging.h"
 
 int32_t log_gwinfo_gw_add(const MqttSnLogger *logger, const device_address *gw_add, uint16_t gw_add_len) {
   log_str(logger, PSTR("gwAdd"));

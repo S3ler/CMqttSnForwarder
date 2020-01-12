@@ -5,27 +5,30 @@
 #ifndef CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERINTERFACE_H_
 #define CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERINTERFACE_H_
 
-#include <string>
 #include <atomic>
-#include <thread>
 #include <memory>
-#include "MqttClientConnectAction.h"
-#include "MqttClientPublishAction.h"
-#include "MqttClientSubscribeAction.h"
-#include "MqttClientDisconnectAction.h"
+#include <string>
+#include <thread>
 #include "MqttClientActionResult.h"
+#include "MqttClientActionSequence.h"
+#include "MqttClientConnectAction.h"
+#include "MqttClientDelayAction.h"
+#include "MqttClientDisconnectAction.h"
+#include "MqttClientPublishAction.h"
+#include "MqttClientPublishReceivePublishAction.h"
+#include "MqttClientSubscribeAction.h"
 #include "MqttClientTestContainerReceiverInterface.h"
 #include "MqttClientUnsubscribeAction.h"
-#include "MqttClientPublishReceivePublish.h"
-#include "MqttClientActionSequence.h"
 
 class MqttClientTestContainerInterface {
  protected:
   uint64_t action_number = 0;
   MqttClientTestContainerReceiverInterface *receiver_interface = nullptr;
+
+  // FEATURE stop/abort client by function, all not processed MqttClientActionResult show ABORTED as MqttClientActionResultType
  public:
-  MqttClientConnectAction initial_connect_action;
-  MqttClientTestContainerInterface(const MqttClientTestContainerConfiguration &configuration);
+  const MqttClientTestContainerConfiguration configuration;
+  MqttClientTestContainerInterface(MqttClientTestContainerConfiguration configuration);
   void SetReceiverInterface(MqttClientTestContainerReceiverInterface *receiver_interface);
   void ReceivePublish(MqttClientTestContainerPublish &mqtt_publish);
 
@@ -33,43 +36,35 @@ class MqttClientTestContainerInterface {
   virtual void StopBackgroundHandler() = 0;
   virtual bool IsBackgroundHandlerRunning() = 0;
 
-  virtual MqttClientActionResult connect() = 0;
-  //virtual MqttClientActionResult connect(MqttClientConnectAction &connect_action) = 0;
-  virtual MqttClientActionResult disconnect() = 0;
+  virtual MqttClientActionResult connect(MqttClientConnectAction &connectAction) = 0;
+  virtual MqttClientActionResult disconnect(MqttClientDisconnectAction &disconnectAction) = 0;
   virtual MqttClientActionResult subscribe(MqttClientSubscribeAction &subscribe_action) = 0;
   virtual MqttClientActionResult unsubscribe(MqttClientUnsubscribeAction &unsubscribe_action) = 0;
   virtual MqttClientActionResult publish(MqttClientPublishAction &publish_action) = 0;
-  virtual MqttClientActionResult publishReceivePublish(MqttClientPublishReceivePublish &publish_receive_publish) = 0;
-  // adds a action to the Sequence
+  virtual MqttClientActionResult publishReceivePublish(MqttClientPublishReceivePublishAction &publish_receive_publish) = 0;
+  virtual MqttClientActionResult delay(MqttClientDelayAction &delayAction) = 0;
+
+  MqttClientActionResult disconnect();
+  MqttClientActionResult connect();
+
   void addAction(std::unique_ptr<MqttClientAction> &action);
   bool execActionSequence();
   bool execActionSequence_async();
-  const bool IsActionSequenceExecuted() const;
+  bool IsActionSequenceExecuted() const;
   const std::vector<MqttClientActionResult> &GetResult() const;
   std::shared_ptr<MqttClientActionSequence> generateActionSequence(int32_t exec_count);
-  // TODO ich will die sequence wissen ob sie läuft
-  // TODO ich will sie abbrechen können
-  /**
-   *
-   * @param times 0
-   * @return
-   */
-  // TODO bool repeatSeries(int32_t times);
 
-  // TODO bool addPublishAction(MqttClientPublishAction publish_action);
-  // TODO bool addSubscribeAction(MqttClientSubscribeAction subscribe_action);
+  std::unique_ptr<MqttClientAction> getConnectAction();
+  std::unique_ptr<MqttClientAction> getDisconnectAction();
+  std::unique_ptr<MqttClientAction> getSubscribeAction(const std::string &topicName, int32_t qos);
+  std::unique_ptr<MqttClientAction> getUnsubscribeAction(const std::string &topicName);
+  std::unique_ptr<MqttClientAction> getPublishAction(const std::string &topicName, const std::vector<uint8_t> &payload, int32_t qos, bool retain);
+  std::unique_ptr<MqttClientAction> getPublishReceivePublishAction(const std::string &topicName, const std::vector<uint8_t> &payload, int32_t qos, bool retain);
+  std::unique_ptr<MqttClientAction> getDelayAction(uint64_t delayDuration);
 
-  // saves the current saved sequence as series
-  // empties the sequence
-  // return the series number;
-  // TODO int32_t saveSequenceAsSeries();
-  // TODO bool executeSeries(int32_t series_number);
-  // TODO bool repeatSeries(int32_t series_number, int32_t times);
-  // TODO series timeout
-  // TODO sequence timeout
-  // TODO action timeout
+ public:
+  std::vector<uint8_t> getPayload(uint16_t payloadLength);
 
-  // TODO get results
  private:
   std::shared_ptr<std::vector<std::unique_ptr<MqttClientAction>>> sequence;
   std::vector<std::shared_ptr<MqttClientActionSequence>> actionSequences;
@@ -79,4 +74,4 @@ class MqttClientTestContainerInterface {
   std::thread thread;
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERINTERFACE_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTTESTCONTAINERINTERFACE_H_

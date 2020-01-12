@@ -17,6 +17,15 @@ extern "C" {
 #define MQTT_SN_MESSAGE_UNSUBACK_LENGTH             (MQTT_SN_MESSAGE_UNSUBACK_HEADER_LENGTH + \
                                                     MQTT_SN_MESSAGE_UNSUBACK_MESSAGEID_LENGTH)
 
+#pragma pack(push, 1)
+typedef struct MqttSnUnsuback_ {
+    uint16_t            topic_id;
+    uint16_t            msg_id;
+} MqttSnUnsuback;
+#pragma pack(pop)
+
+int32_t parse_unsuback(MqttSnUnsuback* unsuback, const uint8_t* data, uint16_t data_len);
+
 int32_t parse_unsuback_byte(uint16_t *msg_id,
                             const uint8_t *data,
                             uint16_t data_len);

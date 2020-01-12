@@ -263,7 +263,7 @@ void UDPPort::close(void)
 
 int UDPPort::open(const char* ipAddress, uint16_t multiPortNo, uint16_t uniPortNo)
 {
-	char loopch = 0;
+	char loopch = 1;
 	const int reuse = 1;
 
 	if (uniPortNo == 0 || multiPortNo == 0)
@@ -330,7 +330,6 @@ int UDPPort::open(const char* ipAddress, uint16_t multiPortNo, uint16_t uniPortN
 		close();
 		return -1;
 	}
-
 	ip_mreq mreq;
 	mreq.imr_interface.s_addr = INADDR_ANY;
 	mreq.imr_multiaddr.s_addr = _grpAddr.getIpAddress();
@@ -341,7 +340,6 @@ int UDPPort::open(const char* ipAddress, uint16_t multiPortNo, uint16_t uniPortN
 		close();
 		return -1;
 	}
-
 	if (setsockopt(_sockfdUnicast, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof(mreq)) < 0)
 	{
 		D_NWSTACK("error Unicast IP_ADD_MEMBERSHIP in UDPPort::open\n");
@@ -402,7 +400,7 @@ int UDPPort::recv(uint8_t* buf, uint16_t len, SensorNetAddress* addr)
 		}
 		else if (FD_ISSET(_sockfdMulticast, &recvfds))
 		{
-			rc = recvfrom(_sockfdMulticast, buf, len, 0, &_grpAddr);
+			rc = recvfrom(_sockfdMulticast, buf, len, 0, addr);
 		}
 	}
 	return rc;

@@ -37,7 +37,7 @@ int32_t EchoGatewayInit(EchoGateway *egw,
   }
 #endif
 
-  if (PlatformCompatibilityGetTimestamp(&egw->last_advertisement_send) < 0) {
+  if (PlatformCompatibilityGetTimestampMs(&egw->last_advertisement_send) < 0) {
     EchoGatewayDeinit(egw);
     MqttSnLoggerDeinit(&egw->logger);
     return -1;
@@ -135,13 +135,13 @@ int32_t EchoGatewayHandleSearchGwMessage(EchoGateway *egw, MqttSnMessageData *ms
 }
 int32_t EchoGatewayHandleAdvertise(EchoGateway *egw) {
   uint64_t current_timestamp = 0;
-  if (PlatformCompatibilityGetTimestamp(&current_timestamp) < 0) {
+  if (PlatformCompatibilityGetTimestampMs(&current_timestamp) < 0) {
     return -1;
   }
   if (current_timestamp - egw->last_advertisement_send < (uint64_t) egw->advertisement_config.advertisement_duration) {
     return 0;
   }
-  if (PlatformCompatibilityGetTimestamp(&egw->last_advertisement_send) < 0) {
+  if (PlatformCompatibilityGetTimestampMs(&egw->last_advertisement_send) < 0) {
     return -1;
   }
   MqttSnMessageData msg = {0};
@@ -158,6 +158,5 @@ int32_t EchoGatewayHandleAdvertise(EchoGateway *egw) {
   msg.signal_strength = egw->advertisement_config.advertisement_radius;
 
   put(&egw->clientNetworkSendBuffer, &msg);
-  // TODO think about: too much messages in message buffer that advertisement time out (not send fast enough)
   return 0;
 }

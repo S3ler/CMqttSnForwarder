@@ -5,16 +5,16 @@
 #ifndef CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYARSMBTESTCONTAINER_H_
 #define CMQTTSNFORWARDER_TEST_MQTTSNGATEWAY_MQTTSNGATEWAYARSMBTESTCONTAINER_H_
 
-#include <string>
-#include <vector>
-#include <thread>
-#include <atomic>
-#include <logging/MqttSnLoggingInterface.h>
 #include <gateway/MqttSnGateway.h>
 #include <gateway/config/gateway_config.h>
-#include <network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
+#include <logging/MqttSnLogging.h>
 #include <logging/linux/file/FileLogging.h>
 #include <logging/linux/filestdout/FileStdoutLogging.h>
+#include <network/linux/client/ip/udp/MqttSnClientUdpNetwork.h>
+#include <atomic>
+#include <string>
+#include <thread>
+#include <vector>
 #include "MqttSnGatewayTestContainerInterface.h"
 
 using std::thread;
@@ -91,7 +91,7 @@ class MqttSnGatewayArsmbTestContainer : public MqttSnGatewayTestContainerInterfa
     }
     //char *argv[tk_count];
     argc = 0;
-    memset(argv, 0, argv_max_len);
+    memset(argv, 0, argv_max_len*sizeof(char*));
     {
       argv[argc++] = (char *) identifier.data();
       for (char *tk = strtok(line_str.data(), " "); tk != NULL; tk = strtok(NULL, " ")) {
@@ -122,9 +122,9 @@ class MqttSnGatewayArsmbTestContainer : public MqttSnGatewayTestContainerInterfa
   device_address forwarderClientNetworkAddress = {0};
   device_address mqttSnGatewayNetworkAddress = {0};
   device_address forwarderClientNetworkBroadcastAddress = {0};
-  int start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
+  /*int start_mqtt_sn_gateway_plugin(const mqtt_sn_gateway__config *fcfg,
                                    const MqttSnLogger *logger,
-                                   MqttSnGateway *mqtt_sn_gateway);
+                                   MqttSnGateway *mqtt_sn_gateway);*/
   int start_mqtt_sn_gateway_tcp(const mqtt_sn_gateway__config *fcfg,
                                 const MqttSnLogger *logger,
                                 MqttSnGateway *mqtt_sn_gateway);

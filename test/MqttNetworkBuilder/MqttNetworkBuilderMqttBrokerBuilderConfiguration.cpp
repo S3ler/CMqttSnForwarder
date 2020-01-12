@@ -10,11 +10,9 @@ const MqttNetworkBuilderMqttBrokerBuilderConfiguration MqttNetworkBuilderMqttBro
                                                    std::string("localhost"),
                                                    1883);
 }
-MqttNetworkBuilderMqttBrokerBuilderConfiguration::MqttNetworkBuilderMqttBrokerBuilderConfiguration(const MqttBrokerTestType type,
-                                                                                     const int32_t max_broker_count,
-                                                                                     const MqttBrokerProtocolTestType protocol_type,
-                                                                                     const std::string &broker_address,
-                                                                                     const uint16_t min_broker_port)
+MqttNetworkBuilderMqttBrokerBuilderConfiguration::MqttNetworkBuilderMqttBrokerBuilderConfiguration(const MqttBrokerTestType type, const uint16_t max_broker_count,
+                                                                                                   const MqttBrokerProtocolTestType protocol_type, const std::string &broker_address,
+                                                                                                   const uint16_t min_broker_port)
     : type(type),
       maxBrokerCount(max_broker_count),
       protocol_type(protocol_type),

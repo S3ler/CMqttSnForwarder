@@ -13,7 +13,7 @@
 #include <network/shared/ip/IpHelper.h>
 #include <network/linux/client/plugin/client_network_plugin_interface.h>
 #include <network/linux/client/plugin/MqttSnClientPluginNetwork.h>
-#include <config/starter/starter_helper.h>
+#include <config/common/starter/starter_helper.h>
 #include "echogateway_starter.h"
 
 static volatile sig_atomic_t keep_running = 1;

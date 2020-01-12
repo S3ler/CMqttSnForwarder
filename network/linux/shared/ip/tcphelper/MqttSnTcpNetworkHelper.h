@@ -16,7 +16,9 @@ int is_tcp_message_received(int socket_fd, int32_t timeout_ms);
 
 int listen_on_tcp_socket(uint32_t ip, uint16_t port, uint32_t max_pending_connections);
 
-// TODO return: error -1,
+// TODO document behaviour
+// TODO make enum
+//  return: error -1,
 //  nothing received 0,
 //  listen only 1,
 //  client only 2,

@@ -7,14 +7,14 @@ const MqttSnNetworkBuilderConfiguration MqttSnNetworkBuilderConfiguration::Defau
   return MqttSnNetworkBuilderConfiguration::DefaultConfiguration(MqttNetworkBuilderConfiguration::DefaultConfiguration());
 }
 const MqttSnNetworkBuilderConfiguration MqttSnNetworkBuilderConfiguration::DefaultConfiguration(const MqttNetworkBuilderConfiguration &mqttNetworkBuilderConfiguration) {
-  return MqttSnNetworkBuilderConfiguration(mqttNetworkBuilderConfiguration,
-                                           MqttSnNetworkBuilderMqttSnGatewayConfiguration::GetDefaultConfiguration(
-                                               mqttNetworkBuilderConfiguration),
-                                           MqttSnNetworkBuilderMqttSnClientConfiguration::GetDefaultConfiguration());
+  return MqttSnNetworkBuilderConfiguration(mqttNetworkBuilderConfiguration, MqttSnNetworkBuilderMqttSnGatewayConfiguration::GetDefaultConfiguration(mqttNetworkBuilderConfiguration),
+                                           MqttSnNetworkBuilderMqttSnClientConfiguration::GetDefaultConfiguration(), MqttSnNetworkBuilderMqttSnForwarderConfiguration::GetDefaultConfiguration());
 }
 MqttSnNetworkBuilderConfiguration::MqttSnNetworkBuilderConfiguration(const MqttNetworkBuilderConfiguration &mqtt_network_builder_configuration,
                                                                      const MqttSnNetworkBuilderMqttSnGatewayConfiguration &mqtt_sn_gateway_config,
-                                                                     const MqttSnNetworkBuilderMqttSnClientConfiguration &mqtt_sn_client_config)
+                                                                     const MqttSnNetworkBuilderMqttSnClientConfiguration &mqtt_sn_client_config,
+                                                                     const MqttSnNetworkBuilderMqttSnForwarderConfiguration &mqtt_sn_forwarder_config)
     : mqtt_network_builder_configuration(mqtt_network_builder_configuration),
       mqtt_sn_gateway_config(mqtt_sn_gateway_config),
+      mqtt_sn_forwarder_config(mqtt_sn_forwarder_config),
       mqtt_sn_client_config(mqtt_sn_client_config) {}

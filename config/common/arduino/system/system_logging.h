@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_UTILITY_ARDUINO_SYSTEM_SYSTEM_LOGGING_H_
 #define CMQTTSNFORWARDER_UTILITY_ARDUINO_SYSTEM_SYSTEM_LOGGING_H_
 
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include <IPAddress.h>
 #include <WiFi.h>
 

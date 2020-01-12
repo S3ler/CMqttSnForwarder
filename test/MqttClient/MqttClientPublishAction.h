@@ -12,14 +12,12 @@
 
 class MqttClientPublishAction : public MqttClientAction {
  public:
-  const std::string topic_name;
+  const std::string topicName;
   const std::vector<uint8_t> payload;
   const int32_t qos;
   const bool retain;
-  MqttClientPublishAction(const std::string &topic_name,
-                          const std::vector<uint8_t> &payload,
-                          int32_t qos,
-                          bool retain);
+  MqttClientPublishAction(const std::string &topicName, const std::vector<uint8_t> &payload, int32_t qos, bool retain);
+  MqttClientPublishAction(MqttClientActionType actionType, const std::string &topicName, const std::vector<uint8_t> &payload, const int32_t qos, const bool retain);
 };
 
-#endif //CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTPUBLISHACTION_H_
+#endif  // CMQTTSNFORWARDER_TEST_MQTTCLIENT_MQTTCLIENTPUBLISHACTION_H_

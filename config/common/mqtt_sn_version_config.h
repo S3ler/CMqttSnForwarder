@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_CONFIG_MQTT_SN_VERSION_CONFIG_H_
 
 #include <stdint.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -5,7 +5,7 @@
 #ifndef CMQTTSNFORWARDER_UTILITY_ARDUINO_EEPROM_EEPROM_CONFIG_LOGGING_H_
 #define CMQTTSNFORWARDER_UTILITY_ARDUINO_EEPROM_EEPROM_CONFIG_LOGGING_H_
 
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #include "eeprom_config.h"
 
 #ifdef __cplusplus

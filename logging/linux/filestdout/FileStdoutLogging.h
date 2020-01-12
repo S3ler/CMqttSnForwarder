@@ -6,7 +6,7 @@
 #define CMQTTSNFORWARDER_LOGGING_LINUX_FILESTDOUT_FILESTDOUTLOGGING_H_
 
 #include <stdio.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

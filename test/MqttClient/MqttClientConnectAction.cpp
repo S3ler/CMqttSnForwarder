@@ -2,15 +2,12 @@
 // Created by SomeDude on 22.07.2019.
 //
 
-#include <cstdint>
 #include "MqttClientConnectAction.h"
-#include "../MqttBroker/MqttBrokerTestContainerConfiguration.h"
+#include <cstdint>
 
-MqttClientConnectAction::MqttClientConnectAction(const MqttBrokerTestContainerConfiguration &broker_config,
-                                                 const std::string &client_id,
-                                                 const std::string &client_password,
-                                                 const int32_t keep_alive_interval,
-                                                 const bool clean_session)
+MqttClientConnectAction::MqttClientConnectAction(const MqttBrokerTestContainerConfiguration& broker_config, const std::string& client_id, const std::string& client_password,
+                                                 const int32_t keep_alive_interval, const bool clean_session, const std::string& willTopic, const std::vector<uint8_t>& willMessage,
+                                                 const int32_t willQoS, const bool willRetain)
     : MqttClientAction(MqttClientActionType::CONNECT),
       protocol(GetProtocolStringFromMqttClientProtocolType(GetProtocolStringFromMqttBrokerProtocolType(broker_config.protocol_type))),
       brokerAddress(broker_config.brokerAddress),
@@ -18,7 +15,11 @@ MqttClientConnectAction::MqttClientConnectAction(const MqttBrokerTestContainerCo
       clientId(client_id),
       clientPassword(client_password),
       keepAliveInterval(keep_alive_interval),
-      cleanSession(clean_session) {}
+      cleanSession(clean_session),
+      willTopic(willTopic),
+      willMessage(willMessage),
+      willQoS(willQoS),
+      willRetain(willRetain) {}
 
 MqttClientConnectAction::MqttClientConnectAction()
     : MqttClientAction(MqttClientActionType::CONNECT),
@@ -28,43 +29,24 @@ MqttClientConnectAction::MqttClientConnectAction()
       clientId(""),
       clientPassword(""),
       keepAliveInterval(60),
-      cleanSession(true) {}
-MqttClientConnectAction::MqttClientConnectAction(MqttClientActionType action_type,
-                                                 const MqttClientProtocolTestType protocol_type,
-                                                 const std::string &broker_address,
-                                                 const uint16_t broker_port,
-                                                 const std::string &client_id,
-                                                 const std::string &client_password,
-                                                 const int32_t keep_alive_interval,
-                                                 const bool clean_session)
-    : MqttClientAction(action_type),
-      protocol(GetProtocolStringFromMqttClientProtocolType(protocol_type)),
-      brokerAddress(broker_address),
-      brokerPort(broker_port),
-      clientId(client_id),
-      clientPassword(client_password),
-      keepAliveInterval(keep_alive_interval),
-      cleanSession(clean_session) {}
-const MqttClientProtocolTestType MqttClientConnectAction::GetProtocolStringFromMqttBrokerProtocolType(
-    MqttBrokerProtocolTestType t) {
+      cleanSession(true),
+      willQoS(0),
+      willRetain(false) {}
+MqttClientProtocolTestType MqttClientConnectAction::GetProtocolStringFromMqttBrokerProtocolType(MqttBrokerProtocolTestType t) {
   if (t == MqttBrokerProtocolTestType::TCP) {
     return MqttClientProtocolTestType::TCP;
   }
-  /*
-   * TODO WEBSOCKET
-   */
+  // FEATURE WEBSOCKET
   throw std::exception();
 }
-const std::string MqttClientConnectAction::GetProtocolStringFromMqttClientProtocolType(const MqttClientProtocolTestType t) {
+std::string MqttClientConnectAction::GetProtocolStringFromMqttClientProtocolType(const MqttClientProtocolTestType t) {
   if (t == MqttClientProtocolTestType::TCP) {
     return std::string("tcp");
   }
-  /*
-   * TODO WEBSOCKET
-   */
+  // FEATURE WEBSOCKET
   throw std::exception();
 }
-MqttClientConnectAction::MqttClientConnectAction(const MqttClientTestContainerConfiguration &configuration)
+MqttClientConnectAction::MqttClientConnectAction(const MqttClientTestContainerConfiguration& configuration)
     : MqttClientAction(MqttClientActionType::CONNECT),
       protocol(GetProtocolStringFromMqttClientProtocolType(configuration.protocol_type)),
       brokerAddress(configuration.brokerAddress),
@@ -72,4 +54,8 @@ MqttClientConnectAction::MqttClientConnectAction(const MqttClientTestContainerCo
       clientId(configuration.clientId),
       clientPassword(configuration.clientPassword),
       keepAliveInterval(configuration.keepAliveInterval),
-      cleanSession(configuration.cleanSession) {}
+      cleanSession(configuration.cleanSession),
+      willTopic(configuration.willTopic),
+      willMessage(configuration.willMessage),
+      willQoS(configuration.willQoS),
+      willRetain(configuration.willRetain) {}

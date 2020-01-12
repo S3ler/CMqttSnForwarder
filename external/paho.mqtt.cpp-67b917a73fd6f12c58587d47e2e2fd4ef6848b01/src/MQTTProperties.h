@@ -105,10 +105,13 @@ typedef struct
     char byte;       /**< holds the value of a byte property type */
     short integer2;  /**< holds the value of a 2 byte integer property type */
     int integer4;    /**< holds the value of a 4 byte integer property type */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
     struct {
       MQTTLenString data;  /**< The value of a string property, or the name of a user property. */
       MQTTLenString value; /**< The value of a user property. */
     };
+#pragma GCC diagnostic pop
   } value;
 } MQTTProperty;
 

@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 #include <ringbuffer/MqttSnFixedSizeRingBuffer.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

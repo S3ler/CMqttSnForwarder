@@ -10,7 +10,8 @@ extern "C" {
 #endif
 
 #include <parser/MqttSnMessageParser.h>
-#include <logging/MqttSnLoggingInterface.h>
+#include <logging/MqttSnLogging.h>
+#include <platform/MqttSnMessageData.h>
 
 int log_mqtt_sn_flags(const MqttSnLogger *logger, uint8_t flags);
 
@@ -44,11 +45,7 @@ int log_close_braked(const MqttSnLogger *logger);
 int log_close_braked_dot(const MqttSnLogger *logger);
 int log_comma(const MqttSnLogger *logger);
 
-int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger *logger,
-                                          const device_address *from,
-                                          const uint8_t *data,
-                                          uint16_t data_len,
-                                          uint8_t signal_strength);
+int log_gateway_mqtt_sn_message_malformed(const MqttSnLogger* logger, MqttSnMessageData *msg);
 
 
 
@@ -87,8 +84,6 @@ int log_connack_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *he
 int log_register_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
 int log_regack_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
-
-int log_publish_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 
 int log_puback_message(const MqttSnLogger *logger, const ParsedMqttSnHeader *header);
 

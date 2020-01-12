@@ -14,10 +14,6 @@ static int32_t parse_will_msg_resp_return_code(const uint8_t *src_pos,
                                                MQTT_SN_RETURN_CODE *return_code);
 
 int32_t parse_will_msg_resp_byte(MQTT_SN_RETURN_CODE *return_code, const uint8_t *data, uint16_t data_len) {
-  return 0;
-}
-
-int32_t parse_will_topic_resp_byte(MQTT_SN_RETURN_CODE *return_code, const uint8_t *data, uint16_t data_len) {
   int32_t parsed_bytes = 0;
   ParsedMqttSnHeader h = {0};
   if ((parsed_bytes = parse_will_msg_resp_header(&h, data, data_len, &parsed_bytes) < 0)) {
