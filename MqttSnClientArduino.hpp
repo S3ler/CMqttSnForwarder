@@ -151,7 +151,7 @@
 #include <client/MqttSnClient.h>
 #include <client/MqttSnClientMethod.c>
 #include <client/MqttSnClientMethod.h>
-#include <client/MqttSnClientAwaitMessage.c >
+#include <client/MqttSnClientAwaitMessage.c>
 #include <client/MqttSnClientAwaitMessage.h>
 #include <client/MqttSnClientReceivedAdvertise.h>
 #include <client/MqttSnClientReceivedGwInfo.h>
