@@ -24,6 +24,7 @@ board_manager:
 [ ! -d ~/Arduino/libraries ] && mkdir -p ~/Arduino/libraries
 cp arduinolibraries ~/Arduino/libraries
 ln -s ~/Arduino/libraries/CMqttSnForwarder ~/CMqttSnForwarder
+ln -s ~/Arduino/libraries/OLED ~/OLED
 
 Ideen:
 Automatisch docker container erstellen aus den executables
