@@ -18,7 +18,6 @@
 #include <network/shared/gateway/logging/MqttSnDebugMessageLogging.h>
 #include <network/shared/ip/IpHelperLogging.h>
 #include <network/linux/shared/ip/MqttSnIpNetworkHelperLogging.h>
-#include <stropts.h>
 #include <asm/ioctls.h>
 
 int32_t GatewayLinuxTcpInitialize(MqttSnGatewayNetworkInterface *n, void *context) {
